@@ -1,0 +1,9 @@
+* add sphinx documentation, including doctests
+
+* add bindings to callback functions for integer optimization solver
+
+* add bindings for graph functions
+
+* add bindings for IO-functions (also redirection of output to Python string; using tempfile?)
+
+* grab GLPK error messages and pass them to Python as some exception

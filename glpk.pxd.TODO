@@ -1,0 +1,7 @@
+* deal properly with cb_func and cb_info in glp_iocp
+
+* glp_printf and glp_vprintf still need to be done
+
+* glp_error and glp_assert related definitions still need to be done
+
+* Uncomment bindings for undocumented methods after acquiring info about them
