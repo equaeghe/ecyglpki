@@ -3,6 +3,9 @@
 # C extensions
 *.so
 
+# Cython generated code
+*.c
+
 # Packages
 *.egg
 *.egg-info
