@@ -24,8 +24,8 @@
 
 cimport glpk
 from cpython.pycapsule cimport PyCapsule_New, PyCapsule_GetPointer
-import numbers
-import collections.abc
+from numbers import Real, Integral
+from collections.abc import Mapping, Sequence
 
 include 'glpk-constants.pxi'
 
@@ -187,9 +187,9 @@ cdef class MILProgram:
             scaling = dict()
         elif scaling is None:
             scaling = dict()
-        elif isinstance(scaling, collections.abc.Mapping):
+        elif isinstance(scaling, Mapping):
             for varstraint, factor in scaling.items():
-                assert isinstance(factor, numbers.Real)
+                assert isinstance(factor, Real)
                 if isinstance(varstraint, Variable):
                     glpk.set_col_sf(self._problem, self._ind(varstraint),
                                     factor)
@@ -199,7 +199,7 @@ cdef class MILProgram:
                 else:
                     raise TypeError("Only 'Variable' and 'Constraint' can " +
                                     "have a scaling factor.")
-        elif isinstance(scaling, collections.abc.Sequence):
+        elif isinstance(scaling, Sequence):
             if 'auto' in scaling:
                 glpk.scale_prob(self._problem, str2scalopt['auto'])
             else:
@@ -285,7 +285,7 @@ cdef class _Varstraint(_ProgramComponent):
         else:
             if lower is None:
                 lb = get_lb_function(self._problem, ind)
-            elif isinstance(lower, numbers.Real):
+            elif isinstance(lower, Real):
                 lb = lower
             else:
                 raise TypeError("Lower bound must be 'Real' or 'False'.")
@@ -295,7 +295,7 @@ cdef class _Varstraint(_ProgramComponent):
         else:
             if upper is None:
                 ub = get_ub_function(self._problem, ind)
-            elif isinstance(upper, numbers.Real):
+            elif isinstance(upper, Real):
                 ub = upper
             else:
                 raise TypeError("Upper bound must be 'Real' or 'False'.")
@@ -376,7 +376,7 @@ cdef class Variable(_Varstraint):
     def bounds(self, lower=None, upper=None):
         if self.kind() in {'integer', 'binary'}:
             if any((bound not in {False, None}) and
-                   not isinstance(bound, numbers.Integral)
+                   not isinstance(bound, Integral)
                    for bound in (lower, upper)):
                 raise TypeError("Integer variable must have integer bounds.")
         return self._bounds(glpk.get_col_lb, glpk.get_col_ub,
@@ -485,7 +485,7 @@ cdef class Objective(_ProgramComponent):
 
         """
         if constant is not None:
-            if isinstance(constant, numbers.Real):
+            if isinstance(constant, Real):
                 glpk.set_obj_coef(self._problem, 0, constant)
             else:
                 raise TypeError("Objective constant must be 'Real'.")
@@ -554,7 +554,7 @@ cdef class SimplexSolver(_LPSolver):
         if controls is False:
             glpk.init_smcp(&self._smcp)
         elif controls is not None:
-            assert isinstance(controls, collections.abc.Mapping)
+            assert isinstance(controls, Mapping)
             for control, val in controls.items():
                 if control is 'msg_lev':
                     self._smcp.msg_lev = str2msglev[val]
@@ -565,31 +565,31 @@ cdef class SimplexSolver(_LPSolver):
                 if control is 'r_test':
                     self._smcp.r_test = str2rtest[val]
                 if control is 'tol_bnd':
-                    assert isinstance(val, numbers.Real)
+                    assert isinstance(val, Real)
                     self._smcp.tol_bnd = val
                 if control is 'tol_dj':
-                    assert isinstance(val, numbers.Real)
+                    assert isinstance(val, Real)
                     self._smcp.tol_dj = val
                 if control is 'tol_piv':
-                    assert isinstance(val, numbers.Real)
+                    assert isinstance(val, Real)
                     self._smcp.tol_piv = val
                 if control is 'obj_ll':
-                    assert isinstance(val, numbers.Real)
+                    assert isinstance(val, Real)
                     self._smcp.obj_ll = val
                 if control is 'obj_ul':
-                    assert isinstance(val, numbers.Real)
+                    assert isinstance(val, Real)
                     self._smcp.obj_ul = val
                 if control is 'it_lim':
-                    assert isinstance(val, numbers.Integral)
+                    assert isinstance(val, Integral)
                     self._smcp.it_lim = val
                 if control is 'tm_lim':
-                    assert isinstance(val, numbers.Integral)
+                    assert isinstance(val, Integral)
                     self._smcp.tm_lim = val
                 if control is 'out_frq':
-                    assert isinstance(val, numbers.Integral)
+                    assert isinstance(val, Integral)
                     self._smcp.out_frq = val
                 if control is 'out_dly':
-                    assert isinstance(val, numbers.Integral)
+                    assert isinstance(val, Integral)
                     self._smcp.out_dly = val
                 if control is 'presolve':
                     assert isinstance(val, bool)
@@ -604,36 +604,36 @@ cdef class SimplexSolver(_LPSolver):
             glpk.set_bfcp(self._problem, NULL)
             glpk.get_bfcp(self._problem, &self._bfcp)
         elif fcontrols is not None:
-            assert isinstance(fcontrols, collections.abc.Mapping)
+            assert isinstance(fcontrols, Mapping)
             for control, val in fcontrols:
                 if control is 'type':
                     self._bfcp.type = str2bftype[val]
                 if control is 'piv_tol':
-                    assert isinstance(val, numbers.Real)
+                    assert isinstance(val, Real)
                     self._bfcp.piv_tol = val
                 if control is 'eps_tol':
-                    assert isinstance(val, numbers.Real)
+                    assert isinstance(val, Real)
                     self._bfcp.eps_tol = val
                 if control is 'max_gro':
-                    assert isinstance(val, numbers.Real)
+                    assert isinstance(val, Real)
                     self._bfcp.max_gro = val
                 if control is 'upd_tol':
-                    assert isinstance(val, numbers.Real)
+                    assert isinstance(val, Real)
                     self._bfcp.upd_tol = val
                 if control is 'lu_size':
-                    assert isinstance(val, numbers.Integral)
+                    assert isinstance(val, Integral)
                     self._bfcp.lu_size = val
                 if control is 'piv_lim':
-                    assert isinstance(val, numbers.Integral)
+                    assert isinstance(val, Integral)
                     self._bfcp.piv_lim = val
                 if control is 'nfs_max':
-                    assert isinstance(val, numbers.Integral)
+                    assert isinstance(val, Integral)
                     self._bfcp.nfs_max = val
                 if control is 'nrs_max':
-                    assert isinstance(val, numbers.Integral)
+                    assert isinstance(val, Integral)
                     self._bfcp.nrs_max = val
                 if control is 'rs_size':
-                    assert isinstance(val, numbers.Integral)
+                    assert isinstance(val, Integral)
                     self._bfcp.rs_size = val
                 if control is 'suhl':
                     assert isinstance(val, bool)
@@ -743,7 +743,7 @@ cdef class IPointSolver(_LPSolver):
         if controls is False:
             glpk.init_iptcp(&self._iptcp)
         elif controls is not None:
-            assert isinstance(controls, collections.abc.Mapping)
+            assert isinstance(controls, Mapping)
             for control, val in controls.items():
                 if control is 'msg_lev':
                     self._iptcp.msg_lev = str2msglev[val]
@@ -788,7 +788,7 @@ cdef class IntOptSolver(_ProgramComponent):
         if controls is False:
             glpk.init_iocp(&self._iocp)
         elif controls is not None:
-            assert isinstance(controls, collections.abc.Mapping)
+            assert isinstance(controls, Mapping)
             for control, val in controls:
                 if control is 'msg_lev':
                     self._iocp.msg_lev = str2msglev[val]
@@ -799,25 +799,25 @@ cdef class IntOptSolver(_ProgramComponent):
                 if control is 'pp_tech':
                     self._iocp.pp_tech = str2pptech[val]
                 if control is 'tol_int':
-                    assert isinstance(val, numbers.Real)
+                    assert isinstance(val, Real)
                     self._iocp.tol_int = val
                 if control is 'tol_obj':
-                    assert isinstance(val, numbers.Real)
+                    assert isinstance(val, Real)
                     self._iocp.tol_obj = val
                 if control is 'mip_gap':
-                    assert isinstance(val, numbers.Real)
+                    assert isinstance(val, Real)
                     self._iocp.mip_gap = val
                 if control is 'tm_lim':
-                    assert isinstance(val, numbers.Integral)
+                    assert isinstance(val, Integral)
                     self._iocp.tm_lim = val
                 if control is 'out_frq':
-                    assert isinstance(val, numbers.Integral)
+                    assert isinstance(val, Integral)
                     self._iocp.out_frq = val
                 if control is 'out_dly':
-                    assert isinstance(val, numbers.Integral)
+                    assert isinstance(val, Integral)
                     self._iocp.out_dly = val
                 if control is 'cb_size':
-                    assert isinstance(val, numbers.Integral)
+                    assert isinstance(val, Integral)
                     self._iocp.cb_size = val
                 if control is 'mir_cuts':
                     assert isinstance(val, bool)

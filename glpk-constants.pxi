@@ -23,9 +23,7 @@
 
 
 from libc.limits cimport INT_MAX
-import sys
-
-DBL_MAX = sys.float_info.max
+from libc.float cimport DBL_MAX
 
 # GENERAL
 # scaling options
