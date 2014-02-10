@@ -375,8 +375,8 @@ cdef class Variable(_Varstraint):
 
     def bounds(self, lower=None, upper=None):
         if self.kind() in {'integer', 'binary'}:
-            if any((bound not in {False, None}) or
-                   not isinstance(lower, numbers.Integer)
+            if any((bound not in {False, None}) and
+                   not isinstance(bound, numbers.Integral)
                    for bound in (lower, upper)):
                 raise TypeError("Integer variable must have integer bounds.")
         return self._bounds(glpk.get_col_lb, glpk.get_col_ub,
@@ -580,16 +580,16 @@ cdef class SimplexSolver(_LPSolver):
                     assert isinstance(val, numbers.Real)
                     self._smcp.obj_ul = val
                 if control is 'it_lim':
-                    assert isinstance(val, numbers.Integer)
+                    assert isinstance(val, numbers.Integral)
                     self._smcp.it_lim = val
                 if control is 'tm_lim':
-                    assert isinstance(val, numbers.Integer)
+                    assert isinstance(val, numbers.Integral)
                     self._smcp.tm_lim = val
                 if control is 'out_frq':
-                    assert isinstance(val, numbers.Integer)
+                    assert isinstance(val, numbers.Integral)
                     self._smcp.out_frq = val
                 if control is 'out_dly':
-                    assert isinstance(val, numbers.Integer)
+                    assert isinstance(val, numbers.Integral)
                     self._smcp.out_dly = val
                 if control is 'presolve':
                     assert isinstance(val, bool)
@@ -621,19 +621,19 @@ cdef class SimplexSolver(_LPSolver):
                     assert isinstance(val, numbers.Real)
                     self._bfcp.upd_tol = val
                 if control is 'lu_size':
-                    assert isinstance(val, numbers.Integer)
+                    assert isinstance(val, numbers.Integral)
                     self._bfcp.lu_size = val
                 if control is 'piv_lim':
-                    assert isinstance(val, numbers.Integer)
+                    assert isinstance(val, numbers.Integral)
                     self._bfcp.piv_lim = val
                 if control is 'nfs_max':
-                    assert isinstance(val, numbers.Integer)
+                    assert isinstance(val, numbers.Integral)
                     self._bfcp.nfs_max = val
                 if control is 'nrs_max':
-                    assert isinstance(val, numbers.Integer)
+                    assert isinstance(val, numbers.Integral)
                     self._bfcp.nrs_max = val
                 if control is 'rs_size':
-                    assert isinstance(val, numbers.Integer)
+                    assert isinstance(val, numbers.Integral)
                     self._bfcp.rs_size = val
                 if control is 'suhl':
                     assert isinstance(val, bool)
@@ -808,16 +808,16 @@ cdef class IntOptSolver(_ProgramComponent):
                     assert isinstance(val, numbers.Real)
                     self._iocp.mip_gap = val
                 if control is 'tm_lim':
-                    assert isinstance(val, numbers.Integer)
+                    assert isinstance(val, numbers.Integral)
                     self._iocp.tm_lim = val
                 if control is 'out_frq':
-                    assert isinstance(val, numbers.Integer)
+                    assert isinstance(val, numbers.Integral)
                     self._iocp.out_frq = val
                 if control is 'out_dly':
-                    assert isinstance(val, numbers.Integer)
+                    assert isinstance(val, numbers.Integral)
                     self._iocp.out_dly = val
                 if control is 'cb_size':
-                    assert isinstance(val, numbers.Integer)
+                    assert isinstance(val, numbers.Integral)
                     self._iocp.cb_size = val
                 if control is 'mir_cuts':
                     assert isinstance(val, bool)
