@@ -34,8 +34,6 @@ cdef name2chars(name):
     cdef char* chars
     if not isinstance(name, str):
         raise TypeError("Name must be a 'str'.")
-    if not name:  #  empty string
-        chars = NULL
     else:
         name = name.encode()
         if len(name) > 255:
@@ -89,7 +87,9 @@ cdef class MILProgram:
 
         """
         cdef char* chars
-        if name is not None:
+        if name is '':
+            glpk.set_prob_name(self._problem, NULL)
+        elif name is not None:
             name = name2chars(name)
             chars = name
             glpk.set_prob_name(self._problem, chars)
@@ -345,7 +345,9 @@ cdef class _Varstraint(_ProgramComponent):
                name=None):
         cdef char* chars
         ind = self._program._ind(self)
-        if name is not None:
+        if name is '':
+            set_name_function(self._problem, ind, NULL)
+        elif name is not None:
             name = name2chars(name)
             chars = name
             set_name_function(self._problem, ind, chars)
@@ -498,7 +500,9 @@ cdef class Objective(_ProgramComponent):
 
         """
         cdef char* chars
-        if name is not None:
+        if name is '':
+            glpk.set_obj_name(self._problem, NULL)
+        elif name is not None:
             name = name2chars(name)
             chars = name
             glpk.set_obj_name(self._problem, chars)
