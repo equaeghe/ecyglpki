@@ -30,6 +30,10 @@ import collections.abc
 include 'glpk-constants.pxi'
 
 
+def GLPK_version():
+    return glpk.version().decode()
+
+
 cdef name2chars(name):
     cdef char* chars
     if not isinstance(name, str):
