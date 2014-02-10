@@ -257,6 +257,9 @@ cdef class _Varstraint(_ProgramComponent):
     def __hash__(self):
         return self._unique_id
 
+    def __str__(self):
+        return str(self._unique_id) + ':' + self.name()
+
     #  how to really del?
     cdef _zombify(self, void (*del_function)(glpk.ProbObj*, int, const int[])):
         cdef int ind[2]
@@ -354,6 +357,8 @@ cdef class _Varstraint(_ProgramComponent):
         chars = get_name_function(self._problem, ind)
         return '' if chars is NULL else chars.decode()
 
+    def name(self, name=None):
+        return NotImplemented  # should be implemented in public child classes
 
 cdef class Variable(_Varstraint):
 
