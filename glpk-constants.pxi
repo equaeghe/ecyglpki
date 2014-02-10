@@ -26,6 +26,12 @@ from libc.limits cimport INT_MAX
 from libc.float cimport DBL_MAX
 
 # GENERAL
+# 
+cdef str2mpsfmt = {
+    'fixed': glpk.MPS_DECK,
+    'free': glpk.MPS_FILE
+    }
+
 # scaling options
 cdef str2scalopt = {
     'geometric': glpk.SF_GM,

@@ -65,6 +65,52 @@ cdef class MILProgram:
         self._variables = []
         self._constraints = []
 
+    @classmethod
+    def read(cls, fname, format='GLPK', mpsfmt='free'):
+        cdef char* chars
+        cdef glpk.ProbObj* problem
+        fname = name2chars(fname)
+        chars = fname
+        program = cls()
+        problem = <glpk.ProbObj*>PyCapsule_GetPointer(
+                                                program._problem_ptr(), NULL)
+        if format is 'GLPK':
+            retcode = glpk.read_prob(problem, 0, chars)
+        elif format is 'LP':
+            retcode = glpk.read_lp(problem, NULL, chars)
+        elif format is 'MPS':
+            retcode = glpk.read_mps(problem, str2mpsfmt[mpsfmt], NULL, chars)
+        else:
+            raise ValueError("Only 'GLPK', 'LP', and 'MPS' formats are " +
+                             "supported.")
+        if retcode is 0:
+            for col in range(glpk.get_num_cols(problem)):
+                variable = Variable(program)
+                program._variables.append(variable)
+            for row in range(glpk.get_num_rows(problem)):
+                constraint = Constraint(program)
+                program._constraints.append(constraint)
+        else:
+            raise RuntimeError("Error reading " + format + " file.")
+        return program
+
+    def write(self, fname, format='GLPK', mpsfmt='free'):
+        cdef char* chars
+        fname = name2chars(fname)
+        chars = fname
+        if format is 'GLPK':
+            retcode = glpk.write_prob(self._problem, 0, chars)
+        elif format is 'LP':
+            retcode = glpk.write_lp(self._problem, NULL, chars)
+        elif format is 'MPS':
+            retcode = glpk.write_mps(self._problem,
+                                     str2mpsfmt[mpsfmt], NULL, chars)
+        else:
+            raise ValueError("Only 'GLPK', 'LP', and 'MPS' formats are " +
+                             "supported.")
+        if retcode is not 0:
+            raise RuntimeError("Error writing " + format + " file.")
+
     def __dealloc__(self):
         glpk.delete_prob(self._problem)
 
@@ -363,6 +409,7 @@ cdef class _Varstraint(_ProgramComponent):
 
     def name(self, name=None):
         return NotImplemented  # should be implemented in public child classes
+
 
 cdef class Variable(_Varstraint):
 
