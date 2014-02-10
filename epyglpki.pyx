@@ -848,8 +848,19 @@ cdef class IntOptSolver(_ProgramComponent):
         controls['pp_tech'] = pptech2str[controls['pp_tech']]
         return controls
 
-    def solve(self):
-        retcode = glpk.intopt(self._problem, &self._iocp)
+    def solve(self, solver='branchcut', obj_bound=False):
+        if solver is 'branchcut':
+            retcode = glpk.intopt(self._problem, &self._iocp)
+        elif solver is 'intfeas1':
+            if obj_bound is False:
+                retcode = glpk.intfeas1(self._problem, False, 0)
+            elif isinstance(obj_bound, Integral):
+                retcode = glpk.intfeas1(self._problem, True, obj_bound)
+            else:
+                raise TypeError("'obj_bound' must be an integer.")
+        else:
+            raise ValueError("The only available solvers are 'branchcut' " +
+                             "and 'intfeas1'.")
         if retcode is not 0:
             raise ioretcode2error[retcode]
         else:

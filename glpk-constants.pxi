@@ -198,5 +198,8 @@ cdef ioretcode2error = {
     glpk.EFAIL: RuntimeError("Solver failure."),
     glpk.EMIPGAP: StopIteration("Relative mip gap tolerance has been reached"),
     glpk.ETMLIM: StopIteration("Time limit exceeded."),
-    glpk.ESTOP: StopIteration("Branch-and-cut callback terminated solver.")
+    glpk.ESTOP: StopIteration("Branch-and-cut callback terminated solver."),
+    glpk.EDATA: ValueError("All problem parameters must be integer."),
+    glpk.ERANGE: OverflowError("Integer overflow occurred when transforming " +
+                               "to CNF SAT format.")
     }

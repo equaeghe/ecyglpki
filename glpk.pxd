@@ -805,10 +805,11 @@ cdef extern from "glpk.h":
     int write_cnfsat "glp_write_cnfsat" (ProbObj* problem, const char* fname)
 
     #  solve CNF-SAT problem with MiniSat solver; returns retcode
-    int glp_minisat1(ProbObj* problem)
+    int minisat1 "glp_minisat1" (ProbObj* problem)
 
     #  solve integer feasibility problem; returns retcode
-    int glp_intfeas1(ProbObj* problem, bint use_bound, int obj_bound)
+    int intfeas1 "glp_intfeas1" (ProbObj* problem,
+                                 bint use_bound, int obj_bound)
 
     #  initialization return codes (argument name is 'initretcode'):
     enum: INIT_OK   #  initialization successful
