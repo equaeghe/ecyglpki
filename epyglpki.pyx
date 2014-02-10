@@ -215,7 +215,7 @@ cdef class MILProgram:
                 scaling[constraint] = factor
         return scaling
 
-    def objective(self, coeffs=False, constant=0, direction='minimize', 
+    def objective(self, coeffs=False, constant=0, direction='minimize',
                   name=None):
         objective = Objective(self)
         objective.coeffs(coeffs)
