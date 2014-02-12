@@ -208,18 +208,18 @@ cdef class MILProgram:
                         raise ValueError("Coefficient position must have " +
                                          "exactly two components.")
                     try:
-                        if isinstance(item[0][0], Variable):
+                        if (isinstance(item[0][0], Variable) and
+                            isinstance(item[0][1], Constraint)):
                             cols[ind] = self._ind(item[0][0])
-                            assert isinstance(item[0][1], Constraint)
                             rows[ind] = self._ind(item[0][1])
-                        if isinstance(item[0][0], Constraint):
+                        elif (isinstance(item[0][0], Constraint) and
+                              isinstance(item[0][1], Variable)):
                             rows[ind] = self._ind(item[0][0])
-                            assert isinstance(item[0][1], Constraint)
                             cols[ind] = self._ind(item[0][1])
-                    except AssertionError:
-                        raise TypeError("Coefficient position components " +
-                                        "must be one Variable and one " +
-                                        "Constraint of the program.")
+                        else:
+                            raise TypeError("Coefficient position " +
+                                            "components must be one " +
+                                            "Variable and one Constraint.")
                 glpk.load_matrix(self._problem, elements, rows, cols, vals)
                 assert elements is glpk.get_num_nz(self._problem)
         finally:
@@ -233,9 +233,10 @@ cdef class MILProgram:
             scaling = dict()
         elif scaling is None:
             scaling = dict()
-        elif isinstance(scaling, collections.abc.mapping):
+        elif isinstance(scaling, collections.abc.Mapping):
             for varstraint, factor in scaling.items():
-                assert isinstance(factor, numbers.Real)
+                if not isinstance(factor, numbers.Real):
+                    raise TypeError("Scaling factors must be real numbers.")
                 if isinstance(varstraint, Variable):
                     glpk.set_col_sf(self._problem, self._ind(varstraint),
                                     factor)
@@ -601,7 +602,8 @@ cdef class SimplexSolver(_LPSolver):
         if controls is False:
             glpk.init_smcp(&self._smcp)
         elif controls is not None:
-            assert isinstance(controls, collections.abc.mapping)
+            if not isinstance(controls, collections.abc.Mapping):
+                raise TypeError("Controls must be passed in a mapping.")
             for control, val in controls.items():
                 if control is 'msg_lev':
                     self._smcp.msg_lev = str2msglev[val]
@@ -651,7 +653,7 @@ cdef class SimplexSolver(_LPSolver):
             glpk.set_bfcp(self._problem, NULL)
             glpk.get_bfcp(self._problem, &self._bfcp)
         elif fcontrols is not None:
-            assert isinstance(fcontrols, collections.abc.mapping)
+            assert isinstance(fcontrols, collections.abc.Mapping)
             for control, val in fcontrols:
                 if control is 'type':
                     self._bfcp.type = str2bftype[val]
@@ -790,7 +792,7 @@ cdef class IPointSolver(_LPSolver):
         if controls is False:
             glpk.init_iptcp(&self._iptcp)
         elif controls is not None:
-            assert isinstance(controls, collections.abc.mapping)
+            assert isinstance(controls, collections.abc.Mapping)
             for control, val in controls.items():
                 if control is 'msg_lev':
                     self._iptcp.msg_lev = str2msglev[val]
@@ -835,7 +837,7 @@ cdef class IntOptSolver(_ProgramComponent):
         if controls is False:
             glpk.init_iocp(&self._iocp)
         elif controls is not None:
-            assert isinstance(controls, collections.abc.mapping)
+            assert isinstance(controls, collections.abc.Mapping)
             for control, val in controls:
                 if control is 'msg_lev':
                     self._iocp.msg_lev = str2msglev[val]
