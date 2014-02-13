@@ -207,19 +207,18 @@ cdef class MILProgram:
                     if len(item[0]) != 2:
                         raise ValueError("Coefficient position must have " +
                                          "exactly two components.")
-                    try:
-                        if (isinstance(item[0][0], Variable) and
-                            isinstance(item[0][1], Constraint)):
-                            cols[ind] = self._ind(item[0][0])
-                            rows[ind] = self._ind(item[0][1])
-                        elif (isinstance(item[0][0], Constraint) and
-                              isinstance(item[0][1], Variable)):
-                            rows[ind] = self._ind(item[0][0])
-                            cols[ind] = self._ind(item[0][1])
-                        else:
-                            raise TypeError("Coefficient position " +
-                                            "components must be one " +
-                                            "Variable and one Constraint.")
+                    elif (isinstance(item[0][0], Variable) and
+                        isinstance(item[0][1], Constraint)):
+                        cols[ind] = self._ind(item[0][0])
+                        rows[ind] = self._ind(item[0][1])
+                    elif (isinstance(item[0][0], Constraint) and
+                            isinstance(item[0][1], Variable)):
+                        rows[ind] = self._ind(item[0][0])
+                        cols[ind] = self._ind(item[0][1])
+                    else:
+                        raise TypeError("Coefficient position components " +
+                                        "must be one Variable and one " +
+                                        "Constraint.")
                 glpk.load_matrix(self._problem, elements, rows, cols, vals)
                 assert elements is glpk.get_num_nz(self._problem)
         finally:
