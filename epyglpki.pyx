@@ -80,9 +80,11 @@ cdef class MILProgram:
             retcode = glpk.read_lp(problem, NULL, chars)
         elif format is 'MPS':
             retcode = glpk.read_mps(problem, str2mpsfmt[mpsfmt], NULL, chars)
+        elif format is 'CNFSAT':
+            retcode = glpk.read_cnfsat(problem, chars)
         else:
-            raise ValueError("Only 'GLPK', 'LP', and 'MPS' formats are " +
-                             "supported.")
+            raise ValueError("Only 'GLPK', 'LP', 'MPS', and 'CNFSAT' " +
+                             "formats are supported.")
         if retcode is 0:
             for col in range(glpk.get_num_cols(problem)):
                 variable = Variable(program)
@@ -105,9 +107,11 @@ cdef class MILProgram:
         elif format is 'MPS':
             retcode = glpk.write_mps(self._problem,
                                      str2mpsfmt[mpsfmt], NULL, chars)
+        if format is 'CNFSAT':
+            retcode = glpk.write_cnfsat(self._problem, chars)
         else:
-            raise ValueError("Only 'GLPK', 'LP', and 'MPS' formats are " +
-                             "supported.")
+            raise ValueError("Only 'GLPK', 'LP', 'MPS', and 'CNFSAT' " +
+                             "formats are supported.")
         if retcode is not 0:
             raise RuntimeError("Error writing " + format + " file.")
 
