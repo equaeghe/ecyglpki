@@ -736,12 +736,12 @@ cdef class SimplexSolver(_LPSolver):
                  raise ValueError("Objective function limits only with " +
                                   "dual simplex.")
             retcode = glpk.simplex(self._problem, &self._smcp)
-        if retcode not in {0, glpk.EOBJLL, glpk.EOBJUL}:
-            raise smretcode2error[retcode]
+        if retcode is 0:
+            return self.status()
         elif retcode in {glpk.EOBJLL, glpk.EOBJUL}:
             return smretcode2str[retcode]
-        elif retcode is 0:
-            return self.status()
+        else:
+            raise smretcode2error[retcode]
 
     def status(self, detailed=False):
         status = solstat2str[glpk.sm_status(self._problem)]
@@ -849,10 +849,10 @@ cdef class IPointSolver(_LPSolver):
 
     def solve(self):
         retcode = glpk.interior(self._problem, &self._iptcp)
-        if retcode is not 0:
-            raise iptretcode2error[retcode]
-        else:
+        if retcode is 0:
             return self.status()
+        else:
+            raise iptretcode2error[retcode]
 
     def status(self):
         return solstat2str[glpk.ipt_status(self._problem)]
@@ -965,10 +965,10 @@ cdef class IntOptSolver(_Solver):
         else:
             raise ValueError("The only available solvers are 'branchcut' " +
                              "and 'intfeas1'.")
-        if retcode is not 0:
-            raise ioretcode2error[retcode]
-        else:
+        if retcode is 0:
             return self.status()
+        else:
+            raise ioretcode2error[retcode]
 
     def status(self):
         return solstat2str[glpk.mip_status(self._problem)]
