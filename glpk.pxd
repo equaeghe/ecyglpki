@@ -561,7 +561,7 @@ cdef extern from "glpk.h":
 
     #  print sensitivity analysis report
     int print_ranges "glp_print_ranges" (ProbObj* problem,
-                                         int length, const int list[],
+                                         int length, const int indlist[],
                                          int flags,  #  flags must be 0!
                                          const char* fname)
 

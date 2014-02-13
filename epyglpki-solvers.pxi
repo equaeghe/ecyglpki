@@ -276,6 +276,31 @@ cdef class SimplexSolver(_LPSolver):
     def write_solution(self, fname):
         self._write(glpk.write_sol, fname)
 
+    def print_ranges(self, varstraints, fname):
+        if self.status() is not 'optimal':
+            raise Exception("Solution must be optimal.")
+        if not isinstance(varstraints, collections.abc.Sequence):
+            raise TypeError("'varstraints' must be a sequence.")
+        length = len(varstraints)
+        cdef char* chars
+        fname = name2chars(fname)
+        chars = fname
+        cdef int* indlist = <int*>glpk.calloc(1+length, sizeof(int))
+        try:
+            rows = len(self._program._constraints)
+            for pos, varstraint in enumerate(varstraints, start=1):
+                ind = self._program._ind(varstraint)
+                if isinstance(varstraint, Variable):
+                    ind += rows
+                indlist[pos] = ind
+            if not glpk.bf_exists(self._problem):
+                retcode = glpk.factorize(self._problem)
+                if retcode is not 0:
+                    raise smretcode2error[retcode]
+            glpk.print_ranges(self._problem, length, indlist, 0, chars)
+        finally:
+            glpk.free(indlist)
+
 
 cdef class IPointSolver(_LPSolver):
 
