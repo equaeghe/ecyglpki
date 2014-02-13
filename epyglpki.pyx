@@ -566,7 +566,28 @@ cdef class Objective(_ProgramComponent):
         return '' if chars is NULL else chars.decode()
 
 
-cdef class _LPSolver(_ProgramComponent):
+cdef class _Solver(_ProgramComponent):
+
+    cdef _faccess(self,
+                  int (*faccess_function)(glpk.ProbObj*, const char*),
+                  fname, error_msg):
+        cdef char* chars
+        fname = name2chars(fname)
+        chars = fname
+        retcode = faccess_function(self._problem, chars)
+        if retcode is not 0:
+            raise RuntimeError(error_msg + " '" + fname + "'.")
+
+    cdef _read(self,
+               int (*faccess_function)(glpk.ProbObj*, const char*), fname):
+        self._faccess(faccess_function, fname, "Error reading file")
+
+    cdef _write(self,
+                int (*faccess_function)(glpk.ProbObj*, const char*), fname):
+        self._faccess(faccess_function, fname, "Error writing file")
+
+
+cdef class _LPSolver(_Solver):
 
     cdef _solution(self, varstraints,
                    double (*primal_func)(glpk.ProbObj*, int),
@@ -790,6 +811,15 @@ cdef class SimplexSolver(_LPSolver):
             basis[constraint] = varstat2str[varstat]
         return basis
 
+    def print_solution(self, fname):
+        self._write(glpk.print_sol, fname)
+
+    def read_solution(self, fname):
+        self._read(glpk.read_sol, fname)
+
+    def write_solution(self, fname):
+        self._write(glpk.write_sol, fname)
+
 
 cdef class IPointSolver(_LPSolver):
 
@@ -838,8 +868,17 @@ cdef class IPointSolver(_LPSolver):
         return self._solution(self._program._constraints,
                               glpk.ipt_row_prim, glpk.ipt_row_dual, values)
 
+    def print_solution(self, fname):
+        self._write(glpk.print_ipt, fname)
 
-cdef class IntOptSolver(_ProgramComponent):
+    def read_solution(self, fname):
+        self._read(glpk.read_ipt, fname)
+
+    def write_solution(self, fname):
+        self._write(glpk.write_ipt, fname)
+
+
+cdef class IntOptSolver(_Solver):
 
     cdef glpk.IntOptCP _iocp
 
@@ -955,3 +994,12 @@ cdef class IntOptSolver(_ProgramComponent):
             if val != 0:
                 solution[constraint] = val
         return solution
+
+    def print_solution(self, fname):
+        self._write(glpk.print_mip, fname)
+
+    def read_solution(self, fname):
+        self._read(glpk.read_mip, fname)
+
+    def write_solution(self, fname):
+        self._write(glpk.write_mip, fname)
