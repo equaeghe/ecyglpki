@@ -3,10 +3,10 @@ epyglpki
 
 Cython/Python GLPK interface
 
-To build:
----------
+To install:
+-----------
 
-    python setup.py build_ext --inplace
+    python setup.py install --user
 
 
 To use:
