@@ -75,12 +75,12 @@ cdef msglev2str = {msg_lev: string for string, msg_lev in str2msglev.items()}
 
 # solution statuses
 cdef solstat2str = {
-    glpk.UNDEF: "undefined",
-    glpk.OPT: "optimal",
-    glpk.INFEAS: "infeasible",
-    glpk.NOFEAS: "no feasible",
-    glpk.FEAS: "feasible",
-    glpk.UNBND: "unbounded",
+    glpk.UNDEF: 'undefined',
+    glpk.OPT: 'optimal',
+    glpk.INFEAS: 'infeasible',
+    glpk.NOFEAS: 'no feasible',
+    glpk.FEAS: 'feasible',
+    glpk.UNBND: 'unbounded',
     }
 
 
