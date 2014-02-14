@@ -88,6 +88,12 @@ pygments_style = 'sphinx'
 #modindex_common_prefix = []
 
 
+# -- Autodoc options -----------------------------------------------------------
+autodoc_member_order = 'bygroup'
+autodoc_default_flags = ['members', 'undoc-members']
+todo_include_todos = True
+
+
 # -- Options for HTML output ---------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -97,7 +103,7 @@ html_theme = 'default'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#html_theme_options = {}
+html_theme_options = {'stickysidebar': True}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []

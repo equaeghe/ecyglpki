@@ -6,11 +6,16 @@
 Welcome to epyglpki's documentation!
 ====================================
 
+:Release: |release|
+:Date:    |today|
+
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+  :maxdepth: 2
 
+  problem
+  solvers
 
 
 Indices and tables
