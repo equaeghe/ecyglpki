@@ -125,7 +125,8 @@ cdef class MILProgram:
     def name(self, name=None):
         """Change or retrieve problem name
 
-          :type `name`: :class:`str` or `None`
+          :type `name`: :class:`str` to change the name or `None` (no argument)
+            to only retrieve it
           :returns: the problem name
           :rtype: :class:`str`
 
@@ -479,8 +480,8 @@ cdef class Objective(_ProgramComponent):
     def direction(self, direction=None):
         """Change or retrieve objective direction
 
-          :type `direction`: :class:`str`, either 'minimize' or 'maximize',
-            or `None`
+          :type `direction`: :class:`str`, either `'minimize'` or `'maximize'`,
+            to change the direction or `None` (no argument) to only retrieve it
           :returns: the objective direction
           :rtype: :class:`str`
 
@@ -523,7 +524,8 @@ cdef class Objective(_ProgramComponent):
     def constant(self, constant=None):
         """ Change or retrieve objective function constant
 
-          :type `constant`: :class:`numbers.Real` or `None`
+          :type `constant`: :class:`numbers.Real` to change the constant or
+            `None` (no argument) to only retrieve it
           :returns: the objective function constant
           :rtype: :class:`float`
 
@@ -545,7 +547,8 @@ cdef class Objective(_ProgramComponent):
     def name(self, name=None):
         """Change or retrieve objective function name
 
-          :type `name`: :class:`str` or `None`
+          :type `name`: :class:`str` to change the name or `None` (no argument)
+            to only retrieve it
           :returns: the objective function name
           :rtype: :class:`str`
 
