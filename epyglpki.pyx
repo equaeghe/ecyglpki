@@ -488,7 +488,7 @@ cdef class Objective(_ProgramComponent):
         >>> o = p.objective()
         >>> o.direction()
         'minimize'
-        >>> o.constant('maximize')
+        >>> o.direction('maximize')
         'maximize'
 
         """
@@ -539,7 +539,7 @@ cdef class Objective(_ProgramComponent):
             if isinstance(constant, numbers.Real):
                 glpk.set_obj_coef(self._problem, 0, constant)
             else:
-                raise TypeError("Objective constant must be 'numbers.Real'.")
+                raise TypeError("Objective constant must be a real number.")
         return glpk.get_obj_coef(self._problem, 0)
 
     def name(self, name=None):
