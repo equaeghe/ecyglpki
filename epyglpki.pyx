@@ -443,6 +443,31 @@ cdef class Variable(_Varstraint):
         return varkind2str[glpk.get_col_kind(self._problem, col)]
 
     def coeffs(self, coeffs=None):
+        """Change or retrieve variable coefficients (constraint matrix column)
+
+          :type `coeffs`:
+            * :class:`collections.abc.Mapping` of :class:`Constraint`
+              to :class:`numbers.Real` to change the coefficients of the
+              variables in the mapping
+            * `False` to set all coefficients to zero
+            * `None` (no argument) to only retrieve the coefficient mapping
+          :returns: the coefficient mapping, which only contains nonzero 
+            coefficients
+          :rtype: :class:`collections.abc.Mapping` of :class:`Constraint`
+            to :class:`float`
+
+        >>> p = MILProgram()
+        >>> c = p.add_constraint()
+        >>> d = p.add_constraint()
+        >>> x = p.add_variable()
+        >>> x.coeffs()
+        {}
+        >>> x.coeffs({c: 10/9, d: 0})
+        {<epyglpki.Constraint object at ...>: 1.1111...}
+        >>> x.coeffs(False)
+        {}
+
+        """
         return self._coeffs(glpk.get_mat_col, glpk.set_mat_col,
                             Constraint.__name__, self._program._constraints, 
                             coeffs)
@@ -483,6 +508,31 @@ cdef class Constraint(_Varstraint):
                             glpk.set_row_bnds, lower, upper)
 
     def coeffs(self, coeffs=None):
+        """Change or retrieve constraint coefficients (constraint matrix row)
+
+          :type `coeffs`:
+            * :class:`collections.abc.Mapping` of :class:`Variable`
+              to :class:`numbers.Real` to change the coefficients of the
+              variables in the mapping
+            * `False` to set all coefficients to zero
+            * `None` (no argument) to only retrieve the coefficient mapping
+          :returns: the coefficient mapping, which only contains nonzero
+            coefficients
+          :rtype: :class:`collections.abc.Mapping` of :class:`Variable`
+            to :class:`float`
+
+        >>> p = MILProgram()
+        >>> x = p.add_variable()
+        >>> y = p.add_variable()
+        >>> c = p.add_constraint()
+        >>> c.coeffs()
+        {}
+        >>> c.coeffs({x: .5, y: 0})
+        {<epyglpki.Variable object at ...>: 0.5}
+        >>> c.coeffs(False)
+        {}
+
+        """
         return self._coeffs(glpk.get_mat_row, glpk.set_mat_row,
                             Variable.__name__, self._program._variables,
                             coeffs)
@@ -549,7 +599,7 @@ cdef class Objective(_ProgramComponent):
           :returns: the coefficient mapping, which only contains nonzero 
             coefficients
           :rtype: :class:`collections.abc.Mapping` of :class:`Variable`
-            to :class:`numbers.Real`
+            to :class:`float`
 
         >>> p = MILProgram()
         >>> x = p.add_variable()

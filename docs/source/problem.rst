@@ -13,8 +13,18 @@ Problems
 Components
 ==========
 
+Variable
+--------
+
 .. autoclass:: Variable
 
+
+Constraint
+----------
+
 .. autoclass:: Constraint
+
+Objective
+---------
 
 .. autoclass:: Objective
