@@ -450,6 +450,23 @@ cdef class Variable(_Varstraint):
                             coeffs)
 
     def name(self, name=None):
+        """Change or retrieve variable name
+
+          :type `name`: :class:`str` to change the name or `None` (no argument)
+            to only retrieve it
+          :returns: the variable name
+          :rtype: :class:`str`
+
+        >>> p = MILProgram()
+        >>> x = p.add_variable()
+        >>> x.name()
+        ''
+        >>> x.name('Stake')
+        'Stake'
+        >>> x.name()
+        'Stake'
+
+        """
         return self._name(glpk.get_col_name, glpk.set_col_name, name)
 
 
@@ -472,6 +489,23 @@ cdef class Constraint(_Varstraint):
                             coeffs)
 
     def name(self, name=None):
+        """Change or retrieve constraint name
+
+          :type `name`: :class:`str` to change the name or `None` (no argument)
+            to only retrieve it
+          :returns: the constraint name
+          :rtype: :class:`str`
+
+        >>> p = MILProgram()
+        >>> c = p.add_constraint()
+        >>> c.name()
+        ''
+        >>> c.name('Budget')
+        'Budget'
+        >>> c.name()
+        'Budget'
+
+        """
         return self._name(glpk.get_row_name, glpk.set_row_name, name)
 
 
