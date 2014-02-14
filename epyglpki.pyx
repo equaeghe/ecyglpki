@@ -125,8 +125,9 @@ cdef class MILProgram:
     def name(self, name=None):
         """Change or retrieve problem name
 
-          :type `name`: :class:`str` to change the name or `None` (no argument)
-            to only retrieve it
+          :type `name`:
+            * :class:`str` to change the name
+            * `None` (no argument) to only retrieve it
           :returns: the problem name
           :rtype: :class:`str`
 
@@ -452,8 +453,9 @@ cdef class Variable(_Varstraint):
     def name(self, name=None):
         """Change or retrieve variable name
 
-          :type `name`: :class:`str` to change the name or `None` (no argument)
-            to only retrieve it
+          :type `name`:
+            * :class:`str` to change the name
+            * `None` (no argument) to only retrieve it
           :returns: the variable name
           :rtype: :class:`str`
 
@@ -491,8 +493,9 @@ cdef class Constraint(_Varstraint):
     def name(self, name=None):
         """Change or retrieve constraint name
 
-          :type `name`: :class:`str` to change the name or `None` (no argument)
-            to only retrieve it
+          :type `name`:
+            * :class:`str` to change the name
+            * `None` (no argument) to only retrieve it
           :returns: the constraint name
           :rtype: :class:`str`
 
@@ -514,8 +517,10 @@ cdef class Objective(_ProgramComponent):
     def direction(self, direction=None):
         """Change or retrieve objective direction
 
-          :type `direction`: :class:`str`, either `'minimize'` or `'maximize'`,
-            to change the direction or `None` (no argument) to only retrieve it
+          :type `direction`:
+            * :class:`str`, either `'minimize'` or `'maximize'`, to change the
+              direction
+            * `None` (no argument) to only retrieve it
           :returns: the objective direction
           :rtype: :class:`str`
 
@@ -541,7 +546,8 @@ cdef class Objective(_ProgramComponent):
             * :class:`collections.abc.Mapping` of :class:`Variable`
               to :class:`numbers.Real` to change the coefficients of the
               variables in the mapping
-            * `False` to remove objective, i.e., set all coefficients to zero
+            * `False` to remove the objective,
+              i.e., set all coefficients to zero
             * `None` (no argument) to only retrieve the coefficient mapping
           :returns: the coefficient mapping, which only contains nonzero 
             coefficients
@@ -583,8 +589,9 @@ cdef class Objective(_ProgramComponent):
     def constant(self, constant=None):
         """ Change or retrieve objective function constant
 
-          :type `constant`: :class:`numbers.Real` to change the constant or
-            `None` (no argument) to only retrieve it
+          :type `constant`:
+            * :class:`numbers.Real` to change the constant
+            * `None` (no argument) to only retrieve it
           :returns: the objective function constant
           :rtype: :class:`float`
 
@@ -606,8 +613,9 @@ cdef class Objective(_ProgramComponent):
     def name(self, name=None):
         """Change or retrieve objective function name
 
-          :type `name`: :class:`str` to change the name or `None` (no argument)
-            to only retrieve it
+          :type `name`:
+            * :class:`str` to change the name
+            * `None` (no argument) to only retrieve it
           :returns: the objective function name
           :rtype: :class:`str`
 
