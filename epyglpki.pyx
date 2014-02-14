@@ -535,6 +535,31 @@ cdef class Objective(_ProgramComponent):
         return optdir2str[glpk.get_obj_dir(self._problem)]
 
     def coeffs(self, coeffs=None):
+        """Change or retrieve objective function coefficients
+
+          :type `coeffs`:
+            * :class:`collections.abc.Mapping` of :class:`Variable`
+              to :class:`numbers.Real` to change the coefficients of the
+              variables in the mapping
+            * `False` to remove objective, i.e., set all coefficients to zero
+            * `None` (no argument) to only retrieve the coefficient mapping
+          :returns: the coefficient mapping, which only contains nonzero 
+            coefficients
+          :rtype: :class:`collections.abc.Mapping` of :class:`Variable`
+            to :class:`numbers.Real`
+
+        >>> p = MILProgram()
+        >>> x = p.add_variable()
+        >>> y = p.add_variable()
+        >>> o = p.objective()
+        >>> o.coeffs()
+        {}
+        >>> o.coeffs({x: 3, y: 0})
+        {<epyglpki.Variable object at ...>: 3.0}
+        >>> o.coeffs(False)
+        {}
+
+        """
         if coeffs is False:
             coeffs = dict()
             for col in range(1, 1+len(self._program._variables)):
