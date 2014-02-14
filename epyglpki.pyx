@@ -413,9 +413,6 @@ cdef class _Varstraint(_ProgramComponent):
         chars = get_name_function(self._problem, ind)
         return '' if chars is NULL else chars.decode()
 
-    def name(self, name=None):
-        return NotImplemented  # should be implemented in public child classes
-
 
 cdef class Variable(_Varstraint):
 
