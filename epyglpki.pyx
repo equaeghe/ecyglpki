@@ -127,7 +127,7 @@ cdef class MILProgram:
 
           :type `name`:
             * :class:`str` to change the name
-            * `None` (no argument) to only retrieve it
+            * :const:`None` (no argument) to only retrieve it
           :returns: the problem name
           :rtype: :class:`str`
 
@@ -200,6 +200,25 @@ cdef class MILProgram:
         return self._constraints
 
     def coeffs(self, coeffs):
+        """Change or retrieve coefficients (constraint matrix)
+
+          :type `coeffs`:
+            * :class:`~collections.abc.Mapping` of length-2
+              :class:`~collections.abc.Sequence` containing one
+              :class:`Variable` and one :class:`Constraint` to
+              :class:`~numbers.Real` to change the coefficients
+              of the variables in the mapping
+            * :const:`False` to set all coefficients to zero
+
+
+        >>> p = MILProgram()
+        >>> x = p.add_variable()
+        >>> y = p.add_variable()
+        >>> c = p.add_constraint()
+        >>> d = p.add_constraint()
+        >>> p.coeffs({(x, c): 1, (d, y): 3/.5, (x, d): 0})
+
+        """
         elements = 0 if coeffs is False else len(coeffs)
         cdef double* vals = <double*>glpk.calloc(1+elements, sizeof(double))
         cdef int* cols = <int*>glpk.calloc(1+elements, sizeof(int))
@@ -446,15 +465,15 @@ cdef class Variable(_Varstraint):
         """Change or retrieve variable coefficients (constraint matrix column)
 
           :type `coeffs`:
-            * :class:`collections.abc.Mapping` of :class:`Constraint`
-              to :class:`numbers.Real` to change the coefficients of the
+            * :class:`~collections.abc.Mapping` of :class:`Constraint`
+              to :class:`~numbers.Real` to change the coefficients of the
               variables in the mapping
-            * `False` to set all coefficients to zero
-            * `None` (no argument) to only retrieve the coefficient mapping
+            * :const:`False` to set all coefficients to zero
+            * :const:`None` (no argument) to only retrieve the coefficient 
+              mapping
           :returns: the coefficient mapping, which only contains nonzero 
             coefficients
-          :rtype: :class:`collections.abc.Mapping` of :class:`Constraint`
-            to :class:`float`
+          :rtype: :class:`dict` of :class:`Constraint` to :class:`float`
 
         >>> p = MILProgram()
         >>> c = p.add_constraint()
@@ -477,7 +496,7 @@ cdef class Variable(_Varstraint):
 
           :type `name`:
             * :class:`str` to change the name
-            * `None` (no argument) to only retrieve it
+            * :const:`None` (no argument) to only retrieve it
           :returns: the variable name
           :rtype: :class:`str`
 
@@ -511,15 +530,15 @@ cdef class Constraint(_Varstraint):
         """Change or retrieve constraint coefficients (constraint matrix row)
 
           :type `coeffs`:
-            * :class:`collections.abc.Mapping` of :class:`Variable`
-              to :class:`numbers.Real` to change the coefficients of the
+            * :class:`~collections.abc.Mapping` of :class:`Variable`
+              to :class:`~numbers.Real` to change the coefficients of the
               variables in the mapping
-            * `False` to set all coefficients to zero
-            * `None` (no argument) to only retrieve the coefficient mapping
+            * :const:`False` to set all coefficients to zero
+            * :const:`None` (no argument) to only retrieve the coefficient
+              mapping
           :returns: the coefficient mapping, which only contains nonzero
             coefficients
-          :rtype: :class:`collections.abc.Mapping` of :class:`Variable`
-            to :class:`float`
+          :rtype: :class:`dict` of :class:`Variable` to :class:`float`
 
         >>> p = MILProgram()
         >>> x = p.add_variable()
@@ -542,7 +561,7 @@ cdef class Constraint(_Varstraint):
 
           :type `name`:
             * :class:`str` to change the name
-            * `None` (no argument) to only retrieve it
+            * :const:`None` (no argument) to only retrieve it
           :returns: the constraint name
           :rtype: :class:`str`
 
@@ -567,7 +586,7 @@ cdef class Objective(_ProgramComponent):
           :type `direction`:
             * :class:`str`, either `'minimize'` or `'maximize'`, to change the
               direction
-            * `None` (no argument) to only retrieve it
+            * :const:`None` (no argument) to only retrieve it
           :returns: the objective direction
           :rtype: :class:`str`
 
@@ -590,16 +609,16 @@ cdef class Objective(_ProgramComponent):
         """Change or retrieve objective function coefficients
 
           :type `coeffs`:
-            * :class:`collections.abc.Mapping` of :class:`Variable`
-              to :class:`numbers.Real` to change the coefficients of the
+            * :class:`~collections.abc.Mapping` of :class:`Variable`
+              to :class:`~numbers.Real` to change the coefficients of the
               variables in the mapping
-            * `False` to remove the objective,
+            * :const:`False` to remove the objective,
               i.e., set all coefficients to zero
-            * `None` (no argument) to only retrieve the coefficient mapping
-          :returns: the coefficient mapping, which only contains nonzero 
+            * :const:`None` (no argument) to only retrieve the coefficient
+              mapping
+          :returns: the coefficient mapping, which only contains nonzero
             coefficients
-          :rtype: :class:`collections.abc.Mapping` of :class:`Variable`
-            to :class:`float`
+          :rtype: :class:`dict` of :class:`Variable` to :class:`float`
 
         >>> p = MILProgram()
         >>> x = p.add_variable()
@@ -637,8 +656,8 @@ cdef class Objective(_ProgramComponent):
         """ Change or retrieve objective function constant
 
           :type `constant`:
-            * :class:`numbers.Real` to change the constant
-            * `None` (no argument) to only retrieve it
+            * :class:`~numbers.Real` to change the constant
+            * :const:`None` (no argument) to only retrieve it
           :returns: the objective function constant
           :rtype: :class:`float`
 
@@ -662,7 +681,7 @@ cdef class Objective(_ProgramComponent):
 
           :type `name`:
             * :class:`str` to change the name
-            * `None` (no argument) to only retrieve it
+            * :const:`None` (no argument) to only retrieve it
           :returns: the objective function name
           :rtype: :class:`str`
 
