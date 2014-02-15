@@ -130,6 +130,8 @@ cdef class MILProgram:
             * :const:`None` (no argument) to only retrieve it
           :returns: the problem name
           :rtype: :class:`str`
+          :raises TypeError: if name is not a :class:`str`
+          :raises ValueError: if name exceeds 255 bytes encoded in UTF-8
 
         >>> p = MILProgram()
         >>> p.name()
@@ -203,20 +205,25 @@ cdef class MILProgram:
         """Change or retrieve coefficients (constraint matrix)
 
           :type `coeffs`:
-            * :class:`~collections.abc.Mapping` of length-2
+            * :class:`~collections.abc.Mapping` of length-2,
               :class:`~collections.abc.Sequence` containing one
-              :class:`Variable` and one :class:`Constraint` to
-              :class:`~numbers.Real` to change the coefficients
+              :class:`Variable` and one :class:`Constraint`,
+              to :class:`~numbers.Real` to change the coefficients
               of the variables in the mapping
             * :const:`False` to set all coefficients to zero
-
+          :raises TypeError:
+            * if `coeffs` is not :class:`~collections.abc.Mapping`
+            * if a coefficient key component is not a pair of
+              :class:`Variable` and :class:`Constraint`
+            * if a coefficient value is not :class:`~numbers.Real`
+          :raises ValueError: if the coefficient key does not have two 
+            components
 
         >>> p = MILProgram()
         >>> x = p.add_variable()
         >>> y = p.add_variable()
         >>> c = p.add_constraint()
         >>> d = p.add_constraint()
-        >>> p.coeffs({(x, c): 1, (d, y): 3/.5, (x, d): 0})
 
         """
         elements = 0 if coeffs is False else len(coeffs)
@@ -227,10 +234,17 @@ cdef class MILProgram:
             if elements is 0:
                 glpk.load_matrix(self._problem, elements, NULL, NULL, NULL)
             else:
+                if not isinstance(coeffs, collections.abc.Mapping):
+                    raise TypeError("Coefficients must be given using a " +
+                                    "collections.abc.Mapping.")
                 for ind, item in enumerate(coeffs.items(), start=1):
-                    vals[ind] = item[1]
-                    if len(item[0]) != 2:
-                        raise ValueError("Coefficient position must have " +
+                    val = vals[ind] = item[1]
+                    if not isinstance(val, numbers.Real):
+                        raise TypeError("Coefficient values must be " +
+                                        "'numbers.Real' instead of '" +
+                                        type(val).__name__ + "'.")
+                    if len(item[0]) is not 2:
+                        raise ValueError("Coefficient key must have " +
                                          "exactly two components.")
                     elif (isinstance(item[0][0], Variable) and
                         isinstance(item[0][1], Constraint)):
@@ -399,8 +413,15 @@ cdef class _Varstraint(_ProgramComponent):
                 if length is 0:
                     set_function(self._problem, ind, length, NULL, NULL)
                 else:
+                    if not isinstance(coeffs, collections.abc.Mapping):
+                        raise TypeError("Coefficients must be given using a " +
+                                        "collections.abc.Mapping.")
                     for other_ind, item in enumerate(coeffs.items(), start=1):
-                        vals[other_ind] = item[1]
+                        val = vals[other_ind] = item[1]
+                        if not isinstance(val, numbers.Real):
+                            raise TypeError("Coefficient values must be " +
+                                            "'numbers.Real' instead of '" +
+                                            type(val).__name__ + "'.")
                         if not isinstance(item[0], type(self)):
                             inds[other_ind] = self._program._ind(item[0])
                         else:
@@ -474,6 +495,10 @@ cdef class Variable(_Varstraint):
           :returns: the coefficient mapping, which only contains nonzero 
             coefficients
           :rtype: :class:`dict` of :class:`Constraint` to :class:`float`
+          :raises TypeError:
+            * if `coeffs` is not :class:`~collections.abc.Mapping`
+            * if a coefficient key is not :class:`Variable`
+            * if a coefficient value is not :class:`~numbers.Real`
 
         >>> p = MILProgram()
         >>> c = p.add_constraint()
@@ -499,6 +524,8 @@ cdef class Variable(_Varstraint):
             * :const:`None` (no argument) to only retrieve it
           :returns: the variable name
           :rtype: :class:`str`
+          :raises TypeError: if name is not a :class:`str`
+          :raises ValueError: if name exceeds 255 bytes encoded in UTF-8
 
         >>> p = MILProgram()
         >>> x = p.add_variable()
@@ -539,6 +566,10 @@ cdef class Constraint(_Varstraint):
           :returns: the coefficient mapping, which only contains nonzero
             coefficients
           :rtype: :class:`dict` of :class:`Variable` to :class:`float`
+          :raises TypeError:
+            * if `coeffs` is not :class:`~collections.abc.Mapping`
+            * if a coefficient key is not :class:`Variable`
+            * if a coefficient value is not :class:`~numbers.Real`
 
         >>> p = MILProgram()
         >>> x = p.add_variable()
@@ -564,6 +595,8 @@ cdef class Constraint(_Varstraint):
             * :const:`None` (no argument) to only retrieve it
           :returns: the constraint name
           :rtype: :class:`str`
+          :raises TypeError: if name is not a :class:`str`
+          :raises ValueError: if name exceeds 255 bytes encoded in UTF-8
 
         >>> p = MILProgram()
         >>> c = p.add_constraint()
@@ -619,6 +652,10 @@ cdef class Objective(_ProgramComponent):
           :returns: the coefficient mapping, which only contains nonzero
             coefficients
           :rtype: :class:`dict` of :class:`Variable` to :class:`float`
+          :raises TypeError:
+            * if `coeffs` is not :class:`~collections.abc.Mapping`
+            * if a coefficient key is not :class:`Variable`
+            * if a coefficient value is not :class:`~numbers.Real`
 
         >>> p = MILProgram()
         >>> x = p.add_variable()
@@ -637,10 +674,18 @@ cdef class Objective(_ProgramComponent):
             for col in range(1, 1+len(self._program._variables)):
                 coeffs[self._program._variables[col-1]] = 0.0
         if coeffs is not None:
+            if not isinstance(coeffs, collections.abc.Mapping):
+                raise TypeError("Coefficients must be given using a " +
+                                "collections.abc.Mapping.")
             for variable, val in coeffs.items():
                 if isinstance(variable, Variable):
                     col = self._program._ind(variable)
-                    glpk.set_obj_coef(self._problem, col, val)
+                    if isinstance(val, numbers.Real):
+                        glpk.set_obj_coef(self._problem, col, val)
+                    else:
+                        raise TypeError("Coefficient values must be " +
+                                        "'numbers.Real' instead of '" +
+                                        type(val).__name__ + "'.")
                 else:
                     raise TypeError("Coefficient keys must be 'Variable' " +
                                     "instead of '"
@@ -660,6 +705,7 @@ cdef class Objective(_ProgramComponent):
             * :const:`None` (no argument) to only retrieve it
           :returns: the objective function constant
           :rtype: :class:`float`
+          :raises TypeError: if the constant is not :class:`~numbers.Real`
 
         >>> p = MILProgram()
         >>> o = p.objective()
@@ -684,6 +730,8 @@ cdef class Objective(_ProgramComponent):
             * :const:`None` (no argument) to only retrieve it
           :returns: the objective function name
           :rtype: :class:`str`
+          :raises TypeError: if name is not a :class:`str`
+          :raises ValueError: if name exceeds 255 bytes encoded in UTF-8
 
         >>> p = MILProgram()
         >>> o = p.objective()
