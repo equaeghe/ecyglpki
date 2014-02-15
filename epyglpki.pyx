@@ -130,8 +130,8 @@ cdef class MILProgram:
             * :const:`None` (no argument) to only retrieve it
           :returns: the problem name
           :rtype: :class:`str`
-          :raises TypeError: if name is not a :class:`str`
-          :raises ValueError: if name exceeds 255 bytes encoded in UTF-8
+          :raises TypeError: if `name` is not a :class:`str`
+          :raises ValueError: if `name` exceeds 255 bytes encoded in UTF-8
 
         >>> p = MILProgram()
         >>> p.name()
@@ -527,8 +527,8 @@ cdef class Variable(_Varstraint):
             * :const:`None` (no argument) to only retrieve it
           :returns: the variable name
           :rtype: :class:`str`
-          :raises TypeError: if name is not a :class:`str`
-          :raises ValueError: if name exceeds 255 bytes encoded in UTF-8
+          :raises TypeError: if `name` is not a :class:`str`
+          :raises ValueError: if `name` exceeds 255 bytes encoded in UTF-8
 
         >>> p = MILProgram()
         >>> x = p.add_variable()
@@ -598,8 +598,8 @@ cdef class Constraint(_Varstraint):
             * :const:`None` (no argument) to only retrieve it
           :returns: the constraint name
           :rtype: :class:`str`
-          :raises TypeError: if name is not a :class:`str`
-          :raises ValueError: if name exceeds 255 bytes encoded in UTF-8
+          :raises TypeError: if `name` is not a :class:`str`
+          :raises ValueError: if `name` exceeds 255 bytes encoded in UTF-8
 
         >>> p = MILProgram()
         >>> c = p.add_constraint()
@@ -625,6 +625,7 @@ cdef class Objective(_ProgramComponent):
             * :const:`None` (no argument) to only retrieve it
           :returns: the objective direction
           :rtype: :class:`str`
+          :raises ValueError: if `direction` is not 'minimize' or 'maximize'
 
         >>> p = MILProgram()
         >>> o = p.objective()
@@ -708,7 +709,7 @@ cdef class Objective(_ProgramComponent):
             * :const:`None` (no argument) to only retrieve it
           :returns: the objective function constant
           :rtype: :class:`float`
-          :raises TypeError: if the constant is not :class:`~numbers.Real`
+          :raises TypeError: if `constant` is not :class:`~numbers.Real`
 
         >>> p = MILProgram()
         >>> o = p.objective()
@@ -733,8 +734,8 @@ cdef class Objective(_ProgramComponent):
             * :const:`None` (no argument) to only retrieve it
           :returns: the objective function name
           :rtype: :class:`str`
-          :raises TypeError: if name is not a :class:`str`
-          :raises ValueError: if name exceeds 255 bytes encoded in UTF-8
+          :raises TypeError: if `name` is not a :class:`str`
+          :raises ValueError: if `name` exceeds 255 bytes encoded in UTF-8
 
         >>> p = MILProgram()
         >>> o = p.objective()
