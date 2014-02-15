@@ -226,7 +226,13 @@ cdef class MILProgram:
         >>> d = p.add_constraint()
 
         """
-        elements = 0 if coeffs is False else len(coeffs)
+        if coeffs is False:
+            elements = 0
+        elif isinstance(coeffs, collections.abc.Mapping):
+            len(coeffs)
+        else:
+            raise TypeError("Coefficients must be given using a " +
+                            "collections.abc.Mapping.")
         cdef double* vals = <double*>glpk.calloc(1+elements, sizeof(double))
         cdef int* cols = <int*>glpk.calloc(1+elements, sizeof(int))
         cdef int* rows = <int*>glpk.calloc(1+elements, sizeof(int))
@@ -234,9 +240,6 @@ cdef class MILProgram:
             if elements is 0:
                 glpk.load_matrix(self._problem, elements, NULL, NULL, NULL)
             else:
-                if not isinstance(coeffs, collections.abc.Mapping):
-                    raise TypeError("Coefficients must be given using a " +
-                                    "collections.abc.Mapping.")
                 for ind, item in enumerate(coeffs.items(), start=1):
                     val = vals[ind] = item[1]
                     if not isinstance(val, numbers.Real):
@@ -412,10 +415,10 @@ cdef class _Varstraint(_ProgramComponent):
             if coeffs is not None:
                 if length is 0:
                     set_function(self._problem, ind, length, NULL, NULL)
+                elif not isinstance(coeffs, collections.abc.Mapping):
+                    raise TypeError("Coefficients must be given using a " +
+                                    "collections.abc.Mapping.")
                 else:
-                    if not isinstance(coeffs, collections.abc.Mapping):
-                        raise TypeError("Coefficients must be given using a " +
-                                        "collections.abc.Mapping.")
                     for other_ind, item in enumerate(coeffs.items(), start=1):
                         val = vals[other_ind] = item[1]
                         if not isinstance(val, numbers.Real):
