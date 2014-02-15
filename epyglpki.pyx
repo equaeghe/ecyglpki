@@ -209,8 +209,8 @@ cdef class MILProgram:
         """Change or retrieve coefficients (constraint matrix)
 
           :type `coeffs`:
-            * :class:`~collections.abc.Mapping` of length-2,
-              :class:`~collections.abc.Sequence` containing one
+            * :class:`~collections.abc.Mapping` of length-2
+              :class:`~collections.abc.Sequence`, containing one
               :class:`Variable` and one :class:`Constraint`,
               to :class:`~numbers.Real` to change the coefficients
               of the variables in the mapping
