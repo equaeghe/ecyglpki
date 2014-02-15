@@ -47,23 +47,27 @@ cdef name2chars(name):
 
 
 cdef class MILProgram:
+    """Main problem object
+
+    >>> p = MILProgram()
+    >>> p
+    <epyglpki.MILProgram object at ...>
+
+    """
 
     cdef glpk.ProbObj* _problem
-
-    def __cinit__(self):
-        self._problem = glpk.create_prob()
-
-    def _problem_ptr(self):
-        return PyCapsule_New(self._problem, NULL, NULL)
-
     cdef int _unique_ids
     cdef object _variables
     cdef object _constraints
 
-    def __init__(self):
+    def __cinit__(self):
+        self._problem = glpk.create_prob()
         self._unique_ids = 0
         self._variables = []
         self._constraints = []
+
+    def _problem_ptr(self):
+        return PyCapsule_New(self._problem, NULL, NULL)
 
     @classmethod
     def read(cls, fname, format='GLPK', mpsfmt='free'):
@@ -353,7 +357,7 @@ cdef class _Varstraint(_ProgramComponent):
 
     cdef int _unique_id
 
-    def __init__(self, program):
+    def __cinit__(self, program):
         self._unique_id = self._program._generate_unique_id()
 
     def __hash__(self):
@@ -468,10 +472,10 @@ cdef class _Varstraint(_ProgramComponent):
 
 
 cdef class Variable(_Varstraint):
+    """One of the problem's variables"""
 
-    def __init__(self, program):
+    def __cinit__(self, program):
         glpk.add_cols(self._problem, 1)
-        super().__init__(program)
 
     def zombify(self):
         self._zombify(glpk.del_cols)
@@ -554,10 +558,10 @@ cdef class Variable(_Varstraint):
 
 
 cdef class Constraint(_Varstraint):
+    """One of the problem's constraints"""
 
-    def __init__(self, program):
+    def __cinit__(self, program):
         glpk.add_rows(self._problem, 1)
-        super().__init__(program)
 
     def zombify(self):
         self._zombify(glpk.del_rows)
@@ -625,6 +629,7 @@ cdef class Constraint(_Varstraint):
 
 
 cdef class Objective(_ProgramComponent):
+    """The problem's objective function"""
 
     def direction(self, direction=None):
         """Change or retrieve objective direction

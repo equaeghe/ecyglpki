@@ -66,6 +66,7 @@ cdef class _LPSolver(_Solver):
 
 
 cdef class SimplexSolver(_LPSolver):
+    """The problem's simplex solver"""
 
     cdef glpk.SimplexCP _smcp
     cdef glpk.BasFacCP _bfcp
@@ -303,6 +304,7 @@ cdef class SimplexSolver(_LPSolver):
 
 
 cdef class IPointSolver(_LPSolver):
+    """The problem's interior point solver"""
 
     cdef glpk.IPointCP _iptcp
 
@@ -360,6 +362,7 @@ cdef class IPointSolver(_LPSolver):
 
 
 cdef class IntOptSolver(_Solver):
+    """The problem's integer optimization solver"""
 
     cdef glpk.IntOptCP _iocp
 
