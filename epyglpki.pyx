@@ -224,12 +224,19 @@ cdef class MILProgram:
         >>> y = p.add_variable()
         >>> c = p.add_constraint()
         >>> d = p.add_constraint()
+        >>> p.coeffs({(x, c): 3, (d, y): 5.5, (x, d): 0})
+        >>> x.coeffs()[c] == c.coeffs()[x] == 3
+        True
+        >>> y.coeffs()[d] == d.coeffs()[y] == 5.5
+        True
+        >>> len(x.coeffs()) == len(d.coeffs()) == 1
+        True
 
         """
         if coeffs is False:
             elements = 0
         elif isinstance(coeffs, collections.abc.Mapping):
-            len(coeffs)
+            elements = len(coeffs)
         else:
             raise TypeError("Coefficients must be given using a " +
                             "collections.abc.Mapping.")
@@ -240,12 +247,15 @@ cdef class MILProgram:
             if elements is 0:
                 glpk.load_matrix(self._problem, elements, NULL, NULL, NULL)
             else:
+                nz_elements = elements
                 for ind, item in enumerate(coeffs.items(), start=1):
                     val = vals[ind] = item[1]
                     if not isinstance(val, numbers.Real):
                         raise TypeError("Coefficient values must be " +
                                         "'numbers.Real' instead of '" +
                                         type(val).__name__ + "'.")
+                    elif val == 0.0:
+                        nz_elements -= 1
                     if len(item[0]) is not 2:
                         raise ValueError("Coefficient key must have " +
                                          "exactly two components.")
@@ -262,7 +272,7 @@ cdef class MILProgram:
                                         "must be one Variable and one " +
                                         "Constraint.")
                 glpk.load_matrix(self._problem, elements, rows, cols, vals)
-                assert elements is glpk.get_num_nz(self._problem)
+                assert nz_elements is glpk.get_num_nz(self._problem)
         finally:
             glpk.free(vals)
             glpk.free(cols)
