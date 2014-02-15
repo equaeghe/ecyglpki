@@ -407,17 +407,17 @@ cdef class _Varstraint(_ProgramComponent):
             length = get_function(self._problem, ind, NULL, NULL)
         elif coeffs is False:
             length = 0
-        else:
+        elif isinstance(coeffs, collections.abc.Mapping):
             length = len(coeffs)
+        else:
+            raise TypeError("Coefficients must be given using a " +
+                            "collections.abc.Mapping.")
         cdef double* vals =  <double*>glpk.calloc(1+length, sizeof(double))
         cdef int* inds =  <int*>glpk.calloc(1+length, sizeof(int))
         try:
             if coeffs is not None:
                 if length is 0:
                     set_function(self._problem, ind, length, NULL, NULL)
-                elif not isinstance(coeffs, collections.abc.Mapping):
-                    raise TypeError("Coefficients must be given using a " +
-                                    "collections.abc.Mapping.")
                 else:
                     for other_ind, item in enumerate(coeffs.items(), start=1):
                         val = vals[other_ind] = item[1]
