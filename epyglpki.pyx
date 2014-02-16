@@ -184,8 +184,8 @@ cdef class MILProgram:
         self._variables.append(variable)
         assert len(self._variables) is glpk.get_num_cols(self._problem)
         variable.coeffs(coeffs)
-        variable.bounds(lower_bound, upper_bound)
         variable.kind(kind)
+        variable.bounds(lower_bound, upper_bound)
         variable.name(name)
         return variable
 
@@ -490,6 +490,38 @@ cdef class Variable(_Varstraint):
                             glpk.set_col_bnds, lower, upper)
 
     def kind(self, kind=None):
+        """Change or retrieve variable kind
+
+          :type `kind`:
+            * :class:`str`, either :data:`'continuous'`, :data:`'integer'`,
+              or :data:`'binary'`, to change the kind
+            * :const:`None` (no argument) to only retrieve it
+          :returns: the variable kind
+          :rtype: :class:`str`
+          :raises ValueError: if `kind` is not :data:`'continuous'`,
+            :data:`'integer'`, or :data:`'binary'`
+
+        >>> p = MILProgram()
+        >>> x = p.add_variable()
+        >>> x.kind()
+        'continuous'
+        >>> x.kind('integer')
+        'integer'
+
+        .. note::
+
+          A variable has :data:`'binary'` kind if and only if it is an integer
+          variable with lower bound 0 and upper bound 1:
+
+          >>> p = MILProgram()
+          >>> x = p.add_variable(kind='integer', lower_bound=0, upper_bound=1)
+          >>> x.kind()
+          'binary'
+          >>> y = p.add_variable(kind='binary', lower_bound=-1)
+          >>> y.kind()
+          'integer'
+
+        """
         col = self._program._ind(self)
         if kind is not None:
             if kind in str2varkind:
