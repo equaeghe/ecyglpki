@@ -668,12 +668,11 @@ cdef class Objective(_ProgramComponent):
 
           :type `direction`:
             * :class:`str`, either :data:`'minimize'` or :data:`'maximize'`,
-              to change the
-              direction
+              to change the direction
             * :const:`None` (no argument) to only retrieve it
           :returns: the objective direction
           :rtype: :class:`str`
-          :raises ValueError: if `direction` is not :data:`'minimize'` or 
+          :raises ValueError: if `direction` is not :data:`'minimize'` or
             :data:`'maximize'`
 
         >>> p = MILProgram()
