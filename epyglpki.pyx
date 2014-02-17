@@ -49,9 +49,11 @@ cdef name2chars(name):
 cdef class MILProgram:
     """Main problem object
 
-    >>> p = MILProgram()
-    >>> p
-    <epyglpki.MILProgram object at ...>
+    .. doctest:: MILProgram
+
+        >>> p = MILProgram()
+        >>> p
+        <epyglpki.MILProgram object at ...>
 
     """
 
@@ -129,23 +131,24 @@ cdef class MILProgram:
     def name(self, name=None):
         """Change or retrieve problem name
 
-          :type `name`:
-            * :class:`str` to change the name
-            * :const:`None` (no argument) to only retrieve it
-          :returns: the problem name
-          :rtype: :class:`str`
-          :raises TypeError: if `name` is not a :class:`str`
-          :raises ValueError: if `name` exceeds 255 bytes encoded in UTF-8
+        :param name: the new problem name (omit for retrieval only)
+        :type name: :class:`str`
+        :returns: the problem name
+        :rtype: :class:`str`
+        :raises TypeError: if `name` is not a :class:`str`
+        :raises ValueError: if `name` exceeds 255 bytes encoded in UTF-8
 
-        >>> p = MILProgram()
-        >>> p.name()
-        ''
-        >>> p.name('Programme Linéaire')
-        'Programme Linéaire'
-        >>> p.name()
-        'Programme Linéaire'
-        >>> p.name('')
-        ''
+        .. doctest:: MILProgram.name
+
+            >>> p = MILProgram()
+            >>> p.name()
+            ''
+            >>> p.name('Programme Linéaire')
+            'Programme Linéaire'
+            >>> p.name()
+            'Programme Linéaire'
+            >>> p.name('')
+            ''
 
         """
         cdef char* chars
@@ -178,28 +181,28 @@ cdef class MILProgram:
         else:
             raise TypeError("No index available for this object type.")
 
-    def add_variable(self, coeffs=False, lower_bound=False, upper_bound=False,
-                     kind='continuous', name=None):
+    def add_variable(self, coeffs={}, lower_bound=False, upper_bound=False,
+                     kind='continuous', name=''):
         variable = Variable(self)
         self._variables.append(variable)
         assert len(self._variables) is glpk.get_num_cols(self._problem)
-        variable.coeffs(coeffs)
+        variable.coeffs(None if not coeffs else coeffs)
         variable.kind(kind)
         variable.bounds(lower_bound, upper_bound)
-        variable.name(name)
+        variable.name(None if not name else name)
         return variable
 
     def variables(self):
         return self._variables
 
-    def add_constraint(self, coeffs=False,
-                       lower_bound=False, upper_bound=False, name=None):
+    def add_constraint(self, coeffs={}, lower_bound=False, upper_bound=False,
+                       name=''):
         constraint = Constraint(self)
         self._constraints.append(constraint)
         assert len(self._constraints) is glpk.get_num_rows(self._problem)
-        constraint.coeffs(coeffs)
+        constraint.coeffs(None if not coeffs else coeffs)
         constraint.bounds(lower_bound, upper_bound)
-        constraint.name(name)
+        constraint.name(None if not name else name)
         return constraint
 
     def constraints(self):
@@ -208,38 +211,36 @@ cdef class MILProgram:
     def coeffs(self, coeffs):
         """Change or retrieve coefficients (constraint matrix)
 
-          :type `coeffs`:
-            * :class:`~collections.abc.Mapping` of length-2
-              :class:`~collections.abc.Sequence`, containing one
-              :class:`Variable` and one :class:`Constraint`,
-              to :class:`~numbers.Real` to change the coefficients
-              of the variables in the mapping
-            * :const:`False` to set all coefficients to zero
-          :raises TypeError:
-            * if `coeffs` is not :class:`~collections.abc.Mapping`
-            * if a coefficient key component is not a pair of
+        :param coeffs: the mapping with coefficients to change
+            (`{}` to set all coefficients to `0`)
+        :type coeffs: :class:`~collections.abc.Mapping` of length-2
+            :class:`~collections.abc.Sequence`, containing one
+            :class:`Variable` and one :class:`Constraint`, to
+            :class:`~numbers.Real`
+        :raises TypeError: if `coeffs` is not :class:`~collections.abc.Mapping`
+        :raises TypeError: if a coefficient key component is not a pair of
               :class:`Variable` and :class:`Constraint`
-            * if a coefficient value is not :class:`~numbers.Real`
-          :raises ValueError: if the coefficient key does not have two 
-            components
+        :raises TypeError: if a coefficient value is not :class:`~numbers.Real`
+        :raises ValueError: if the coefficient key does not have two 
+              components
 
-        >>> p = MILProgram()
-        >>> x = p.add_variable()
-        >>> y = p.add_variable()
-        >>> c = p.add_constraint()
-        >>> d = p.add_constraint()
-        >>> p.coeffs({(x, c): 3, (d, y): 5.5, (x, d): 0})
-        >>> x.coeffs()[c] == c.coeffs()[x] == 3
-        True
-        >>> y.coeffs()[d] == d.coeffs()[y] == 5.5
-        True
-        >>> len(x.coeffs()) == len(d.coeffs()) == 1
-        True
+        .. doctest:: MILProgram.coeffs
+
+            >>> p = MILProgram()
+            >>> x = p.add_variable()
+            >>> y = p.add_variable()
+            >>> c = p.add_constraint()
+            >>> d = p.add_constraint()
+            >>> p.coeffs({(x, c): 3, (d, y): 5.5, (x, d): 0})
+            >>> x.coeffs()[c] == c.coeffs()[x] == 3
+            True
+            >>> y.coeffs()[d] == d.coeffs()[y] == 5.5
+            True
+            >>> len(x.coeffs()) == len(d.coeffs()) == 1
+            True
 
         """
-        if coeffs is False:
-            elements = 0
-        elif isinstance(coeffs, collections.abc.Mapping):
+        if isinstance(coeffs, collections.abc.Mapping):
             elements = len(coeffs)
         else:
             raise TypeError("Coefficients must be given using a " +
@@ -285,9 +286,9 @@ cdef class MILProgram:
     def scaling(self, scaling=None):
         if scaling is False:
             glpk.unscale_prob(self._problem)
-            scaling = dict()
+            scaling = {}
         elif scaling is None:
-            scaling = dict()
+            scaling = {}
         elif isinstance(scaling, collections.abc.Mapping):
             for varstraint, factor in scaling.items():
                 if not isinstance(factor, numbers.Real):
@@ -317,8 +318,8 @@ cdef class MILProgram:
                 scaling[constraint] = factor
         return scaling
 
-    def objective(self, coeffs=False, constant=0, direction='minimize',
-                  name=None):
+    def objective(self, coeffs={}, constant=0, direction='minimize',
+                  name=''):
         objective = Objective(self)
         objective.coeffs(coeffs)
         objective.constant(constant)
@@ -419,8 +420,6 @@ cdef class _Varstraint(_ProgramComponent):
         ind = self._program._ind(self)
         if coeffs is None:
             length = get_function(self._problem, ind, NULL, NULL)
-        elif coeffs is False:
-            length = 0
         elif isinstance(coeffs, collections.abc.Mapping):
             length = len(coeffs)
         else:
@@ -447,7 +446,7 @@ cdef class _Varstraint(_ProgramComponent):
                                             type(item[0]).__name__ +"'.")
                     set_function(self._problem, ind, length, inds, vals)
             length = get_function(self._problem, ind, inds, vals)
-            coeffs = dict()
+            coeffs = {}
             for other_ind in range(1, 1+length):
                 coeffs[varstraints[inds[other_ind]-1]] = vals[other_ind]
         finally:
@@ -481,6 +480,7 @@ cdef class Variable(_Varstraint):
         self._zombify(glpk.del_cols)
 
     def bounds(self, lower=None, upper=None):
+        """Change or retrieve variable bounds"""
         if self.kind() in {'integer', 'binary'}:
             if any((bound not in {False, None}) and
                    not isinstance(bound, numbers.Integral)
@@ -492,34 +492,40 @@ cdef class Variable(_Varstraint):
     def kind(self, kind=None):
         """Change or retrieve variable kind
 
-          :type `kind`:
-            * :class:`str`, either :data:`'continuous'`, :data:`'integer'`,
-              or :data:`'binary'`, to change the kind
-            * :const:`None` (no argument) to only retrieve it
-          :returns: the variable kind
-          :rtype: :class:`str`
-          :raises ValueError: if `kind` is not :data:`'continuous'`,
+        :param kind: the new variable kind (omit for retrieval only)
+        :type kind: :class:`str`,
+            either :data:`'continuous'`, :data:`'integer'`, or :data:`'binary'`
+        :returns: the variable kind
+        :rtype: :class:`str`
+        :raises ValueError: if `kind` is not :data:`'continuous'`,
             :data:`'integer'`, or :data:`'binary'`
 
-        >>> p = MILProgram()
-        >>> x = p.add_variable()
-        >>> x.kind()
-        'continuous'
-        >>> x.kind('integer')
-        'integer'
+        .. doctest:: Variable.kind
+
+            >>> p = MILProgram()
+            >>> x = p.add_variable()
+            >>> x.kind()
+            'continuous'
+            >>> x.kind('integer')
+            'integer'
 
         .. note::
 
-          A variable has :data:`'binary'` kind if and only if it is an integer
-          variable with lower bound 0 and upper bound 1:
+            A variable has :data:`'binary'` kind if and only if it is an
+            integer variable with lower bound zero and upper bound one:
 
-          >>> p = MILProgram()
-          >>> x = p.add_variable(kind='integer', lower_bound=0, upper_bound=1)
-          >>> x.kind()
-          'binary'
-          >>> y = p.add_variable(kind='binary', lower_bound=-1)
-          >>> y.kind()
-          'integer'
+            .. doctest:: Variable.kind
+
+                >>> x.kind()
+                'integer'
+                >>> x.bounds(lower=0, upper=1)
+                (0.0, 1.0)
+                >>> x.kind()
+                'binary'
+                >>> x.bounds(upper=3)
+                (0.0, 3.0)
+                >>> x.kind()
+                'integer'
 
         """
         col = self._program._ind(self)
@@ -534,31 +540,29 @@ cdef class Variable(_Varstraint):
     def coeffs(self, coeffs=None):
         """Change or retrieve variable coefficients (constraint matrix column)
 
-          :type `coeffs`:
-            * :class:`~collections.abc.Mapping` of :class:`Constraint`
-              to :class:`~numbers.Real` to change the coefficients of the
-              variables in the mapping
-            * :const:`False` to set all coefficients to zero
-            * :const:`None` (no argument) to only retrieve the coefficient 
-              mapping
-          :returns: the coefficient mapping, which only contains nonzero 
+        :param coeffs: the mapping with coefficients to change
+            (`{}` to set all coefficients to `0` ; omit for retrieval only)
+        :type coeffs: :class:`~collections.abc.Mapping` of
+            :class:`Constraint` to :class:`~numbers.Real`
+        :returns: the coefficient mapping, which only contains nonzero
             coefficients
-          :rtype: :class:`dict` of :class:`Constraint` to :class:`float`
-          :raises TypeError:
-            * if `coeffs` is not :class:`~collections.abc.Mapping`
-            * if a coefficient key is not :class:`Variable`
-            * if a coefficient value is not :class:`~numbers.Real`
+        :rtype: :class:`dict` of :class:`Constraint` to :class:`float`
+        :raises TypeError: if `coeffs` is not :class:`~collections.abc.Mapping`
+        :raises TypeError: if a coefficient key is not :class:`Variable`
+        :raises TypeError: if a coefficient value is not :class:`~numbers.Real`
 
-        >>> p = MILProgram()
-        >>> c = p.add_constraint()
-        >>> d = p.add_constraint()
-        >>> x = p.add_variable()
-        >>> x.coeffs()
-        {}
-        >>> x.coeffs({c: 10/9, d: 0})
-        {<epyglpki.Constraint object at ...>: 1.1111...}
-        >>> x.coeffs(False)
-        {}
+        .. doctest:: Variable.coeffs
+
+            >>> p = MILProgram()
+            >>> c = p.add_constraint()
+            >>> d = p.add_constraint()
+            >>> x = p.add_variable()
+            >>> x.coeffs()
+            {}
+            >>> x.coeffs({c: 10/9, d: 0})
+            {<epyglpki.Constraint object at ...>: 1.1111...}
+            >>> x.coeffs({})
+            {}
 
         """
         return self._coeffs(glpk.get_mat_col, glpk.set_mat_col,
@@ -568,22 +572,23 @@ cdef class Variable(_Varstraint):
     def name(self, name=None):
         """Change or retrieve variable name
 
-          :type `name`:
-            * :class:`str` to change the name
-            * :const:`None` (no argument) to only retrieve it
-          :returns: the variable name
-          :rtype: :class:`str`
-          :raises TypeError: if `name` is not a :class:`str`
-          :raises ValueError: if `name` exceeds 255 bytes encoded in UTF-8
+        :param name: the new variable name (omit for retrieval only)
+        :type name: :class:`str`
+        :returns: the variable name
+        :rtype: :class:`str`
+        :raises TypeError: if `name` is not a :class:`str`
+        :raises ValueError: if `name` exceeds 255 bytes encoded in UTF-8
 
-        >>> p = MILProgram()
-        >>> x = p.add_variable()
-        >>> x.name()
-        ''
-        >>> x.name('Stake')
-        'Stake'
-        >>> x.name()
-        'Stake'
+        .. doctest:: Variable.name
+
+            >>> p = MILProgram()
+            >>> x = p.add_variable()
+            >>> x.name()
+            ''
+            >>> x.name('Stake')
+            'Stake'
+            >>> x.name()
+            'Stake'
 
         """
         return self._name(glpk.get_col_name, glpk.set_col_name, name)
@@ -599,37 +604,36 @@ cdef class Constraint(_Varstraint):
         self._zombify(glpk.del_rows)
 
     def bounds(self, lower=None, upper=None):
+        """Change or retrieve constraint bounds"""
         return self._bounds(glpk.get_row_lb, glpk.get_row_ub,
                             glpk.set_row_bnds, lower, upper)
 
     def coeffs(self, coeffs=None):
         """Change or retrieve constraint coefficients (constraint matrix row)
 
-          :type `coeffs`:
-            * :class:`~collections.abc.Mapping` of :class:`Variable`
-              to :class:`~numbers.Real` to change the coefficients of the
-              variables in the mapping
-            * :const:`False` to set all coefficients to zero
-            * :const:`None` (no argument) to only retrieve the coefficient
-              mapping
-          :returns: the coefficient mapping, which only contains nonzero
+        :param coeffs: the mapping with coefficients to change
+            (`{}` to set all coefficients to `0` ; omit for retrieval only)
+        :type coeffs: :class:`~collections.abc.Mapping` of
+            :class:`Variable` to :class:`~numbers.Real`
+        :returns: the coefficient mapping, which only contains nonzero
             coefficients
-          :rtype: :class:`dict` of :class:`Variable` to :class:`float`
-          :raises TypeError:
-            * if `coeffs` is not :class:`~collections.abc.Mapping`
-            * if a coefficient key is not :class:`Variable`
-            * if a coefficient value is not :class:`~numbers.Real`
+        :rtype: :class:`dict` of :class:`Variable` to :class:`float`
+        :raises TypeError: if `coeffs` is not :class:`~collections.abc.Mapping`
+        :raises TypeError: if a coefficient key is not :class:`Variable`
+        :raises TypeError: if a coefficient value is not :class:`~numbers.Real`
 
-        >>> p = MILProgram()
-        >>> x = p.add_variable()
-        >>> y = p.add_variable()
-        >>> c = p.add_constraint()
-        >>> c.coeffs()
-        {}
-        >>> c.coeffs({x: .5, y: 0})
-        {<epyglpki.Variable object at ...>: 0.5}
-        >>> c.coeffs(False)
-        {}
+        .. doctest:: Constraint.coeffs
+
+            >>> p = MILProgram()
+            >>> x = p.add_variable()
+            >>> y = p.add_variable()
+            >>> c = p.add_constraint()
+            >>> c.coeffs()
+            {}
+            >>> c.coeffs({x: .5, y: 0})
+            {<epyglpki.Variable object at ...>: 0.5}
+            >>> c.coeffs({})
+            {}
 
         """
         return self._coeffs(glpk.get_mat_row, glpk.set_mat_row,
@@ -639,22 +643,23 @@ cdef class Constraint(_Varstraint):
     def name(self, name=None):
         """Change or retrieve constraint name
 
-          :type `name`:
-            * :class:`str` to change the name
-            * :const:`None` (no argument) to only retrieve it
-          :returns: the constraint name
-          :rtype: :class:`str`
-          :raises TypeError: if `name` is not a :class:`str`
-          :raises ValueError: if `name` exceeds 255 bytes encoded in UTF-8
+        :param name: the new constraint name (omit for retrieval only)
+        :type name: :class:`str`
+        :returns: the constraint name
+        :rtype: :class:`str`
+        :raises TypeError: if `name` is not a :class:`str`
+        :raises ValueError: if `name` exceeds 255 bytes encoded in UTF-8
 
-        >>> p = MILProgram()
-        >>> c = p.add_constraint()
-        >>> c.name()
-        ''
-        >>> c.name('Budget')
-        'Budget'
-        >>> c.name()
-        'Budget'
+        .. doctest:: Constraint.coeffs
+
+            >>> p = MILProgram()
+            >>> c = p.add_constraint()
+            >>> c.name()
+            ''
+            >>> c.name('Budget')
+            'Budget'
+            >>> c.name()
+            'Budget'
 
         """
         return self._name(glpk.get_row_name, glpk.set_row_name, name)
@@ -666,21 +671,23 @@ cdef class Objective(_ProgramComponent):
     def direction(self, direction=None):
         """Change or retrieve objective direction
 
-          :type `direction`:
-            * :class:`str`, either :data:`'minimize'` or :data:`'maximize'`,
-              to change the direction
-            * :const:`None` (no argument) to only retrieve it
-          :returns: the objective direction
-          :rtype: :class:`str`
-          :raises ValueError: if `direction` is not :data:`'minimize'` or
+        :param direction: the new objective direction
+            (omit for retrieval only)
+        :type direction: :class:`str`,
+            either :data:`'minimize'` or :data:`'maximize'`
+        :returns: the objective direction
+        :rtype: :class:`str`
+        :raises ValueError: if `direction` is not :data:`'minimize'` or
             :data:`'maximize'`
 
-        >>> p = MILProgram()
-        >>> o = p.objective()
-        >>> o.direction()
-        'minimize'
-        >>> o.direction('maximize')
-        'maximize'
+        .. doctest:: Objective.direction
+
+            >>> p = MILProgram()
+            >>> o = p.objective()
+            >>> o.direction()
+            'minimize'
+            >>> o.direction('maximize')
+            'maximize'
 
         """
         if direction is not None:
@@ -693,44 +700,44 @@ cdef class Objective(_ProgramComponent):
     def coeffs(self, coeffs=None):
         """Change or retrieve objective function coefficients
 
-          :type `coeffs`:
-            * :class:`~collections.abc.Mapping` of :class:`Variable`
-              to :class:`~numbers.Real` to change the coefficients of the
-              variables in the mapping
-            * :const:`False` to remove the objective,
-              i.e., set all coefficients to zero
-            * :const:`None` (no argument) to only retrieve the coefficient
-              mapping
-          :returns: the coefficient mapping, which only contains nonzero
+        :param coeffs: the mapping with coefficients to change
+            (`{}` to set all coefficients to `0` ; omit for retrieval only)
+        :type coeffs: :class:`~collections.abc.Mapping` of
+            :class:`Variable` to :class:`~numbers.Real`
+        :returns: the coefficient mapping, which only contains nonzero
             coefficients
-          :rtype: :class:`dict` of :class:`Variable` to :class:`float`
-          :raises TypeError:
-            * if `coeffs` is not :class:`~collections.abc.Mapping`
-            * if a coefficient key is not :class:`Variable`
-            * if a coefficient value is not :class:`~numbers.Real`
+        :rtype: :class:`dict` of :class:`Variable` to :class:`float`
+        :raises TypeError: if `coeffs` is not :class:`~collections.abc.Mapping`
+        :raises TypeError: if a coefficient key is not :class:`Variable`
+        :raises TypeError: if a coefficient value is not :class:`~numbers.Real`
 
-        >>> p = MILProgram()
-        >>> x = p.add_variable()
-        >>> y = p.add_variable()
-        >>> o = p.objective()
-        >>> o.coeffs()
-        {}
-        >>> o.coeffs({x: 3, y: 0})
-        {<epyglpki.Variable object at ...>: 3.0}
-        >>> o.coeffs(False)
-        {}
+        .. doctest:: Objective.coeffs
+
+            >>> p = MILProgram()
+            >>> x = p.add_variable()
+            >>> y = p.add_variable()
+            >>> o = p.objective()
+            >>> o.coeffs()
+            {}
+            >>> o.coeffs({x: 3, y: 0})
+            {<epyglpki.Variable object at ...>: 3.0}
+            >>> o.coeffs({})
+            {}
 
         """
-        if coeffs is False:
-            coeffs = dict()
-            for col in range(1, 1+len(self._program._variables)):
-                coeffs[self._program._variables[col-1]] = 0.0
         if coeffs is not None:
             if not isinstance(coeffs, collections.abc.Mapping):
                 raise TypeError("Coefficients must be given using a " +
                                 "collections.abc.Mapping.")
+            elif not coeffs:
+                for variable in self._program._variables:
+                    coeffs[variable] = 0.0
             for variable, val in coeffs.items():
-                if isinstance(variable, Variable):
+                if not isinstance(variable, Variable):
+                    raise TypeError("Coefficient keys must be 'Variable' " +
+                                    "instead of '"
+                                    + type(variable).__name__ + "'.")
+                else:
                     col = self._program._ind(variable)
                     if isinstance(val, numbers.Real):
                         glpk.set_obj_coef(self._problem, col, val)
@@ -738,33 +745,31 @@ cdef class Objective(_ProgramComponent):
                         raise TypeError("Coefficient values must be " +
                                         "'numbers.Real' instead of '" +
                                         type(val).__name__ + "'.")
-                else:
-                    raise TypeError("Coefficient keys must be 'Variable' " +
-                                    "instead of '"
-                                    + type(variable).__name__ + "'.")
-        coeffs = dict()
-        for col in range(1, 1+len(self._program._variables)):
+        coeffs = {}
+        for col, variable in enumerate(self._program._variables, start=1):
             val = glpk.get_obj_coef(self._problem, col)
             if val != 0.0:
-                coeffs[self._program._variables[col-1]] = val
+                coeffs[variable] = val
         return coeffs
 
     def constant(self, constant=None):
         """ Change or retrieve objective function constant
 
-          :type `constant`:
-            * :class:`~numbers.Real` to change the constant
-            * :const:`None` (no argument) to only retrieve it
-          :returns: the objective function constant
-          :rtype: :class:`float`
-          :raises TypeError: if `constant` is not :class:`~numbers.Real`
+        :param constant: the new objective function constant
+            (omit for retrieval only)
+        :type constant: :class:`~numbers.Real`
+        :returns: the objective function constant
+        :rtype: :class:`float`
+        :raises TypeError: if `constant` is not :class:`~numbers.Real`
 
-        >>> p = MILProgram()
-        >>> o = p.objective()
-        >>> o.constant()
-        0.0
-        >>> o.constant(3)
-        3.0
+        .. doctest:: Objective.constant
+
+            >>> p = MILProgram()
+            >>> o = p.objective()
+            >>> o.constant()
+            0.0
+            >>> o.constant(3)
+            3.0
 
         """
         if constant is not None:
@@ -777,22 +782,24 @@ cdef class Objective(_ProgramComponent):
     def name(self, name=None):
         """Change or retrieve objective function name
 
-          :type `name`:
-            * :class:`str` to change the name
-            * :const:`None` (no argument) to only retrieve it
-          :returns: the objective function name
-          :rtype: :class:`str`
-          :raises TypeError: if `name` is not a :class:`str`
-          :raises ValueError: if `name` exceeds 255 bytes encoded in UTF-8
+        :param name: the new objective function name
+            (omit for retrieval only)
+        :type name: :class:`str`
+        :returns: the objective function name
+        :rtype: :class:`str`
+        :raises TypeError: if `name` is not a :class:`str`
+        :raises ValueError: if `name` exceeds 255 bytes encoded in UTF-8
 
-        >>> p = MILProgram()
-        >>> o = p.objective()
-        >>> o.name()
-        ''
-        >>> o.name('σκοπός')
-        'σκοπός'
-        >>> o.name()
-        'σκοπός'
+        .. doctest:: Objective.name
+
+            >>> p = MILProgram()
+            >>> o = p.objective()
+            >>> o.name()
+            ''
+            >>> o.name('σκοπός')
+            'σκοπός'
+            >>> o.name()
+            'σκοπός'
 
         """
         cdef char* chars

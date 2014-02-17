@@ -97,7 +97,7 @@ autodoc_member_order = 'bygroup'
 autodoc_default_flags = ['members', 'undoc-members']
 todo_include_todos = True
 
-def remove_self(app, what, name, obj, options, signature, return_annotation):
+def fix_sig(app, what, name, obj, options, signature, return_annotation):
     if what is 'method':
         # standard methods
         signature = signature.replace('(self, ', '(', 1)
@@ -105,10 +105,12 @@ def remove_self(app, what, name, obj, options, signature, return_annotation):
         # class methods
         signature = signature.replace('(type cls, ', '(', 1)
         signature = signature.replace('(type cls)', '()', 1)
+        # all methods
+        signature = signature.replace('=None', '')
     return (signature, return_annotation)
 
 def setup(app):
-    app.connect('autodoc-process-signature', remove_self)
+    app.connect('autodoc-process-signature', fix_sig)
 
 
 # -- Options for HTML output ---------------------------------------------------

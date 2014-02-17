@@ -1,8 +1,8 @@
 .. module:: epyglpki
 
-.. testsetup::
+.. testsetup:: *
 
-    from epyglpki import *
+    from epyglpki import MILProgram
 
 Problems
 ========
