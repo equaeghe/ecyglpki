@@ -616,12 +616,32 @@ cdef class Variable(_Varstraint):
         self._zombify(glpk.del_cols)
 
     def bounds(self, lower=None, upper=None):
-        """Change or retrieve variable bounds"""
-        if self.kind() in {'integer', 'binary'}:
-            if any((bound not in {False, None}) and
-                   not isinstance(bound, numbers.Integral)
-                   for bound in (lower, upper)):
-                raise TypeError("Integer variable must have integer bounds.")
+        """Change or retrieve variable bounds
+
+        :param lower: the variable's lower bound
+            (:const:`False` to remove bound; omit for retrieval only)
+        :type lower: :class:`~numbers.Real` or :const:`False`
+        :param upper: the variable's upper bound
+            (:const:`False` to remove bound; omit for retrieval only)
+        :type upper: :class:`~numbers.Real` or :const:`False`
+        :returns: the variable's bounds
+        :rtype: length-2 :class:`tuple` of :class:`float` (or :const:`False`)
+        :raises TypeError: if `lower` or `upper` is not
+            :class:`~numbers.Real` or :const:`False`
+        :raises ValueError: if `lower` is larger than `upper`
+
+        .. doctest:: Variable.bounds
+
+            >>> p = MILProgram()
+            >>> x = p.add_variable()
+            >>> x.bounds()
+            (False, False)
+            >>> x.bounds(lower=0, upper=5.5)
+            (0.0, 5.5)
+            >>> x.bounds(upper=False)
+            (0.0, False)
+
+        """
         return self._bounds(glpk.get_col_lb, glpk.get_col_ub,
                             glpk.set_col_bnds, lower, upper)
 
@@ -744,7 +764,32 @@ cdef class Constraint(_Varstraint):
         self._zombify(glpk.del_rows)
 
     def bounds(self, lower=None, upper=None):
-        """Change or retrieve constraint bounds"""
+        """Change or retrieve constraint bounds
+
+        :param lower: the constraint's lower bound
+            (:const:`False` to remove bound; omit for retrieval only)
+        :type lower: :class:`~numbers.Real` or :const:`False`
+        :param upper: the constraint's upper bound
+            (:const:`False` to remove bound; omit for retrieval only)
+        :type upper: :class:`~numbers.Real` or :const:`False`
+        :returns: the constraint's bounds
+        :rtype: length-2 :class:`tuple` of :class:`float` (or :const:`False`)
+        :raises TypeError: if `lower` or `upper` is not
+            :class:`~numbers.Real` or :const:`False`
+        :raises ValueError: if `lower` is larger than `upper`
+
+        .. doctest:: Constraint.bounds
+
+            >>> p = MILProgram()
+            >>> c = p.add_constraint()
+            >>> c.bounds()
+            (False, False)
+            >>> c.bounds(lower=-1/2, upper=1/2)
+            (-0.5, 0.5)
+            >>> c.bounds(lower=False)
+            (False, 0.5)
+
+        """
         return self._bounds(glpk.get_row_lb, glpk.get_row_ub,
                             glpk.set_row_bnds, lower, upper)
 
