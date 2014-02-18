@@ -207,8 +207,8 @@ cdef class MILProgram:
         self._variables.append(variable)
         assert len(self._variables) is glpk.get_num_cols(self._problem)
         variable.coeffs(None if not coeffs else coeffs)
-        variable.kind(kind)
         variable.bounds(lower_bound, upper_bound)
+        variable.kind(kind)
         variable.name(None if not name else name)
         return variable
 
@@ -662,6 +662,10 @@ cdef class Variable(_Varstraint):
                 (0.0, 3.0)
                 >>> x.kind()
                 'integer'
+                >>> x.kind('binary')
+                'binary'
+                >>> x.bounds()
+                (0.0, 1.0)
 
         """
         col = self._program._ind(self)
