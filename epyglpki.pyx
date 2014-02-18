@@ -418,13 +418,11 @@ cdef class MILProgram:
         objective.name(name)
         return objective
 
-    def simplex(self, controls=None, fcontrols=None):
+    def simplex(self, **controls):
         """Obtain simplex solver object
 
-        :param controls: set solver control parameters;
+        :param controls: set solver and basis factorization control parameters;
             see :meth:`SimplexSolver.controls`, parameter `controls`
-        :param fcontrols: set basis matrix factorization control parameters;
-            see :meth:`SimplexSolver.controls`, parameter `fcontrols`
         :returns: simplex solver object
         :rtype: :class:`SimplexSolver`
 
@@ -437,14 +435,14 @@ cdef class MILProgram:
 
         """
         simplex_solver = SimplexSolver(self)
-        simplex_solver.controls(controls, fcontrols)
+        simplex_solver.controls(**controls)
         return simplex_solver
 
-    def ipoint(self, controls=None):
+    def ipoint(self, **controls):
         """Obtain interior point solver object
 
         :param controls: set solver control parameters;
-            see :meth:`IPointSolver.controls`
+            see :meth:`IPointSolver.controls`, parameter `controls`
         :returns: interior point solver object
         :rtype: :class:`IPointSolver`
 
@@ -457,14 +455,14 @@ cdef class MILProgram:
 
         """
         ipoint_solver = IPointSolver(self)
-        ipoint_solver.controls(controls)
+        ipoint_solver.controls(**controls)
         return ipoint_solver
 
-    def intopt(self, controls=None):
+    def intopt(self, **controls):
         """Obtain integer optimization solver object
 
         :param controls: set solver control parameters;
-            see :meth:`IntOptSolver.controls`
+            see :meth:`IntOptSolver.controls`, parameter `controls`
         :returns: integer optimization solver object
         :rtype: :class:`IntOptSolver`
 
@@ -477,7 +475,7 @@ cdef class MILProgram:
 
         """
         intopt_solver = IntOptSolver(self)
-        intopt_solver.controls(controls)
+        intopt_solver.controls(**controls)
         return intopt_solver
 
 

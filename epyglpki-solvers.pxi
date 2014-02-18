@@ -75,111 +75,113 @@ cdef class SimplexSolver(_LPSolver):
         glpk.init_smcp(&self._smcp)
         glpk.get_bfcp(self._problem, &self._bfcp)
 
-    def controls(self, controls=None, fcontrols=None):
-        if controls is False:
+    def controls(self, defaults=False, **controls):
+        if defaults:
             glpk.init_smcp(&self._smcp)
-        elif controls is not None:
-            if not isinstance(controls, collections.abc.Mapping):
-                raise TypeError("Controls must be passed in a mapping.")
-            for control, val in controls.items():
-                if control is 'msg_lev':
-                    self._smcp.msg_lev = str2msglev[val]
-                elif control is 'meth':
-                    self._smcp.meth = str2meth[val]
-                elif control is 'pricing':
-                    self._smcp.meth = str2pricing[val]
-                elif control is 'r_test':
-                    self._smcp.r_test = str2rtest[val]
-                elif control in {'tol_bnd', 'tol_dj', 'tol_piv',
-                               'obj_ll', 'obj_ul'}:
-                    if not isinstance(val, numbers.Real):
-                        raise TypeError("'" + control +
-                                        "' value must be real.")
-                    elif control is 'tol_bnd':
-                        self._smcp.tol_bnd = val
-                    elif control is 'tol_dj':
-                        self._smcp.tol_dj = val
-                    elif control is 'tol_piv':
-                        self._smcp.tol_piv = val
-                    elif control is 'obj_ll':
-                        self._smcp.obj_ll = val
-                    elif control is 'obj_ul':
-                        self._smcp.obj_ul = val
-                elif control in {'it_lim', 'tm_lim', 'out_frq', 'out_dly'}:
-                    if not isinstance(val, numbers.Integral):
-                        raise TypeError("'" + control +
-                                        "' value must be integer.")
-                    elif control is 'it_lim':
-                        self._smcp.it_lim = val
-                    elif control is 'tm_lim':
-                        self._smcp.tm_lim = val
-                    elif control is 'out_frq':
-                        self._smcp.out_frq = val
-                    elif control is 'out_dly':
-                        self._smcp.out_dly = val
-                elif control is 'presolve':
-                    if not isinstance(val, bool):
-                        raise TypeError("'" + control +
-                                        "' value must be Boolean.")
-                    else:
-                        self._smcp.presolve = val
-                else:
-                    raise ValueError("Non-existing control: " + repr(control))
-        controls = dict()
-        controls = self._smcp
-        controls['msg_lev'] = msglev2str[controls['msg_lev']]
-        controls['meth'] = meth2str[controls['meth']]
-        controls['pricing'] = pricing2str[controls['pricing']]
-        controls['r_test'] = rtest2str[controls['r_test']]
-        if fcontrols is False:
             glpk.set_bfcp(self._problem, NULL)
             glpk.get_bfcp(self._problem, &self._bfcp)
-        elif fcontrols is not None:
-            if not isinstance(fcontrols, collections.abc.Mapping):
-                raise TypeError("Controls must be passed in a mapping.")
-            for control, val in fcontrols.items():
-                if control is 'type':
-                    self._bfcp.type = str2bftype[val]
-                elif control in {'piv_tol', 'eps_tol', 'max_gro', 'upd_tol'}:
-                    if not isinstance(val, numbers.Real):
-                        raise TypeError("'" + control +
-                                        "' value must be real.")
-                    elif control is 'piv_tol':
-                        self._bfcp.piv_tol = val
-                    elif control is 'eps_tol':
-                        self._bfcp.eps_tol = val
-                    elif control is 'max_gro':
-                        self._bfcp.max_gro = val
-                    elif control is 'upd_tol':
-                        self._bfcp.upd_tol = val
-                elif control in {'lu_size', 'piv_lim',
-                               'nfs_max', 'nrs_max', 'rs_size'}:
-                    if not isinstance(val, numbers.Integral):
-                        raise TypeError("'" + control +
-                                        "' value must be integer.")
-                    elif control is 'lu_size':
-                        self._bfcp.lu_size = val
-                    elif control is 'piv_lim':
-                        self._bfcp.piv_lim = val
-                    elif control is 'nfs_max':
-                        self._bfcp.nfs_max = val
-                    elif control is 'nrs_max':
-                        self._bfcp.nrs_max = val
-                    elif control is 'rs_size':
-                        self._bfcp.rs_size = val
+        for control, val in controls.items():
+            # smcp enumerated parameters
+            if control is 'msg_lev':
+                self._smcp.msg_lev = str2msglev[val]
+            elif control is 'meth':
+                self._smcp.meth = str2meth[val]
+            elif control is 'pricing':
+                self._smcp.meth = str2pricing[val]
+            elif control is 'r_test':
+                self._smcp.r_test = str2rtest[val]
+            # bfcp enumerated parameters
+            elif control is 'type':
+                self._bfcp.type = str2bftype[val]
+            # double parameters
+            elif control in {
+                # smcp
+                'tol_bnd', 'tol_dj', 'tol_piv', 'obj_ll', 'obj_ul',
+                # bfcp
+                'piv_tol', 'eps_tol', 'max_gro', 'upd_tol'
+                }:
+                if not isinstance(val, numbers.Real):
+                    raise TypeError("'" + control + "' value must be real.")
+                # smcp
+                elif control is 'tol_bnd':
+                    self._smcp.tol_bnd = val
+                elif control is 'tol_dj':
+                    self._smcp.tol_dj = val
+                elif control is 'tol_piv':
+                    self._smcp.tol_piv = val
+                elif control is 'obj_ll':
+                    self._smcp.obj_ll = val
+                elif control is 'obj_ul':
+                    self._smcp.obj_ul = val
+                # bfcp
+                elif control is 'piv_tol':
+                    self._bfcp.piv_tol = val
+                elif control is 'eps_tol':
+                    self._bfcp.eps_tol = val
+                elif control is 'max_gro':
+                    self._bfcp.max_gro = val
+                elif control is 'upd_tol':
+                    self._bfcp.upd_tol = val
+            # int parameters
+            elif control in {
+                # smcp
+                'it_lim', 'tm_lim', 'out_frq', 'out_dly',
+                # bfcp
+                'lu_size', 'piv_lim', 'nfs_max', 'nrs_max', 'rs_size'
+                }:
+                if not isinstance(val, numbers.Integral):
+                    raise TypeError("'" + control + "' value must be integer.")
+                # smcp
+                elif control is 'it_lim':
+                    self._smcp.it_lim = val
+                elif control is 'tm_lim':
+                    self._smcp.tm_lim = val
+                elif control is 'out_frq':
+                    self._smcp.out_frq = val
+                elif control is 'out_dly':
+                    self._smcp.out_dly = val
+                # bfcp
+                elif control is 'lu_size':
+                    self._bfcp.lu_size = val
+                elif control is 'piv_lim':
+                    self._bfcp.piv_lim = val
+                elif control is 'nfs_max':
+                    self._bfcp.nfs_max = val
+                elif control is 'nrs_max':
+                    self._bfcp.nrs_max = val
+                elif control is 'rs_size':
+                    self._bfcp.rs_size = val
+            # bint parameters
+            elif control in {
+                # smcp
+                'presolve',
+                # bfcp
+                'suhl'
+                }:
+                if not isinstance(val, bool):
+                    raise TypeError("'" + control + "' value must be Boolean.")
+                # smcp
+                elif control is 'presolve':
+                    self._smcp.presolve = val
+                # bfcp
                 elif control is 'suhl':
-                    if not isinstance(val, bool):
-                        raise TypeError("'" + control +
-                                        "' value must be Boolean.")
-                    else:
-                        self._bfcp.suhl = val
-                else:
-                    raise ValueError("Non-existing control: " + repr(control))
-            glpk.set_bfcp(self._problem, &self._bfcp)
-        fcontrols = dict()
+                    self._bfcp.suhl = val
+            else:
+                raise ValueError("Non-existing control: " + repr(control))
+        glpk.set_bfcp(self._problem, &self._bfcp)
+        scontrols = {}
+        scontrols = self._smcp
+        scontrols['msg_lev'] = msglev2str[scontrols['msg_lev']]
+        scontrols['meth'] = meth2str[scontrols['meth']]
+        scontrols['pricing'] = pricing2str[scontrols['pricing']]
+        scontrols['r_test'] = rtest2str[scontrols['r_test']]
+        fcontrols = {}
         fcontrols = self._bfcp
         fcontrols['type'] = bftype2str[fcontrols['type']]
-        return (controls, fcontrols)
+        controls = {}
+        controls.update(scontrols)
+        controls.update(fcontrols)
+        return controls
 
     def solve(self, exact=False):
         if exact:
@@ -311,20 +313,17 @@ cdef class IPointSolver(_LPSolver):
     def __cinit__(self, program):
         glpk.init_iptcp(&self._iptcp)
 
-    def controls(self, controls=None):
-        if controls is False:
+    def controls(self, defaults=False, **controls):
+        if defaults:
             glpk.init_iptcp(&self._iptcp)
-        elif controls is not None:
-            if not isinstance(controls, collections.abc.Mapping):
-                raise TypeError("Controls must be passed in a mapping.")
-            for control, val in controls.items():
-                if control is 'msg_lev':
-                    self._iptcp.msg_lev = str2msglev[val]
-                elif control is 'ord_alg':
-                    self._iptcp.ord_alg = str2ordalg[val]
-                else:
-                    raise ValueError("Non-existing control: " + repr(control))
-        controls = dict()
+        for control, val in controls.items():
+            if control is 'msg_lev':
+                self._iptcp.msg_lev = str2msglev[val]
+            elif control is 'ord_alg':
+                self._iptcp.ord_alg = str2ordalg[val]
+            else:
+                raise ValueError("Non-existing control: " + repr(control))
+        controls = {}
         controls = self._iptcp
         controls['msg_lev'] = msglev2str[controls['msg_lev']]
         controls['ord_alg'] = ordalg2str[controls['ord_alg']]
@@ -369,66 +368,59 @@ cdef class IntOptSolver(_Solver):
     def __cinit__(self, program):
         glpk.init_iocp(&self._iocp)
 
-    def controls(self, controls=None):
-        if controls is False:
+    def controls(self, defaults=False, **controls):
+        if defaults:
             glpk.init_iocp(&self._iocp)
-        elif controls is not None:
-            if not isinstance(controls, collections.abc.Mapping):
-                raise TypeError("Controls must be passed in a mapping.")
-            for control, val in controls.items():
-                if control is 'msg_lev':
-                    self._iocp.msg_lev = str2msglev[val]
-                elif control is 'br_tech':
-                    self._iocp.br_tech = str2brtech[val]
-                elif control is 'bt_tech':
-                    self._iocp.bt_tech = str2bttech[val]
-                elif control is 'pp_tech':
-                    self._iocp.pp_tech = str2pptech[val]
-                elif control in {'tol_int', 'tol_obj', 'mip_gap'}:
-                    if not isinstance(val, numbers.Real):
-                        raise TypeError("'" + control +
-                                        "' value must be real.")
-                    elif control is 'tol_int':
-                        self._iocp.tol_int = val
-                    elif control is 'tol_obj':
-                        self._iocp.tol_obj = val
-                    elif control is 'mip_gap':
-                        self._iocp.mip_gap = val
-                elif control in {'tm_lim', 'out_frq', 'out_dly', 'cb_size'}:
-                    if not isinstance(val, numbers.Integral):
-                        raise TypeError("'" + control +
-                                        "' value must be integer.")
-                    elif control is 'tm_lim':
-                        self._iocp.tm_lim = val
-                    elif control is 'out_frq':
-                        self._iocp.out_frq = val
-                    elif control is 'out_dly':
-                        self._iocp.out_dly = val
-                    elif control is 'cb_size':
-                        self._iocp.cb_size = val
-                elif control in {'mir_cuts', 'gmi_cuts', 'cov_cuts',
-                                 'clq_cuts',
-                                 'presolve', 'binarize', 'fp_heur'}:
-                    if not isinstance(val, bool):
-                        raise TypeError("'" + control +
-                                        "' value must be Boolean.")
-                    elif control is 'mir_cuts':
-                        self._iocp.mir_cuts = val
-                    elif control is 'gmi_cuts':
-                        self._iocp.gmi_cuts = val
-                    elif control is 'cov_cuts':
-                        self._iocp.cov_cuts = val
-                    elif control is 'clq_cuts':
-                        self._iocp.clq_cuts = val
-                    elif control is 'presolve':
-                        self._iocp.presolve = val
-                    elif control is 'binarize':
-                        self._iocp.binarize = val
-                    elif control is 'fp_heur':
-                        self._iocp.fp_heur = val
-                else:
-                    raise ValueError("Non-existing control: " + repr(control))
-        controls = dict()
+        for control, val in controls.items():
+            if control is 'msg_lev':
+                self._iocp.msg_lev = str2msglev[val]
+            elif control is 'br_tech':
+                self._iocp.br_tech = str2brtech[val]
+            elif control is 'bt_tech':
+                self._iocp.bt_tech = str2bttech[val]
+            elif control is 'pp_tech':
+                self._iocp.pp_tech = str2pptech[val]
+            elif control in {'tol_int', 'tol_obj', 'mip_gap'}:
+                if not isinstance(val, numbers.Real):
+                    raise TypeError("'" + control + "' value must be real.")
+                elif control is 'tol_int':
+                    self._iocp.tol_int = val
+                elif control is 'tol_obj':
+                    self._iocp.tol_obj = val
+                elif control is 'mip_gap':
+                    self._iocp.mip_gap = val
+            elif control in {'tm_lim', 'out_frq', 'out_dly', 'cb_size'}:
+                if not isinstance(val, numbers.Integral):
+                    raise TypeError("'" + control + "' value must be integer.")
+                elif control is 'tm_lim':
+                    self._iocp.tm_lim = val
+                elif control is 'out_frq':
+                    self._iocp.out_frq = val
+                elif control is 'out_dly':
+                    self._iocp.out_dly = val
+                elif control is 'cb_size':
+                    self._iocp.cb_size = val
+            elif control in {'mir_cuts', 'gmi_cuts', 'cov_cuts', 'clq_cuts',
+                             'presolve', 'binarize', 'fp_heur'}:
+                if not isinstance(val, bool):
+                    raise TypeError("'" + control + "' value must be Boolean.")
+                elif control is 'mir_cuts':
+                    self._iocp.mir_cuts = val
+                elif control is 'gmi_cuts':
+                    self._iocp.gmi_cuts = val
+                elif control is 'cov_cuts':
+                    self._iocp.cov_cuts = val
+                elif control is 'clq_cuts':
+                    self._iocp.clq_cuts = val
+                elif control is 'presolve':
+                    self._iocp.presolve = val
+                elif control is 'binarize':
+                    self._iocp.binarize = val
+                elif control is 'fp_heur':
+                    self._iocp.fp_heur = val
+            else:
+                raise ValueError("Non-existing control: " + repr(control))
+        controls = {}
         controls = self._iocp
         controls['msg_lev'] = msglev2str[controls['msg_lev']]
         controls['br_tech'] = brtech2str[controls['br_tech']]
