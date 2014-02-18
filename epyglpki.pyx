@@ -53,7 +53,7 @@ cdef class MILProgram:
 
         >>> p = MILProgram()
         >>> p
-        <epyglpki.MILProgram object at ...>
+        <epyglpki.MILProgram object at 0x...>
 
     """
 
@@ -560,7 +560,7 @@ cdef class Variable(_Varstraint):
             >>> x.coeffs()
             {}
             >>> x.coeffs({c: 10/9, d: 0})
-            {<epyglpki.Constraint object at ...>: 1.1111...}
+            {<epyglpki.Constraint object at 0x...>: 1.1111...}
             >>> x.coeffs({})
             {}
 
@@ -631,7 +631,7 @@ cdef class Constraint(_Varstraint):
             >>> c.coeffs()
             {}
             >>> c.coeffs({x: .5, y: 0})
-            {<epyglpki.Variable object at ...>: 0.5}
+            {<epyglpki.Variable object at 0x...>: 0.5}
             >>> c.coeffs({})
             {}
 
@@ -720,7 +720,7 @@ cdef class Objective(_ProgramComponent):
             >>> o.coeffs()
             {}
             >>> o.coeffs({x: 3, y: 0})
-            {<epyglpki.Variable object at ...>: 3.0}
+            {<epyglpki.Variable object at 0x...>: 3.0}
             >>> o.coeffs({})
             {}
 
