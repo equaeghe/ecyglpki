@@ -786,7 +786,7 @@ cdef class Constraint(_Varstraint):
         :raises TypeError: if `name` is not a :class:`str`
         :raises ValueError: if `name` exceeds 255 bytes encoded in UTF-8
 
-        .. doctest:: Constraint.coeffs
+        .. doctest:: Constraint.name
 
             >>> p = MILProgram()
             >>> c = p.add_constraint()
