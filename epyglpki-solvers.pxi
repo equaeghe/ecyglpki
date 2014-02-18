@@ -48,7 +48,7 @@ cdef class _LPSolver(_Solver):
     cdef _solution(self, varstraints,
                    double (*primal_func)(glpk.ProbObj*, int),
                    double (*dual_func)(glpk.ProbObj*, int), values):
-        solution = dict()
+        solution = {}
         if values == 'primal':
             for varstraint in varstraints:
                 val = primal_func(self._problem,
@@ -257,7 +257,7 @@ cdef class SimplexSolver(_LPSolver):
             retcode = glpk.warm_up(self._problem)
             if retcode is not 0:
                 raise smretcode2error[retcode]
-        basis = dict()
+        basis = {}
         for variable in self._program._variables:
             col = self._program._ind(variable)
             varstat = glpk.get_col_stat(self._problem, col)
@@ -461,7 +461,7 @@ cdef class IntOptSolver(_Solver):
         return glpk.mip_obj_val(self._problem)
 
     def variables(self):
-        solution = dict()
+        solution = {}
         for variable in self._program._variables:
             val = glpk.mip_col_val(self._problem, self._program._ind(variable))
             if variable.kind() in {'integer', 'binary'}:
@@ -471,7 +471,7 @@ cdef class IntOptSolver(_Solver):
         return solution
 
     def constraints(self):
-        solution = dict()
+        solution = {}
         for constraint in self._program._constraints:
             val = glpk.mip_row_val(self._problem,
                                    self._program._ind(constraint))
