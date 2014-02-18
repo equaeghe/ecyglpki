@@ -183,6 +183,26 @@ cdef class MILProgram:
 
     def add_variable(self, coeffs={}, lower_bound=False, upper_bound=False,
                      kind='continuous', name=''):
+        """Add and obtain new variable object
+
+        :param coeffs: set variable coefficients; see :meth:`Variable.coeffs`
+        :param lower_bound: set variable lower bound;
+            see :meth:`Variable.bounds`, parameter `lower`
+        :param upper_bound: set variable upper bound;
+            see :meth:`Variable.bounds`, parameter `upper`
+        :param kind: set variable kind; see :meth:`Variable.kind`
+        :param name: set variable name; see :meth:`Variable.name`
+        :returns: variable object
+        :rtype: :class:`Variable`
+
+        .. doctest:: MILProgram.add_variable
+
+            >>> p = MILProgram()
+            >>> x = p.add_variable()
+            >>> x
+            <epyglpki.Variable object at 0x...>
+
+        """
         variable = Variable(self)
         self._variables.append(variable)
         assert len(self._variables) is glpk.get_num_cols(self._problem)
@@ -197,6 +217,26 @@ cdef class MILProgram:
 
     def add_constraint(self, coeffs={}, lower_bound=False, upper_bound=False,
                        name=''):
+        """Add and obtain new constraint object
+
+        :param coeffs: set constraint coefficients;
+            see :meth:`Constraint.coeffs`
+        :param lower_bound: set constraint lower bound;
+            see :meth:`Constraint.bounds`, parameter `lower`
+        :param upper_bound: set constraint upper bound;
+            see :meth:`Constraint.bounds`, parameter `upper`
+        :param name: set constraint name; see :meth:`Constraint.name`
+        :returns: constraint object
+        :rtype: :class:`Constraint`
+
+        .. doctest:: MILProgram.add_constraint
+
+            >>> p = MILProgram()
+            >>> c = p.add_constraint()
+            >>> c
+            <epyglpki.Constraint object at 0x...>
+
+        """
         constraint = Constraint(self)
         self._constraints.append(constraint)
         assert len(self._constraints) is glpk.get_num_rows(self._problem)
@@ -320,6 +360,23 @@ cdef class MILProgram:
 
     def objective(self, coeffs={}, constant=0, direction='minimize',
                   name=''):
+        """Obtain objective object
+
+        :param coeffs: set objective coefficients; see :meth:`Objective.coeffs`
+        :param constant: set objective constant; see :meth:`Objective.constant`
+        :param direction: set objective direction; see :meth:`Objective.direction`
+        :param name: set objective name; see :meth:`Objective.name`
+        :returns: objective object
+        :rtype: :class:`Objective`
+
+        .. doctest:: MILProgram.objective
+
+            >>> p = MILProgram()
+            >>> o = p.objective()
+            >>> o
+            <epyglpki.Objective object at 0x...>
+
+        """
         objective = Objective(self)
         objective.coeffs(coeffs)
         objective.constant(constant)
