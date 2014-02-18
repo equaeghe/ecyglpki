@@ -612,7 +612,7 @@ cdef class Variable(_Varstraint):
     def __cinit__(self, program):
         glpk.add_cols(self._problem, 1)
 
-    def zombify(self):
+    def remove(self):
         self._zombify(glpk.del_cols)
 
     def bounds(self, lower=None, upper=None):
@@ -736,7 +736,7 @@ cdef class Constraint(_Varstraint):
     def __cinit__(self, program):
         glpk.add_rows(self._problem, 1)
 
-    def zombify(self):
+    def remove(self):
         self._zombify(glpk.del_rows)
 
     def bounds(self, lower=None, upper=None):
