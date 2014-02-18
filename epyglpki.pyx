@@ -213,6 +213,23 @@ cdef class MILProgram:
         return variable
 
     def variables(self):
+        """A list of the problem's variables
+
+        :returns: a list of the problem's variables
+        :rtype: :class:`list` of :class:`Variable`
+
+        .. doctest:: MILProgram.variables
+
+            >>> p = MILProgram()
+            >>> x = p.add_variable()
+            >>> p.variables()
+            [<epyglpki.Variable object at 0x...>]
+            >>> y = p.add_variable()
+            >>> v = p.variables()
+            >>> (x in v) and (y in v)
+            True
+
+        """
         return self._variables
 
     def add_constraint(self, coeffs={}, lower_bound=False, upper_bound=False,
@@ -246,6 +263,23 @@ cdef class MILProgram:
         return constraint
 
     def constraints(self):
+        """A list of the problem's constraints
+
+        :returns: a list of the problem's constraints
+        :rtype: :class:`list` of :class:`Constraint`
+
+        .. doctest:: MILProgram.constraints
+
+            >>> p = MILProgram()
+            >>> c = p.add_constraint()
+            >>> p.constraints()
+            [<epyglpki.Constraint object at 0x...>]
+            >>> d = p.add_constraint()
+            >>> w = p.constraints()
+            >>> (c in w) and (d in w)
+            True
+
+        """
         return self._constraints
 
     def coeffs(self, coeffs):
