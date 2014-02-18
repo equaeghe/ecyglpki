@@ -85,7 +85,7 @@ cdef extern from "glpk.h":
         int lu_size     #  luf.sv_size
         double piv_tol  #  luf.piv_tol
         int piv_lim     #  luf.piv_lim
-        bint suhl        #  luf.suhl
+        bint suhl       #  luf.suhl
         double eps_tol  #  luf.eps_tol
         double max_gro  #  luf.max_gro
         int nfs_max     #  fhv.hh_max
