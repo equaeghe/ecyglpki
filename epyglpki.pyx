@@ -385,16 +385,63 @@ cdef class MILProgram:
         return objective
 
     def simplex(self, controls=None, fcontrols=None):
+        """Obtain simplex solver object
+
+        :param controls: set solver control parameters;
+            see :meth:`SimplexSolver.controls`, parameter `controls`
+        :param fcontrols: set basis matrix factorization control parameters;
+            see :meth:`SimplexSolver.controls`, parameter `fcontrols`
+        :returns: simplex solver object
+        :rtype: :class:`SimplexSolver`
+
+        .. doctest:: MILProgram.simplex
+
+            >>> p = MILProgram()
+            >>> s = p.simplex()
+            >>> s
+            <epyglpki.SimplexSolver object at 0x...>
+
+        """
         simplex_solver = SimplexSolver(self)
         simplex_solver.controls(controls, fcontrols)
         return simplex_solver
 
     def ipoint(self, controls=None):
+        """Obtain interior point solver object
+
+        :param controls: set solver control parameters;
+            see :meth:`IPointSolver.controls`
+        :returns: interior point solver object
+        :rtype: :class:`IPointSolver`
+
+        .. doctest:: MILProgram.ipoint
+
+            >>> p = MILProgram()
+            >>> s = p.ipoint()
+            >>> s
+            <epyglpki.IPointSolver object at 0x...>
+
+        """
         ipoint_solver = IPointSolver(self)
         ipoint_solver.controls(controls)
         return ipoint_solver
 
     def intopt(self, controls=None):
+        """Obtain integer optimization solver object
+
+        :param controls: set solver control parameters;
+            see :meth:`IntOptSolver.controls`
+        :returns: integer optimization solver object
+        :rtype: :class:`IntOptSolver`
+
+        .. doctest:: MILProgram.intopt
+
+            >>> p = MILProgram()
+            >>> s = p.intopt()
+            >>> s
+            <epyglpki.IntOptSolver object at 0x...>
+
+        """
         intopt_solver = IntOptSolver(self)
         intopt_solver.controls(controls)
         return intopt_solver
