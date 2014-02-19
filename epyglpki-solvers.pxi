@@ -260,12 +260,10 @@ cdef class SimplexSolver(_LPSolver):
             if retcode is not 0:
                 raise smretcode2error[retcode]
         basis = {}
-        for variable in self._program._variables:
-            col = self._program._ind(variable)
+        for col, variable in enumerate(self._program._variables, start=1):
             varstat = glpk.get_col_stat(self._problem, col)
             basis[variable] = varstat2str[varstat]
-        for constraint in self._program._constraints:
-            row = self._program._ind(constraint)
+        for row, constraint in enumerate(self._program._constraints, start=1):
             varstat = glpk.get_row_stat(self._problem, row)
             basis[constraint] = varstat2str[varstat]
         return basis
@@ -454,8 +452,8 @@ cdef class IntOptSolver(_Solver):
 
     def variables(self):
         solution = {}
-        for variable in self._program._variables:
-            val = glpk.mip_col_val(self._problem, self._program._ind(variable))
+        for col, variable in enumerate(self._program._variables, start=1):
+            val = glpk.mip_col_val(self._problem, col)
             if variable.kind() in {'integer', 'binary'}:
                 val = int(val)
             if val != 0:
@@ -464,9 +462,8 @@ cdef class IntOptSolver(_Solver):
 
     def constraints(self):
         solution = {}
-        for constraint in self._program._constraints:
-            val = glpk.mip_row_val(self._problem,
-                                   self._program._ind(constraint))
+        for row, constraint in enumerate(self._program._constraints, start=1):
+            val = glpk.mip_row_val(self._problem, row)
             if val != 0:
                 solution[constraint] = val
         return solution
