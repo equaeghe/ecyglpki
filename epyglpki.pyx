@@ -357,14 +357,54 @@ cdef class MILProgram:
             glpk.free(cols)
             glpk.free(rows)
 
-    def scaling(self, scaling=None):
-        if scaling is False:
+    def scaling(self, *algorithms, factors=None):
+        """Change, apply and unapply scaling factors
+
+        :param algorithms: choose scaling algorithms to apply from the list
+            below
+
+            * :data:`'auto'`: choose algorithms automatically
+              (other arguments are ignored)
+            * :data:`'skip'`: skip scaling if the problem is already
+              well-scaled
+            * :data:`'geometric'`: perform geometric mean scaling
+            * :data:`'equilibration'`: perform equilibration scaling
+            * :data:`'round'`: round scaling factors to the nearest power of
+              two
+
+        :type algorithms: zero or more :class:`str` arguments
+        :param factors: the mapping with scaling factors to change
+            (`{}` to set all factors to `1`; omit for retrieval only)
+        :type factors: :class:`~collections.abc.Mapping` of
+            :class:`Variable` or :class:`Constraint` to :class:`~numbers.Real`
+        :returns: the scale factor mapping, which only contains non-`1`
+            factors
+        :rtype: :class:`dict` of :class:`Variable` or :class:`Constraint` to
+            :class:`float`
+        :raises TypeError: if the scaling factors are not
+            :class:`~numbers.Real`
+        :raises TypeError: if a key in the scale factor mapping is neither
+            :class:`Variable` nor :class:`Constraint`
+
+        .. doctest:: MILProgram.scaling
+
+            >>> p = MILProgram()
+            >>> p.scaling()
+            {}
+
+        """
+        if algorithms:
+            if 'auto' in algorithms:
+                glpk.scale_prob(self._problem, str2scalopt['auto'])
+            else:
+                glpk.scale_prob(self._problem, sum(str2scalopt[algorithm]
+                                                for algorithm in algorithms))
+        if factors is {}:
             glpk.unscale_prob(self._problem)
-            scaling = {}
-        elif scaling is None:
-            scaling = {}
-        elif isinstance(scaling, collections.abc.Mapping):
-            for varstraint, factor in scaling.items():
+        elif factors is None:
+            factors = {}
+        elif isinstance(factors, collections.abc.Mapping):
+            for varstraint, factor in factors.items():
                 if not isinstance(factor, numbers.Real):
                     raise TypeError("Scaling factors must be real numbers.")
                 if isinstance(varstraint, Variable):
@@ -376,21 +416,15 @@ cdef class MILProgram:
                 else:
                     raise TypeError("Only 'Variable' and 'Constraint' can " +
                                     "have a scaling factor.")
-        elif isinstance(scaling, collections.abc.Sequence):
-            if 'auto' in scaling:
-                glpk.scale_prob(self._problem, str2scalopt['auto'])
-            else:
-                glpk.scale_prob(self._problem, sum(str2scalopt[string]
-                                                   for string in scaling))
-        for variable in self._variables:
-            factor = glpk.get_col_sf(self._problem, self._ind(variable))
+        for col, variable in enumerate(self._variables, start=1):
+            factor = glpk.get_col_sf(self._problem, col)
             if factor != 1.0:
-                scaling[variable] = factor
-        for constraint in self._constraints:
-            factor = glpk.get_row_sf(self._problem, self._ind(constraint))
+                factors[variable] = factor
+        for row, constraint in enumerate(self._constraints, start=1):
+            factor = glpk.get_row_sf(self._problem, row)
             if factor != 1.0:
-                scaling[constraint] = factor
-        return scaling
+                factors[constraint] = factor
+        return factors
 
     def objective(self, coeffs={}, constant=0, direction='minimize',
                   name=''):
