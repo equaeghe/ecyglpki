@@ -81,6 +81,25 @@ cdef class MILProgram:
 
     @classmethod
     def read(cls, fname, format='GLPK', mpsfmt='free'):
+        """Read a problem from a file (class method)
+
+        :param fname: the name of the file to read from
+        :type fname: :class:`str`
+        :param format: the format of the file read from; either :data:`'GLPK'`,
+            :data:`'LP'`, :data:`'MPS'`, or :data:`'CNFSAT'`
+        :type format: :class:`str`
+        :param mpsfmt: MPS-subformat; either :data:`'free'` or :data:`'fixed'`
+            (ignored when `format` is not :data:`'MPS'`)
+        :type mpsfmt: :class:`str`
+        :raises ValueError: if `format` is not :data:`'GLPK'`, :data:`'LP'`,
+            :data:`'MPS'`, or :data:`'CNFSAT'`
+        :raises RuntimeError: if an error occurred reading the file
+
+        .. todo::
+
+            Add doctest
+
+        """
         cdef char* chars
         cdef glpk.ProbObj* problem
         fname = name2chars(fname)
@@ -111,6 +130,25 @@ cdef class MILProgram:
         return program
 
     def write(self, fname, format='GLPK', mpsfmt='free'):
+        """Write the problem to a file
+
+        :param fname: the name of the file to write to
+        :type fname: :class:`str`
+        :param format: the format of the file written to; either
+            :data:`'GLPK'`, :data:`'LP'`, :data:`'MPS'`, or :data:`'CNFSAT'`
+        :type format: :class:`str`
+        :param mpsfmt: MPS-subformat; either :data:`'free'` or :data:`'fixed'`
+            (ignored when `format` is not :data:`'MPS'`)
+        :type mpsfmt: :class:`str`
+        :raises ValueError: if `format` is not :data:`'GLPK'`, :data:`'LP'`,
+            :data:`'MPS'`, or :data:`'CNFSAT'`
+        :raises RuntimeError: if an error occurred writing the file
+
+        .. todo::
+
+            Add doctest
+
+        """
         cdef char* chars
         fname = name2chars(fname)
         chars = fname
