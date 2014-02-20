@@ -203,6 +203,27 @@ cdef class SimplexSolver(_LPSolver):
             raise smretcode2error[retcode]
 
     def status(self, detailed=False):
+        """Return the current solution status
+
+        :param detailed: whether to give a detailed solution status
+        :type detailed: :class:`bool`
+        :returns: the current solution status
+
+            * in case `detailed` is :data:`False`, either :data:`'undefined'`,
+              :data:`'optimal`, :data:`'infeasible'`, :data:`'no feasible'`,
+              :data:`'feasible'`, or :data:`'unbounded'`
+            * in case `detailed` is :data:`True`, a pair of statuses is given,
+              one for the primal solution and one for the dual solution, either
+              :data:`'undefined'`, :data:`'infeasible'`, :data:`'no feasible'`,
+              or :data:`'feasible'`
+
+        :rtype: :class:`str` or length-2 :class:`tuple` of :class:`str`
+
+        .. todo::
+
+            Add doctest
+
+        """
         status = solstat2str[glpk.sm_status(self._problem)]
         if detailed:
             return (status, (solstat2str[glpk.sm_prim_stat(self._problem)],
@@ -211,6 +232,16 @@ cdef class SimplexSolver(_LPSolver):
             return status
 
     def objective(self):
+        """Return the objective value for the current solution
+
+        :returns: the objective value for the current solution
+        :rtype: :class:`float`
+
+        .. todo::
+
+            Add doctest
+
+        """
         return glpk.sm_obj_val(self._problem)
 
     def variables(self, values='primal'):
@@ -269,12 +300,46 @@ cdef class SimplexSolver(_LPSolver):
         return basis
 
     def print_solution(self, fname):
+        """Write the solution to a file in a readable format
+
+        :param fname: the name of the file to write to
+        :type fname: :class:`str`
+        :raises RuntimeError: if there is an error writing the file
+
+        .. todo::
+
+            Add doctest
+
+        """
         self._write(glpk.print_sol, fname)
 
     def read_solution(self, fname):
+        """Read the solution from a file
+
+        :param fname: the name of the file to read from
+            (written by :meth:`SimplexSolver.write_solution`)
+        :type fname: :class:`str`
+        :raises RuntimeError: if there is an error reading the file
+
+        .. todo::
+
+            Add doctest
+
+        """
         self._read(glpk.read_sol, fname)
 
     def write_solution(self, fname):
+        """Write the solution to a file
+
+        :param fname: the name of the file to write to
+        :type fname: :class:`str`
+        :raises RuntimeError: if there is an error writing the file
+
+        .. todo::
+
+            Add doctest
+
+        """
         self._write(glpk.write_sol, fname)
 
     def print_ranges(self, varstraints, fname):
@@ -328,6 +393,22 @@ cdef class IPointSolver(_LPSolver):
         return controls
 
     def solve(self):
+        """Solve the linear program
+
+        :returns: solution status; see :meth:`IPointSolver.status` for details
+        :rtype: :class:`str`
+        :raises ValueError: if the problem has no rows/columns
+        :raises ArithmeticError: if there occurs very slow convergence or
+            divergence
+        :raises StopIteration: if the iteration limit is exceeded
+        :raises ArithmeticError: if numerical instability occurs on solving
+            the Newtonian system
+
+        .. todo::
+
+            Add doctest
+
+        """
         retcode = glpk.interior(self._problem, &self._iptcp)
         if retcode is 0:
             return self.status()
@@ -335,9 +416,30 @@ cdef class IPointSolver(_LPSolver):
             raise iptretcode2error[retcode]
 
     def status(self):
+        """Return the current solution status
+
+        :returns: the current solution status, either :data:`'undefined'`,
+            :data:`'optimal`, :data:`'infeasible'`, or :data:`'no feasible'`
+        :rtype: :class:`str`
+
+        .. todo::
+
+            Add doctest
+
+        """
         return solstat2str[glpk.ipt_status(self._problem)]
 
     def objective(self):
+        """Return the objective value for the current solution
+
+        :returns: the objective value for the current solution
+        :rtype: :class:`float`
+
+        .. todo::
+
+            Add doctest
+
+        """
         return glpk.ipt_obj_val(self._problem)
 
     def variables(self, values='primal'):
@@ -349,12 +451,46 @@ cdef class IPointSolver(_LPSolver):
                               glpk.ipt_row_prim, glpk.ipt_row_dual, values)
 
     def print_solution(self, fname):
+        """Write the solution to a file in a readable format
+
+        :param fname: the name of the file to write to
+        :type fname: :class:`str`
+        :raises RuntimeError: if there is an error writing the file
+
+        .. todo::
+
+            Add doctest
+
+        """
         self._write(glpk.print_ipt, fname)
 
     def read_solution(self, fname):
+        """Read the solution from a file
+
+        :param fname: the name of the file to read from
+            (written by :meth:`IPointSolver.write_solution`)
+        :type fname: :class:`str`
+        :raises RuntimeError: if there is an error reading the file
+
+        .. todo::
+
+            Add doctest
+
+        """
         self._read(glpk.read_ipt, fname)
 
     def write_solution(self, fname):
+        """Write the solution to a file
+
+        :param fname: the name of the file to write to
+        :type fname: :class:`str`
+        :raises RuntimeError: if there is an error writing the file
+
+        .. todo::
+
+            Add doctest
+
+        """
         self._write(glpk.write_ipt, fname)
 
 
@@ -445,12 +581,45 @@ cdef class IntOptSolver(_Solver):
             raise ioretcode2error[retcode]
 
     def status(self):
+        """Return the current solution status
+
+        :returns: the current solution status, either :data:`'undefined'`,
+            :data:`'optimal`, :data:`'no feasible'`, or :data:`'feasible'`
+        :rtype: :class:`str`
+
+        .. todo::
+
+            Add doctest
+
+        """
         return solstat2str[glpk.mip_status(self._problem)]
 
     def objective(self):
+        """Return the objective value for the current solution
+
+        :returns: the objective value for the current solution
+        :rtype: :class:`float`
+
+        .. todo::
+
+            Add doctest
+
+        """
         return glpk.mip_obj_val(self._problem)
 
     def variables(self):
+        """Returns the values of the variables for the current solution
+
+        :returns: the nonzero values of the variables for the current
+            solution
+        :rtype: :class:`dict` from :class:`Variable` to :class:`float` or 
+            :class:`int`
+
+        .. todo::
+
+            Add doctest
+
+        """
         solution = {}
         for col, variable in enumerate(self._program._variables, start=1):
             val = glpk.mip_col_val(self._problem, col)
@@ -461,6 +630,17 @@ cdef class IntOptSolver(_Solver):
         return solution
 
     def constraints(self):
+        """Returns the values of the constraints for the current solution
+
+        :returns: the nonzero values of the constraints for the current
+            solution
+        :rtype: :class:`dict` from :class:`Constraint` to :class:`float`
+
+        .. todo::
+
+            Add doctest
+
+        """
         solution = {}
         for row, constraint in enumerate(self._program._constraints, start=1):
             val = glpk.mip_row_val(self._problem, row)
@@ -469,10 +649,44 @@ cdef class IntOptSolver(_Solver):
         return solution
 
     def print_solution(self, fname):
+        """Write the solution to a file in a readable format
+
+        :param fname: the name of the file to write to
+        :type fname: :class:`str`
+        :raises RuntimeError: if there is an error writing the file
+
+        .. todo::
+
+            Add doctest
+
+        """
         self._write(glpk.print_mip, fname)
 
     def read_solution(self, fname):
+        """Read the solution from a file
+
+        :param fname: the name of the file to read from
+            (written by :meth:`IntOptSolver.write_solution`)
+        :type fname: :class:`str`
+        :raises RuntimeError: if there is an error reading the file
+
+        .. todo::
+
+            Add doctest
+
+        """
         self._read(glpk.read_mip, fname)
 
     def write_solution(self, fname):
+        """Write the solution to a file
+
+        :param fname: the name of the file to write to
+        :type fname: :class:`str`
+        :raises RuntimeError: if there is an error writing the file
+
+        .. todo::
+
+            Add doctest
+
+        """
         self._write(glpk.write_mip, fname)
