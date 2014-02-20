@@ -69,6 +69,14 @@ cdef class MILProgram:
         self._constraints = []
 
     def _problem_ptr(self):
+        """Encapsulates the pointer to the problem object
+
+        The problem object pointer `self._problem` cannot be passed as such as
+        an argument to other functions. Therefore we encapsulate it in a
+        capsule that can be passed. It has to be unencapsulated after
+        reception.
+
+        """
         return PyCapsule_New(self._problem, NULL, NULL)
 
     @classmethod
@@ -162,6 +170,7 @@ cdef class MILProgram:
         return '' if chars is NULL else chars.decode()
 
     def _ind(self, varstraint):
+        """Return the column/row index of a Variable/Constraint"""
         try:
             if isinstance(varstraint, Variable):
                 ind = self._variables.index(varstraint)
@@ -171,9 +180,10 @@ cdef class MILProgram:
                 raise TypeError("No index available for this object type.")
         except ValueError:
             raise IndexError("This is possibly a zombie; kill it using 'del'.")
-        return 1 + ind
+        return 1 + ind  # GLPK indices start at 1
 
-    def _del(self, varstraint):
+    def _del_varstraint(self, varstraint):
+        """Remove a Variable or Constraint from the problem"""
         if isinstance(varstraint, Variable):
             self._variables.remove(varstraint)
         elif isinstance(varstraint, Constraint):
@@ -571,7 +581,7 @@ cdef class _Varstraint(_ProgramComponent):
         cdef int ind[2]
         ind[1] = self._program._ind(self)
         del_function(self._problem, 1, ind)
-        self._program._del(self)
+        self._program._del_varstraint(self)
 
     cdef _bounds(self,
                  double (*get_lb_function)(glpk.ProbObj*, int),
