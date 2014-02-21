@@ -1,0 +1,581 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Problems &mdash; epyglpki  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="epyglpki  documentation" href="index.html" />
+    <link rel="next" title="Components" href="components.html" />
+    <link rel="prev" title="Welcome to epyglpki’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="components.html" title="Components"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to epyglpki’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">epyglpki  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-epyglpki"></span><div class="section" id="problems">
+<h1>Problems<a class="headerlink" href="#problems" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="epyglpki.MILProgram">
+<em class="property">class </em><tt class="descclassname">epyglpki.</tt><tt class="descname">MILProgram</tt><a class="headerlink" href="#epyglpki.MILProgram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main problem object</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">&lt;epyglpki.MILProgram object at 0x...&gt;</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="epyglpki.MILProgram.add_constraint">
+<tt class="descname">add_constraint</tt><big>(</big><em>coeffs={}</em>, <em>lower_bound=False</em>, <em>upper_bound=False</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.add_constraint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add and obtain new constraint object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coeffs</strong> &#8211; set constraint coefficients;
+see <a class="reference internal" href="components.html#epyglpki.Constraint.coeffs" title="epyglpki.Constraint.coeffs"><tt class="xref py py-meth docutils literal"><span class="pre">Constraint.coeffs()</span></tt></a></li>
+<li><strong>lower_bound</strong> &#8211; set constraint lower bound;
+see <a class="reference internal" href="components.html#epyglpki.Constraint.bounds" title="epyglpki.Constraint.bounds"><tt class="xref py py-meth docutils literal"><span class="pre">Constraint.bounds()</span></tt></a>, parameter <cite>lower</cite></li>
+<li><strong>upper_bound</strong> &#8211; set constraint upper bound;
+see <a class="reference internal" href="components.html#epyglpki.Constraint.bounds" title="epyglpki.Constraint.bounds"><tt class="xref py py-meth docutils literal"><span class="pre">Constraint.bounds()</span></tt></a>, parameter <cite>upper</cite></li>
+<li><strong>name</strong> &#8211; set constraint name; see <a class="reference internal" href="components.html#epyglpki.Constraint.name" title="epyglpki.Constraint.name"><tt class="xref py py-meth docutils literal"><span class="pre">Constraint.name()</span></tt></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">constraint object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="components.html#epyglpki.Constraint" title="epyglpki.Constraint"><tt class="xref py py-class docutils literal"><span class="pre">Constraint</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span>
+<span class="go">&lt;epyglpki.Constraint object at 0x...&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="epyglpki.MILProgram.add_variable">
+<tt class="descname">add_variable</tt><big>(</big><em>coeffs={}</em>, <em>lower_bound=False</em>, <em>upper_bound=False</em>, <em>kind='continuous'</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.add_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add and obtain new variable object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coeffs</strong> &#8211; set variable coefficients; see <a class="reference internal" href="components.html#epyglpki.Variable.coeffs" title="epyglpki.Variable.coeffs"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.coeffs()</span></tt></a></li>
+<li><strong>lower_bound</strong> &#8211; set variable lower bound;
+see <a class="reference internal" href="components.html#epyglpki.Variable.bounds" title="epyglpki.Variable.bounds"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.bounds()</span></tt></a>, parameter <cite>lower</cite></li>
+<li><strong>upper_bound</strong> &#8211; set variable upper bound;
+see <a class="reference internal" href="components.html#epyglpki.Variable.bounds" title="epyglpki.Variable.bounds"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.bounds()</span></tt></a>, parameter <cite>upper</cite></li>
+<li><strong>kind</strong> &#8211; set variable kind; see <a class="reference internal" href="components.html#epyglpki.Variable.kind" title="epyglpki.Variable.kind"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.kind()</span></tt></a></li>
+<li><strong>name</strong> &#8211; set variable name; see <a class="reference internal" href="components.html#epyglpki.Variable.name" title="epyglpki.Variable.name"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.name()</span></tt></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">variable object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="components.html#epyglpki.Variable" title="epyglpki.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_variable</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>
+<span class="go">&lt;epyglpki.Variable object at 0x...&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="epyglpki.MILProgram.coeffs">
+<tt class="descname">coeffs</tt><big>(</big><em>coeffs</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.coeffs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change or retrieve coefficients (constraint matrix)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>coeffs</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a> of length-2
+<a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Sequence</span></tt></a>, containing one
+<a class="reference internal" href="components.html#epyglpki.Variable" title="epyglpki.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a> and one <a class="reference internal" href="components.html#epyglpki.Constraint" title="epyglpki.Constraint"><tt class="xref py py-class docutils literal"><span class="pre">Constraint</span></tt></a>, to
+<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Real</span></tt></a>) &#8211; the mapping with coefficients to change
+(<cite>{}</cite> to set all coefficients to <cite>0</cite>)</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#TypeError" title="(in Python v3.3)"><strong>TypeError</strong></a> &#8211; if <cite>coeffs</cite> is not <a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a></li>
+<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#TypeError" title="(in Python v3.3)"><strong>TypeError</strong></a> &#8211; if a coefficient key component is not a pair of
+<a class="reference internal" href="components.html#epyglpki.Variable" title="epyglpki.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a> and <a class="reference internal" href="components.html#epyglpki.Constraint" title="epyglpki.Constraint"><tt class="xref py py-class docutils literal"><span class="pre">Constraint</span></tt></a></li>
+<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#TypeError" title="(in Python v3.3)"><strong>TypeError</strong></a> &#8211; if a coefficient value is not <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Real</span></tt></a></li>
+<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#ValueError" title="(in Python v3.3)"><strong>ValueError</strong></a> &#8211; if the coefficient key does not have two 
+components</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_variable</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_variable</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">coeffs</span><span class="p">({(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span> <span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="mf">5.5</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span> <span class="mi">0</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">coeffs</span><span class="p">()[</span><span class="n">c</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span><span class="o">.</span><span class="n">coeffs</span><span class="p">()[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">coeffs</span><span class="p">()[</span><span class="n">d</span><span class="p">]</span> <span class="o">==</span> <span class="n">d</span><span class="o">.</span><span class="n">coeffs</span><span class="p">()[</span><span class="n">y</span><span class="p">]</span> <span class="o">==</span> <span class="mf">5.5</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">coeffs</span><span class="p">())</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">coeffs</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="epyglpki.MILProgram.constraints">
+<tt class="descname">constraints</tt><big>(</big><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.constraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of the problem&#8217;s constraints</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a list of the problem&#8217;s constraints</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#list" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt></a> of <a class="reference internal" href="components.html#epyglpki.Constraint" title="epyglpki.Constraint"><tt class="xref py py-class docutils literal"><span class="pre">Constraint</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">constraints</span><span class="p">()</span>
+<span class="go">[&lt;epyglpki.Constraint object at 0x...&gt;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">constraints</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">c</span> <span class="ow">in</span> <span class="n">w</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">d</span> <span class="ow">in</span> <span class="n">w</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="epyglpki.MILProgram.intopt">
+<tt class="descname">intopt</tt><big>(</big><em>**controls</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.intopt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain integer optimization solver object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>controls</strong> &#8211; set solver control parameters;
+see <a class="reference internal" href="solvers.html#epyglpki.IntOptSolver.controls" title="epyglpki.IntOptSolver.controls"><tt class="xref py py-meth docutils literal"><span class="pre">IntOptSolver.controls()</span></tt></a>, parameter <cite>controls</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">integer optimization solver object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="solvers.html#epyglpki.IntOptSolver" title="epyglpki.IntOptSolver"><tt class="xref py py-class docutils literal"><span class="pre">IntOptSolver</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">intopt</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">&lt;epyglpki.IntOptSolver object at 0x...&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="epyglpki.MILProgram.ipoint">
+<tt class="descname">ipoint</tt><big>(</big><em>**controls</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.ipoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain interior point solver object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>controls</strong> &#8211; set solver control parameters;
+see <a class="reference internal" href="solvers.html#epyglpki.IPointSolver.controls" title="epyglpki.IPointSolver.controls"><tt class="xref py py-meth docutils literal"><span class="pre">IPointSolver.controls()</span></tt></a>, parameter <cite>controls</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">interior point solver object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="solvers.html#epyglpki.IPointSolver" title="epyglpki.IPointSolver"><tt class="xref py py-class docutils literal"><span class="pre">IPointSolver</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">ipoint</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">&lt;epyglpki.IPointSolver object at 0x...&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="epyglpki.MILProgram.name">
+<tt class="descname">name</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change or retrieve problem name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>name</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; the new problem name (omit for retrieval only)</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the problem name</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#TypeError" title="(in Python v3.3)"><strong>TypeError</strong></a> &#8211; if <cite>name</cite> is not a <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a></li>
+<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#ValueError" title="(in Python v3.3)"><strong>ValueError</strong></a> &#8211; if <cite>name</cite> exceeds 255 bytes encoded in UTF-8</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+<span class="go">&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="s">&#39;Programme Linéaire&#39;</span><span class="p">)</span>
+<span class="go">&#39;Programme Linéaire&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+<span class="go">&#39;Programme Linéaire&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+<span class="go">&#39;&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="epyglpki.MILProgram.objective">
+<tt class="descname">objective</tt><big>(</big><em>coeffs={}</em>, <em>constant=0</em>, <em>direction='minimize'</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.objective" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain objective object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coeffs</strong> &#8211; set objective coefficients; see <a class="reference internal" href="components.html#epyglpki.Objective.coeffs" title="epyglpki.Objective.coeffs"><tt class="xref py py-meth docutils literal"><span class="pre">Objective.coeffs()</span></tt></a></li>
+<li><strong>constant</strong> &#8211; set objective constant; see <a class="reference internal" href="components.html#epyglpki.Objective.constant" title="epyglpki.Objective.constant"><tt class="xref py py-meth docutils literal"><span class="pre">Objective.constant()</span></tt></a></li>
+<li><strong>direction</strong> &#8211; set objective direction; see <a class="reference internal" href="components.html#epyglpki.Objective.direction" title="epyglpki.Objective.direction"><tt class="xref py py-meth docutils literal"><span class="pre">Objective.direction()</span></tt></a></li>
+<li><strong>name</strong> &#8211; set objective name; see <a class="reference internal" href="components.html#epyglpki.Objective.name" title="epyglpki.Objective.name"><tt class="xref py py-meth docutils literal"><span class="pre">Objective.name()</span></tt></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">objective object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="components.html#epyglpki.Objective" title="epyglpki.Objective"><tt class="xref py py-class docutils literal"><span class="pre">Objective</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">objective</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o</span>
+<span class="go">&lt;epyglpki.Objective object at 0x...&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="epyglpki.MILProgram.read">
+<tt class="descname">read</tt><big>(</big><em>fname</em>, <em>format='GLPK'</em>, <em>mpsfmt='free'</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a problem from a file (class method)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; the name of the file to read from</li>
+<li><strong>format</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; the format of the file read from; either <tt class="xref py py-data docutils literal"><span class="pre">'GLPK'</span></tt>,
+<tt class="xref py py-data docutils literal"><span class="pre">'LP'</span></tt>, <tt class="xref py py-data docutils literal"><span class="pre">'MPS'</span></tt>, or <tt class="xref py py-data docutils literal"><span class="pre">'CNFSAT'</span></tt></li>
+<li><strong>mpsfmt</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; MPS-subformat; either <tt class="xref py py-data docutils literal"><span class="pre">'free'</span></tt> or <tt class="xref py py-data docutils literal"><span class="pre">'fixed'</span></tt>
+(ignored when <cite>format</cite> is not <tt class="xref py py-data docutils literal"><span class="pre">'MPS'</span></tt>)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#ValueError" title="(in Python v3.3)"><strong>ValueError</strong></a> &#8211; if <cite>format</cite> is not <tt class="xref py py-data docutils literal"><span class="pre">'GLPK'</span></tt>, <tt class="xref py py-data docutils literal"><span class="pre">'LP'</span></tt>,
+<tt class="xref py py-data docutils literal"><span class="pre">'MPS'</span></tt>, or <tt class="xref py py-data docutils literal"><span class="pre">'CNFSAT'</span></tt></li>
+<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#RuntimeError" title="(in Python v3.3)"><strong>RuntimeError</strong></a> &#8211; if an error occurred reading the file</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">Add doctest</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="epyglpki.MILProgram.scaling">
+<tt class="descname">scaling</tt><big>(</big><em>*algorithms</em>, <em>factors</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.scaling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change, apply and unapply scaling factors</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>algorithms</strong> (zero or more <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> arguments) &#8211; <p>choose scaling algorithms to apply from among</p>
+<ul>
+<li><tt class="xref py py-data docutils literal"><span class="pre">'auto'</span></tt>: choose algorithms automatically
+(other arguments are ignored)</li>
+<li><tt class="xref py py-data docutils literal"><span class="pre">'skip'</span></tt>: skip scaling if the problem is already
+well-scaled</li>
+<li><tt class="xref py py-data docutils literal"><span class="pre">'geometric'</span></tt>: perform geometric mean scaling</li>
+<li><tt class="xref py py-data docutils literal"><span class="pre">'equilibration'</span></tt>: perform equilibration scaling</li>
+<li><tt class="xref py py-data docutils literal"><span class="pre">'round'</span></tt>: round scaling factors to the nearest power of
+two</li>
+</ul>
+</li>
+<li><strong>factors</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a> of
+<a class="reference internal" href="components.html#epyglpki.Variable" title="epyglpki.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a> or <a class="reference internal" href="components.html#epyglpki.Constraint" title="epyglpki.Constraint"><tt class="xref py py-class docutils literal"><span class="pre">Constraint</span></tt></a> to <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Real</span></tt></a>) &#8211; the mapping with scaling factors to change
+(<cite>{}</cite> to set all factors to <cite>1</cite>; omit for retrieval only);
+values defined here have precedence over the ones generated by
+<cite>algorithms</cite></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the scaling factor mapping, which only contains non-<cite>1</cite>
+factors</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#dict" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a> of <a class="reference internal" href="components.html#epyglpki.Variable" title="epyglpki.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a> or <a class="reference internal" href="components.html#epyglpki.Constraint" title="epyglpki.Constraint"><tt class="xref py py-class docutils literal"><span class="pre">Constraint</span></tt></a> to
+<tt class="xref py py-class docutils literal"><span class="pre">float</span></tt></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#TypeError" title="(in Python v3.3)"><strong>TypeError</strong></a> &#8211; if <cite>factors</cite> is not
+<a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a></li>
+<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#TypeError" title="(in Python v3.3)"><strong>TypeError</strong></a> &#8211; if the scaling factors are not
+<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Real</span></tt></a></li>
+<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#TypeError" title="(in Python v3.3)"><strong>TypeError</strong></a> &#8211; if a key in the scaling factor mapping is neither
+<a class="reference internal" href="components.html#epyglpki.Variable" title="epyglpki.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a> nor <a class="reference internal" href="components.html#epyglpki.Constraint" title="epyglpki.Constraint"><tt class="xref py py-class docutils literal"><span class="pre">Constraint</span></tt></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_variable</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_variable</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">coeffs</span><span class="p">({(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span> <span class="mf">3e-100</span><span class="p">,</span> <span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="mf">5.5</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span> <span class="mf">1.5e200</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">scaling</span><span class="p">()</span>
+<span class="go">{}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">scaling</span><span class="p">(</span><span class="s">&#39;skip&#39;</span><span class="p">,</span> <span class="s">&#39;geometric&#39;</span><span class="p">,</span> <span class="s">&#39;equilibration&#39;</span><span class="p">,</span>
+<span class="gp">... </span>          <span class="n">factors</span><span class="o">=</span><span class="p">{</span><span class="n">y</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span> 
+<span class="go">{&lt;epyglpki.Variable object at 0x...&gt;: 3.329...e-67,</span>
+<span class="go"> &lt;epyglpki.Variable object at 0x...&gt;: 3.0,</span>
+<span class="go"> &lt;epyglpki.Constraint object at 0x...&gt;: 1.001...e+166,</span>
+<span class="go"> &lt;epyglpki.Constraint object at 0x...&gt;: 2.002...e-134}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">scaling</span><span class="p">(</span><span class="n">factors</span><span class="o">=</span><span class="p">{})</span>
+<span class="go">{}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>If a scaling algorithm is given, all factors are first set to <cite>1</cite>:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">scaling</span><span class="p">(</span><span class="n">factors</span><span class="o">=</span><span class="p">{</span><span class="n">d</span><span class="p">:</span> <span class="mf">5.5</span><span class="p">})</span>
+<span class="go">{&lt;epyglpki.Constraint object at 0x...&gt;: 5.5}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">scaling</span><span class="p">(</span><span class="s">&#39;round&#39;</span><span class="p">)</span>
+<span class="go">{}</span>
+</pre></div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="epyglpki.MILProgram.simplex">
+<tt class="descname">simplex</tt><big>(</big><em>**controls</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.simplex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain simplex solver object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>controls</strong> &#8211; set solver and basis factorization control parameters;
+see <a class="reference internal" href="solvers.html#epyglpki.SimplexSolver.controls" title="epyglpki.SimplexSolver.controls"><tt class="xref py py-meth docutils literal"><span class="pre">SimplexSolver.controls()</span></tt></a>, parameter <cite>controls</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">simplex solver object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="solvers.html#epyglpki.SimplexSolver" title="epyglpki.SimplexSolver"><tt class="xref py py-class docutils literal"><span class="pre">SimplexSolver</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">simplex</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">&lt;epyglpki.SimplexSolver object at 0x...&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="epyglpki.MILProgram.variables">
+<tt class="descname">variables</tt><big>(</big><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of the problem&#8217;s variables</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a list of the problem&#8217;s variables</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#list" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt></a> of <a class="reference internal" href="components.html#epyglpki.Variable" title="epyglpki.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_variable</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">variables</span><span class="p">()</span>
+<span class="go">[&lt;epyglpki.Variable object at 0x...&gt;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_variable</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">variables</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="n">v</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">y</span> <span class="ow">in</span> <span class="n">v</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="epyglpki.MILProgram.write">
+<tt class="descname">write</tt><big>(</big><em>fname</em>, <em>format='GLPK'</em>, <em>mpsfmt='free'</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the problem to a file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; the name of the file to write to</li>
+<li><strong>format</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; the format of the file written to; either
+<tt class="xref py py-data docutils literal"><span class="pre">'GLPK'</span></tt>, <tt class="xref py py-data docutils literal"><span class="pre">'LP'</span></tt>, <tt class="xref py py-data docutils literal"><span class="pre">'MPS'</span></tt>, or <tt class="xref py py-data docutils literal"><span class="pre">'CNFSAT'</span></tt></li>
+<li><strong>mpsfmt</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; MPS-subformat; either <tt class="xref py py-data docutils literal"><span class="pre">'free'</span></tt> or <tt class="xref py py-data docutils literal"><span class="pre">'fixed'</span></tt>
+(ignored when <cite>format</cite> is not <tt class="xref py py-data docutils literal"><span class="pre">'MPS'</span></tt>)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#ValueError" title="(in Python v3.3)"><strong>ValueError</strong></a> &#8211; if <cite>format</cite> is not <tt class="xref py py-data docutils literal"><span class="pre">'GLPK'</span></tt>, <tt class="xref py py-data docutils literal"><span class="pre">'LP'</span></tt>,
+<tt class="xref py py-data docutils literal"><span class="pre">'MPS'</span></tt>, or <tt class="xref py py-data docutils literal"><span class="pre">'CNFSAT'</span></tt></li>
+<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#RuntimeError" title="(in Python v3.3)"><strong>RuntimeError</strong></a> &#8211; if an error occurred writing the file</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">Todo</p>
+<p class="last">Add doctest</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to epyglpki&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="components.html"
+                        title="next chapter">Components</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/problem.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="components.html" title="Components"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to epyglpki’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">epyglpki  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Erik Quaeghebeur.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>
