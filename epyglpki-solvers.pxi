@@ -47,21 +47,21 @@ cdef class _LPSolver(_Solver):
 
     cdef _solution(self, varstraints,
                    double (*primal_func)(glpk.ProbObj*, int),
-                   double (*dual_func)(glpk.ProbObj*, int), values):
+                   double (*dual_func)(glpk.ProbObj*, int), dual):
+        if not isinstance(dual, bool):
+            raise TypeError("Parameter dual must be True or False")
         solution = {}
-        if values == 'primal':
+        if not dual:
             for varstraint in varstraints:
                 val = primal_func(self._problem,
                                   self._program._ind(varstraint))
                 if val != 0.0:
                     solution[varstraint] = val
-        elif values == 'dual':
+        else:
             for varstraint in varstraints:
                 val = dual_func(self._problem, self._program._ind(varstraint))
                 if val != 0.0:
                     solution[varstraint] = val
-        else:
-            raise ValueError("Values must be either 'primal' or 'dual'.")
         return solution
 
 
@@ -244,13 +244,41 @@ cdef class SimplexSolver(_LPSolver):
         """
         return glpk.sm_obj_val(self._problem)
 
-    def variables(self, values='primal'):
-        return self._solution(self._program._variables,
-                              glpk.sm_col_prim, glpk.sm_col_dual, values)
+    def variables(self, dual=False):
+        """Returns the values of the variables for the current solution
 
-    def constraints(self, values='primal'):
+        :param dual: whether to return dual or primal values
+        :type dual: :class:`bool`
+        :returns: the nonzero values of the variables for the current
+            solution
+        :rtype: :class:`dict` from :class:`Variable` to :class:`float`
+        :raises TypeError: if `dual` is not :class:`bool`
+
+        .. todo::
+
+            Add doctest
+
+        """
+        return self._solution(self._program._variables,
+                              glpk.sm_col_prim, glpk.sm_col_dual, dual)
+
+    def constraints(self, dual=False):
+        """Returns the values of the constraints for the current solution
+
+        :param dual: whether to return dual or primal values
+        :type dual: :class:`bool`
+        :returns: the nonzero values of the constraints for the current
+            solution
+        :rtype: :class:`dict` from :class:`Constraint` to :class:`float`
+        :raises TypeError: if `dual` is not :class:`bool`
+
+        .. todo::
+
+            Add doctest
+
+        """
         return self._solution(self._program._constraints,
-                              glpk.sm_row_prim, glpk.sm_row_dual, values)
+                              glpk.sm_row_prim, glpk.sm_row_dual, dual)
 
     def unboundedness(self):
         ind = glpk.sm_unbnd_ray(self._problem)
@@ -442,13 +470,27 @@ cdef class IPointSolver(_LPSolver):
         """
         return glpk.ipt_obj_val(self._problem)
 
-    def variables(self, values='primal'):
+    def variables(self, dual=False):
         return self._solution(self._program._variables,
-                              glpk.ipt_col_prim, glpk.ipt_col_dual, values)
+                              glpk.ipt_col_prim, glpk.ipt_col_dual, dual)
 
-    def constraints(self, values='primal'):
+    def constraints(self, dual=False):
+        """Returns the values of the constraints for the current solution
+
+        :param dual: whether to return dual or primal values
+        :type dual: :class:`bool`
+        :returns: the nonzero values of the constraints for the current
+            solution
+        :rtype: :class:`dict` from :class:`Constraint` to :class:`float`
+        :raises TypeError: if `dual` is not :class:`bool`
+
+        .. todo::
+
+            Add doctest
+
+        """
         return self._solution(self._program._constraints,
-                              glpk.ipt_row_prim, glpk.ipt_row_dual, values)
+                              glpk.ipt_row_prim, glpk.ipt_row_dual, dual)
 
     def print_solution(self, fname):
         """Write the solution to a file in a readable format
