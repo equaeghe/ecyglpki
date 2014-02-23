@@ -176,7 +176,7 @@ cdef extern from "glpk.h":
         #void (*cb_func)(Tree* tree, void* info)
                         #  mip.cb_func
         #void* cb_info   #  mip.cb_info
-        int cb_size     #  mip.cb_size
+        #int cb_size     #  mip.cb_size
         int pp_tech     #  preprocessing technique
         double mip_gap  #  relative MIP gap tolerance
         bint mir_cuts   #  MIR cuts

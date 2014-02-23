@@ -611,7 +611,7 @@ cdef class IntOptSolver(_Solver):
                     self._iocp.tol_obj = val
                 elif control is 'mip_gap':
                     self._iocp.mip_gap = val
-            elif control in {'tm_lim', 'out_frq', 'out_dly', 'cb_size'}:
+            elif control in {'tm_lim', 'out_frq', 'out_dly'}:
                 if not isinstance(val, numbers.Integral):
                     raise TypeError("'" + control + "' value must be integer.")
                 elif control is 'tm_lim':
@@ -620,8 +620,6 @@ cdef class IntOptSolver(_Solver):
                     self._iocp.out_frq = val
                 elif control is 'out_dly':
                     self._iocp.out_dly = val
-                elif control is 'cb_size':
-                    self._iocp.cb_size = val
             elif control in {'mir_cuts', 'gmi_cuts', 'cov_cuts', 'clq_cuts',
                              'presolve', 'binarize', 'fp_heur'}:
                 if not isinstance(val, bool):
