@@ -416,19 +416,19 @@ cdef class IPointSolver(_LPSolver):
             * :data:`msg_lev`, the message level,
               with possible values
 
-                * :data:`'no'`: no output
-                * :data:`'warnerror'`: warnings and errors only
-                * :data:`'normal'`: normal output
-                * :data:`'full'`: normal output and informational messages
+              * :data:`'no'`: no output
+              * :data:`'warnerror'`: warnings and errors only
+              * :data:`'normal'`: normal output
+              * :data:`'full'`: normal output and informational messages
 
             * :data:`ord_alg`, the ordering algorithm used prior to Cholesky
               factorization, with possible values
 
-                * :data:`'orig'`: normal (original)
-                * :data:`'qmd'`: quotient minimum degree
-                * :data:`'amd'`: approximate minimum degree
-                * :data:`'symamd'`: approximate minimum degree for symmetric
-                  matrices
+              * :data:`'orig'`: normal (original)
+              * :data:`'qmd'`: quotient minimum degree
+              * :data:`'amd'`: approximate minimum degree
+              * :data:`'symamd'`: approximate minimum degree for symmetric
+                matrices
 
         :raises ValueError: if a non-existing control name is given
 
