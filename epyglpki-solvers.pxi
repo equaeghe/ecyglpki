@@ -650,11 +650,60 @@ cdef class IntOptSolver(_Solver):
         controls['pp_tech'] = pptech2str[controls['pp_tech']]
         return controls
 
-    def solve(self, solver='branchcut', obj_bound=False):
+    def solve(self, solver='branchcut', obj_bound=None):
+        """Solve the mixed-integer linear program
+
+        :param solver: which solver to use, chosen from
+
+            * :data:`'branchcut'`: a branch-and-cut solver
+            * :data:`'intfeas1'`: a SAT solver based integer feasibility
+              solver; applicable only to problems
+
+              * that are feasibility problems (but see `obj_bound` description)
+              * with only binary variables
+                (and integer variables with coinciding lower and upper bound)
+              * with all-integer coefficients
+
+              and furthermore efficient mainly for problems with constraints
+              that are covering, packing, or partitioning inequalities, i.e.,
+              sums of binary variables :math:`x` or their ‘negation’
+              :math:`1-x`, smaller than, equal to, or larger than :math:`1`.
+
+        :type solver: :class:`str`
+        :param obj_bound: if `solver` is :data:`'intfeas1'`, a solution is
+            considered feasible only if the corresponding objective value is
+            not worse than this bound (not used if solver is
+            :data:`'branchcut'`)
+        :type obj_bound: :class:`~numbers.Integral`
+        :returns: solution status; see :meth:`IntOptSolver.status` for details
+        :rtype: :class:`str`
+        :raises ValueError: if `solver` is neither :data:`'branchcut'` nor
+            :data:`'intfeas1'`
+        :raises TypeError: if `obj_bound` is not :class:`~numbers.Integral`
+        :raises ValueError: if incorrect bounds are given
+        :raises ValueError: if no optimal LP relaxation basis has been provided
+        :raises ValueError: if the LP relaxation is infeasible
+        :raises ValueError: if the LP relaxation is unbounded
+        :raises RuntimeError: in case of solver failure
+        :raises StopIteration: if the relative mip gap tolerance has been
+            reached
+        :raises StopIteration: if the time limit has been exceeded
+        :raises StopIteration: if the branch-and-cut callback terminated the
+            solver
+        :raises ValueError: if not all problem parameters are integer
+            (only relevant if `solver` is :data:`'intfeas1'`)
+        :raises OverflowError: if an integer overflow occurred when
+            transforming to CNF SAT format
+
+        .. todo::
+
+            Add doctest
+
+        """
         if solver is 'branchcut':
             retcode = glpk.intopt(self._problem, &self._iocp)
         elif solver is 'intfeas1':
-            if obj_bound is False:
+            if obj_bound is None:
                 retcode = glpk.intfeas1(self._problem, False, 0)
             elif isinstance(obj_bound, numbers.Integral):
                 retcode = glpk.intfeas1(self._problem, True, obj_bound)
