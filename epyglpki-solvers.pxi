@@ -408,7 +408,7 @@ cdef class IPointSolver(_LPSolver):
         """Change or retrieve the solver's control parameters
 
         :param defaults: whether to set the parameters back to their default
-            values
+            values or not
         :type defaults: :class:`bool`
         :param controls: zero or more named parameters to change from the
             following list:
@@ -425,7 +425,7 @@ cdef class IPointSolver(_LPSolver):
               factorization, with possible values
 
                 * :data:`'orig'`: normal (original)
-                * :data:`'qmd'`: quotient maximum degree
+                * :data:`'qmd'`: quotient minimum degree
                 * :data:`'amd'`: approximate minimum degree
                 * :data:`'symamd'`: approximate minimum degree for symmetric
                   matrices
