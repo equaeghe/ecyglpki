@@ -405,6 +405,38 @@ cdef class IPointSolver(_LPSolver):
         glpk.init_iptcp(&self._iptcp)
 
     def controls(self, defaults=False, **controls):
+        """Change or retrieve the solver's control parameters
+
+        :param defaults: whether to set the parameters back to their default
+            values
+        :type defaults: :class:`bool`
+        :param controls: zero or more named parameters to change from the
+            following list:
+
+            * :data:`msg_lev`, the message level,
+              with possible values
+
+                * :data:`'no'`: no output
+                * :data:`'warnerror'`: warnings and errors only
+                * :data:`'normal'`: normal output
+                * :data:`'full'`: normal output and informational messages
+
+            * :data:`ord_alg`, the ordering algorithm used prior to Cholesky
+              factorization, with possible values
+
+                * :data:`'orig'`: normal (original)
+                * :data:`'qmd'`: quotient maximum degree
+                * :data:`'amd'`: approximate minimum degree
+                * :data:`'symamd'`: approximate minimum degree for symmetric
+                  matrices
+
+        :raises ValueError: if a non-existing control name is given
+
+        .. todo::
+
+            Add doctest
+
+        """
         if defaults:
             glpk.init_iptcp(&self._iptcp)
         for control, val in controls.items():
