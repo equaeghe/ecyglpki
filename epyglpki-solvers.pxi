@@ -591,6 +591,81 @@ cdef class IntOptSolver(_Solver):
         glpk.init_iocp(&self._iocp)
 
     def controls(self, defaults=False, **controls):
+        """Change or retrieve the solver's control parameters
+
+        :param defaults: whether to set the parameters back to their default
+            values or not
+        :type defaults: :class:`bool`
+        :param controls: zero or more named parameters to change from the
+            following list:
+
+            * :data:`msg_lev`, the message level,
+              with possible values
+
+              * :data:`'no'`: no output
+              * :data:`'warnerror'`: warnings and errors only
+              * :data:`'normal'`: normal output
+              * :data:`'full'`: normal output and informational messages
+
+            * :data:`out_frq` (:class:`~numbers.Integral`) – output frequency
+              [ms] of informational messages
+            * :data:`out_dly` (:class:`~numbers.Integral`) – output delay
+              [ms] of current LP relaxation solution
+            * :data:`tm_lim` (:class:`~numbers.Integral`) – time limit [ms]
+            * :data:`br_tech`, the branching technique, with possible values
+
+              * :data:`'first_fracvar'`: first fractional variable
+              * :data:`'last_fracvar'`: last fractional variable
+              * :data:`'most_fracvar'`: most fractional variable
+              * :data:`'Driebeck-Tomlin'`: heuristic by Driebeck & Tomlin
+              * :data:`'hybrid_peudocost'`: hybrid pseudocost heuristic
+
+            * :data:`bt_tech`, the backtracking technique, with possible values
+
+              * :data:`'depth'`: depth first search
+              * :data:`'breadth'`: breadth first search
+              * :data:`'bound'`: best local bound
+              * :data:`'projection'`: best projection heuristic
+
+            * :data:`pp_tech`, the preprocessing technique,
+              with possible values
+
+              * :data:`'none'`: disable preprocessing
+              * :data:`'root'`: preprocessing only on the root level
+              * :data:`'all'`: preprocessing on all levels
+
+            * :data:`mir_cuts` (:class:`bool`) –
+              generate mixed integer rounding cuts
+            * :data:`gmi_cuts` (:class:`bool`) –
+              generate Gomory’s mixed integer cuts
+            * :data:`cov_cuts` (:class:`bool`) –
+              generate mixed cover cuts
+            * :data:`clq_cuts` (:class:`bool`) –
+              generate clique cuts
+            * :data:`fp_heur` (:class:`bool`) –
+              apply feasibility pump heuristic
+            * :data:`tol_int` (:class:`~numbers.Real`) – absolute tolerance
+              used to check if the optimal solution to the current LP
+              relaxation is integer feasible
+            * :data:`tol_obj` (:class:`~numbers.Real`) – relative tolerance
+              used to check if the objective value in the optimal solution to
+              the current LP relaxation is not better than in the best known
+              integer feasible solution.
+            * :data:`mip_gap` (:class:`~numbers.Real`) – relative MIP-gap
+              tolerance
+              (search stops once the relative MIP-gap falls below this value)
+            * :data:`presolve` (:class:`bool`) – use MIP presolver,
+              may simplify the problem
+            * :data:`binarize` (:class:`bool`) – binarize integer variables
+              (only used if :data:`presolve` is :data:`True`)
+
+        :raises ValueError: if a non-existing control name is given
+
+        .. todo::
+
+            Add doctest
+
+        """
         if defaults:
             glpk.init_iocp(&self._iocp)
         for control, val in controls.items():
