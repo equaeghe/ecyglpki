@@ -471,6 +471,20 @@ cdef class IPointSolver(_LPSolver):
         return glpk.ipt_obj_val(self._problem)
 
     def variables(self, dual=False):
+        """Returns the values of the variables for the current solution
+
+        :param dual: whether to return dual or primal values
+        :type dual: :class:`bool`
+        :returns: the nonzero values of the variables for the current
+            solution
+        :rtype: :class:`dict` from :class:`Variable` to :class:`float`
+        :raises TypeError: if `dual` is not :class:`bool`
+
+        .. todo::
+
+            Add doctest
+
+        """
         return self._solution(self._program._variables,
                               glpk.ipt_col_prim, glpk.ipt_col_dual, dual)
 
