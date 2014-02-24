@@ -824,8 +824,10 @@ cdef class IntOptSolver(_Solver):
 
         :returns: the nonzero values of the variables for the current
             solution
-        :rtype: :class:`dict` from :class:`Variable` to :class:`float` or 
+        :rtype: :class:`dict` from :class:`Variable` to :class:`float` or
             :class:`int`
+        :raises ValueError: if a variable with :data:`'integer'` or
+            :data:`'binary'` kind has a non-integer value
 
         .. todo::
 
@@ -836,7 +838,11 @@ cdef class IntOptSolver(_Solver):
         for col, variable in enumerate(self._program._variables, start=1):
             val = glpk.mip_col_val(self._problem, col)
             if variable.kind() in {'integer', 'binary'}:
-                val = int(val)
+                if val.is_integer():
+                    val = int(val)
+                else:
+                    raise ValueError("Variable with integer or binary kind" +
+                                     "has non-integer value")
             if val != 0:
                 solution[variable] = val
         return solution
