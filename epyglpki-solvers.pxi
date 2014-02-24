@@ -413,7 +413,7 @@ cdef class IPointSolver(_LPSolver):
         :param controls: zero or more named parameters to change from the
             following list:
 
-            * :data:`msg_lev`, the message level,
+            * :data:`msg_lev` (:class:`str`) – the message level,
               with possible values
 
               * :data:`'no'`: no output
@@ -421,8 +421,8 @@ cdef class IPointSolver(_LPSolver):
               * :data:`'normal'`: normal output
               * :data:`'full'`: normal output and informational messages
 
-            * :data:`ord_alg`, the ordering algorithm used prior to Cholesky
-              factorization, with possible values
+            * :data:`ord_alg` (:class:`str`) – the ordering algorithm used
+              prior to Cholesky factorization, with possible values
 
               * :data:`'orig'`: normal (original)
               * :data:`'qmd'`: quotient minimum degree
@@ -599,7 +599,7 @@ cdef class IntOptSolver(_Solver):
         :param controls: zero or more named parameters to change from the
             following list:
 
-            * :data:`msg_lev`, the message level,
+            * :data:`msg_lev` (:class:`str`) – the message level,
               with possible values
 
               * :data:`'no'`: no output
@@ -612,7 +612,8 @@ cdef class IntOptSolver(_Solver):
             * :data:`out_dly` (:class:`~numbers.Integral`) – output delay
               [ms] of current LP relaxation solution
             * :data:`tm_lim` (:class:`~numbers.Integral`) – time limit [ms]
-            * :data:`br_tech`, the branching technique, with possible values
+            * :data:`br_tech` (:class:`str`) – the branching technique,
+              with possible values
 
               * :data:`'first_fracvar'`: first fractional variable
               * :data:`'last_fracvar'`: last fractional variable
@@ -620,14 +621,15 @@ cdef class IntOptSolver(_Solver):
               * :data:`'Driebeck-Tomlin'`: heuristic by Driebeck & Tomlin
               * :data:`'hybrid_peudocost'`: hybrid pseudocost heuristic
 
-            * :data:`bt_tech`, the backtracking technique, with possible values
+            * :data:`bt_tech` (:class:`str`) – the backtracking technique,
+              with possible values
 
               * :data:`'depth'`: depth first search
               * :data:`'breadth'`: breadth first search
               * :data:`'bound'`: best local bound
               * :data:`'projection'`: best projection heuristic
 
-            * :data:`pp_tech`, the preprocessing technique,
+            * :data:`pp_tech` (:class:`str`) – the preprocessing technique,
               with possible values
 
               * :data:`'none'`: disable preprocessing
