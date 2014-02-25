@@ -142,8 +142,8 @@ cdef smretcode2error = {
 
 # return codes (message)
 cdef smretcode2str = {
-    glpk.EOBJLL: "Objective function has reached its lower limit.",
-    glpk.EOBJUL: "Objective function has reached its upper limit.",
+    glpk.EOBJLL: "obj_ll reached",
+    glpk.EOBJUL: "obj_ul reached",
     }
 
 

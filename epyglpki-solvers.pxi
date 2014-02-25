@@ -184,6 +184,37 @@ cdef class SimplexSolver(_LPSolver):
         return controls
 
     def solve(self, exact=False):
+        """Solve the linear program
+
+        :param exact: whether to use exact arithmetic or not
+            (only if the :class:`meth` control parameter is :data:`'primal'`)
+        :type exact: :class:`bool`
+        :returns: solution status; see :meth:`SimplexSolver.status` for
+            details, or :data:`"obj_ll reached"` or :data:`"obj_ul reached"` in
+            case that happens
+        :rtype: :class:`str`
+        :raises ValueError: if `exact` is :data:`True` but the :data:`meth`
+            control parameter is not :data:`'primal'`
+        :raises ValueError: if finite values are set for :data:`obj_ll` or
+            :data:`obj_ll` while the :data:`meth` control parameter is not
+            :data:`'dual'`
+        :raises ValueError: if the basis is invalid
+        :raises ValueError: if the basis matrix is singular
+        :raises ValueError: if the basis matrix is ill-conditioned
+        :raises ValueError: if incorrect bounds are given
+        :raises RuntimeError: in case of solver failure
+        :raises StopIteration: if the iteration limit is exceeded
+        :raises StopIteration: if the time limit is exceeded
+        :raises StopIteration: if the presolver detects the problem has no
+            primal feasible solution
+        :raises StopIteration: if the presolver detects the problem has no dual
+            feasible solution
+
+        .. todo::
+
+            Add doctest
+
+        """
         if exact:
             if meth2str[self._smcp.meth] is not 'primal':
                 raise ValueError("Only primal simplex with exact arithmetic.")
