@@ -173,7 +173,7 @@ cdef str2brtech = {
     'first_fracvar': glpk.BR_FFV,
     'last_fracvar': glpk.BR_LFV,
     'most_fracvar': glpk.BR_MFV,
-    'Driebeck-Tomlin': glpk.BR_DTH, 
+    'Driebeek-Tomlin': glpk.BR_DTH,
     'hybrid_peudocost': glpk.BR_PCH
     }
 cdef brtech2str = {br_tech: string for string, br_tech in str2brtech.items()}

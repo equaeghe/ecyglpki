@@ -618,7 +618,8 @@ cdef class IntOptSolver(_Solver):
               * :data:`'first_fracvar'`: first fractional variable
               * :data:`'last_fracvar'`: last fractional variable
               * :data:`'most_fracvar'`: most fractional variable
-              * :data:`'Driebeck-Tomlin'`: heuristic by Driebeck & Tomlin
+              * :data:`'Driebeek-Tomlin'`: heuristic by `Driebeek
+                <http://www.jstor.org/discover/10.2307/2627887>`_ & Tomlin
               * :data:`'hybrid_peudocost'`: hybrid pseudocost heuristic
 
             * :data:`bt_tech` (:class:`str`) – the backtracking technique,
