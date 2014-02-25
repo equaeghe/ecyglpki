@@ -76,6 +76,89 @@ cdef class SimplexSolver(_LPSolver):
         glpk.get_bfcp(self._problem, &self._bfcp)
 
     def controls(self, defaults=False, **controls):
+        """Change or retrieve the solver's control parameters
+
+        :param defaults: whether to set the parameters back to their default
+            values or not
+        :type defaults: :class:`bool`
+        :param controls: zero or more named parameters to change from the
+            following list:
+
+            * :data:`msg_lev` (:class:`str`) – the message level,
+              with possible values
+
+              * :data:`'no'`: no output
+              * :data:`'warnerror'`: warnings and errors only
+              * :data:`'normal'`: normal output
+              * :data:`'full'`: normal output and informational messages
+
+            * :data:`meth` (:class:`str`) – simplex method,
+              with possible values
+
+              * :data:`'primal'`: two-phase primal simplex
+              * :data:`'dual'`: two-phase dual simplex
+              * :data:`'dual_fail_primal'`: two-phase dual simplex and, if it
+                fails, switch to primal simplex
+
+            * :data:`pricing` (:class:`str`) – pricing technique,
+              with possible values
+
+              * :data:`'Dantzig'`: standard ‘textbook’
+              * :data:`'steepest'`: projected steepest edge
+
+            * :data:`r_test` (:class:`str`) – ratio test technique,
+              with possible values
+
+              * :data:`'standard'`: standard ‘textbook’
+              * :data:`'Harris'`: Harris’s two-pass ratio test
+
+            * :data:`tol_bnd` (:class:`~numbers.Real`) – tolerance used to
+              check if the basic solution is primal feasible
+            * :data:`tol_dj` (:class:`~numbers.Real`) – tolerance used to check
+              if the basic solution is dual feasible
+            * :data:`tol_piv` (:class:`~numbers.Real`) – tolerance used to
+              choose eligble pivotal elements of the simplex table
+            * :data:`obj_ll` (:class:`~numbers.Real`) – lower limit of the
+              objective function (only if :data:`meth` is :data:`'dual'`)
+            * :data:`obj_ul` (:class:`~numbers.Real`) – upper limit of the
+              objective function (only if :data:`meth` is :data:`'dual'`)
+            * :data:`it_lim` (:class:`~numbers.Integral`) – iteration limit
+            * :data:`tm_lim` (:class:`~numbers.Integral`) – time limit [ms]
+            * :data:`out_frq` (:class:`~numbers.Integral`) – output frequency
+              [iterations] of informational messages
+            * :data:`out_dly` (:class:`~numbers.Integral`) – output delay
+              [ms] of solution process information
+            * :data:`presolve` (:class:`bool`) – use LP presolver
+
+            or, for basis factorization, from the following list:
+
+            * :data:`type` (:class:`str`) – basis factorization type,
+              with possible values
+
+              * :data:`'Forrest-Tomlin'`: LU + Forrest–Tomlin update
+              * :data:`'Bartels-Golub'`: LU + Schur complement +
+                Bartels–Golub update
+              * :data:`'Givens'`: LU + Schur complement +
+                Givens rotation update
+
+            * :data:`lu_size` (:class:`~numbers.Integral`) – 
+            * :data:`piv_tol` (:class:`~numbers.Real`) – 
+            * :data:`piv_lim` (:class:`~numbers.Integral`) – 
+            * :data:`suhl` (:class:`bool`) – 
+            * :data:`eps_tol` (:class:`~numbers.Real`) – 
+            * :data:`max_gro` (:class:`~numbers.Real`) – 
+            * :data:`nfs_max` (:class:`~numbers.Integral`) – 
+            * :data:`upd_tol` (:class:`~numbers.Real`) – 
+            * :data:`nrs_max` (:class:`~numbers.Integral`) – 
+            * :data:`rs_size` (:class:`~numbers.Integral`) – 
+
+        :raises ValueError: if a non-existing control name is given
+
+        .. todo::
+
+            Add doctest
+
+        """
         if defaults:
             glpk.init_smcp(&self._smcp)
             glpk.set_bfcp(self._problem, NULL)
