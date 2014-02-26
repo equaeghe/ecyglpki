@@ -135,9 +135,11 @@ cdef class SimplexSolver(_LPSolver):
             * :data:`type` (:class:`str`) – basis factorization type,
               with possible values
 
-              * :data:`'Forrest-Tomlin'`: LU + Forrest–Tomlin update
+              * :data:`'Forrest-Tomlin'`: LU + `Forrest–Tomlin
+                <http://dx.doi.org/10.1007/BF01584548>`_ update
               * :data:`'Bartels-Golub'`: LU + Schur complement +
-                Bartels–Golub update
+                `Bartels–Golub <http://dx.doi.org/10.1145/362946.362974>`_
+                update
               * :data:`'Givens'`: LU + Schur complement +
                 Givens rotation update
 
@@ -759,8 +761,8 @@ cdef class IntOptSolver(_Solver):
               generate mixed cover cuts
             * :data:`clq_cuts` (:class:`bool`) –
               generate clique cuts
-            * :data:`fp_heur` (:class:`bool`) –
-              apply feasibility pump heuristic
+            * :data:`fp_heur` (:class:`bool`) – apply `feasibility pump
+              <http://dx.doi.org/10.1007/s10107-004-0570-3>`_ heuristic
             * :data:`tol_int` (:class:`~numbers.Real`) – absolute tolerance
               used to check if the optimal solution to the current LP
               relaxation is integer feasible
