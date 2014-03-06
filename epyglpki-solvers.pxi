@@ -519,6 +519,26 @@ cdef class SimplexSolver(_LPSolver):
         self._write(glpk.write_sol, fname)
 
     def print_ranges(self, varstraints, fname):
+        """Write a sensitivity analysis report to file in readable format
+
+        :param varstraints: sequence of variables and/or constraints to analyze
+        :type varstraints: :class:`~collections.abc.Sequence` of
+            :class:`Variable` and/or :class:`Constraint`
+        :param fname: the name of the file to write to
+        :type fname: :class:`str`
+        :raises Exception: if the current solution is not optimal
+        :raises TypeError: if `varstraints` is not 
+            :class:`~collections.abc.Sequence` of :class:`Variable` and/or
+            :class:`Constraint`
+        :raises ValueError: if the current basis is invalid
+        :raises ValueError: if the current basis matrix is singular
+        :raises ValueError: if the current basis matrix is ill-conditioned
+
+        .. todo::
+
+            Add doctest
+
+        """
         if self.status() is not 'optimal':
             raise Exception("Solution must be optimal.")
         if not isinstance(varstraints, collections.abc.Sequence):
