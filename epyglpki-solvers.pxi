@@ -416,6 +416,19 @@ cdef class SimplexSolver(_LPSolver):
                               glpk.sm_row_prim, glpk.sm_row_dual, dual)
 
     def unboundedness(self):
+        """Returns a variable or constraint causing unboundedness
+
+        :returns: a variable or constraint causing unboundedness (if any) and
+            the nature of the unboundedness, either :data:`'primal'` or
+            :data:`'dual'`
+        :rtype: length-2 :class:`tuple` of :class:`Variable` or
+            :class:`Constraint` and :class:`str`
+
+        .. todo::
+
+            Add doctest
+
+        """
         ind = glpk.sm_unbnd_ray(self._problem)
         constraints = len(self._program._constraints)
         if ind is 0:
