@@ -143,16 +143,35 @@ cdef class SimplexSolver(_LPSolver):
               * :data:`'Givens'`: LU + Schur complement +
                 Givens rotation update
 
-            * :data:`lu_size` (:class:`~numbers.Integral`) – 
-            * :data:`piv_tol` (:class:`~numbers.Real`) – 
-            * :data:`piv_lim` (:class:`~numbers.Integral`) – 
-            * :data:`suhl` (:class:`bool`) – 
-            * :data:`eps_tol` (:class:`~numbers.Real`) – 
-            * :data:`max_gro` (:class:`~numbers.Real`) – 
-            * :data:`nfs_max` (:class:`~numbers.Integral`) – 
-            * :data:`upd_tol` (:class:`~numbers.Real`) – 
-            * :data:`nrs_max` (:class:`~numbers.Integral`) – 
-            * :data:`rs_size` (:class:`~numbers.Integral`) – 
+            * :data:`lu_size` (:class:`~numbers.Integral`) – initial size
+              of the Sparse Vector Area, in non-zeros (for first
+              LU-factorization; set to `0` to determine it automatically)
+            * :data:`piv_tol` (:class:`~numbers.Real`) – Markowitz threshold
+              pivoting tolerance (value must lie between `0` and `1`)
+            * :data:`piv_lim` (:class:`~numbers.Integral`) – number of pivot
+              candidates that need to be considered on choosing a pivot element (at least `1`)
+            * :data:`suhl` (:class:`bool`) – use Suhl heuristic
+            * :data:`eps_tol` (:class:`~numbers.Real`) – tolerance below which
+              numbers are replaced by zero
+            * :data:`max_gro` (:class:`~numbers.Real`) – maximal growth factor
+              of elements of the U-matrix above which the basis matrix is
+              considered ill-conditioned 
+            * :data:`nfs_max` (:class:`~numbers.Integral`) – maximal number of
+              additional row-like factors (used only when :data:`type` is
+              :data:`'Forrest-Tomlin'`)
+            * :data:`upd_tol` (:class:`~numbers.Real`) – update tolerance for
+              the relative magnitude of diagonal elements of U determining
+              whether the factorization is inaccurate (value must lie between
+              `0` and `1`; used only when :data:`type` is
+              :data:`'Forrest-Tomlin'`)
+            * :data:`nrs_max` (:class:`~numbers.Integral`) – maximal number of
+              additional row and columns (used only when :data:`type` is
+              :data:`'Bartels-Golub'` or :data:`Givens'`)
+            * :data:`rs_size` (:class:`~numbers.Integral`) – initial size
+              of the Sparse Vector Area, in non-zeros (for initial
+              LU-factorization; set to `0` to determine it automatically; used
+              only when :data:`type` is :data:`'Bartels-Golub'` or
+              :data:`Givens'`)
 
         :raises ValueError: if a non-existing control name is given
 
