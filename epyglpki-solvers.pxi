@@ -444,6 +444,60 @@ cdef class SimplexSolver(_LPSolver):
         return (varstraint, nature)
 
     def basis(self, basis=None, warmup=False):
+        """Change or retrieve basis
+
+        A basis is defined by the statuses assigned to all variables and
+        constraints; the possible statuses are
+
+        * :data:`'basic'`: basic
+        * :data:`'lower'`: non-basic with active lower bound
+        * :data:`'upper'`: non-basic with active upper bound
+        * :data:`'free'`: non-basic free
+        * :data:`'fixed'`: non-basic fixed
+
+        A basis is valid if the basis matrix is non-singular, which implies
+        that the number of basic variables and constraints is equal to the
+        total number of constraints.
+
+        :param basis: either an algorithm for generating a basis,
+            chosen from
+
+            * :data:`'standard'`: sets all constraints as basic
+            * :data:`'advanced'`: sets as basic
+
+              #. all non-fixed constraints
+              #. as many non-fixed variables as possible, while preserving the
+                 lower triangular structure of the basis matrix
+              #. appropriate fixed constraints to complete the basis
+
+            * :data:`'Bixby'`: algorithm used by CPLEX, as discussed by
+              `Bixby <http://dx.doi.org/10.1287/ijoc.4.3.267>`_
+
+            or the mapping of statuses to change
+            (omit for retrieval only)
+
+        :type basis: :class:`str` or :class:`~collections.abc.Mapping` from
+            :class:`Variable` or :class:`Constraint` to :class:`str`
+        :param warmup: whether to ‘warm up’ the basis, so that
+            :meth:`SimplexSolver.solve` can be used without presolving
+        :type warmup: :class:`bool`
+        :returns: a mapping of the basis statuses of all variables and
+            constraints
+        :rtype: :class:`dict` from :class:`Variable` or :class:`Constraint` to
+            :class:`str`
+
+        .. todo::
+
+            Add doctest
+
+        .. note::
+
+            After :meth:`SimplexSolver.solve` has been run successfully, the
+            basis is left in a valid state. So it is not necessary to run this
+            method before, e.g., re-optimizating after only the objective has
+            been changed.
+
+        """
         if basis is 'standard':
             glpk.std_basis(self._problem)
         elif basis is 'advanced':
