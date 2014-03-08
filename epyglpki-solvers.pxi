@@ -443,7 +443,7 @@ cdef class SimplexSolver(_LPSolver):
         nature = 'dual' if varstat is glpk.BS else 'primal'
         return (varstraint, nature)
 
-    def basis(self, basis=None, warmup=False):
+    def basis(self, algorithm=None, status=None, warmup=False):
         """Change or retrieve basis
 
         A basis is defined by the statuses assigned to all variables and
@@ -459,8 +459,8 @@ cdef class SimplexSolver(_LPSolver):
         that the number of basic variables and constraints is equal to the
         total number of constraints.
 
-        :param basis: either an algorithm for generating a basis,
-            chosen from
+        :param algorithm: an algorithm for generating a basis (omit to leave
+            keep current basis), chosen from
 
             * :data:`'standard'`: sets all constraints as basic
             * :data:`'advanced'`: sets as basic
@@ -473,10 +473,10 @@ cdef class SimplexSolver(_LPSolver):
             * :data:`'Bixby'`: algorithm used by CPLEX, as discussed by
               `Bixby <http://dx.doi.org/10.1287/ijoc.4.3.267>`_
 
-            or the mapping of statuses to change
+        :type algorithm: :class:`str`
+        :param status: the mapping of statuses to change
             (omit for retrieval only)
-
-        :type basis: :class:`str` or :class:`~collections.abc.Mapping` from
+        :type status: :class:`~collections.abc.Mapping` from
             :class:`Variable` or :class:`Constraint` to :class:`str`
         :param warmup: whether to ‘warm up’ the basis, so that
             :meth:`SimplexSolver.solve` can be used without presolving
@@ -485,6 +485,14 @@ cdef class SimplexSolver(_LPSolver):
             constraints
         :rtype: :class:`dict` from :class:`Variable` or :class:`Constraint` to
             :class:`str`
+        :raises ValueError: if `algorithm` is neither :data:`'standard'`,
+            :data:`'advanced'`, nor :data:`'Bixby'`
+        :raises TypeError: if `basis` is not :class:`~collections.abc.Mapping`
+        :raises TypeError: if `basis` keys are neither :class:`Variable` nor
+            :class:`Constraint`
+        :raises ValueError: if the basis is invalid
+        :raises ValueError: if the basis matrix is singular
+        :raises ValueError: if the basis matrix is ill-conditioned
 
         .. todo::
 
@@ -498,14 +506,18 @@ cdef class SimplexSolver(_LPSolver):
             been changed.
 
         """
-        if basis is 'standard':
-            glpk.std_basis(self._problem)
-        elif basis is 'advanced':
-            glpk.adv_basis(self._problem, 0)
-        elif basis is 'Bixby':
-            glpk.cpx_basis(self._problem)
-        elif basis is not None:
-            for varstraint, string in basis.items():
+        if algorithm is not None:
+            if algorithm is 'standard':
+                glpk.std_basis(self._problem)
+            elif algorithm is 'advanced':
+                glpk.adv_basis(self._problem, 0)
+            elif algorithm is 'Bixby':
+                glpk.cpx_basis(self._problem)
+            else:
+                raise ValueError(repr(algorithm)
+                                 + " is not a basis generation algorithm.")
+        if isinstance(status, collections.abc.Mapping):
+            for varstraint, string in status.items():
                 varstat = str2varstat[string]
                 if isinstance(varstraint, Variable):
                     col = self._program._ind(varstraint)
@@ -516,18 +528,20 @@ cdef class SimplexSolver(_LPSolver):
                 else:
                     raise TypeError("Only 'Variable' and 'Constraint' " +
                                     "can have a status.")
+        elif status is not None:
+            raise TypeError("Statuses must be specified using a Mapping.")
         if warmup:
             retcode = glpk.warm_up(self._problem)
             if retcode is not 0:
                 raise smretcode2error[retcode]
-        basis = {}
+        status = {}
         for col, variable in enumerate(self._program._variables, start=1):
             varstat = glpk.get_col_stat(self._problem, col)
-            basis[variable] = varstat2str[varstat]
+            status[variable] = varstat2str[varstat]
         for row, constraint in enumerate(self._program._constraints, start=1):
             varstat = glpk.get_row_stat(self._problem, row)
-            basis[constraint] = varstat2str[varstat]
-        return basis
+            status[constraint] = varstat2str[varstat]
+        return status
 
     def print_solution(self, fname):
         """Write the solution to a file in a readable format
