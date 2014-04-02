@@ -69,7 +69,7 @@ cdef class MILProgram:
         self._constraints = []
 
     def _problem_ptr(self):
-        """Encapsulates the pointer to the problem object
+        """Encapsulate the pointer to the problem object
 
         The problem object pointer `self._problem` cannot be passed as such as
         an argument to other functions. Therefore we encapsulate it in a
@@ -311,7 +311,7 @@ cdef class MILProgram:
         return constraint
 
     def constraints(self):
-        """A list of the problem's constraints
+        """Return a list of the problem's constraints
 
         :returns: a list of the problem's constraints
         :rtype: :class:`list` of :class:`Constraint`

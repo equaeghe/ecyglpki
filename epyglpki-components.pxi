@@ -563,7 +563,7 @@ cdef class Objective(_ProgramComponent):
         return coeffs
 
     def constant(self, constant=None):
-        """ Change or retrieve objective function constant
+        """Change or retrieve objective function constant
 
         :param constant: the new objective function constant
             (omit for retrieval only)

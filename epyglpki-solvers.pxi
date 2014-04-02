@@ -380,7 +380,7 @@ cdef class SimplexSolver(_LPSolver):
         return glpk.sm_obj_val(self._problem)
 
     def variables(self, dual=False):
-        """Returns the values of the variables for the current solution
+        """Return the values of the variables for the current solution
 
         :param dual: whether to return dual or primal values
         :type dual: :class:`bool`
@@ -398,7 +398,7 @@ cdef class SimplexSolver(_LPSolver):
                               glpk.sm_col_prim, glpk.sm_col_dual, dual)
 
     def constraints(self, dual=False):
-        """Returns the values of the constraints for the current solution
+        """Return the values of the constraints for the current solution
 
         :param dual: whether to return dual or primal values
         :type dual: :class:`bool`
@@ -416,7 +416,7 @@ cdef class SimplexSolver(_LPSolver):
                               glpk.sm_row_prim, glpk.sm_row_dual, dual)
 
     def unboundedness(self):
-        """Returns a variable or constraint causing unboundedness
+        """Return a variable or constraint causing unboundedness
 
         :returns: a variable or constraint causing unboundedness (if any) and
             the nature of the unboundedness, either :data:`'primal'` or
@@ -459,8 +459,8 @@ cdef class SimplexSolver(_LPSolver):
         that the number of basic variables and constraints is equal to the
         total number of constraints.
 
-        :param algorithm: an algorithm for generating a basis (omit to leave
-            keep current basis), chosen from
+        :param algorithm: an algorithm for generating a basis (omit to keep 
+            current basis), chosen from
 
             * :data:`'standard'`: sets all constraints as basic
             * :data:`'advanced'`: sets as basic
@@ -739,7 +739,7 @@ cdef class IPointSolver(_LPSolver):
         return glpk.ipt_obj_val(self._problem)
 
     def variables(self, dual=False):
-        """Returns the values of the variables for the current solution
+        """Return the values of the variables for the current solution
 
         :param dual: whether to return dual or primal values
         :type dual: :class:`bool`
@@ -757,7 +757,7 @@ cdef class IPointSolver(_LPSolver):
                               glpk.ipt_col_prim, glpk.ipt_col_dual, dual)
 
     def constraints(self, dual=False):
-        """Returns the values of the constraints for the current solution
+        """Return the values of the constraints for the current solution
 
         :param dual: whether to return dual or primal values
         :type dual: :class:`bool`
@@ -1057,7 +1057,7 @@ cdef class IntOptSolver(_Solver):
         return glpk.mip_obj_val(self._problem)
 
     def variables(self):
-        """Returns the values of the variables for the current solution
+        """Return the values of the variables for the current solution
 
         :returns: the nonzero values of the variables for the current
             solution
@@ -1085,7 +1085,7 @@ cdef class IntOptSolver(_Solver):
         return solution
 
     def constraints(self):
-        """Returns the values of the constraints for the current solution
+        """Return the values of the constraints for the current solution
 
         :returns: the nonzero values of the constraints for the current
             solution
