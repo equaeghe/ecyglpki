@@ -41,7 +41,7 @@ cdef extern from "glpk.h":
     enum: BV "GLP_BV"  #  binary variable
 
     #  type of auxiliary/structural variable (argument name is 'vartype'):
-    enum: FR "GLP_FR"  #  free variable
+    enum: FR "GLP_FR"  #  free (unbounded) variable
     enum: LO "GLP_LO"  #  variable with lower bound
     enum: UP "GLP_UP"  #  variable with upper bound
     enum: DB "GLP_DB"  #  double-bounded variable
@@ -51,7 +51,7 @@ cdef extern from "glpk.h":
     enum: BS "GLP_BS"  #  basic variable
     enum: NL "GLP_NL"  #  non-basic variable on lower bound
     enum: NU "GLP_NU"  #  non-basic variable on upper bound
-    enum: NF "GLP_NF"  #  non-basic free variable
+    enum: NF "GLP_NF"  #  non-basic free (unbounded) variable
     enum: NS "GLP_NS"  #  non-basic fixed variable
 
     #  scaling options (argument name is 'scalopt'):
@@ -75,23 +75,25 @@ cdef extern from "glpk.h":
     enum: UNBND "GLP_UNBND"    #  solution is unbounded
 
     #  factorization type (argument name is 'type'):
-    enum: BF_FT "GLP_BF_FT"  #  LUF + Forrest-Tomlin
-    enum: BF_BG "GLP_BF_BG"  #  LUF + Schur compl. + Bartels-Golub
-    enum: BF_GR "GLP_BF_GR"  #  LUF + Schur compl. + Givens rotation
+    enum: BF_LUF "GLP_BF_LUF"  #  plain LU-factorization
+    enum: BF_BTF "GLP_BF_BTF"  #  block triangular LU factorization
+    enum: BF_FT "GLP_BF_FT"    #  Forrest-Tomlin (LUF only)
+    enum: BF_BG "GLP_BF_BG"    #  Schur compl. + Bartels-Golub
+    enum: BF_GR "GLP_BF_GR"    #  Schur compl. + Givens rotation
 
     #  basis factorization control parameters
     ctypedef struct BasFacCP "glp_bfcp":
         int type        #  factorization type
-        int lu_size     #  luf.sv_size
-        double piv_tol  #  luf.piv_tol
-        int piv_lim     #  luf.piv_lim
-        bint suhl       #  luf.suhl
-        double eps_tol  #  luf.eps_tol
-        double max_gro  #  luf.max_gro
-        int nfs_max     #  fhv.hh_max
-        double upd_tol  #  fhv.upd_tol
-        int nrs_max     #  lpf.n_max
-        int rs_size     #  lpf.v_size
+        int lu_size     #  (not used)
+        double piv_tol  #  sgf_piv_tol
+        int piv_lim     #  sgf_piv_lim
+        bint suhl       #  sgf_suhl
+        double eps_tol  #  sgf_eps_tol
+        double max_gro  #  (not used)
+        int nfs_max     #  fhvint.nfs_max
+        double upd_tol  #  (not used) (DOCUMENTED!)
+        int nrs_max     #  scfint.nn_max
+        int rs_size     #  (not used)
 
     #  message level (argument name is 'msg_lev'):
     enum: MSG_OFF "GLP_MSG_OFF"  #  no output
@@ -186,6 +188,11 @@ cdef extern from "glpk.h":
         bint presolve   #  enable/disable using MIP presolver
         bint binarize   #  try to binarize integer variables
         bint fp_heur    #  feasibility pump heuristic
+        bint ps_heur    #  proximity search heuristic
+        int ps_tm_lim   #  proxy time limit (milliseconds)
+        #bint use_sol;  #  use existing solution (UNDOCUMENTED!)
+        #const char* save_sol;
+                        #  filename to save every new solution (UNDOCUMENTED!)
         #bint alien      #  use alien solver (UNDOCUMENTED!)
 
     #  row origin flag (argument name is 'origin'):
@@ -495,6 +502,14 @@ cdef extern from "glpk.h":
     #  determine variable causing unboundedness
     int sm_unbnd_ray "glp_get_unbnd_ray" (ProbObj* problem)
 
+# Undocumented
+#
+#    # get simplex solver iteration count
+#    int get_it_cnt "glp_get_it_cnt" (ProbObj* problem);
+#
+#    # set simplex solver iteration count
+#    void set_it_cnt "glp_set_it_cnt" (ProbObj* problem, int it_cnt);
+
     #  solve LP problem with the interior-point method; returns retcode
     int interior "glp_interior" (ProbObj* problem, const IPointCP* cp)
 
@@ -550,6 +565,11 @@ cdef extern from "glpk.h":
     #  retrieve column value (MIP solution)
     double mip_col_val "glp_mip_col_val" (ProbObj* problem, int col)
 
+    # check feasibility/optimality conditions
+    void check_kkt "glp_check_kkt" (ProbObj* problem, int sol, int cond,
+                                    double* ae_max, int* ae_ind,
+                                    double* re_max, int* re_ind)
+
     #  write basic solution in printable format
     int print_sol "glp_print_sol" (ProbObj* problem, const char* fname)
 
@@ -583,22 +603,22 @@ cdef extern from "glpk.h":
     #  write MIP solution to text file
     int write_mip "glp_write_mip" (ProbObj* problem, const char* fname)
 
-    #  check if the basis factorization exists
+    #  check if LP basis factorization exists
     bint bf_exists "glp_bf_exists" (ProbObj* problem)
 
-    #  compute the basis factorization; returns retcode
+    #  compute LP basis factorization; returns retcode
     int factorize "glp_factorize" (ProbObj* problem)
 
-    #  check if the basis factorization has been updated
+    #  check if LP basis factorization has been updated
     bint bf_updated "glp_bf_updated" (ProbObj* problem)
 
-    #  retrieve basis factorization control parameters
+    #  retrieve LP basis factorization control parameters
     void get_bfcp "glp_get_bfcp" (ProbObj* problem, BasFacCP* cp)
 
-    #  change basis factorization control parameters
+    #  change LP basis factorization control parameters
     void set_bfcp "glp_set_bfcp" (ProbObj* problem, const BasFacCP* cp)
 
-    #  retrieve the basis header information
+    #  retrieve LP basis header information
     int get_bhead "glp_get_bhead" (ProbObj* problem, int k)
 
     #  retrieve row index in the basis header
@@ -830,13 +850,16 @@ cdef extern from "glpk.h":
     #  free GLPK environment; returns freeretcode
     int free_env "glp_free_env" ()
 
+    # write string on terminal
+    void puts "glp_puts" (const char *s);
+
 # Wrapping va_list type args nontrivial
 # (cf. https://github.com/cython/cython/wiki/FAQ#wiki-how-do-i-use-variable-args)
 #
-#    #  write formatted output to terminal
+#    #  write formatted output on terminal
 #    void printf "glp_printf" (const char* fmt, ...)
 #
-#    #  write formatted output to terminal
+#    #  write formatted output on terminal
 #    void vprintf "glp_vprintf" (const char* fmt, va_list arg)
 
     #  enable/disable terminal output
@@ -855,11 +878,11 @@ cdef extern from "glpk.h":
 
 # Currently not fully  wrapped (how to deal with second macro definition?)
 #
-#    ctypedef void (*_glp_error)(const char* fmt, ...)
+#    ctypedef void (*_glp_errfunc)(const char* fmt, ...)
 #
-#    #  display error message and terminate execution
+#    #  display fatal error message and terminate execution
 ##define glp_error glp_error_(__FILE__, __LINE__)
-#    _glp_error error_ "glp_error_" (const char* file, int line)
+#    glp_errfunc glp_error_ "error_" (const char* file, int line)
 #
 #    #  check for logical condition
 ##define glp_assert(expr) \
@@ -870,12 +893,12 @@ cdef extern from "glpk.h":
     void error_hook "glp_error_hook" (void (*func)(void* info), void* info)
 
     #  allocate memory block
-    void* malloc "glp_malloc" (int size)
+    void* alloc "glp_alloc" (int n, int size)
 
-    #  allocate memory block
-    void* calloc "glp_calloc" (int n, int size)
+    #  reallocate memory block
+    void* realloc "glp_realloc" (void *ptr, int n, int size)
 
-    #  free memory block
+    #  free (deallocate) memory block
     void free "glp_free" (void* ptr)
 
     #  set memory usage limit
@@ -981,8 +1004,15 @@ cdef extern from "glpk.h":
 
     #  find minimum-cost flow with out-of-kilter algorithm; returns retcode
     int mincost_okalg "glp_mincost_okalg" (Graph* graph, int v_rhs,
-                                           int a_low, int a_cap, int a_cost, 
+                                           int a_low, int a_cap, int a_cost,
                                            double* sol, int a_x, int v_pi)
+
+
+    # find minimum-cost flow with Bertsekas-Tseng relaxation method
+    int mincost_relax4 "glp_mincost_relax4" (Graph* graph, int v_rhs,
+                                             int a_low, int a_cap, int a_cost,
+                                             int crash, double* sol,
+                                             int a_x, int a_rc)
 
     #  convert maximum flow problem to LP
     void maxflow_lp "glp_maxflow_lp" (ProbObj* problem, Graph* graph,

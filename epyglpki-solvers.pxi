@@ -452,7 +452,7 @@ cdef class SimplexSolver(_LPSolver):
         * :data:`'basic'`: basic
         * :data:`'lower'`: non-basic with active lower bound
         * :data:`'upper'`: non-basic with active upper bound
-        * :data:`'free'`: non-basic free
+        * :data:`'free'`: non-basic free (unbounded)
         * :data:`'fixed'`: non-basic fixed
 
         A basis is valid if the basis matrix is non-singular, which implies
@@ -615,7 +615,7 @@ cdef class SimplexSolver(_LPSolver):
         cdef char* chars
         fname = name2chars(fname)
         chars = fname
-        cdef int* indlist = <int*>glpk.calloc(1+length, sizeof(int))
+        cdef int* indlist = <int*>glpk.alloc(1+length, sizeof(int))
         try:
             rows = len(self._program._constraints)
             for pos, varstraint in enumerate(varstraints, start=1):

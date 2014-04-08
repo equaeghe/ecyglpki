@@ -104,8 +104,8 @@ cdef class _Varstraint(_ProgramComponent):
         else:
             raise TypeError("Coefficients must be given using a " +
                             "collections.abc.Mapping.")
-        cdef double* vals =  <double*>glpk.calloc(1+length, sizeof(double))
-        cdef int* inds =  <int*>glpk.calloc(1+length, sizeof(int))
+        cdef double* vals =  <double*>glpk.alloc(1+length, sizeof(double))
+        cdef int* inds =  <int*>glpk.alloc(1+length, sizeof(int))
         try:
             if coeffs is not None:
                 if length is 0:

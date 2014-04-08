@@ -367,9 +367,9 @@ cdef class MILProgram:
         else:
             raise TypeError("Coefficients must be given using a " +
                             "collections.abc.Mapping.")
-        cdef double* vals = <double*>glpk.calloc(1+elements, sizeof(double))
-        cdef int* cols = <int*>glpk.calloc(1+elements, sizeof(int))
-        cdef int* rows = <int*>glpk.calloc(1+elements, sizeof(int))
+        cdef double* vals = <double*>glpk.alloc(1+elements, sizeof(double))
+        cdef int* cols = <int*>glpk.alloc(1+elements, sizeof(int))
+        cdef int* rows = <int*>glpk.alloc(1+elements, sizeof(int))
         try:
             if elements is 0:
                 glpk.load_matrix(self._problem, elements, NULL, NULL, NULL)
