@@ -89,7 +89,6 @@ cdef extern from "glpk.h":
         bint suhl       #  sgf_suhl
         double eps_tol  #  sgf_eps_tol
         int nfs_max     #  fhvint.nfs_max
-        double upd_tol  #  (not used) (DOCUMENTED!)
         int nrs_max     #  scfint.nn_max
 
     #  message level (argument name is 'msg_lev'):
@@ -187,10 +186,10 @@ cdef extern from "glpk.h":
         bint fp_heur    #  feasibility pump heuristic
         bint ps_heur    #  proximity search heuristic
         int ps_tm_lim   #  proxy time limit (milliseconds)
-        #bint use_sol;  #  use existing solution (UNDOCUMENTED!)
-        #const char* save_sol;
-                        #  filename to save every new solution (UNDOCUMENTED!)
-        #bint alien      #  use alien solver (UNDOCUMENTED!)
+        #bint use_sol    #  use existing solution (experimental/undocumented)
+        #const char* save_sol
+                        #  filename to save every new solution
+                        # (experimental/undocumented)
 
     #  row origin flag (argument name is 'origin'):
     enum: RF_REG "GLP_RF_REG"    #  regular constraint
@@ -743,7 +742,7 @@ cdef extern from "glpk.h":
     #  terminate the solution process
     void ios_terminate "glp_ios_terminate" (Tree* tree)
 
-# Undocumented.
+# Not used and (therefore) undocumented.
 #
 #    #  initialize MPS format control parameters
 #    void init_mpscp "glp_init_mpscp" (MPSFormCP* cp)
@@ -758,7 +757,7 @@ cdef extern from "glpk.h":
                                    const MPSFormCP* cp,  #  cp must be NULL!
                                    const char* fname)
 
-# Undocumented.
+# Not used and (therefore) undocumented.
 #
 #    #  initialize CPLEX LP format control parameters
 #    void init_cpxcp "glp_init_cpxcp" (CPXFormCP* cp)
@@ -807,10 +806,9 @@ cdef extern from "glpk.h":
     #  free the MathProg translator workspace
     void mpl_free_wksp "glp_mpl_free_wksp" (MPTranWksp* wksp)
 
-# Undocumented.
-#
-#    #  stand-alone LP/MIP solver
-#    int main "glp_main" (int argc, const char* argv[])
+    #  stand-alone LP/MIP solver (main function of glpsol;
+    # can be used to avoid having to call glpsol in a separate process)
+    int main "glp_main" (int argc, const char* argv[])
 
     #  read CNF-SAT problem data in DIMACS format
     int read_cnfsat "glp_read_cnfsat" (ProbObj* problem, const char* fname)

@@ -140,7 +140,7 @@ cdef class SimplexSolver(_LPSolver):
 
               and possible second components
 
-              * :data:`'Forrest-Tomlin'`: `Forrest–Tomlin
+              * :data:`'Forrest–Tomlin'`: `Forrest–Tomlin
                 <http://dx.doi.org/10.1007/BF01584548>`_ update applied to U
                 (only with plain LU factorization)
               * :data:`'Bartels-Golub'`:
@@ -158,12 +158,7 @@ cdef class SimplexSolver(_LPSolver):
               numbers are replaced by zero
             * :data:`nfs_max` (:class:`~numbers.Integral`) – maximal number of
               additional row-like factors (used only when :data:`type` is
-              :data:`'Forrest-Tomlin'`)
-            * :data:`upd_tol` (:class:`~numbers.Real`) – update tolerance for
-              the relative magnitude of diagonal elements of U determining
-              whether the factorization is inaccurate (value must lie between
-              `0` and `1`; used only when :data:`type` is
-              :data:`'Forrest-Tomlin'`)
+              :data:`'Forrest–Tomlin'`)
             * :data:`nrs_max` (:class:`~numbers.Integral`) – maximal number of
               additional row and columns (used only when :data:`type` is
               :data:`'Bartels-Golub'` or :data:`Givens'`)
@@ -197,7 +192,7 @@ cdef class SimplexSolver(_LPSolver):
                 # smcp
                 'tol_bnd', 'tol_dj', 'tol_piv', 'obj_ll', 'obj_ul',
                 # bfcp
-                'piv_tol', 'eps_tol', 'upd_tol'
+                'piv_tol', 'eps_tol'
                 }:
                 if not isinstance(val, numbers.Real):
                     raise TypeError("'" + control + "' value must be real.")
@@ -217,8 +212,6 @@ cdef class SimplexSolver(_LPSolver):
                     self._bfcp.piv_tol = val
                 elif control is 'eps_tol':
                     self._bfcp.eps_tol = val
-                elif control is 'upd_tol':
-                    self._bfcp.upd_tol = val
             # int parameters
             elif control in {
                 # smcp
@@ -448,8 +441,8 @@ cdef class SimplexSolver(_LPSolver):
         that the number of basic variables and constraints is equal to the
         total number of constraints.
 
-        :param algorithm: an algorithm for generating a basis (omit to keep 
-            current basis), chosen from
+        :param algorithm: an algorithm for generating a basis (omit to not
+            replace the current basis), chosen from
 
             * :data:`'standard'`: sets all constraints as basic
             * :data:`'advanced'`: sets as basic
@@ -464,7 +457,7 @@ cdef class SimplexSolver(_LPSolver):
 
         :type algorithm: :class:`str`
         :param status: the mapping of statuses to change
-            (omit for retrieval only)
+            (omit to not modify the basis)
         :type status: :class:`~collections.abc.Mapping` from
             :class:`Variable` or :class:`Constraint` to :class:`str`
         :param warmup: whether to ‘warm up’ the basis, so that
@@ -476,8 +469,8 @@ cdef class SimplexSolver(_LPSolver):
             :class:`str`
         :raises ValueError: if `algorithm` is neither :data:`'standard'`,
             :data:`'advanced'`, nor :data:`'Bixby'`
-        :raises TypeError: if `basis` is not :class:`~collections.abc.Mapping`
-        :raises TypeError: if `basis` keys are neither :class:`Variable` nor
+        :raises TypeError: if `status` is not :class:`~collections.abc.Mapping`
+        :raises TypeError: if `status` keys are neither :class:`Variable` nor
             :class:`Constraint`
         :raises ValueError: if the basis is invalid
         :raises ValueError: if the basis matrix is singular
@@ -843,7 +836,7 @@ cdef class IntOptSolver(_Solver):
               * :data:`'first_fracvar'`: first fractional variable
               * :data:`'last_fracvar'`: last fractional variable
               * :data:`'most_fracvar'`: most fractional variable
-              * :data:`'Driebeek-Tomlin'`: heuristic by `Driebeek
+              * :data:`'Driebeek–Tomlin'`: heuristic by `Driebeek
                 <http://www.jstor.org/discover/10.2307/2627887>`_ & Tomlin
               * :data:`'hybrid_peudocost'`: hybrid pseudocost heuristic
 
@@ -862,16 +855,21 @@ cdef class IntOptSolver(_Solver):
               * :data:`'root'`: preprocessing only on the root level
               * :data:`'all'`: preprocessing on all levels
 
-            * :data:`mir_cuts` (:class:`bool`) –
-              generate mixed integer rounding cuts
+            * :data:`fp_heur` (:class:`bool`) – apply `feasibility pump
+              <http://dx.doi.org/10.1007/s10107-004-0570-3>`_ heuristic
+            * :data:`ps_heur` (:class:`bool`) – apply `proximity search
+              <http://www.dei.unipd.it/~fisch/papers/proximity_search.pdf>`_
+              heuristic
+            * :data:`ps_tm_lim` (:class:`~numbers.Integral`) –  time limit [ms]
+              for the proximity search heuristic
             * :data:`gmi_cuts` (:class:`bool`) –
               generate Gomory’s mixed integer cuts
+            * :data:`mir_cuts` (:class:`bool`) –
+              generate mixed integer rounding cuts
             * :data:`cov_cuts` (:class:`bool`) –
               generate mixed cover cuts
             * :data:`clq_cuts` (:class:`bool`) –
               generate clique cuts
-            * :data:`fp_heur` (:class:`bool`) – apply `feasibility pump
-              <http://dx.doi.org/10.1007/s10107-004-0570-3>`_ heuristic
             * :data:`tol_int` (:class:`~numbers.Real`) – absolute tolerance
               used to check if the optimal solution to the current LP
               relaxation is integer feasible
