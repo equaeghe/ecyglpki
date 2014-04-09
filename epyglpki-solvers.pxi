@@ -132,20 +132,23 @@ cdef class SimplexSolver(_LPSolver):
 
             or, for basis factorization, from the following list:
 
-            * :data:`type` (:class:`str`) – basis factorization type,
-              with possible values
+            * :data:`type` (length-2 :class:`tuple` of :class:`str`) – basis
+              factorization type, pairs with possible first components
 
-              * :data:`'Forrest-Tomlin'`: LU + `Forrest–Tomlin
-                <http://dx.doi.org/10.1007/BF01584548>`_ update
-              * :data:`'Bartels-Golub'`: LU + Schur complement +
+              * :data:`'LU'`: plain LU factorization
+              * :data:`'BTLU'`: block-triangular LU factorization
+
+              and possible second components
+
+              * :data:`'Forrest-Tomlin'`: `Forrest–Tomlin
+                <http://dx.doi.org/10.1007/BF01584548>`_ update applied to U
+                (only with plain LU factorization)
+              * :data:`'Bartels-Golub'`:
                 `Bartels–Golub <http://dx.doi.org/10.1145/362946.362974>`_
-                update
-              * :data:`'Givens'`: LU + Schur complement +
-                Givens rotation update
+                update applied to Schur complement
+              * :data:`'Givens'`: Givens rotation update
+                applied to Schur complement
 
-            * :data:`lu_size` (:class:`~numbers.Integral`) – initial size
-              of the Sparse Vector Area, in non-zeros (for first
-              LU-factorization; set to `0` to determine it automatically)
             * :data:`piv_tol` (:class:`~numbers.Real`) – Markowitz threshold
               pivoting tolerance (value must lie between `0` and `1`)
             * :data:`piv_lim` (:class:`~numbers.Integral`) – number of pivot
@@ -153,9 +156,6 @@ cdef class SimplexSolver(_LPSolver):
             * :data:`suhl` (:class:`bool`) – use Suhl heuristic
             * :data:`eps_tol` (:class:`~numbers.Real`) – tolerance below which
               numbers are replaced by zero
-            * :data:`max_gro` (:class:`~numbers.Real`) – maximal growth factor
-              of elements of the U-matrix above which the basis matrix is
-              considered ill-conditioned 
             * :data:`nfs_max` (:class:`~numbers.Integral`) – maximal number of
               additional row-like factors (used only when :data:`type` is
               :data:`'Forrest-Tomlin'`)
@@ -167,11 +167,6 @@ cdef class SimplexSolver(_LPSolver):
             * :data:`nrs_max` (:class:`~numbers.Integral`) – maximal number of
               additional row and columns (used only when :data:`type` is
               :data:`'Bartels-Golub'` or :data:`Givens'`)
-            * :data:`rs_size` (:class:`~numbers.Integral`) – initial size
-              of the Sparse Vector Area, in non-zeros (for initial
-              LU-factorization; set to `0` to determine it automatically; used
-              only when :data:`type` is :data:`'Bartels-Golub'` or
-              :data:`Givens'`)
 
         :raises ValueError: if a non-existing control name is given
 
@@ -196,13 +191,13 @@ cdef class SimplexSolver(_LPSolver):
                 self._smcp.r_test = str2rtest[val]
             # bfcp enumerated parameters
             elif control is 'type':
-                self._bfcp.type = str2bftype[val]
+                self._bfcp.type = strpair2bftype[val]
             # double parameters
             elif control in {
                 # smcp
                 'tol_bnd', 'tol_dj', 'tol_piv', 'obj_ll', 'obj_ul',
                 # bfcp
-                'piv_tol', 'eps_tol', 'max_gro', 'upd_tol'
+                'piv_tol', 'eps_tol', 'upd_tol'
                 }:
                 if not isinstance(val, numbers.Real):
                     raise TypeError("'" + control + "' value must be real.")
@@ -222,8 +217,6 @@ cdef class SimplexSolver(_LPSolver):
                     self._bfcp.piv_tol = val
                 elif control is 'eps_tol':
                     self._bfcp.eps_tol = val
-                elif control is 'max_gro':
-                    self._bfcp.max_gro = val
                 elif control is 'upd_tol':
                     self._bfcp.upd_tol = val
             # int parameters
@@ -231,7 +224,7 @@ cdef class SimplexSolver(_LPSolver):
                 # smcp
                 'it_lim', 'tm_lim', 'out_frq', 'out_dly',
                 # bfcp
-                'lu_size', 'piv_lim', 'nfs_max', 'nrs_max', 'rs_size'
+                'piv_lim', 'nfs_max', 'nrs_max'
                 }:
                 if not isinstance(val, numbers.Integral):
                     raise TypeError("'" + control + "' value must be integer.")
@@ -245,16 +238,12 @@ cdef class SimplexSolver(_LPSolver):
                 elif control is 'out_dly':
                     self._smcp.out_dly = val
                 # bfcp
-                elif control is 'lu_size':
-                    self._bfcp.lu_size = val
                 elif control is 'piv_lim':
                     self._bfcp.piv_lim = val
                 elif control is 'nfs_max':
                     self._bfcp.nfs_max = val
                 elif control is 'nrs_max':
                     self._bfcp.nrs_max = val
-                elif control is 'rs_size':
-                    self._bfcp.rs_size = val
             # bint parameters
             elif control in {
                 # smcp
@@ -281,7 +270,7 @@ cdef class SimplexSolver(_LPSolver):
         scontrols['r_test'] = rtest2str[scontrols['r_test']]
         fcontrols = {}
         fcontrols = self._bfcp
-        fcontrols['type'] = bftype2str[fcontrols['type']]
+        fcontrols['type'] = bftype2strpair[fcontrols['type']]
         controls = {}
         controls.update(scontrols)
         controls.update(fcontrols)

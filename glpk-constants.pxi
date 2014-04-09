@@ -108,12 +108,15 @@ cdef str2rtest = {
 cdef rtest2str = {r_test: string for string, r_test in str2rtest.items()}
 
 # basis factorization approach
-cdef str2bftype = {
-    'Forrest-Tomlin': glpk.BF_FT,
-    'Bartels-Golub': glpk.BF_BG,
-    'Givens': glpk.BF_GR
+cdef strpair2bftype = {
+    ('LU', 'Forrest-Tomlin'): glpk.BF_LUF + glpk.BF_FT,
+    ('LU', 'Bartels-Golub'): glpk.BF_LUF + glpk.BF_BG,
+    ('LU', 'Givens'): glpk.BF_LUF + glpk.BF_GR,
+    ('BTLU', 'Bartels-Golub'): glpk.BF_BTF + glpk.BF_BG,
+    ('BTLU', 'Givens'): glpk.BF_BTF + glpk.BF_GR
     }
-cdef bftype2str = {bftype: string for string, bftype in str2bftype.items()}
+cdef bftype2strpair = {bftype: stringpair
+                       for stringpair, bftype in strpair2bftype.items()}
 
 # variable status
 cdef str2varstat = {

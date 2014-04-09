@@ -84,16 +84,13 @@ cdef extern from "glpk.h":
     #  basis factorization control parameters
     ctypedef struct BasFacCP "glp_bfcp":
         int type        #  factorization type
-        int lu_size     #  (not used)
         double piv_tol  #  sgf_piv_tol
         int piv_lim     #  sgf_piv_lim
         bint suhl       #  sgf_suhl
         double eps_tol  #  sgf_eps_tol
-        double max_gro  #  (not used)
         int nfs_max     #  fhvint.nfs_max
         double upd_tol  #  (not used) (DOCUMENTED!)
         int nrs_max     #  scfint.nn_max
-        int rs_size     #  (not used)
 
     #  message level (argument name is 'msg_lev'):
     enum: MSG_OFF "GLP_MSG_OFF"  #  no output
@@ -505,10 +502,10 @@ cdef extern from "glpk.h":
 # Undocumented
 #
 #    # get simplex solver iteration count
-#    int get_it_cnt "glp_get_it_cnt" (ProbObj* problem);
+#    int get_it_cnt "glp_get_it_cnt" (ProbObj* problem)
 #
 #    # set simplex solver iteration count
-#    void set_it_cnt "glp_set_it_cnt" (ProbObj* problem, int it_cnt);
+#    void set_it_cnt "glp_set_it_cnt" (ProbObj* problem, int it_cnt)
 
     #  solve LP problem with the interior-point method; returns retcode
     int interior "glp_interior" (ProbObj* problem, const IPointCP* cp)
@@ -851,7 +848,7 @@ cdef extern from "glpk.h":
     int free_env "glp_free_env" ()
 
     # write string on terminal
-    void puts "glp_puts" (const char *s);
+    void puts "glp_puts" (const char *s)
 
 # Wrapping va_list type args nontrivial
 # (cf. https://github.com/cython/cython/wiki/FAQ#wiki-how-do-i-use-variable-args)
@@ -1089,10 +1086,8 @@ cdef extern from "glpk.h":
                              int v_rhs, int a_cap, int a_cost,
                              const int param[1+15])
 
-# Undocumented.
-#
-#    #  Klingman's standard network problem instance
-#    void netgen_prob "glp_netgen_prob" (int nprob, int param[1+15])
+    #  Klingman's standard network problem instance
+    void netgen_prob "glp_netgen_prob" (int nprob, int param[1+15])
 
     #  grid-like network problem generator
     int gridgen "glp_gridgen" (Graph* graph,
