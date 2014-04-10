@@ -272,7 +272,7 @@ cdef class Variable(_Varstraint):
                 (0.0, 1.0)
 
         """
-        col = self._program._ind(self)
+        col = self._program._col(self)
         if kind is not None:
             if kind in str2varkind:
                 glpk.set_col_kind(self._problem, col, str2varkind[kind])
@@ -548,7 +548,7 @@ cdef class Objective(_ProgramComponent):
                                     "instead of '"
                                     + type(variable).__name__ + "'.")
                 else:
-                    col = self._program._ind(variable)
+                    col = self._program._col(variable)
                     if isinstance(val, numbers.Real):
                         glpk.set_obj_coef(self._problem, col, val)
                     else:

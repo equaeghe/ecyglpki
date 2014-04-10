@@ -28,10 +28,10 @@ cdef class _Solver(_ProgramComponent):
                 double (*variable_func)(glpk.ProbObj*, int),
                 double (*constraint_func)(glpk.ProbObj*, int)):
         if isinstance(varstraint, Variable):
-            col = 1 + self._variables.index(varstraint)
+            col = self._program._col(varstraint)
             return variable_func(self._problem, col)
         elif isinstance(varstraint, Constraint):
-            row = 1 + self._constraints.index(varstraint)
+            row = self._program._row(varstraint)
             return constraint_func(self._problem, row)
         else:
             raise TypeError("varstraint must be a Variable or Constraint")
@@ -491,10 +491,10 @@ cdef class SimplexSolver(_Solver):
             for varstraint, string in status.items():
                 varstat = str2varstat[string]
                 if isinstance(varstraint, Variable):
-                    col = self._program._ind(varstraint)
+                    col = self._program._col(varstraint)
                     glpk.set_col_stat(self._problem, col, varstat)
                 elif isinstance(varstraint, Constraint):
-                    row = self._program._ind(varstraint)
+                    row = self._program._row(varstraint)
                     glpk.set_row_stat(self._problem, row, varstat)
                 else:
                     raise TypeError("Only 'Variable' and 'Constraint' " +

@@ -207,18 +207,30 @@ cdef class MILProgram:
         chars = glpk.get_prob_name(self._problem)
         return '' if chars is NULL else chars.decode()
 
-    def _ind(self, varstraint):
-        """Return the column/row index of a Variable/Constraint"""
+    def _col(self, variable):
+        """Return the column index of a Variable"""
         try:
-            if isinstance(varstraint, Variable):
-                ind = self._variables.index(varstraint)
-            elif isinstance(varstraint, Constraint):
-                ind = self._constraints.index(varstraint)
-            else:
-                raise TypeError("No index available for this object type.")
+            return 1 + self._variables.index(variable)
+                # GLPK indices start at 1
         except ValueError:
             raise IndexError("This is possibly a zombie; kill it using 'del'.")
-        return 1 + ind  # GLPK indices start at 1
+
+    def _row(self, constraint):
+        """Return the row index of a Constraint"""
+        try:
+            return 1 + self._constraints.index(constraint)
+                # GLPK indices start at 1
+        except ValueError:
+            raise IndexError("This is possibly a zombie; kill it using 'del'.")
+
+    def _ind(self, varstraint):
+        """Return the column/row index of a Variable/Constraint"""
+        if isinstance(varstraint, Variable):
+            return self._col(varstraint)
+        elif isinstance(varstraint, Constraint):
+            return self._row(varstraint)
+        else:
+            raise TypeError("No index available for this object type.")
 
     def _del_varstraint(self, varstraint):
         """Remove a Variable or Constraint from the problem"""
@@ -388,12 +400,12 @@ cdef class MILProgram:
                                          "exactly two components.")
                     elif (isinstance(item[0][0], Variable) and
                         isinstance(item[0][1], Constraint)):
-                        cols[ind] = self._ind(item[0][0])
-                        rows[ind] = self._ind(item[0][1])
+                        cols[ind] = self._col(item[0][0])
+                        rows[ind] = self._row(item[0][1])
                     elif (isinstance(item[0][0], Constraint) and
                             isinstance(item[0][1], Variable)):
-                        rows[ind] = self._ind(item[0][0])
-                        cols[ind] = self._ind(item[0][1])
+                        rows[ind] = self._row(item[0][0])
+                        cols[ind] = self._col(item[0][1])
                     else:
                         raise TypeError("Coefficient position components " +
                                         "must be one Variable and one " +
@@ -481,10 +493,10 @@ cdef class MILProgram:
                 if not isinstance(factor, numbers.Real):
                     raise TypeError("Scaling factors must be real numbers.")
                 if isinstance(varstraint, Variable):
-                    glpk.set_col_sf(self._problem, self._ind(varstraint),
+                    glpk.set_col_sf(self._problem, self._col(varstraint),
                                     factor)
                 elif isinstance(varstraint, Constraint):
-                    glpk.set_row_sf(self._problem, self._ind(varstraint),
+                    glpk.set_row_sf(self._problem, self._row(varstraint),
                                     factor)
                 else:
                     raise TypeError("Only 'Variable' and 'Constraint' can " +
