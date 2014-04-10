@@ -43,11 +43,11 @@ cdef class _Solver(_ProgramComponent):
         cdef int* re_ind = <int*>glpk.alloc(1, sizeof(int))
         try:
             if soltype is 'primal':
-                eqtype = glpk.PE
-                bndtype = glpk.PB
+                eqtype = glpk.KKT_PE
+                bndtype = glpk.KKT_PB
             elif soltype is 'dual':
-                eqtype = glpk.DE
-                bndtype = glpk.DB
+                eqtype = glpk.KKT_DE
+                bndtype = glpk.KKT_DB
             else:
                 raise ValueError("soltype should be 'primal' or 'dual'.")
             error = {}
@@ -58,14 +58,12 @@ cdef class _Solver(_ProgramComponent):
             a_ind = ae_ind[0]
             r_max = re_max[0]
             r_ind = re_ind[0]
-            if a_ind is 0:
-                a_varstraint = None
-            else:
-                a_varstraint = self._program._constraints[a_ind-1]
-            if r_ind is 0:
-                r_varstraint = None
-            else:
-                r_varstraint = self._program._constraint[r_ind-1]
+            if eqtype is glpk.KKT_PE:
+                a_varstraint = self._program._constraint(a_ind)
+                r_varstraint = self._program._constraint(r_ind)
+            elif eqtype is glpk.KKT_DE:
+                a_varstraint = self._program._variable(a_ind)
+                r_varstraint = self._program._variable(r_ind)
             error['equalities'] = {'abs': (a_max, a_varstraint),
                                    'rel': (r_max, r_varstraint)}
             # bounds
