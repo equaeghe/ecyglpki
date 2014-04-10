@@ -150,15 +150,15 @@ cdef class SimplexSolver(_Solver):
               * :data:`'standard'`: standard ‘textbook’
               * :data:`'Harris'`: Harris’s two-pass ratio test
 
-            * :data:`tol_bnd` (:class:`~numbers.Real`) – tolerance used to
+            * :data:`tol_bnd` (|Real|) – tolerance used to
               check if the basic solution is primal feasible
-            * :data:`tol_dj` (:class:`~numbers.Real`) – tolerance used to check
+            * :data:`tol_dj` (|Real|) – tolerance used to check
               if the basic solution is dual feasible
-            * :data:`tol_piv` (:class:`~numbers.Real`) – tolerance used to
+            * :data:`tol_piv` (|Real|) – tolerance used to
               choose eligble pivotal elements of the simplex table
-            * :data:`obj_ll` (:class:`~numbers.Real`) – lower limit of the
+            * :data:`obj_ll` (|Real|) – lower limit of the
               objective function (only if :data:`meth` is :data:`'dual'`)
-            * :data:`obj_ul` (:class:`~numbers.Real`) – upper limit of the
+            * :data:`obj_ul` (|Real|) – upper limit of the
               objective function (only if :data:`meth` is :data:`'dual'`)
             * :data:`it_lim` (:class:`~numbers.Integral`) – iteration limit
             * :data:`tm_lim` (:class:`~numbers.Integral`) – time limit [ms]
@@ -187,13 +187,13 @@ cdef class SimplexSolver(_Solver):
               * :data:`'Givens'`: Givens rotation update
                 applied to Schur complement
 
-            * :data:`piv_tol` (:class:`~numbers.Real`) – Markowitz threshold
+            * :data:`piv_tol` (|Real|) – Markowitz threshold
               pivoting tolerance (value must lie between `0` and `1`)
             * :data:`piv_lim` (:class:`~numbers.Integral`) – number of pivot
               candidates that need to be considered on choosing a pivot element
               (at least `1`)
             * :data:`suhl` (:class:`bool`) – use Suhl heuristic
-            * :data:`eps_tol` (:class:`~numbers.Real`) – tolerance below which
+            * :data:`eps_tol` (|Real|) – tolerance below which
               numbers are replaced by zero
             * :data:`nfs_max` (:class:`~numbers.Integral`) – maximal number of
               additional row-like factors (used only when :data:`type` is
@@ -992,14 +992,14 @@ cdef class IntOptSolver(_Solver):
               generate mixed cover cuts
             * :data:`clq_cuts` (:class:`bool`) –
               generate clique cuts
-            * :data:`tol_int` (:class:`~numbers.Real`) – absolute tolerance
+            * :data:`tol_int` (|Real|) – absolute tolerance
               used to check if the optimal solution to the current LP
               relaxation is integer feasible
-            * :data:`tol_obj` (:class:`~numbers.Real`) – relative tolerance
+            * :data:`tol_obj` (|Real|) – relative tolerance
               used to check if the objective value in the optimal solution to
               the current LP relaxation is not better than in the best known
               integer feasible solution.
-            * :data:`mip_gap` (:class:`~numbers.Real`) – relative MIP-gap
+            * :data:`mip_gap` (|Real|) – relative MIP-gap
               tolerance
               (search stops once the relative MIP-gap falls below this value)
             * :data:`presolve` (:class:`bool`) – use MIP presolver,

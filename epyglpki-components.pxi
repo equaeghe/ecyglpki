@@ -204,14 +204,14 @@ cdef class Variable(_Varstraint):
 
         :param lower: the variable's lower bound
             (:const:`False` to remove bound; omit for retrieval only)
-        :type lower: :class:`~numbers.Real` or :const:`False`
+        :type lower: |Real| or :const:`False`
         :param upper: the variable's upper bound
             (:const:`False` to remove bound; omit for retrieval only)
-        :type upper: :class:`~numbers.Real` or :const:`False`
+        :type upper: |Real| or :const:`False`
         :returns: the variable's bounds
         :rtype: length-2 :class:`tuple` of :class:`float` (or :const:`False`)
         :raises TypeError: if `lower` or `upper` is not
-            :class:`~numbers.Real` or :const:`False`
+            |Real| or :const:`False`
         :raises ValueError: if `lower` is larger than `upper`
 
         .. doctest:: Variable.bounds
@@ -287,13 +287,13 @@ cdef class Variable(_Varstraint):
         :param coeffs: the mapping with coefficients to change
             (`{}` to set all coefficients to `0`; omit for retrieval only)
         :type coeffs: :class:`~collections.abc.Mapping` of
-            :class:`Constraint` to :class:`~numbers.Real`
+            :class:`Constraint` to |Real|
         :returns: the coefficient mapping, which only contains nonzero
             coefficients
         :rtype: :class:`dict` of :class:`Constraint` to :class:`float`
         :raises TypeError: if `coeffs` is not :class:`~collections.abc.Mapping`
         :raises TypeError: if a coefficient key is not :class:`Variable`
-        :raises TypeError: if a coefficient value is not :class:`~numbers.Real`
+        :raises TypeError: if a coefficient value is not |Real|
 
         .. doctest:: Variable.coeffs
 
@@ -393,14 +393,14 @@ cdef class Constraint(_Varstraint):
 
         :param lower: the constraint's lower bound
             (:const:`False` to remove bound; omit for retrieval only)
-        :type lower: :class:`~numbers.Real` or :const:`False`
+        :type lower: |Real| or :const:`False`
         :param upper: the constraint's upper bound
             (:const:`False` to remove bound; omit for retrieval only)
-        :type upper: :class:`~numbers.Real` or :const:`False`
+        :type upper: |Real| or :const:`False`
         :returns: the constraint's bounds
         :rtype: length-2 :class:`tuple` of :class:`float` (or :const:`False`)
         :raises TypeError: if `lower` or `upper` is not
-            :class:`~numbers.Real` or :const:`False`
+            |Real| or :const:`False`
         :raises ValueError: if `lower` is larger than `upper`
 
         .. doctest:: Constraint.bounds
@@ -424,13 +424,13 @@ cdef class Constraint(_Varstraint):
         :param coeffs: the mapping with coefficients to change
             (`{}` to set all coefficients to `0`; omit for retrieval only)
         :type coeffs: :class:`~collections.abc.Mapping` of
-            :class:`Variable` to :class:`~numbers.Real`
+            :class:`Variable` to |Real|
         :returns: the coefficient mapping, which only contains nonzero
             coefficients
         :rtype: :class:`dict` of :class:`Variable` to :class:`float`
         :raises TypeError: if `coeffs` is not :class:`~collections.abc.Mapping`
         :raises TypeError: if a coefficient key is not :class:`Variable`
-        :raises TypeError: if a coefficient value is not :class:`~numbers.Real`
+        :raises TypeError: if a coefficient value is not |Real|
 
         .. doctest:: Constraint.coeffs
 
@@ -513,13 +513,13 @@ cdef class Objective(_ProgramComponent):
         :param coeffs: the mapping with coefficients to change
             (`{}` to set all coefficients to `0` ; omit for retrieval only)
         :type coeffs: :class:`~collections.abc.Mapping` of
-            :class:`Variable` to :class:`~numbers.Real`
+            :class:`Variable` to |Real|
         :returns: the coefficient mapping, which only contains nonzero
             coefficients
         :rtype: :class:`dict` of :class:`Variable` to :class:`float`
         :raises TypeError: if `coeffs` is not :class:`~collections.abc.Mapping`
         :raises TypeError: if a coefficient key is not :class:`Variable`
-        :raises TypeError: if a coefficient value is not :class:`~numbers.Real`
+        :raises TypeError: if a coefficient value is not |Real|
 
         .. doctest:: Objective.coeffs
 
@@ -567,10 +567,10 @@ cdef class Objective(_ProgramComponent):
 
         :param constant: the new objective function constant
             (omit for retrieval only)
-        :type constant: :class:`~numbers.Real`
+        :type constant: |Real|
         :returns: the objective function constant
         :rtype: :class:`float`
-        :raises TypeError: if `constant` is not :class:`~numbers.Real`
+        :raises TypeError: if `constant` is not |Real|
 
         .. doctest:: Objective.constant
 
