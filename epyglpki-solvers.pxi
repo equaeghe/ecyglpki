@@ -405,11 +405,11 @@ cdef class SimplexSolver(_Solver):
         if ind is 0:
             return (None, '')
         elif ind <= constraints:
-            varstraint = self._program._constraints[ind]
+            varstraint = self._program._constraints[ind-1]
             varstat = glpk.get_row_stat(self._problem, ind)
         else:
             ind -= constraints
-            varstraint = self._program._variables[ind]
+            varstraint = self._program._variables[ind-1]
             varstat = glpk.get_col_stat(self._problem, ind)
         nature = 'dual' if varstat is glpk.BS else 'primal'
         return (varstraint, nature)
