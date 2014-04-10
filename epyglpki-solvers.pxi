@@ -190,7 +190,8 @@ cdef class SimplexSolver(_Solver):
             * :data:`piv_tol` (:class:`~numbers.Real`) – Markowitz threshold
               pivoting tolerance (value must lie between `0` and `1`)
             * :data:`piv_lim` (:class:`~numbers.Integral`) – number of pivot
-              candidates that need to be considered on choosing a pivot element (at least `1`)
+              candidates that need to be considered on choosing a pivot element
+              (at least `1`)
             * :data:`suhl` (:class:`bool`) – use Suhl heuristic
             * :data:`eps_tol` (:class:`~numbers.Real`) – tolerance below which
               numbers are replaced by zero
