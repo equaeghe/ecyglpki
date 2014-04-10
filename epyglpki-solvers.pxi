@@ -24,6 +24,18 @@
 
 cdef class _Solver(_ProgramComponent):
 
+    cdef _value(self, varstraint,
+                double (*variable_func)(glpk.ProbObj*, int),
+                double (*constraint_func)(glpk.ProbObj*, int)):
+        if isinstance(varstraint, Variable):
+            col = self._variables.index(varstraint)
+            return variable_func(self._problem, col)
+        elif isinstance(varstraint, Constraint):
+            row = self._constraints.index(varstraint)
+            return constraint_func(self._problem, row)
+        else:
+            raise TypeError("varstraint must be a Variable or Constraint")
+
     cdef _faccess(self,
                   int (*faccess_function)(glpk.ProbObj*, const char*),
                   fname, error_msg):
@@ -43,29 +55,7 @@ cdef class _Solver(_ProgramComponent):
         self._faccess(faccess_function, fname, "Error writing file")
 
 
-cdef class _LPSolver(_Solver):
-
-    cdef _solution(self, varstraints,
-                   double (*primal_func)(glpk.ProbObj*, int),
-                   double (*dual_func)(glpk.ProbObj*, int), dual):
-        if not isinstance(dual, bool):
-            raise TypeError("Parameter dual must be True or False")
-        solution = {}
-        if not dual:
-            for varstraint in varstraints:
-                val = primal_func(self._problem,
-                                  self._program._ind(varstraint))
-                if val != 0.0:
-                    solution[varstraint] = val
-        else:
-            for varstraint in varstraints:
-                val = dual_func(self._problem, self._program._ind(varstraint))
-                if val != 0.0:
-                    solution[varstraint] = val
-        return solution
-
-
-cdef class SimplexSolver(_LPSolver):
+cdef class SimplexSolver(_Solver):
     """The problem's simplex solver"""
 
     cdef glpk.SimplexCP _smcp
@@ -361,41 +351,40 @@ cdef class SimplexSolver(_LPSolver):
         """
         return glpk.sm_obj_val(self._problem)
 
-    def variables(self, dual=False):
-        """Return the values of the variables for the current solution
 
-        :param dual: whether to return dual or primal values
-        :type dual: :class:`bool`
-        :returns: the nonzero values of the variables for the current
-            solution
-        :rtype: :class:`dict` from :class:`Variable` to :class:`float`
-        :raises TypeError: if `dual` is not :class:`bool`
+    def primal(self, varstraint):
+        """Return primal value for the current solution
 
-        .. todo::
-
-            Add doctest
-
-        """
-        return self._solution(self._program._variables,
-                              glpk.sm_col_prim, glpk.sm_col_dual, dual)
-
-    def constraints(self, dual=False):
-        """Return the values of the constraints for the current solution
-
-        :param dual: whether to return dual or primal values
-        :type dual: :class:`bool`
-        :returns: the nonzero values of the constraints for the current
-            solution
-        :rtype: :class:`dict` from :class:`Constraint` to :class:`float`
-        :raises TypeError: if `dual` is not :class:`bool`
+        :param varstraint: variable or constraint to return the primal value of
+        :type varstraint: :class:`Variable` or :class:`Constraint`
+        :returns: the value of `varstraint` for the current solution
+        :rtype: :class:`float` or :class:`int`
+        :raises TypeError: if varstraint is neither :class:`Variable` nor
+            :class:`Constraint`
 
         .. todo::
 
             Add doctest
 
         """
-        return self._solution(self._program._constraints,
-                              glpk.sm_row_prim, glpk.sm_row_dual, dual)
+        return self._value(varstraint, glpk.sm_col_prim, glpk.sm_row_prim)
+
+    def dual(self, varstraint):
+        """Return dual value for the current solution
+
+        :param varstraint: variable or constraint to return the dual value of
+        :type varstraint: :class:`Variable` or :class:`Constraint`
+        :returns: the value of `varstraint` for the current solution
+        :rtype: :class:`float` or :class:`int`
+        :raises TypeError: if varstraint is neither :class:`Variable` nor
+            :class:`Constraint`
+
+        .. todo::
+
+            Add doctest
+
+        """
+        return self._value(varstraint, glpk.sm_col_dual, glpk.sm_row_dual)
 
     def unboundedness(self):
         """Return a variable or constraint causing unboundedness
@@ -614,7 +603,7 @@ cdef class SimplexSolver(_LPSolver):
             glpk.free(indlist)
 
 
-cdef class IPointSolver(_LPSolver):
+cdef class IPointSolver(_Solver):
     """The problem's interior point solver"""
 
     cdef glpk.IPointCP _iptcp
@@ -720,41 +709,39 @@ cdef class IPointSolver(_LPSolver):
         """
         return glpk.ipt_obj_val(self._problem)
 
-    def variables(self, dual=False):
-        """Return the values of the variables for the current solution
+    def primal(self, varstraint):
+        """Return primal value for the current solution
 
-        :param dual: whether to return dual or primal values
-        :type dual: :class:`bool`
-        :returns: the nonzero values of the variables for the current
-            solution
-        :rtype: :class:`dict` from :class:`Variable` to :class:`float`
-        :raises TypeError: if `dual` is not :class:`bool`
-
-        .. todo::
-
-            Add doctest
-
-        """
-        return self._solution(self._program._variables,
-                              glpk.ipt_col_prim, glpk.ipt_col_dual, dual)
-
-    def constraints(self, dual=False):
-        """Return the values of the constraints for the current solution
-
-        :param dual: whether to return dual or primal values
-        :type dual: :class:`bool`
-        :returns: the nonzero values of the constraints for the current
-            solution
-        :rtype: :class:`dict` from :class:`Constraint` to :class:`float`
-        :raises TypeError: if `dual` is not :class:`bool`
+        :param varstraint: variable or constraint to return the primal value of
+        :type varstraint: :class:`Variable` or :class:`Constraint`
+        :returns: the value of `varstraint` for the current solution
+        :rtype: :class:`float` or :class:`int`
+        :raises TypeError: if varstraint is neither :class:`Variable` nor
+            :class:`Constraint`
 
         .. todo::
 
             Add doctest
 
         """
-        return self._solution(self._program._constraints,
-                              glpk.ipt_row_prim, glpk.ipt_row_dual, dual)
+        return self._value(varstraint, glpk.ipt_col_prim, glpk.ipt_row_prim)
+
+    def dual(self, varstraint):
+        """Return dual value for the current solution
+
+        :param varstraint: variable or constraint to return the dual value of
+        :type varstraint: :class:`Variable` or :class:`Constraint`
+        :returns: the value of `varstraint` for the current solution
+        :rtype: :class:`float` or :class:`int`
+        :raises TypeError: if varstraint is neither :class:`Variable` nor
+            :class:`Constraint`
+
+        .. todo::
+
+            Add doctest
+
+        """
+        return self._value(varstraint, glpk.ipt_col_dual, glpk.ipt_row_dual)
 
     def print_solution(self, fname):
         """Write the solution to a file in a readable format
@@ -1043,13 +1030,15 @@ cdef class IntOptSolver(_Solver):
         """
         return glpk.mip_obj_val(self._problem)
 
-    def variables(self):
-        """Return the values of the variables for the current solution
+    def value(self, varstraint):
+        """Return the variable or constraint value for the current solution
 
-        :returns: the nonzero values of the variables for the current
-            solution
-        :rtype: :class:`dict` from :class:`Variable` to :class:`float` or
-            :class:`int`
+        :param varstraint: variable or constraint to return the value of
+        :type varstraint: :class:`Variable` or :class:`Constraint`
+        :returns: the value of `varstraint` for the current solution
+        :rtype: :class:`float` or :class:`int`
+        :raises TypeError: if varstraint is neither :class:`Variable` nor
+            :class:`Constraint`
         :raises ValueError: if a variable with :data:`'integer'` or
             :data:`'binary'` kind has a non-integer value
 
@@ -1058,37 +1047,15 @@ cdef class IntOptSolver(_Solver):
             Add doctest
 
         """
-        solution = {}
-        for col, variable in enumerate(self._program._variables, start=1):
-            val = glpk.mip_col_val(self._problem, col)
-            if variable.kind() in {'integer', 'binary'}:
-                if val.is_integer():
+        val = self._value(varstraint, glpk.mip_col_val, glpk.mip_row_val)
+        if isinstance(varstraint, Variable):
+            if varstraint.kind() in {'binary', 'integer'}:
+                if val.isinteger():
                     val = int(val)
                 else:
-                    raise ValueError("Variable with integer or binary kind" +
-                                     "has non-integer value")
-            if val != 0:
-                solution[variable] = val
-        return solution
-
-    def constraints(self):
-        """Return the values of the constraints for the current solution
-
-        :returns: the nonzero values of the constraints for the current
-            solution
-        :rtype: :class:`dict` from :class:`Constraint` to :class:`float`
-
-        .. todo::
-
-            Add doctest
-
-        """
-        solution = {}
-        for row, constraint in enumerate(self._program._constraints, start=1):
-            val = glpk.mip_row_val(self._problem, row)
-            if val != 0:
-                solution[constraint] = val
-        return solution
+                    raise ValueError("Variable with binary or integer kind " +
+                                     "has non-integer value " + str(val))
+        return val
 
     def print_solution(self, fname):
         """Write the solution to a file in a readable format
