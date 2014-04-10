@@ -207,13 +207,27 @@ cdef class MILProgram:
         chars = glpk.get_prob_name(self._problem)
         return '' if chars is NULL else chars.decode()
 
-    def _col(self, variable):
+    def _col(self, variable, alternate=False):
         """Return the column index of a Variable"""
         try:
-            return 1 + self._variables.index(variable)
+            col = 1 + self._variables.index(variable)
+            if alternate: # GLPK sometimes indexes variables after constraints
+                col += len(self._constraints)
+            return col
                 # GLPK indices start at 1
         except ValueError:
             raise IndexError("This is possibly a zombie; kill it using 'del'.")
+
+    def _variable(self, col, alternate=False):
+        """Return the Variable corresponding to a column index"""
+        if alternate: # GLPK sometimes indexes variables after constraints
+            rows = len(self._constraints)
+            if col <= rows:
+                raise IndexError("Alternate column index cannot be smaller " +
+                                 "than total number of rows")
+            else:
+                col -= rows
+        return None if col is 0 else self._variables[col-1]
 
     def _row(self, constraint):
         """Return the row index of a Constraint"""
@@ -223,14 +237,25 @@ cdef class MILProgram:
         except ValueError:
             raise IndexError("This is possibly a zombie; kill it using 'del'.")
 
-    def _ind(self, varstraint):
+    def _constraint(self, row):
+        """Return the Constraint corresponding to a row index"""
+        return None if row is 0 else self._constraints[row-1]
+
+    def _ind(self, varstraint, alternate=False):
         """Return the column/row index of a Variable/Constraint"""
         if isinstance(varstraint, Variable):
-            return self._col(varstraint)
+            return self._col(varstraint, alternate)
         elif isinstance(varstraint, Constraint):
             return self._row(varstraint)
         else:
             raise TypeError("No index available for this object type.")
+
+    def _varstraint(self, ind):
+        """Return the Variable/Constraint corresponding to an alternate index"""
+        if ind > len(self._constraints):
+            return self._variable(ind, alternate=True)
+        else:
+            return self._constraint(ind)
 
     def _del_varstraint(self, varstraint):
         """Remove a Variable or Constraint from the problem"""

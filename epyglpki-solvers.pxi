@@ -75,21 +75,8 @@ cdef class _Solver(_ProgramComponent):
             a_ind = ae_ind[0]
             r_max = re_max[0]
             r_ind = re_ind[0]
-            constraints = len(self._program._constraints)
-            if a_ind is 0:
-                a_varstraint = None
-            elif a_ind <= constraints:
-                a_varstraint = self._program._constraints[a_ind-1]
-            else:
-                a_ind -= constraints
-                a_varstraint = self._program._variables[a_ind-1]
-            if r_ind is 0:
-                r_varstraint = None
-            elif r_ind <= constraints:
-                r_varstraint = self._program._constraints[r_ind-1]
-            else:
-                r_ind -= constraints
-                r_varstraint = self._program._variables[r_ind-1]
+            a_varstraint = self._program._varstraint(a_ind)
+            r_varstraint = self._program._varstraint(r_ind)
             error['bounds'] = {'abs': (a_max, a_varstraint),
                                'rel': (r_max, r_varstraint)}
             return error
@@ -509,17 +496,17 @@ cdef class SimplexSolver(_Solver):
 
         """
         ind = glpk.sm_unbnd_ray(self._problem)
+        varstraint = self._program._varstraint(ind)
+        nature = 'primal'
         constraints = len(self._program._constraints)
         if ind is 0:
-            return (None, '')
+            nature = ''
         elif ind <= constraints:
-            varstraint = self._program._constraints[ind-1]
-            varstat = glpk.get_row_stat(self._problem, ind)
+            if glpk.get_row_stat(self._problem, ind) is glpk.BS:
+                nature = 'dual'
         else:
-            ind -= constraints
-            varstraint = self._program._variables[ind-1]
-            varstat = glpk.get_col_stat(self._problem, ind)
-        nature = 'dual' if varstat is glpk.BS else 'primal'
+            if glpk.get_col_stat(self._problem, ind) is glpk.BS:
+                nature = 'dual'
         return (varstraint, nature)
 
     def basis(self, algorithm=None, status=None, warmup=False):
@@ -696,11 +683,8 @@ cdef class SimplexSolver(_Solver):
         chars = fname
         cdef int* indlist = <int*>glpk.alloc(1+length, sizeof(int))
         try:
-            rows = len(self._program._constraints)
             for pos, varstraint in enumerate(varstraints, start=1):
-                ind = self._program._ind(varstraint)
-                if isinstance(varstraint, Variable):
-                    ind += rows
+                ind = self._program._ind(varstraint, alternate=True)
                 indlist[pos] = ind
             if not glpk.bf_exists(self._problem):
                 retcode = glpk.factorize(self._problem)
