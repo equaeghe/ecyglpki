@@ -28,10 +28,10 @@ cdef class _Solver(_ProgramComponent):
                 double (*variable_func)(glpk.ProbObj*, int),
                 double (*constraint_func)(glpk.ProbObj*, int)):
         if isinstance(varstraint, Variable):
-            col = self._variables.index(varstraint)
+            col = 1 + self._variables.index(varstraint)
             return variable_func(self._problem, col)
         elif isinstance(varstraint, Constraint):
-            row = self._constraints.index(varstraint)
+            row = 1 + self._constraints.index(varstraint)
             return constraint_func(self._problem, row)
         else:
             raise TypeError("varstraint must be a Variable or Constraint")
