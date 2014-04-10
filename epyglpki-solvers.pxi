@@ -36,6 +36,69 @@ cdef class _Solver(_ProgramComponent):
         else:
             raise TypeError("varstraint must be a Variable or Constraint")
 
+    def _error(self, soltype, solver):
+        cdef double* ae_max = <double*>glpk.alloc(1, sizeof(double))
+        cdef int* ae_ind = <int*>glpk.alloc(1, sizeof(int))
+        cdef double* re_max = <double*>glpk.alloc(1, sizeof(double))
+        cdef int* re_ind = <int*>glpk.alloc(1, sizeof(int))
+        try:
+            if soltype is 'primal':
+                eqtype = glpk.PE
+                bndtype = glpk.PB
+            elif soltype is 'dual':
+                eqtype = glpk.DE
+                bndtype = glpk.DB
+            else:
+                raise ValueError("soltype should be 'primal' or 'dual'.")
+            error = {}
+            # equalities
+            glpk.check_kkt(self._problem, solver, eqtype,
+                           ae_max, ae_ind, re_max, re_ind)
+            a_max = ae_max[0]
+            a_ind = ae_ind[0]
+            r_max = re_max[0]
+            r_ind = re_ind[0]
+            if a_ind is 0:
+                a_varstraint = None
+            else:
+                a_varstraint = self._program._constraints[a_ind-1]
+            if r_ind is 0:
+                r_varstraint = None
+            else:
+                r_varstraint = self._program._constraint[r_ind-1]
+            error['equalities'] = {'abs': (a_max, a_varstraint),
+                                   'rel': (r_max, r_varstraint)}
+            # bounds
+            glpk.check_kkt(self._problem, solver, bndtype,
+                           ae_max, ae_ind, re_max, re_ind)
+            a_max = ae_max[0]
+            a_ind = ae_ind[0]
+            r_max = re_max[0]
+            r_ind = re_ind[0]
+            constraints = len(self._program._constraints)
+            if a_ind is 0:
+                a_varstraint = None
+            elif a_ind <= constraints:
+                a_varstraint = self._program._constraints[a_ind-1]
+            else:
+                a_ind -= constraints
+                a_varstraint = self._program._variables[a_ind-1]
+            if r_ind is 0:
+                r_varstraint = None
+            elif r_ind <= constraints:
+                r_varstraint = self._program._constraints[r_ind-1]
+            else:
+                r_ind -= constraints
+                r_varstraint = self._program._variables[r_ind-1]
+            error['bounds'] = {'abs': (a_max, a_varstraint),
+                               'rel': (r_max, r_varstraint)}
+            return error
+        finally:
+            glpk.free(ae_max)
+            glpk.free(ae_ind)
+            glpk.free(re_max)
+            glpk.free(ae_ind)
+
     cdef _faccess(self,
                   int (*faccess_function)(glpk.ProbObj*, const char*),
                   fname, error_msg):
@@ -369,6 +432,29 @@ cdef class SimplexSolver(_Solver):
         """
         return self._value(varstraint, glpk.sm_col_prim, glpk.sm_row_prim)
 
+
+    def primal_error(self):
+        """Return absolute and relative primal solution errors
+
+        :returns: a :class:`~collections.abc.Mapping`
+            of {:data:`'equalities'`, :data:`'bounds'`}
+            to :class:`~collections.abc.Mapping`
+            of {:data:`'abs'`, :data:`'rel'`} to pairs consisting of
+            an error (:class:`float`) and a :class:`Variable`
+            or :class:`Constraint` where it is attained
+
+        The errors returned by this function quantify to what degree the
+        current primal solution does not satisfy the Karush-Kuhn-Tucker
+        conditions for equalities and bounds
+        (possibly due to floating-point errors).
+
+        .. todo::
+
+            Add doctest
+
+        """
+        return self._error('primal', glpk.SOL)
+
     def dual(self, varstraint):
         """Return dual value for the current solution
 
@@ -385,6 +471,28 @@ cdef class SimplexSolver(_Solver):
 
         """
         return self._value(varstraint, glpk.sm_col_dual, glpk.sm_row_dual)
+
+    def dual_error(self):
+        """Return absolute and relative dual solution errors
+
+        :returns: a :class:`~collections.abc.Mapping`
+            of {:data:`'equalities'`, :data:`'bounds'`}
+            to :class:`~collections.abc.Mapping`
+            of {:data:`'abs'`, :data:`'rel'`} to pairs consisting of
+            an error (:class:`float`) and a :class:`Variable`
+            or :class:`Constraint` where it is attained
+
+        The errors returned by this function quantify to what degree the
+        current dual solution does not satisfy the Karush-Kuhn-Tucker
+        conditions for equalities and bounds
+        (possibly due to floating-point errors).
+
+        .. todo::
+
+            Add doctest
+
+        """
+        return self._error('dual', glpk.SOL)
 
     def unboundedness(self):
         """Return a variable or constraint causing unboundedness
@@ -726,6 +834,28 @@ cdef class IPointSolver(_Solver):
         """
         return self._value(varstraint, glpk.ipt_col_prim, glpk.ipt_row_prim)
 
+    def primal_error(self):
+        """Return absolute and relative primal solution errors
+
+        :returns: a :class:`~collections.abc.Mapping`
+            of {:data:`'equalities'`, :data:`'bounds'`}
+            to :class:`~collections.abc.Mapping`
+            of {:data:`'abs'`, :data:`'rel'`} to pairs consisting of
+            an error (:class:`float`) and a :class:`Variable`
+            or :class:`Constraint` where it is attained
+
+        The errors returned by this function quantify to what degree the
+        current primal solution does not satisfy the Karush-Kuhn-Tucker
+        conditions for equalities and bounds
+        (possibly due to floating-point errors).
+
+        .. todo::
+
+            Add doctest
+
+        """
+        return self._error('primal', glpk.IPT)
+
     def dual(self, varstraint):
         """Return dual value for the current solution
 
@@ -742,6 +872,28 @@ cdef class IPointSolver(_Solver):
 
         """
         return self._value(varstraint, glpk.ipt_col_dual, glpk.ipt_row_dual)
+
+    def dual_error(self):
+        """Return absolute and relative dual solution errors
+
+        :returns: a :class:`~collections.abc.Mapping`
+            of {:data:`'equalities'`, :data:`'bounds'`}
+            to :class:`~collections.abc.Mapping`
+            of {:data:`'abs'`, :data:`'rel'`} to pairs consisting of
+            an error (:class:`float`) and a :class:`Variable`
+            or :class:`Constraint` where it is attained
+
+        The errors returned by this function quantify to what degree the
+        current dual solution does not satisfy the Karush-Kuhn-Tucker
+        conditions for equalities and bounds
+        (possibly due to floating-point errors).
+
+        .. todo::
+
+            Add doctest
+
+        """
+        return self._error('dual', glpk.IPT)
 
     def print_solution(self, fname):
         """Write the solution to a file in a readable format
@@ -1056,6 +1208,27 @@ cdef class IntOptSolver(_Solver):
                     raise ValueError("Variable with binary or integer kind " +
                                      "has non-integer value " + str(val))
         return val
+
+    def error(self):
+        """Return absolute and relative solution errors
+
+        :returns: a :class:`~collections.abc.Mapping`
+            of {:data:`'equalities'`, :data:`'bounds'`}
+            to :class:`~collections.abc.Mapping`
+            of {:data:`'abs'`, :data:`'rel'`} to pairs consisting of
+            an error (:class:`float`) and a :class:`Variable`
+            or :class:`Constraint` where it is attained
+
+        The errors returned by this function quantify to what degree the
+        current solution does not satisfy the Karush-Kuhn-Tucker conditions
+        for equalities and bounds (possibly due to floating-point errors).
+
+        .. todo::
+
+            Add doctest
+
+        """
+        return self._error('primal', glpk.MIP)
 
     def print_solution(self, fname):
         """Write the solution to a file in a readable format
