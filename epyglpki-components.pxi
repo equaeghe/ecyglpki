@@ -94,7 +94,7 @@ cdef class _Varstraint(_ProgramComponent):
     cdef _coeffs(self,
                  int (*get_function)(glpk.ProbObj*, int, int[], double[]),
                  void (*set_function)(glpk.ProbObj*, int, int,
-                                      int[], double[]), 
+                                      int[], double[]),
                  argtypename, varstraints, coeffs=None):
         ind = self._program._ind(self)
         if coeffs is None:
@@ -135,7 +135,7 @@ cdef class _Varstraint(_ProgramComponent):
 
     cdef _name(self,
                const char* (*get_name_function)(glpk.ProbObj*, int),
-               void (*set_name_function)(glpk.ProbObj*, int, const char*), 
+               void (*set_name_function)(glpk.ProbObj*, int, const char*),
                name=None):
         cdef char* chars
         ind = self._program._ind(self)
@@ -307,7 +307,7 @@ cdef class Variable(_Varstraint):
 
         """
         return self._coeffs(glpk.get_mat_col, glpk.set_mat_col,
-                            Constraint.__name__, self._program._constraints, 
+                            Constraint.__name__, self._program._constraints,
                             coeffs)
 
     def name(self, name=None):

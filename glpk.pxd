@@ -1050,7 +1050,7 @@ cdef extern from "glpk.h":
 
     #  write min-cost flow problem data in DIMACS format
     int write_mincost "glp_write_mincost" (Graph* graph, int v_rhs,
-                                           int a_low, int a_cap, int a_cost, 
+                                           int a_low, int a_cap, int a_cost,
                                            const char* fname)
 
     #  read maximum flow problem data in DIMACS format

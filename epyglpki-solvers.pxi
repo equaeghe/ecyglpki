@@ -940,7 +940,7 @@ cdef class IntOptSolver(_Solver):
               * `'bound'`: best local bound
               * `'projection'`: best projection heuristic
 
-            * **pp_tech** (`str`) – the preprocessing technique, with possible 
+            * **pp_tech** (`str`) – the preprocessing technique, with possible
               values
 
               * `'none'`: disable preprocessing
