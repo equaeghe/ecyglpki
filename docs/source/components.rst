@@ -7,6 +7,11 @@
 Components
 ==========
 
+Varstraint
+----------
+
+.. autoclass:: Varstraint
+
 Variable
 --------
 

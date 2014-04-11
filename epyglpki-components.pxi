@@ -33,16 +33,15 @@ cdef class _Component:
                                                 program._problem_ptr(), NULL)
 
 
-cdef class _Varstraint(_Component):
+cdef class Varstraint(_Component):
     """One of the program's variables or constraints
 
     Any constraint :math:`a\leq c'x\leq b` can be represented as a combination
     of an ‘auxiliary’ variable :math:`z_c`, an equality constraint
     :math:`z_c=c'x` linking that auxiliary variable to the (vector of)
-    ‘structural’ variables :math:`x`, and :math:`a\leq z_c\leq b` bounds on
-    that auxiliary variable. Therefore it is useful to have this class, a
-    common class for both structural and auxiliary variables, which contains
-    the methods common to both `.Variable` and `.Constraint` classes.
+    ‘structural’ variables :math:`x`, and bounds :math:`a\leq z_c\leq b` on
+    that auxiliary variable. Therefore it is useful to have this class, which
+    contains the methods common to both `.Variable` and `.Constraint` classes.
 
     """
 
@@ -160,7 +159,7 @@ cdef class _Varstraint(_Component):
         return '' if chars is NULL else chars.decode()
 
 
-cdef class Variable(_Varstraint):
+cdef class Variable(Varstraint):
     """One of the problem's variables"""
 
     def __cinit__(self, program):
@@ -346,7 +345,7 @@ cdef class Variable(_Varstraint):
         return self._name(glpk.get_col_name, glpk.set_col_name, name)
 
 
-cdef class Constraint(_Varstraint):
+cdef class Constraint(Varstraint):
     """One of the problem's constraints"""
 
     def __cinit__(self, program):

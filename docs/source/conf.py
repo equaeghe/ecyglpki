@@ -94,7 +94,7 @@ pygments_style = 'sphinx'
 
 # -- Autodoc options -----------------------------------------------------------
 autodoc_member_order = 'bygroup'
-autodoc_default_flags = ['members', 'undoc-members']
+autodoc_default_flags = ['members', 'undoc-members', 'show-inheritance']
 todo_include_todos = True
 
 def fix_sig(app, what, name, obj, options, signature, return_annotation):
