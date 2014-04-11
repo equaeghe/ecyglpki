@@ -122,56 +122,52 @@ cdef class SimplexSolver(_Solver):
         :param controls: zero or more named parameters to change from the
             following list:
 
-            * :data:`msg_lev` (`str`) – the message level,
-              with possible values
+            * **msg_lev** (`str`) – the message level, with possible values
 
               * `'no'`: no output
               * `'warnerror'`: warnings and errors only
               * `'normal'`: normal output
               * `'full'`: normal output and informational messages
 
-            * :data:`meth` (`str`) – simplex method,
-              with possible values
+            * **meth** (`str`) – simplex method, with possible values
 
               * `'primal'`: two-phase primal simplex
               * `'dual'`: two-phase dual simplex
-              * `'dual_fail_primal'`: two-phase dual simplex and, if it
-                fails, switch to primal simplex
+              * `'dual_fail_primal'`: two-phase dual simplex and, if it fails,
+                switch to primal simplex
 
-            * :data:`pricing` (`str`) – pricing technique,
-              with possible values
+            * **pricing** (`str`) – pricing technique, with possible values
 
               * `'Dantzig'`: standard ‘textbook’
               * `'steepest'`: projected steepest edge
 
-            * :data:`r_test` (`str`) – ratio test technique,
-              with possible values
+            * **r_test** (`str`) – ratio test technique, with possible values
 
               * `'standard'`: standard ‘textbook’
               * `'Harris'`: Harris’s two-pass ratio test
 
-            * :data:`tol_bnd` (|Real|) – tolerance used to
-              check if the basic solution is primal feasible
-            * :data:`tol_dj` (|Real|) – tolerance used to check
-              if the basic solution is dual feasible
-            * :data:`tol_piv` (|Real|) – tolerance used to
-              choose eligble pivotal elements of the simplex table
-            * :data:`obj_ll` (|Real|) – lower limit of the
-              objective function (only if :data:`meth` is `'dual'`)
-            * :data:`obj_ul` (|Real|) – upper limit of the
-              objective function (only if :data:`meth` is `'dual'`)
-            * :data:`it_lim` (|Integral|) – iteration limit
-            * :data:`tm_lim` (|Integral|) – time limit [ms]
-            * :data:`out_frq` (|Integral|) – output frequency
-              [iterations] of informational messages
-            * :data:`out_dly` (|Integral|) – output delay
-              [ms] of solution process information
-            * :data:`presolve` (`bool`) – use LP presolver
+            * **tol_bnd** (|Real|) – tolerance used to check if the basic
+              solution is primal feasible
+            * **tol_dj** (|Real|) – tolerance used to check if the basic
+              solution is dual feasible
+            * **tol_piv** (|Real|) – tolerance used to choose eligble pivotal
+              elements of the simplex table
+            * **obj_ll** (|Real|) – lower limit of the objective function
+              (only if *meth* is `'dual'`)
+            * **obj_ul** (|Real|) – upper limit of the objective function
+              (only if *meth* is `'dual'`)
+            * **it_lim** (|Integral|) – iteration limit
+            * **tm_lim** (|Integral|) – time limit [ms]
+            * **out_frq** (|Integral|) – output frequency [iterations] of
+              informational messages
+            * **out_dly** (|Integral|) – output delay [ms] of solution process
+              information
+            * **presolve** (`bool`) – use LP presolver
 
             or, for basis factorization, from the following list:
 
-            * :data:`type` (length-2 `tuple` of `str`) – basis
-              factorization type, pairs with possible first components
+            * **type** (length-2 `tuple` of `str`) – basis factorization type,
+              pairs with possible first components
 
               * `'LU'`: plain LU factorization
               * `'BTLU'`: block-triangular LU factorization
@@ -180,25 +176,23 @@ cdef class SimplexSolver(_Solver):
 
               * `'Forrest-Tomlin'`: `Forrest–Tomlin`_ update applied to U
                 (only with plain LU factorization)
-              * `'Bartels-Golub'`: `Bartels–Golub`_ update
-                applied to Schur complement
-              * `'Givens'`: Givens rotation update
-                applied to Schur complement
+              * `'Bartels-Golub'`: `Bartels–Golub`_ update applied to Schur
+                complement
+              * `'Givens'`: Givens rotation update applied to Schur complement
 
-            * :data:`piv_tol` (|Real|) – Markowitz threshold pivoting tolerance
+            * **piv_tol** (|Real|) – Markowitz threshold pivoting tolerance
               (value must lie between :math:`0` and :math:`1`)
-            * :data:`piv_lim` (|Integral|) – number of pivot
+            * **piv_lim** (|Integral|) – number of pivot
               candidates that need to be considered on choosing a pivot element
               (at least :math:`1`)
-            * :data:`suhl` (`bool`) – use Suhl heuristic
-            * :data:`eps_tol` (|Real|) – tolerance below which
-              numbers are replaced by zero
-            * :data:`nfs_max` (|Integral|) – maximal number of
-              additional row-like factors (used only when :data:`type` is
-              `'Forrest-Tomlin'`)
-            * :data:`nrs_max` (|Integral|) – maximal number of
-              additional row and columns (used only when :data:`type` is
-              `'Bartels-Golub'` or `'Givens'`)
+            * **suhl** (`bool`) – use Suhl heuristic
+            * **eps_tol** (|Real|) – tolerance below which numbers are replaced
+              by zero
+            * **nfs_max** (|Integral|) – maximal number of additional row-like
+              factors (used only when *type* is `'Forrest-Tomlin'`)
+            * **nrs_max** (|Integral|) – maximal number of additional row and
+              columns
+              (used only when *type* is `'Bartels-Golub'` or `'Givens'`)
 
         :raises ValueError: if a non-existing control name is given
 
@@ -313,16 +307,15 @@ cdef class SimplexSolver(_Solver):
         """Solve the linear program
 
         :param exact: whether to use exact arithmetic or not
-            (only if the :data:`meth` control parameter is `'primal'`)
+            (only if the *meth* control parameter is `'primal'`)
         :type exact: `bool`
         :returns: solution status; see `.status` for details,
             or `'obj_ll reached'` or `'obj_ul reached'` in case that happens
         :rtype: `str`
-        :raises ValueError: if *exact* is `True` but the :data:`meth`
-            control parameter is not `'primal'`
-        :raises ValueError: if finite values are set for :data:`obj_ll` or
-            :data:`obj_ll` while the :data:`meth` control parameter is not
-            `'dual'`
+        :raises ValueError: if *exact* is `True` but the *meth* control
+            parameter is not `'primal'`
+        :raises ValueError: if finite values are set for *obj_ll* or *obj_ul*
+            while the *meth* control parameter is not `'dual'`
         :raises ValueError: if the basis is invalid
         :raises ValueError: if the basis matrix is singular
         :raises ValueError: if the basis matrix is ill-conditioned
@@ -698,16 +691,15 @@ cdef class IPointSolver(_Solver):
         :param controls: zero or more named parameters to change from the
             following list:
 
-            * :data:`msg_lev` (`str`) – the message level,
-              with possible values
+            * **msg_lev** (`str`) – the message level, with possible values
 
               * `'no'`: no output
               * `'warnerror'`: warnings and errors only
               * `'normal'`: normal output
               * `'full'`: normal output and informational messages
 
-            * :data:`ord_alg` (`str`) – the ordering algorithm used
-              prior to Cholesky factorization, with possible values
+            * **ord_alg** (`str`) – the ordering algorithm used prior to
+              Cholesky factorization, with possible values
 
               * `'orig'`: normal (original)
               * `'qmd'`: quotient minimum degree
@@ -919,21 +911,20 @@ cdef class IntOptSolver(_Solver):
         :param controls: zero or more named parameters to change from the
             following list:
 
-            * :data:`msg_lev` (`str`) – the message level,
-              with possible values
+            * **msg_lev** (`str`) – the message level, with possible values
 
               * `'no'`: no output
               * `'warnerror'`: warnings and errors only
               * `'normal'`: normal output
               * `'full'`: normal output and informational messages
 
-            * :data:`out_frq` (|Integral|) – output frequency
-              [ms] of informational messages
-            * :data:`out_dly` (|Integral|) – output delay
-              [ms] of current LP relaxation solution
-            * :data:`tm_lim` (|Integral|) – time limit [ms]
-            * :data:`br_tech` (`str`) – the branching technique,
-              with possible values
+            * **out_frq** (|Integral|) – output frequency [ms] of informational
+              messages
+            * **out_dly** (|Integral|) – output delay [ms] of current LP
+              relaxation solution
+            * **tm_lim** (|Integral|) – time limit [ms]
+            * **br_tech** (`str`) – the branching technique, with possible
+              values
 
               * `'first_fracvar'`: first fractional variable
               * `'last_fracvar'`: last fractional variable
@@ -941,47 +932,41 @@ cdef class IntOptSolver(_Solver):
               * `'Driebeek-Tomlin'`: heuristic by Driebeek_ & Tomlin
               * `'hybrid_peudocost'`: hybrid pseudocost heuristic
 
-            * :data:`bt_tech` (`str`) – the backtracking technique,
-              with possible values
+            * **bt_tech** (`str`) – the backtracking technique, with possible
+              values
 
               * `'depth'`: depth first search
               * `'breadth'`: breadth first search
               * `'bound'`: best local bound
               * `'projection'`: best projection heuristic
 
-            * :data:`pp_tech` (`str`) – the preprocessing technique,
-              with possible values
+            * **pp_tech** (`str`) – the preprocessing technique, with possible 
+              values
 
               * `'none'`: disable preprocessing
               * `'root'`: preprocessing only on the root level
               * `'all'`: preprocessing on all levels
 
-            * :data:`fp_heur` (`bool`) – apply `feasibility pump`_ heuristic
-            * :data:`ps_heur` (`bool`) – apply `proximity search`_ heuristic
-            * :data:`ps_tm_lim` (|Integral|) –  time limit [ms]
-              for the proximity search heuristic
-            * :data:`gmi_cuts` (`bool`) –
-              generate Gomory’s mixed integer cuts
-            * :data:`mir_cuts` (`bool`) –
-              generate mixed integer rounding cuts
-            * :data:`cov_cuts` (`bool`) –
-              generate mixed cover cuts
-            * :data:`clq_cuts` (`bool`) –
-              generate clique cuts
-            * :data:`tol_int` (|Real|) – absolute tolerance
-              used to check if the optimal solution to the current LP
-              relaxation is integer feasible
-            * :data:`tol_obj` (|Real|) – relative tolerance
-              used to check if the objective value in the optimal solution to
-              the current LP relaxation is not better than in the best known
-              integer feasible solution.
-            * :data:`mip_gap` (|Real|) – relative MIP-gap
-              tolerance
+            * **fp_heur** (`bool`) – apply `feasibility pump`_ heuristic
+            * **ps_heur** (`bool`) – apply `proximity search`_ heuristic
+            * **ps_tm_lim** (|Integral|) –  time limit [ms] for the proximity
+              search heuristic
+            * **gmi_cuts** (`bool`) – generate Gomory’s mixed integer cuts
+            * **mir_cuts** (`bool`) – generate mixed integer rounding cuts
+            * **cov_cuts** (`bool`) – generate mixed cover cuts
+            * **clq_cuts** (`bool`) – generate clique cuts
+            * **tol_int** (|Real|) – absolute tolerance used to check if the
+              optimal solution to the current LP relaxation is integer feasible
+            * **tol_obj** (|Real|) – relative tolerance used to check if the
+              objective value in the optimal solution to the current LP
+              relaxation is not better than in the best known integer feasible
+              solution.
+            * **mip_gap** (|Real|) – relative MIP-gap tolerance
               (search stops once the relative MIP-gap falls below this value)
-            * :data:`presolve` (`bool`) – use MIP presolver,
-              may simplify the problem
-            * :data:`binarize` (`bool`) – binarize integer variables
-              (only used if :data:`presolve` is `True`)
+            * **presolve** (`bool`) – use MIP presolver, may simplify the
+              problem
+            * **binarize** (`bool`) – binarize integer variables
+              (only used if *presolve* is `True`)
 
         :raises ValueError: if a non-existing control name is given
 
