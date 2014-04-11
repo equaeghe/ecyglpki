@@ -272,7 +272,7 @@ cdef class Variable(_Varstraint):
         """Change or retrieve variable coefficients (constraint matrix column)
 
         :param coeffs: the mapping with coefficients to change
-            (``{}`` to set all coefficients to `0`; omit for retrieval only)
+            (``{}`` to set all coefficients to 0; omit for retrieval only)
         :type coeffs: |Mapping| of `.Constraint` to |Real|
         :returns: the coefficient mapping, which only contains nonzero
             coefficients

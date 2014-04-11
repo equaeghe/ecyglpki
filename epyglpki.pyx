@@ -486,7 +486,7 @@ cdef class MILProgram:
 
         .. note::
 
-            If a scaling algorithm is given, all factors are first set to `1`:
+            If a scaling algorithm is given, all factors are first set to 1:
 
             .. doctest:: MILProgram.scaling
 
