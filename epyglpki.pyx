@@ -46,7 +46,75 @@ cdef name2chars(name):
     return chars
 
 
-cdef class MILProgram:
+cdef class Named:
+    """Object that can be given a name
+
+    .. doctest:: Named
+
+        >>> p = MILProgram()
+        >>> x = p.add_variable()
+        >>> c = p.add_constraint()
+        >>> o = p.objective()
+        >>> all(isinstance(thing, Named) for thing in {p, x, c, o})
+        True
+
+    """
+
+    def name(self, name=None):
+        """Change or retrieve object name
+
+        :param name: the new object name (omit for retrieval only)
+        :type name: `str`
+        :returns: the object name
+        :rtype: `str`
+        :raises TypeError: if *name* is not a `str`
+        :raises ValueError: if *name* exceeds 255 bytes encoded in UTF-8
+
+        .. doctest:: Named
+
+            >>> p.name()
+            ''
+            >>> p.name('Programme Linéaire')
+            'Programme Linéaire'
+            >>> p.name()
+            'Programme Linéaire'
+            >>> p.name('')
+            ''
+
+        .. doctest:: Named
+
+            >>> x.name()
+            ''
+            >>> x.name('Stake')
+            'Stake'
+            >>> x.name()
+            'Stake'
+
+        .. doctest:: Named
+
+            >>> c.name()
+            ''
+            >>> c.name('Budget')
+            'Budget'
+            >>> c.name()
+            'Budget'
+
+        .. doctest:: Named
+
+            >>> o.name()
+            ''
+            >>> o.name('σκοπός')
+            'σκοπός'
+            >>> o.name()
+            'σκοπός'
+
+        """
+        if name is not None:
+            self._set_name(name)
+        return self._get_name()
+
+
+cdef class MILProgram(Named):
     """Main problem object
 
     .. doctest:: MILProgram
@@ -174,38 +242,19 @@ cdef class MILProgram:
         self._unique_ids += 1
         return self._unique_ids
 
-    def name(self, name=None):
-        """Change or retrieve problem name
+    def _get_name(self):
+        cdef char* chars
+        chars = glpk.get_prob_name(self._problem)
+        return '' if chars is NULL else chars.decode()
 
-        :param name: the new problem name (omit for retrieval only)
-        :type name: `str`
-        :returns: the problem name
-        :rtype: `str`
-        :raises TypeError: if *name* is not a `str`
-        :raises ValueError: if *name* exceeds 255 bytes encoded in UTF-8
-
-        .. doctest:: MILProgram.name
-
-            >>> p = MILProgram()
-            >>> p.name()
-            ''
-            >>> p.name('Programme Linéaire')
-            'Programme Linéaire'
-            >>> p.name()
-            'Programme Linéaire'
-            >>> p.name('')
-            ''
-
-        """
+    def _set_name(self, name):
         cdef char* chars
         if name is '':
             glpk.set_prob_name(self._problem, NULL)
-        elif name is not None:
+        else:
             name = name2chars(name)
             chars = name
             glpk.set_prob_name(self._problem, chars)
-        chars = glpk.get_prob_name(self._problem)
-        return '' if chars is NULL else chars.decode()
 
     def _col(self, variable, alternate=False):
         """Return the column index of a Variable"""

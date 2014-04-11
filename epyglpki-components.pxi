@@ -22,7 +22,7 @@
 ###############################################################################
 
 
-cdef class _Component:
+cdef class _Component(Named):
 
     cdef MILProgram _program
     cdef glpk.ProbObj* _problem
@@ -225,39 +225,6 @@ cdef class Varstraint(_Component):
             glpk.free(vals)
             glpk.free(inds)
         return coeffs
-
-    def name(self, name=None):
-        """Change or retrieve varstraint name
-
-        :param name: the new varstraint name (omit for retrieval only)
-        :type name: `str`
-        :returns: the varstraint name
-        :rtype: `str`
-        :raises TypeError: if *name* is not a `str`
-        :raises ValueError: if *name* exceeds 255 bytes encoded in UTF-8
-
-        .. doctest:: Varstraint
-
-            >>> x.name()
-            ''
-            >>> x.name('Stake')
-            'Stake'
-            >>> x.name()
-            'Stake'
-
-        .. doctest:: Varstraint
-
-            >>> c.name()
-            ''
-            >>> c.name('Budget')
-            'Budget'
-            >>> c.name()
-            'Budget'
-
-        """
-        if name is not None:
-            self._set_name(name)
-        return self._get_name()
 
 
 cdef class Variable(Varstraint):
@@ -557,34 +524,16 @@ cdef class Objective(_Component):
                 raise TypeError("Objective constant must be a real number.")
         return glpk.get_obj_coef(self._problem, 0)
 
-    def name(self, name=None):
-        """Change or retrieve objective function name
+    def _get_name(self):
+        cdef char* chars
+        chars = glpk.get_obj_name(self._problem)
+        return '' if chars is NULL else chars.decode()
 
-        :param name: the new objective function name (omit for retrieval only)
-        :type name: `str`
-        :returns: the objective function name
-        :rtype: `str`
-        :raises TypeError: if *name* is not a `str`
-        :raises ValueError: if *name* exceeds 255 bytes encoded in UTF-8
-
-        .. doctest:: Objective.name
-
-            >>> p = MILProgram()
-            >>> o = p.objective()
-            >>> o.name()
-            ''
-            >>> o.name('σκοπός')
-            'σκοπός'
-            >>> o.name()
-            'σκοπός'
-
-        """
+    def _set_name(self, name):
         cdef char* chars
         if name is '':
             glpk.set_obj_name(self._problem, NULL)
-        elif name is not None:
+        else:
             name = name2chars(name)
             chars = name
             glpk.set_obj_name(self._problem, chars)
-        chars = glpk.get_obj_name(self._problem)
-        return '' if chars is NULL else chars.decode()
