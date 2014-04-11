@@ -270,13 +270,13 @@ cdef class MILProgram:
                      kind='continuous', name=''):
         """Add and obtain new variable object
 
-        :param coeffs: set variable coefficients; see :meth:`Variable.coeffs`
+        :param coeffs: set variable coefficients; see `.Variable.coeffs`
         :param lower_bound: set variable lower bound;
-            see :meth:`Variable.bounds`, parameter *lower*
+            see `.Variable.bounds`, parameter *lower*
         :param upper_bound: set variable upper bound;
-            see :meth:`Variable.bounds`, parameter *upper*
-        :param kind: set variable kind; see :meth:`Variable.kind`
-        :param name: set variable name; see :meth:`Variable.name`
+            see `.Variable.bounds`, parameter *upper*
+        :param kind: set variable kind; see `.Variable.kind`
+        :param name: set variable name; see `.Variable.name`
         :returns: variable object
         :rtype: `.Variable`
 
@@ -322,12 +322,12 @@ cdef class MILProgram:
         """Add and obtain new constraint object
 
         :param coeffs: set constraint coefficients;
-            see :meth:`Constraint.coeffs`
+            see `.Constraint.coeffs`
         :param lower_bound: set constraint lower bound;
-            see :meth:`Constraint.bounds`, parameter *lower*
+            see `.Constraint.bounds`, parameter *lower*
         :param upper_bound: set constraint upper bound;
-            see :meth:`Constraint.bounds`, parameter *upper*
-        :param name: set constraint name; see :meth:`Constraint.name`
+            see `.Constraint.bounds`, parameter *upper*
+        :param name: set constraint name; see `.Constraint.name`
         :returns: constraint object
         :rtype: `.Constraint`
 
@@ -543,10 +543,10 @@ cdef class MILProgram:
                   name=''):
         """Obtain objective object
 
-        :param coeffs: set objective coefficients; see :meth:`Objective.coeffs`
-        :param constant: set objective constant; see :meth:`Objective.constant`
-        :param direction: set objective direction; see :meth:`Objective.direction`
-        :param name: set objective name; see :meth:`Objective.name`
+        :param coeffs: set objective coefficients; see `.Objective.coeffs`
+        :param constant: set objective constant; see `.Objective.constant`
+        :param direction: set objective direction; see `.Objective.direction`
+        :param name: set objective name; see `.Objective.name`
         :returns: objective object
         :rtype: `.Objective`
 
@@ -569,7 +569,7 @@ cdef class MILProgram:
         """Obtain simplex solver object
 
         :param controls: set solver and basis factorization control parameters;
-            see :meth:`SimplexSolver.controls`, parameter *controls*
+            see `.SimplexSolver.controls`, parameter *controls*
         :returns: simplex solver object
         :rtype: `.SimplexSolver`
 
@@ -589,7 +589,7 @@ cdef class MILProgram:
         """Obtain interior point solver object
 
         :param controls: set solver control parameters;
-            see :meth:`IPointSolver.controls`, parameter *controls*
+            see `.IPointSolver.controls`, parameter *controls*
         :returns: interior point solver object
         :rtype: `.IPointSolver`
 
@@ -609,7 +609,7 @@ cdef class MILProgram:
         """Obtain integer optimization solver object
 
         :param controls: set solver control parameters;
-            see :meth:`IntOptSolver.controls`, parameter *controls*
+            see `.IntOptSolver.controls`, parameter *controls*
         :returns: integer optimization solver object
         :rtype: `.IntOptSolver`
 

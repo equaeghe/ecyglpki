@@ -315,8 +315,8 @@ cdef class SimplexSolver(_Solver):
         :param exact: whether to use exact arithmetic or not
             (only if the :data:`meth` control parameter is `'primal'`)
         :type exact: `bool`
-        :returns: solution status; see :meth:`SimplexSolver.status` for
-            details, or :data:`"obj_ll reached"` or :data:`"obj_ul reached"` in
+        :returns: solution status; see `.status` for
+            details, or `'obj_ll reached'` or `'obj_ul reached'` in
             case that happens
         :rtype: `str`
         :raises ValueError: if *exact* is `True` but the :data:`meth`
@@ -565,7 +565,7 @@ cdef class SimplexSolver(_Solver):
 
         .. note::
 
-            After :meth:`SimplexSolver.solve` has been run successfully, the
+            After `.solve` has been run successfully, the
             basis is left in a valid state. So it is not necessary to run this
             method before, e.g., re-optimizating after only the objective has
             been changed.
@@ -628,7 +628,7 @@ cdef class SimplexSolver(_Solver):
         """Read the solution from a file
 
         :param fname: the name of the file to read from
-            (written by :meth:`SimplexSolver.write_solution`)
+            (written by `.write_solution`)
         :type fname: `str`
         :raises RuntimeError: if there is an error reading the file
 
@@ -755,7 +755,7 @@ cdef class IPointSolver(_Solver):
     def solve(self):
         """Solve the linear program
 
-        :returns: solution status; see :meth:`IPointSolver.status` for details
+        :returns: solution status; see `.status` for details
         :rtype: `str`
         :raises ValueError: if the problem has no rows/columns
         :raises ArithmeticError: if there occurs very slow convergence or
@@ -898,7 +898,7 @@ cdef class IPointSolver(_Solver):
         """Read the solution from a file
 
         :param fname: the name of the file to read from
-            (written by :meth:`IPointSolver.write_solution`)
+            (written by `.write_solution`)
         :type fname: `str`
         :raises RuntimeError: if there is an error reading the file
 
@@ -1098,7 +1098,7 @@ cdef class IntOptSolver(_Solver):
             not worse than this bound (not used if solver is
             `'branchcut'`)
         :type obj_bound: |Integral|
-        :returns: solution status; see :meth:`IntOptSolver.status` for details
+        :returns: solution status; see `.status` for details
         :rtype: `str`
         :raises ValueError: if *solver* is neither `'branchcut'` nor
             `'intfeas1'`
@@ -1233,7 +1233,7 @@ cdef class IntOptSolver(_Solver):
         """Read the solution from a file
 
         :param fname: the name of the file to read from
-            (written by :meth:`IntOptSolver.write_solution`)
+            (written by `.write_solution`)
         :type fname: `str`
         :raises RuntimeError: if there is an error reading the file
 
