@@ -51,7 +51,7 @@ cdef class Named:
 
     .. doctest:: Named
 
-        >>> p = MILProgram()
+        >>> p = MILProgram('Linear Program')
         >>> x = p.add_variable()
         >>> c = p.add_constraint()
         >>> o = p.objective()
@@ -73,7 +73,7 @@ cdef class Named:
         .. doctest:: Named
 
             >>> p.name()
-            ''
+            'Linear Program'
             >>> p.name('Programme Linéaire')
             'Programme Linéaire'
             >>> p.name()
@@ -117,6 +117,7 @@ cdef class Named:
 cdef class MILProgram(Named):
     """Main problem object
 
+
     .. doctest:: MILProgram
 
         >>> p = MILProgram()
@@ -130,11 +131,12 @@ cdef class MILProgram(Named):
     cdef object _variables
     cdef object _constraints
 
-    def __cinit__(self):
+    def __cinit__(self, name=None):
         self._problem = glpk.create_prob()
         self._unique_ids = 0
         self._variables = []
         self._constraints = []
+        self.name(name)
 
     def _problem_ptr(self):
         """Encapsulate the pointer to the problem object
@@ -325,7 +327,7 @@ cdef class MILProgram(Named):
         :param upper_bound: set variable upper bound;
             see `.Varstraint.bounds`, parameter *upper*
         :param kind: set variable kind; see `.Variable.kind`
-        :param name: set variable name; see `.Variable.name`
+        :param name: set variable name; see `.Named.name`
         :returns: variable object
         :rtype: `.Variable`
 
@@ -375,7 +377,7 @@ cdef class MILProgram(Named):
             see `.Varstraint.bounds`, parameter *lower*
         :param upper_bound: set constraint upper bound;
             see `.Varstraint.bounds`, parameter *upper*
-        :param name: set constraint name; see `.Constraint.name`
+        :param name: set constraint name; see `.Named.name`
         :returns: constraint object
         :rtype: `.Constraint`
 
@@ -587,7 +589,7 @@ cdef class MILProgram(Named):
         :param coeffs: set objective coefficients; see `.Objective.coeffs`
         :param constant: set objective constant; see `.Objective.constant`
         :param direction: set objective direction; see `.Objective.direction`
-        :param name: set objective name; see `.Objective.name`
+        :param name: set objective name; see `.Named.name`
         :returns: objective object
         :rtype: `.Objective`
 
