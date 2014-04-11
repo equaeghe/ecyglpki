@@ -203,16 +203,16 @@ cdef class Variable(_Varstraint):
         """Change or retrieve variable bounds
 
         :param lower: the variable's lower bound
-            (|False| to remove bound; omit for retrieval only)
-        :type lower: |Real| or |False|
+            (`False` to remove bound; omit for retrieval only)
+        :type lower: |Real| or `False`
         :param upper: the variable's upper bound
-            (|False| to remove bound; omit for retrieval only)
-        :type upper: |Real| or |False|
+            (`False` to remove bound; omit for retrieval only)
+        :type upper: |Real| or `False`
         :returns: the variable's bounds
-        :rtype: length-2 |tuple| of |float| (or |False|)
-        :raises TypeError: if `lower` or `upper` is not
-            |Real| or |False|
-        :raises ValueError: if `lower` is larger than `upper`
+        :rtype: length-2 `tuple` of `float` (or `False`)
+        :raises TypeError: if *lower* or *upper* is not
+            |Real| or `False`
+        :raises ValueError: if *lower* is larger than *upper*
 
         .. doctest:: Variable.bounds
 
@@ -233,11 +233,11 @@ cdef class Variable(_Varstraint):
         """Change or retrieve variable kind
 
         :param kind: the new variable kind (omit for retrieval only)
-        :type kind: |str|,
+        :type kind: `str`,
             either :data:`'continuous'`, :data:`'integer'`, or :data:`'binary'`
         :returns: the variable kind
-        :rtype: |str|
-        :raises ValueError: if `kind` is not :data:`'continuous'`,
+        :rtype: `str`
+        :raises ValueError: if *kind* is not :data:`'continuous'`,
             :data:`'integer'`, or :data:`'binary'`
 
         .. doctest:: Variable.kind
@@ -287,12 +287,12 @@ cdef class Variable(_Varstraint):
         :param coeffs: the mapping with coefficients to change
             (`{}` to set all coefficients to `0`; omit for retrieval only)
         :type coeffs: |Mapping| of
-            |Constraint| to |Real|
+            `.Constraint` to |Real|
         :returns: the coefficient mapping, which only contains nonzero
             coefficients
-        :rtype: |dict| of |Constraint| to |float|
-        :raises TypeError: if `coeffs` is not |Mapping|
-        :raises TypeError: if a coefficient key is not |Variable|
+        :rtype: `dict` of `.Constraint` to `float`
+        :raises TypeError: if *coeffs* is not |Mapping|
+        :raises TypeError: if a coefficient key is not `.Variable`
         :raises TypeError: if a coefficient value is not |Real|
 
         .. doctest:: Variable.coeffs
@@ -317,11 +317,11 @@ cdef class Variable(_Varstraint):
         """Change or retrieve variable name
 
         :param name: the new variable name (omit for retrieval only)
-        :type name: |str|
+        :type name: `str`
         :returns: the variable name
-        :rtype: |str|
-        :raises TypeError: if `name` is not a |str|
-        :raises ValueError: if `name` exceeds 255 bytes encoded in UTF-8
+        :rtype: `str`
+        :raises TypeError: if *name* is not a `str`
+        :raises ValueError: if *name* exceeds 255 bytes encoded in UTF-8
 
         .. doctest:: Variable.name
 
@@ -392,16 +392,15 @@ cdef class Constraint(_Varstraint):
         """Change or retrieve constraint bounds
 
         :param lower: the constraint's lower bound
-            (|False| to remove bound; omit for retrieval only)
-        :type lower: |Real| or |False|
+            (`False` to remove bound; omit for retrieval only)
+        :type lower: |Real| or `False`
         :param upper: the constraint's upper bound
-            (|False| to remove bound; omit for retrieval only)
-        :type upper: |Real| or |False|
+            (`False` to remove bound; omit for retrieval only)
+        :type upper: |Real| or `False`
         :returns: the constraint's bounds
-        :rtype: length-2 |tuple| of |float| (or |False|)
-        :raises TypeError: if `lower` or `upper` is not
-            |Real| or |False|
-        :raises ValueError: if `lower` is larger than `upper`
+        :rtype: length-2 `tuple` of `float` (or `False`)
+        :raises TypeError: if *lower* or *upper* is not |Real| or `False`
+        :raises ValueError: if *lower* is larger than *upper*
 
         .. doctest:: Constraint.bounds
 
@@ -424,12 +423,12 @@ cdef class Constraint(_Varstraint):
         :param coeffs: the mapping with coefficients to change
             (`{}` to set all coefficients to `0`; omit for retrieval only)
         :type coeffs: |Mapping| of
-            |Variable| to |Real|
+            `.Variable` to |Real|
         :returns: the coefficient mapping, which only contains nonzero
             coefficients
-        :rtype: |dict| of |Variable| to |float|
-        :raises TypeError: if `coeffs` is not |Mapping|
-        :raises TypeError: if a coefficient key is not |Variable|
+        :rtype: `dict` of `.Variable` to `float`
+        :raises TypeError: if *coeffs* is not |Mapping|
+        :raises TypeError: if a coefficient key is not `.Variable`
         :raises TypeError: if a coefficient value is not |Real|
 
         .. doctest:: Constraint.coeffs
@@ -454,11 +453,11 @@ cdef class Constraint(_Varstraint):
         """Change or retrieve constraint name
 
         :param name: the new constraint name (omit for retrieval only)
-        :type name: |str|
+        :type name: `str`
         :returns: the constraint name
-        :rtype: |str|
-        :raises TypeError: if `name` is not a |str|
-        :raises ValueError: if `name` exceeds 255 bytes encoded in UTF-8
+        :rtype: `str`
+        :raises TypeError: if *name* is not a `str`
+        :raises ValueError: if *name* exceeds 255 bytes encoded in UTF-8
 
         .. doctest:: Constraint.name
 
@@ -483,11 +482,11 @@ cdef class Objective(_ProgramComponent):
 
         :param direction: the new objective direction
             (omit for retrieval only)
-        :type direction: |str|,
+        :type direction: `str`,
             either :data:`'minimize'` or :data:`'maximize'`
         :returns: the objective direction
-        :rtype: |str|
-        :raises ValueError: if `direction` is not :data:`'minimize'` or
+        :rtype: `str`
+        :raises ValueError: if *direction* is not :data:`'minimize'` or
             :data:`'maximize'`
 
         .. doctest:: Objective.direction
@@ -513,12 +512,12 @@ cdef class Objective(_ProgramComponent):
         :param coeffs: the mapping with coefficients to change
             (`{}` to set all coefficients to `0` ; omit for retrieval only)
         :type coeffs: |Mapping| of
-            |Variable| to |Real|
+            `.Variable` to |Real|
         :returns: the coefficient mapping, which only contains nonzero
             coefficients
-        :rtype: |dict| of |Variable| to |float|
-        :raises TypeError: if `coeffs` is not |Mapping|
-        :raises TypeError: if a coefficient key is not |Variable|
+        :rtype: `dict` of `.Variable` to `float`
+        :raises TypeError: if *coeffs* is not |Mapping|
+        :raises TypeError: if a coefficient key is not `.Variable`
         :raises TypeError: if a coefficient value is not |Real|
 
         .. doctest:: Objective.coeffs
@@ -569,8 +568,8 @@ cdef class Objective(_ProgramComponent):
             (omit for retrieval only)
         :type constant: |Real|
         :returns: the objective function constant
-        :rtype: |float|
-        :raises TypeError: if `constant` is not |Real|
+        :rtype: `float`
+        :raises TypeError: if *constant* is not |Real|
 
         .. doctest:: Objective.constant
 
@@ -594,11 +593,11 @@ cdef class Objective(_ProgramComponent):
 
         :param name: the new objective function name
             (omit for retrieval only)
-        :type name: |str|
+        :type name: `str`
         :returns: the objective function name
-        :rtype: |str|
-        :raises TypeError: if `name` is not a |str|
-        :raises ValueError: if `name` exceeds 255 bytes encoded in UTF-8
+        :rtype: `str`
+        :raises TypeError: if *name* is not a `str`
+        :raises ValueError: if *name* exceeds 255 bytes encoded in UTF-8
 
         .. doctest:: Objective.name
 

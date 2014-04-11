@@ -118,11 +118,11 @@ cdef class SimplexSolver(_Solver):
 
         :param defaults: whether to set the parameters back to their default
             values or not
-        :type defaults: |bool|
+        :type defaults: `bool`
         :param controls: zero or more named parameters to change from the
             following list:
 
-            * :data:`msg_lev` (|str|) – the message level,
+            * :data:`msg_lev` (`str`) – the message level,
               with possible values
 
               * :data:`'no'`: no output
@@ -130,7 +130,7 @@ cdef class SimplexSolver(_Solver):
               * :data:`'normal'`: normal output
               * :data:`'full'`: normal output and informational messages
 
-            * :data:`meth` (|str|) – simplex method,
+            * :data:`meth` (`str`) – simplex method,
               with possible values
 
               * :data:`'primal'`: two-phase primal simplex
@@ -138,13 +138,13 @@ cdef class SimplexSolver(_Solver):
               * :data:`'dual_fail_primal'`: two-phase dual simplex and, if it
                 fails, switch to primal simplex
 
-            * :data:`pricing` (|str|) – pricing technique,
+            * :data:`pricing` (`str`) – pricing technique,
               with possible values
 
               * :data:`'Dantzig'`: standard ‘textbook’
               * :data:`'steepest'`: projected steepest edge
 
-            * :data:`r_test` (|str|) – ratio test technique,
+            * :data:`r_test` (`str`) – ratio test technique,
               with possible values
 
               * :data:`'standard'`: standard ‘textbook’
@@ -166,11 +166,11 @@ cdef class SimplexSolver(_Solver):
               [iterations] of informational messages
             * :data:`out_dly` (|Integral|) – output delay
               [ms] of solution process information
-            * :data:`presolve` (|bool|) – use LP presolver
+            * :data:`presolve` (`bool`) – use LP presolver
 
             or, for basis factorization, from the following list:
 
-            * :data:`type` (length-2 |tuple| of |str|) – basis
+            * :data:`type` (length-2 `tuple` of `str`) – basis
               factorization type, pairs with possible first components
 
               * :data:`'LU'`: plain LU factorization
@@ -185,12 +185,12 @@ cdef class SimplexSolver(_Solver):
               * :data:`'Givens'`: Givens rotation update
                 applied to Schur complement
 
-            * :data:`piv_tol` (|Real|) – Markowitz threshold
-              pivoting tolerance (value must lie between `0` and `1`)
+            * :data:`piv_tol` (|Real|) – Markowitz threshold pivoting tolerance
+              (value must lie between :math:`0` and :math:`1`)
             * :data:`piv_lim` (|Integral|) – number of pivot
               candidates that need to be considered on choosing a pivot element
-              (at least `1`)
-            * :data:`suhl` (|bool|) – use Suhl heuristic
+              (at least :math:`1`)
+            * :data:`suhl` (`bool`) – use Suhl heuristic
             * :data:`eps_tol` (|Real|) – tolerance below which
               numbers are replaced by zero
             * :data:`nfs_max` (|Integral|) – maximal number of
@@ -314,12 +314,12 @@ cdef class SimplexSolver(_Solver):
 
         :param exact: whether to use exact arithmetic or not
             (only if the :data:`meth` control parameter is :data:`'primal'`)
-        :type exact: |bool|
+        :type exact: `bool`
         :returns: solution status; see :meth:`SimplexSolver.status` for
             details, or :data:`"obj_ll reached"` or :data:`"obj_ul reached"` in
             case that happens
-        :rtype: |str|
-        :raises ValueError: if `exact` is |True| but the :data:`meth`
+        :rtype: `str`
+        :raises ValueError: if *exact* is `True` but the :data:`meth`
             control parameter is not :data:`'primal'`
         :raises ValueError: if finite values are set for :data:`obj_ll` or
             :data:`obj_ll` while the :data:`meth` control parameter is not
@@ -363,18 +363,18 @@ cdef class SimplexSolver(_Solver):
         """Return the current solution status
 
         :param detailed: whether to give a detailed solution status
-        :type detailed: |bool|
+        :type detailed: `bool`
         :returns: the current solution status
 
-            * in case `detailed` is :data:`False`, either :data:`'undefined'`,
+            * in case *detailed* is `False`, either :data:`'undefined'`,
               :data:`'optimal`, :data:`'infeasible'`, :data:`'no feasible'`,
               :data:`'feasible'`, or :data:`'unbounded'`
-            * in case `detailed` is :data:`True`, a pair of statuses is given,
+            * in case *detailed* is `True`, a pair of statuses is given,
               one for the primal solution and one for the dual solution, either
               :data:`'undefined'`, :data:`'infeasible'`, :data:`'no feasible'`,
               or :data:`'feasible'`
 
-        :rtype: |str| or length-2 |tuple| of |str|
+        :rtype: `str` or length-2 `tuple` of `str`
 
         .. todo::
 
@@ -392,7 +392,7 @@ cdef class SimplexSolver(_Solver):
         """Return the objective value for the current solution
 
         :returns: the objective value for the current solution
-        :rtype: |float|
+        :rtype: `float`
 
         .. todo::
 
@@ -406,11 +406,11 @@ cdef class SimplexSolver(_Solver):
         """Return primal value for the current solution
 
         :param varstraint: variable or constraint to return the primal value of
-        :type varstraint: |Variable| or |Constraint|
-        :returns: the value of `varstraint` for the current solution
-        :rtype: |float| or |int|
-        :raises TypeError: if varstraint is neither |Variable| nor
-            |Constraint|
+        :type varstraint: `.Variable` or `.Constraint`
+        :returns: the value of *varstraint* for the current solution
+        :rtype: `float` or `int`
+        :raises TypeError: if varstraint is neither `.Variable` nor
+            `.Constraint`
 
         .. todo::
 
@@ -427,8 +427,8 @@ cdef class SimplexSolver(_Solver):
             of {:data:`'equalities'`, :data:`'bounds'`}
             to |Mapping|
             of {:data:`'abs'`, :data:`'rel'`} to pairs consisting of
-            an error (|float|) and a |Variable|
-            or |Constraint| where it is attained
+            an error (`float`) and a `.Variable`
+            or `.Constraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current primal solution does not satisfy the Karush-Kuhn-Tucker
@@ -446,11 +446,11 @@ cdef class SimplexSolver(_Solver):
         """Return dual value for the current solution
 
         :param varstraint: variable or constraint to return the dual value of
-        :type varstraint: |Variable| or |Constraint|
-        :returns: the value of `varstraint` for the current solution
-        :rtype: |float| or |int|
-        :raises TypeError: if varstraint is neither |Variable| nor
-            |Constraint|
+        :type varstraint: `.Variable` or `.Constraint`
+        :returns: the value of *varstraint* for the current solution
+        :rtype: `float` or `int`
+        :raises TypeError: if varstraint is neither `.Variable` nor
+            `.Constraint`
 
         .. todo::
 
@@ -466,8 +466,8 @@ cdef class SimplexSolver(_Solver):
             of {:data:`'equalities'`, :data:`'bounds'`}
             to |Mapping|
             of {:data:`'abs'`, :data:`'rel'`} to pairs consisting of
-            an error (|float|) and a |Variable|
-            or |Constraint| where it is attained
+            an error (`float`) and a `.Variable`
+            or `.Constraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current dual solution does not satisfy the Karush-Kuhn-Tucker
@@ -487,8 +487,8 @@ cdef class SimplexSolver(_Solver):
         :returns: a variable or constraint causing unboundedness (if any) and
             the nature of the unboundedness, either :data:`'primal'` or
             :data:`'dual'`
-        :rtype: length-2 |tuple| of |Variable| or
-            |Constraint| and |str|
+        :rtype: length-2 `tuple` of `.Variable` or
+            `.Constraint` and `str`
 
         .. todo::
 
@@ -538,23 +538,23 @@ cdef class SimplexSolver(_Solver):
 
             * :data:`'Bixby'`: algorithm used by CPLEX, as discussed by Bixby_
 
-        :type algorithm: |str|
+        :type algorithm: `str`
         :param status: the mapping of statuses to change
             (omit to not modify the basis)
         :type status: |Mapping| from
-            |Variable| or |Constraint| to |str|
+            `.Variable` or `.Constraint` to `str`
         :param warmup: whether to ‘warm up’ the basis, so that
-            :meth:`SimplexSolver.solve` can be used without presolving
-        :type warmup: |bool|
+            `.solve` can be used without presolving
+        :type warmup: `bool`
         :returns: a mapping of the basis statuses of all variables and
             constraints
-        :rtype: |dict| from |Variable| or |Constraint| to
-            |str|
-        :raises ValueError: if `algorithm` is neither :data:`'standard'`,
-            :data:`'advanced'`, nor :data:`'Bixby'`
-        :raises TypeError: if `status` is not |Mapping|
-        :raises TypeError: if `status` keys are neither |Variable| nor
-            |Constraint|
+        :rtype: `dict` from `.Variable` or `.Constraint` to
+            `str`
+        :raises ValueError: if *algorithm* is neither `'standard'`,
+            `'advanced'`, nor `'Bixby'`
+        :raises TypeError: if *status* is not |Mapping|
+        :raises TypeError: if *status* keys are neither `.Variable` nor
+            `.Constraint`
         :raises ValueError: if the basis is invalid
         :raises ValueError: if the basis matrix is singular
         :raises ValueError: if the basis matrix is ill-conditioned
@@ -614,7 +614,7 @@ cdef class SimplexSolver(_Solver):
         """Write the solution to a file in a readable format
 
         :param fname: the name of the file to write to
-        :type fname: |str|
+        :type fname: `str`
         :raises RuntimeError: if there is an error writing the file
 
         .. todo::
@@ -629,7 +629,7 @@ cdef class SimplexSolver(_Solver):
 
         :param fname: the name of the file to read from
             (written by :meth:`SimplexSolver.write_solution`)
-        :type fname: |str|
+        :type fname: `str`
         :raises RuntimeError: if there is an error reading the file
 
         .. todo::
@@ -643,7 +643,7 @@ cdef class SimplexSolver(_Solver):
         """Write the solution to a file
 
         :param fname: the name of the file to write to
-        :type fname: |str|
+        :type fname: `str`
         :raises RuntimeError: if there is an error writing the file
 
         .. todo::
@@ -658,13 +658,13 @@ cdef class SimplexSolver(_Solver):
 
         :param varstraints: sequence of variables and/or constraints to analyze
         :type varstraints: |Sequence| of
-            |Variable| and/or |Constraint|
+            `.Variable` and/or `.Constraint`
         :param fname: the name of the file to write to
-        :type fname: |str|
+        :type fname: `str`
         :raises Exception: if the current solution is not optimal
-        :raises TypeError: if `varstraints` is not 
-            |Sequence| of |Variable| and/or
-            |Constraint|
+        :raises TypeError: if *varstraints* is not 
+            |Sequence| of `.Variable` and/or
+            `.Constraint`
         :raises ValueError: if the current basis is invalid
         :raises ValueError: if the current basis matrix is singular
         :raises ValueError: if the current basis matrix is ill-conditioned
@@ -709,11 +709,11 @@ cdef class IPointSolver(_Solver):
 
         :param defaults: whether to set the parameters back to their default
             values or not
-        :type defaults: |bool|
+        :type defaults: `bool`
         :param controls: zero or more named parameters to change from the
             following list:
 
-            * :data:`msg_lev` (|str|) – the message level,
+            * :data:`msg_lev` (`str`) – the message level,
               with possible values
 
               * :data:`'no'`: no output
@@ -721,7 +721,7 @@ cdef class IPointSolver(_Solver):
               * :data:`'normal'`: normal output
               * :data:`'full'`: normal output and informational messages
 
-            * :data:`ord_alg` (|str|) – the ordering algorithm used
+            * :data:`ord_alg` (`str`) – the ordering algorithm used
               prior to Cholesky factorization, with possible values
 
               * :data:`'orig'`: normal (original)
@@ -756,7 +756,7 @@ cdef class IPointSolver(_Solver):
         """Solve the linear program
 
         :returns: solution status; see :meth:`IPointSolver.status` for details
-        :rtype: |str|
+        :rtype: `str`
         :raises ValueError: if the problem has no rows/columns
         :raises ArithmeticError: if there occurs very slow convergence or
             divergence
@@ -780,7 +780,7 @@ cdef class IPointSolver(_Solver):
 
         :returns: the current solution status, either :data:`'undefined'`,
             :data:`'optimal`, :data:`'infeasible'`, or :data:`'no feasible'`
-        :rtype: |str|
+        :rtype: `str`
 
         .. todo::
 
@@ -793,7 +793,7 @@ cdef class IPointSolver(_Solver):
         """Return the objective value for the current solution
 
         :returns: the objective value for the current solution
-        :rtype: |float|
+        :rtype: `float`
 
         .. todo::
 
@@ -806,11 +806,11 @@ cdef class IPointSolver(_Solver):
         """Return primal value for the current solution
 
         :param varstraint: variable or constraint to return the primal value of
-        :type varstraint: |Variable| or |Constraint|
-        :returns: the value of `varstraint` for the current solution
-        :rtype: |float| or |int|
-        :raises TypeError: if varstraint is neither |Variable| nor
-            |Constraint|
+        :type varstraint: `.Variable` or `.Constraint`
+        :returns: the value of *varstraint* for the current solution
+        :rtype: `float` or `int`
+        :raises TypeError: if varstraint is neither `.Variable` nor
+            `.Constraint`
 
         .. todo::
 
@@ -826,8 +826,8 @@ cdef class IPointSolver(_Solver):
             of {:data:`'equalities'`, :data:`'bounds'`}
             to |Mapping|
             of {:data:`'abs'`, :data:`'rel'`} to pairs consisting of
-            an error (|float|) and a |Variable|
-            or |Constraint| where it is attained
+            an error (`float`) and a `.Variable`
+            or `.Constraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current primal solution does not satisfy the Karush-Kuhn-Tucker
@@ -845,11 +845,11 @@ cdef class IPointSolver(_Solver):
         """Return dual value for the current solution
 
         :param varstraint: variable or constraint to return the dual value of
-        :type varstraint: |Variable| or |Constraint|
-        :returns: the value of `varstraint` for the current solution
-        :rtype: |float| or |int|
-        :raises TypeError: if varstraint is neither |Variable| nor
-            |Constraint|
+        :type varstraint: `.Variable` or `.Constraint`
+        :returns: the value of *varstraint* for the current solution
+        :rtype: `float` or `int`
+        :raises TypeError: if varstraint is neither `.Variable` nor
+            `.Constraint`
 
         .. todo::
 
@@ -865,8 +865,8 @@ cdef class IPointSolver(_Solver):
             of {:data:`'equalities'`, :data:`'bounds'`}
             to |Mapping|
             of {:data:`'abs'`, :data:`'rel'`} to pairs consisting of
-            an error (|float|) and a |Variable|
-            or |Constraint| where it is attained
+            an error (`float`) and a `.Variable`
+            or `.Constraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current dual solution does not satisfy the Karush-Kuhn-Tucker
@@ -884,7 +884,7 @@ cdef class IPointSolver(_Solver):
         """Write the solution to a file in a readable format
 
         :param fname: the name of the file to write to
-        :type fname: |str|
+        :type fname: `str`
         :raises RuntimeError: if there is an error writing the file
 
         .. todo::
@@ -899,7 +899,7 @@ cdef class IPointSolver(_Solver):
 
         :param fname: the name of the file to read from
             (written by :meth:`IPointSolver.write_solution`)
-        :type fname: |str|
+        :type fname: `str`
         :raises RuntimeError: if there is an error reading the file
 
         .. todo::
@@ -913,7 +913,7 @@ cdef class IPointSolver(_Solver):
         """Write the solution to a file
 
         :param fname: the name of the file to write to
-        :type fname: |str|
+        :type fname: `str`
         :raises RuntimeError: if there is an error writing the file
 
         .. todo::
@@ -937,11 +937,11 @@ cdef class IntOptSolver(_Solver):
 
         :param defaults: whether to set the parameters back to their default
             values or not
-        :type defaults: |bool|
+        :type defaults: `bool`
         :param controls: zero or more named parameters to change from the
             following list:
 
-            * :data:`msg_lev` (|str|) – the message level,
+            * :data:`msg_lev` (`str`) – the message level,
               with possible values
 
               * :data:`'no'`: no output
@@ -954,7 +954,7 @@ cdef class IntOptSolver(_Solver):
             * :data:`out_dly` (|Integral|) – output delay
               [ms] of current LP relaxation solution
             * :data:`tm_lim` (|Integral|) – time limit [ms]
-            * :data:`br_tech` (|str|) – the branching technique,
+            * :data:`br_tech` (`str`) – the branching technique,
               with possible values
 
               * :data:`'first_fracvar'`: first fractional variable
@@ -963,7 +963,7 @@ cdef class IntOptSolver(_Solver):
               * :data:`'Driebeek–Tomlin'`: heuristic by Driebeek_ & Tomlin
               * :data:`'hybrid_peudocost'`: hybrid pseudocost heuristic
 
-            * :data:`bt_tech` (|str|) – the backtracking technique,
+            * :data:`bt_tech` (`str`) – the backtracking technique,
               with possible values
 
               * :data:`'depth'`: depth first search
@@ -971,24 +971,24 @@ cdef class IntOptSolver(_Solver):
               * :data:`'bound'`: best local bound
               * :data:`'projection'`: best projection heuristic
 
-            * :data:`pp_tech` (|str|) – the preprocessing technique,
+            * :data:`pp_tech` (`str`) – the preprocessing technique,
               with possible values
 
               * :data:`'none'`: disable preprocessing
               * :data:`'root'`: preprocessing only on the root level
               * :data:`'all'`: preprocessing on all levels
 
-            * :data:`fp_heur` (|bool|) – apply `feasibility pump`_ heuristic
-            * :data:`ps_heur` (|bool|) – apply `proximity search`_ heuristic
+            * :data:`fp_heur` (`bool`) – apply `feasibility pump`_ heuristic
+            * :data:`ps_heur` (`bool`) – apply `proximity search`_ heuristic
             * :data:`ps_tm_lim` (|Integral|) –  time limit [ms]
               for the proximity search heuristic
-            * :data:`gmi_cuts` (|bool|) –
+            * :data:`gmi_cuts` (`bool`) –
               generate Gomory’s mixed integer cuts
-            * :data:`mir_cuts` (|bool|) –
+            * :data:`mir_cuts` (`bool`) –
               generate mixed integer rounding cuts
-            * :data:`cov_cuts` (|bool|) –
+            * :data:`cov_cuts` (`bool`) –
               generate mixed cover cuts
-            * :data:`clq_cuts` (|bool|) –
+            * :data:`clq_cuts` (`bool`) –
               generate clique cuts
             * :data:`tol_int` (|Real|) – absolute tolerance
               used to check if the optimal solution to the current LP
@@ -1000,10 +1000,10 @@ cdef class IntOptSolver(_Solver):
             * :data:`mip_gap` (|Real|) – relative MIP-gap
               tolerance
               (search stops once the relative MIP-gap falls below this value)
-            * :data:`presolve` (|bool|) – use MIP presolver,
+            * :data:`presolve` (`bool`) – use MIP presolver,
               may simplify the problem
-            * :data:`binarize` (|bool|) – binarize integer variables
-              (only used if :data:`presolve` is :data:`True`)
+            * :data:`binarize` (`bool`) – binarize integer variables
+              (only used if :data:`presolve` is `True`)
 
         :raises ValueError: if a non-existing control name is given
 
@@ -1092,15 +1092,15 @@ cdef class IntOptSolver(_Solver):
               sums of binary variables :math:`x` or their ‘negation’
               :math:`1-x`, smaller than, equal to, or larger than :math:`1`.
 
-        :type solver: |str|
-        :param obj_bound: if `solver` is :data:`'intfeas1'`, a solution is
+        :type solver: `str`
+        :param obj_bound: if *solver* is :data:`'intfeas1'`, a solution is
             considered feasible only if the corresponding objective value is
             not worse than this bound (not used if solver is
             :data:`'branchcut'`)
         :type obj_bound: |Integral|
         :returns: solution status; see :meth:`IntOptSolver.status` for details
-        :rtype: |str|
-        :raises ValueError: if `solver` is neither :data:`'branchcut'` nor
+        :rtype: `str`
+        :raises ValueError: if *solver* is neither :data:`'branchcut'` nor
             :data:`'intfeas1'`
         :raises TypeError: if `obj_bound` is not |Integral|
         :raises ValueError: if incorrect bounds are given
@@ -1114,7 +1114,7 @@ cdef class IntOptSolver(_Solver):
         :raises StopIteration: if the branch-and-cut callback terminated the
             solver
         :raises ValueError: if not all problem parameters are integer
-            (only relevant if `solver` is :data:`'intfeas1'`)
+            (only relevant if *solver* is :data:`'intfeas1'`)
         :raises OverflowError: if an integer overflow occurred when
             transforming to CNF SAT format
 
@@ -1145,7 +1145,7 @@ cdef class IntOptSolver(_Solver):
 
         :returns: the current solution status, either :data:`'undefined'`,
             :data:`'optimal`, :data:`'no feasible'`, or :data:`'feasible'`
-        :rtype: |str|
+        :rtype: `str`
 
         .. todo::
 
@@ -1158,7 +1158,7 @@ cdef class IntOptSolver(_Solver):
         """Return the objective value for the current solution
 
         :returns: the objective value for the current solution
-        :rtype: |float|
+        :rtype: `float`
 
         .. todo::
 
@@ -1171,11 +1171,11 @@ cdef class IntOptSolver(_Solver):
         """Return the variable or constraint value for the current solution
 
         :param varstraint: variable or constraint to return the value of
-        :type varstraint: |Variable| or |Constraint|
-        :returns: the value of `varstraint` for the current solution
-        :rtype: |float| or |int|
-        :raises TypeError: if varstraint is neither |Variable| nor
-            |Constraint|
+        :type varstraint: `.Variable` or `.Constraint`
+        :returns: the value of *varstraint* for the current solution
+        :rtype: `float` or `int`
+        :raises TypeError: if varstraint is neither `.Variable` nor
+            `.Constraint`
         :raises ValueError: if a variable with :data:`'integer'` or
             :data:`'binary'` kind has a non-integer value
 
@@ -1201,8 +1201,8 @@ cdef class IntOptSolver(_Solver):
             of {:data:`'equalities'`, :data:`'bounds'`}
             to |Mapping|
             of {:data:`'abs'`, :data:`'rel'`} to pairs consisting of
-            an error (|float|) and a |Variable|
-            or |Constraint| where it is attained
+            an error (`float`) and a `.Variable`
+            or `.Constraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current solution does not satisfy the Karush-Kuhn-Tucker conditions
@@ -1219,7 +1219,7 @@ cdef class IntOptSolver(_Solver):
         """Write the solution to a file in a readable format
 
         :param fname: the name of the file to write to
-        :type fname: |str|
+        :type fname: `str`
         :raises RuntimeError: if there is an error writing the file
 
         .. todo::
@@ -1234,7 +1234,7 @@ cdef class IntOptSolver(_Solver):
 
         :param fname: the name of the file to read from
             (written by :meth:`IntOptSolver.write_solution`)
-        :type fname: |str|
+        :type fname: `str`
         :raises RuntimeError: if there is an error reading the file
 
         .. todo::
@@ -1248,7 +1248,7 @@ cdef class IntOptSolver(_Solver):
         """Write the solution to a file
 
         :param fname: the name of the file to write to
-        :type fname: |str|
+        :type fname: `str`
         :raises RuntimeError: if there is an error writing the file
 
         .. todo::

@@ -84,14 +84,14 @@ cdef class MILProgram:
         """Read a problem from a file (class method)
 
         :param fname: the name of the file to read from
-        :type fname: |str|
+        :type fname: `str`
         :param format: the format of the file read from; either :data:`'GLPK'`,
             :data:`'LP'`, :data:`'MPS'`, or :data:`'CNFSAT'`
-        :type format: |str|
+        :type format: `str`
         :param mpsfmt: MPS-subformat; either :data:`'free'` or :data:`'fixed'`
-            (ignored when `format` is not :data:`'MPS'`)
-        :type mpsfmt: |str|
-        :raises ValueError: if `format` is not :data:`'GLPK'`, :data:`'LP'`,
+            (ignored when *format* is not :data:`'MPS'`)
+        :type mpsfmt: `str`
+        :raises ValueError: if *format* is not :data:`'GLPK'`, :data:`'LP'`,
             :data:`'MPS'`, or :data:`'CNFSAT'`
         :raises RuntimeError: if an error occurred reading the file
 
@@ -133,14 +133,14 @@ cdef class MILProgram:
         """Write the problem to a file
 
         :param fname: the name of the file to write to
-        :type fname: |str|
+        :type fname: `str`
         :param format: the format of the file written to; either
             :data:`'GLPK'`, :data:`'LP'`, :data:`'MPS'`, or :data:`'CNFSAT'`
-        :type format: |str|
+        :type format: `str`
         :param mpsfmt: MPS-subformat; either :data:`'free'` or :data:`'fixed'`
-            (ignored when `format` is not :data:`'MPS'`)
-        :type mpsfmt: |str|
-        :raises ValueError: if `format` is not :data:`'GLPK'`, :data:`'LP'`,
+            (ignored when *format* is not :data:`'MPS'`)
+        :type mpsfmt: `str`
+        :raises ValueError: if *format* is not :data:`'GLPK'`, :data:`'LP'`,
             :data:`'MPS'`, or :data:`'CNFSAT'`
         :raises RuntimeError: if an error occurred writing the file
 
@@ -178,11 +178,11 @@ cdef class MILProgram:
         """Change or retrieve problem name
 
         :param name: the new problem name (omit for retrieval only)
-        :type name: |str|
+        :type name: `str`
         :returns: the problem name
-        :rtype: |str|
-        :raises TypeError: if `name` is not a |str|
-        :raises ValueError: if `name` exceeds 255 bytes encoded in UTF-8
+        :rtype: `str`
+        :raises TypeError: if *name* is not a `str`
+        :raises ValueError: if *name* exceeds 255 bytes encoded in UTF-8
 
         .. doctest:: MILProgram.name
 
@@ -272,13 +272,13 @@ cdef class MILProgram:
 
         :param coeffs: set variable coefficients; see :meth:`Variable.coeffs`
         :param lower_bound: set variable lower bound;
-            see :meth:`Variable.bounds`, parameter `lower`
+            see :meth:`Variable.bounds`, parameter *lower*
         :param upper_bound: set variable upper bound;
-            see :meth:`Variable.bounds`, parameter `upper`
+            see :meth:`Variable.bounds`, parameter *upper*
         :param kind: set variable kind; see :meth:`Variable.kind`
         :param name: set variable name; see :meth:`Variable.name`
         :returns: variable object
-        :rtype: |Variable|
+        :rtype: `.Variable`
 
         .. doctest:: MILProgram.add_variable
 
@@ -301,7 +301,7 @@ cdef class MILProgram:
         """A list of the problem's variables
 
         :returns: a list of the problem's variables
-        :rtype: |list| of |Variable|
+        :rtype: `list` of `.Variable`
 
         .. doctest:: MILProgram.variables
 
@@ -324,12 +324,12 @@ cdef class MILProgram:
         :param coeffs: set constraint coefficients;
             see :meth:`Constraint.coeffs`
         :param lower_bound: set constraint lower bound;
-            see :meth:`Constraint.bounds`, parameter `lower`
+            see :meth:`Constraint.bounds`, parameter *lower*
         :param upper_bound: set constraint upper bound;
-            see :meth:`Constraint.bounds`, parameter `upper`
+            see :meth:`Constraint.bounds`, parameter *upper*
         :param name: set constraint name; see :meth:`Constraint.name`
         :returns: constraint object
-        :rtype: |Constraint|
+        :rtype: `.Constraint`
 
         .. doctest:: MILProgram.add_constraint
 
@@ -351,7 +351,7 @@ cdef class MILProgram:
         """Return a list of the problem's constraints
 
         :returns: a list of the problem's constraints
-        :rtype: |list| of |Constraint|
+        :rtype: `list` of `.Constraint`
 
         .. doctest:: MILProgram.constraints
 
@@ -371,13 +371,13 @@ cdef class MILProgram:
         """Change or retrieve coefficients (constraint matrix)
 
         :param coeffs: the mapping with coefficients to change
-            (`{}` to set all coefficients to `0`)
+            (`{}` to set all coefficients to :math:`0`)
         :type coeffs: |Mapping| of length-2
             |Sequence|, containing one
-            |Variable| and one |Constraint|, to |Real|
-        :raises TypeError: if `coeffs` is not |Mapping|
+            `.Variable` and one `.Constraint`, to |Real|
+        :raises TypeError: if *coeffs* is not |Mapping|
         :raises TypeError: if a coefficient key component is not a pair of
-              |Variable| and |Constraint|
+              `.Variable` and `.Constraint`
         :raises TypeError: if a coefficient value is not |Real|
         :raises ValueError: if the coefficient key does not have two 
               components
@@ -455,23 +455,23 @@ cdef class MILProgram:
             * :data:`'round'`: round scaling factors to the nearest power of
               two
 
-        :type algorithms: zero or more |str| arguments
+        :type algorithms: zero or more `str` arguments
         :param factors: the mapping with scaling factors to change
             (`{}` to set all factors to `1`; omit for retrieval only);
             values defined here have precedence over the ones generated by
-            `algorithms`
+            *algorithms*
         :type factors: |Mapping| of
-            |Variable| or |Constraint| to |Real|
+            `.Variable` or `.Constraint` to |Real|
         :returns: the scaling factor mapping, which only contains non-`1`
             factors
-        :rtype: |dict| of |Variable| or |Constraint| to
-            |float|
-        :raises TypeError: if `factors` is not
+        :rtype: `dict` of `.Variable` or `.Constraint` to
+            `float`
+        :raises TypeError: if *factors* is not
             |Mapping|
         :raises TypeError: if the scaling factors are not
             |Real|
         :raises TypeError: if a key in the scaling factor mapping is neither
-            |Variable| nor |Constraint|
+            `.Variable` nor `.Constraint`
 
         .. doctest:: MILProgram.scaling
 
@@ -548,7 +548,7 @@ cdef class MILProgram:
         :param direction: set objective direction; see :meth:`Objective.direction`
         :param name: set objective name; see :meth:`Objective.name`
         :returns: objective object
-        :rtype: |Objective|
+        :rtype: `.Objective`
 
         .. doctest:: MILProgram.objective
 
@@ -569,9 +569,9 @@ cdef class MILProgram:
         """Obtain simplex solver object
 
         :param controls: set solver and basis factorization control parameters;
-            see :meth:`SimplexSolver.controls`, parameter `controls`
+            see :meth:`SimplexSolver.controls`, parameter *controls*
         :returns: simplex solver object
-        :rtype: |SimplexSolver|
+        :rtype: `.SimplexSolver`
 
         .. doctest:: MILProgram.simplex
 
@@ -589,9 +589,9 @@ cdef class MILProgram:
         """Obtain interior point solver object
 
         :param controls: set solver control parameters;
-            see :meth:`IPointSolver.controls`, parameter `controls`
+            see :meth:`IPointSolver.controls`, parameter *controls*
         :returns: interior point solver object
-        :rtype: |IPointSolver|
+        :rtype: `.IPointSolver`
 
         .. doctest:: MILProgram.ipoint
 
@@ -609,9 +609,9 @@ cdef class MILProgram:
         """Obtain integer optimization solver object
 
         :param controls: set solver control parameters;
-            see :meth:`IntOptSolver.controls`, parameter `controls`
+            see :meth:`IntOptSolver.controls`, parameter *controls*
         :returns: integer optimization solver object
-        :rtype: |IntOptSolver|
+        :rtype: `.IntOptSolver`
 
         .. doctest:: MILProgram.intopt
 
