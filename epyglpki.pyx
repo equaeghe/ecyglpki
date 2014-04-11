@@ -85,14 +85,14 @@ cdef class MILProgram:
 
         :param fname: the name of the file to read from
         :type fname: `str`
-        :param format: the format of the file read from; either :data:`'GLPK'`,
-            :data:`'LP'`, :data:`'MPS'`, or :data:`'CNFSAT'`
+        :param format: the format of the file read from; either `'GLPK'`,
+            `'LP'`, `'MPS'`, or `'CNFSAT'`
         :type format: `str`
-        :param mpsfmt: MPS-subformat; either :data:`'free'` or :data:`'fixed'`
-            (ignored when *format* is not :data:`'MPS'`)
+        :param mpsfmt: MPS-subformat; either `'free'` or `'fixed'`
+            (ignored when *format* is not `'MPS'`)
         :type mpsfmt: `str`
-        :raises ValueError: if *format* is not :data:`'GLPK'`, :data:`'LP'`,
-            :data:`'MPS'`, or :data:`'CNFSAT'`
+        :raises ValueError: if *format* is not `'GLPK'`, `'LP'`,
+            `'MPS'`, or `'CNFSAT'`
         :raises RuntimeError: if an error occurred reading the file
 
         .. todo::
@@ -135,13 +135,13 @@ cdef class MILProgram:
         :param fname: the name of the file to write to
         :type fname: `str`
         :param format: the format of the file written to; either
-            :data:`'GLPK'`, :data:`'LP'`, :data:`'MPS'`, or :data:`'CNFSAT'`
+            `'GLPK'`, `'LP'`, `'MPS'`, or `'CNFSAT'`
         :type format: `str`
-        :param mpsfmt: MPS-subformat; either :data:`'free'` or :data:`'fixed'`
-            (ignored when *format* is not :data:`'MPS'`)
+        :param mpsfmt: MPS-subformat; either `'free'` or `'fixed'`
+            (ignored when *format* is not `'MPS'`)
         :type mpsfmt: `str`
-        :raises ValueError: if *format* is not :data:`'GLPK'`, :data:`'LP'`,
-            :data:`'MPS'`, or :data:`'CNFSAT'`
+        :raises ValueError: if *format* is not `'GLPK'`, `'LP'`,
+            `'MPS'`, or `'CNFSAT'`
         :raises RuntimeError: if an error occurred writing the file
 
         .. todo::
@@ -446,13 +446,13 @@ cdef class MILProgram:
 
         :param algorithms: choose scaling algorithms to apply from among
 
-            * :data:`'auto'`: choose algorithms automatically
+            * `'auto'`: choose algorithms automatically
               (other arguments are ignored)
-            * :data:`'skip'`: skip scaling if the problem is already
+            * `'skip'`: skip scaling if the problem is already
               well-scaled
-            * :data:`'geometric'`: perform geometric mean scaling
-            * :data:`'equilibration'`: perform equilibration scaling
-            * :data:`'round'`: round scaling factors to the nearest power of
+            * `'geometric'`: perform geometric mean scaling
+            * `'equilibration'`: perform equilibration scaling
+            * `'round'`: round scaling factors to the nearest power of
               two
 
         :type algorithms: zero or more `str` arguments

@@ -234,11 +234,11 @@ cdef class Variable(_Varstraint):
 
         :param kind: the new variable kind (omit for retrieval only)
         :type kind: `str`,
-            either :data:`'continuous'`, :data:`'integer'`, or :data:`'binary'`
+            either `'continuous'`, `'integer'`, or `'binary'`
         :returns: the variable kind
         :rtype: `str`
-        :raises ValueError: if *kind* is not :data:`'continuous'`,
-            :data:`'integer'`, or :data:`'binary'`
+        :raises ValueError: if *kind* is not `'continuous'`,
+            `'integer'`, or `'binary'`
 
         .. doctest:: Variable.kind
 
@@ -251,7 +251,7 @@ cdef class Variable(_Varstraint):
 
         .. note::
 
-            A variable has :data:`'binary'` kind if and only if it is an
+            A variable has `'binary'` kind if and only if it is an
             integer variable with lower bound zero and upper bound one:
 
             .. doctest:: Variable.kind
@@ -483,11 +483,11 @@ cdef class Objective(_ProgramComponent):
         :param direction: the new objective direction
             (omit for retrieval only)
         :type direction: `str`,
-            either :data:`'minimize'` or :data:`'maximize'`
+            either `'minimize'` or `'maximize'`
         :returns: the objective direction
         :rtype: `str`
-        :raises ValueError: if *direction* is not :data:`'minimize'` or
-            :data:`'maximize'`
+        :raises ValueError: if *direction* is not `'minimize'` or
+            `'maximize'`
 
         .. doctest:: Objective.direction
 

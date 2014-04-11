@@ -125,30 +125,30 @@ cdef class SimplexSolver(_Solver):
             * :data:`msg_lev` (`str`) – the message level,
               with possible values
 
-              * :data:`'no'`: no output
-              * :data:`'warnerror'`: warnings and errors only
-              * :data:`'normal'`: normal output
-              * :data:`'full'`: normal output and informational messages
+              * `'no'`: no output
+              * `'warnerror'`: warnings and errors only
+              * `'normal'`: normal output
+              * `'full'`: normal output and informational messages
 
             * :data:`meth` (`str`) – simplex method,
               with possible values
 
-              * :data:`'primal'`: two-phase primal simplex
-              * :data:`'dual'`: two-phase dual simplex
-              * :data:`'dual_fail_primal'`: two-phase dual simplex and, if it
+              * `'primal'`: two-phase primal simplex
+              * `'dual'`: two-phase dual simplex
+              * `'dual_fail_primal'`: two-phase dual simplex and, if it
                 fails, switch to primal simplex
 
             * :data:`pricing` (`str`) – pricing technique,
               with possible values
 
-              * :data:`'Dantzig'`: standard ‘textbook’
-              * :data:`'steepest'`: projected steepest edge
+              * `'Dantzig'`: standard ‘textbook’
+              * `'steepest'`: projected steepest edge
 
             * :data:`r_test` (`str`) – ratio test technique,
               with possible values
 
-              * :data:`'standard'`: standard ‘textbook’
-              * :data:`'Harris'`: Harris’s two-pass ratio test
+              * `'standard'`: standard ‘textbook’
+              * `'Harris'`: Harris’s two-pass ratio test
 
             * :data:`tol_bnd` (|Real|) – tolerance used to
               check if the basic solution is primal feasible
@@ -157,9 +157,9 @@ cdef class SimplexSolver(_Solver):
             * :data:`tol_piv` (|Real|) – tolerance used to
               choose eligble pivotal elements of the simplex table
             * :data:`obj_ll` (|Real|) – lower limit of the
-              objective function (only if :data:`meth` is :data:`'dual'`)
+              objective function (only if :data:`meth` is `'dual'`)
             * :data:`obj_ul` (|Real|) – upper limit of the
-              objective function (only if :data:`meth` is :data:`'dual'`)
+              objective function (only if :data:`meth` is `'dual'`)
             * :data:`it_lim` (|Integral|) – iteration limit
             * :data:`tm_lim` (|Integral|) – time limit [ms]
             * :data:`out_frq` (|Integral|) – output frequency
@@ -173,16 +173,16 @@ cdef class SimplexSolver(_Solver):
             * :data:`type` (length-2 `tuple` of `str`) – basis
               factorization type, pairs with possible first components
 
-              * :data:`'LU'`: plain LU factorization
-              * :data:`'BTLU'`: block-triangular LU factorization
+              * `'LU'`: plain LU factorization
+              * `'BTLU'`: block-triangular LU factorization
 
               and possible second components
 
-              * :data:`'Forrest–Tomlin'`: `Forrest–Tomlin`_ update applied to U
+              * `'Forrest-Tomlin'`: `Forrest–Tomlin`_ update applied to U
                 (only with plain LU factorization)
-              * :data:`'Bartels-Golub'`: `Bartels–Golub`_ update
+              * `'Bartels-Golub'`: `Bartels–Golub`_ update
                 applied to Schur complement
-              * :data:`'Givens'`: Givens rotation update
+              * `'Givens'`: Givens rotation update
                 applied to Schur complement
 
             * :data:`piv_tol` (|Real|) – Markowitz threshold pivoting tolerance
@@ -195,10 +195,10 @@ cdef class SimplexSolver(_Solver):
               numbers are replaced by zero
             * :data:`nfs_max` (|Integral|) – maximal number of
               additional row-like factors (used only when :data:`type` is
-              :data:`'Forrest–Tomlin'`)
+              `'Forrest-Tomlin'`)
             * :data:`nrs_max` (|Integral|) – maximal number of
               additional row and columns (used only when :data:`type` is
-              :data:`'Bartels-Golub'` or :data:`Givens'`)
+              `'Bartels-Golub'` or `'Givens'`)
 
         :raises ValueError: if a non-existing control name is given
 
@@ -313,17 +313,17 @@ cdef class SimplexSolver(_Solver):
         """Solve the linear program
 
         :param exact: whether to use exact arithmetic or not
-            (only if the :data:`meth` control parameter is :data:`'primal'`)
+            (only if the :data:`meth` control parameter is `'primal'`)
         :type exact: `bool`
         :returns: solution status; see :meth:`SimplexSolver.status` for
             details, or :data:`"obj_ll reached"` or :data:`"obj_ul reached"` in
             case that happens
         :rtype: `str`
         :raises ValueError: if *exact* is `True` but the :data:`meth`
-            control parameter is not :data:`'primal'`
+            control parameter is not `'primal'`
         :raises ValueError: if finite values are set for :data:`obj_ll` or
             :data:`obj_ll` while the :data:`meth` control parameter is not
-            :data:`'dual'`
+            `'dual'`
         :raises ValueError: if the basis is invalid
         :raises ValueError: if the basis matrix is singular
         :raises ValueError: if the basis matrix is ill-conditioned
@@ -366,13 +366,13 @@ cdef class SimplexSolver(_Solver):
         :type detailed: `bool`
         :returns: the current solution status
 
-            * in case *detailed* is `False`, either :data:`'undefined'`,
-              :data:`'optimal`, :data:`'infeasible'`, :data:`'no feasible'`,
-              :data:`'feasible'`, or :data:`'unbounded'`
+            * in case *detailed* is `False`, either `'undefined'`,
+              `'optimal'`, `'infeasible'`, `'no feasible'`,
+              `'feasible'`, or `'unbounded'`
             * in case *detailed* is `True`, a pair of statuses is given,
               one for the primal solution and one for the dual solution, either
-              :data:`'undefined'`, :data:`'infeasible'`, :data:`'no feasible'`,
-              or :data:`'feasible'`
+              `'undefined'`, `'infeasible'`, `'no feasible'`,
+              or `'feasible'`
 
         :rtype: `str` or length-2 `tuple` of `str`
 
@@ -424,9 +424,9 @@ cdef class SimplexSolver(_Solver):
         """Return absolute and relative primal solution errors
 
         :returns: a |Mapping|
-            of {:data:`'equalities'`, :data:`'bounds'`}
+            of {`'equalities'`, `'bounds'`}
             to |Mapping|
-            of {:data:`'abs'`, :data:`'rel'`} to pairs consisting of
+            of {`'abs'`, `'rel'`} to pairs consisting of
             an error (`float`) and a `.Variable`
             or `.Constraint` where it is attained
 
@@ -463,9 +463,9 @@ cdef class SimplexSolver(_Solver):
         """Return absolute and relative dual solution errors
 
         :returns: a |Mapping|
-            of {:data:`'equalities'`, :data:`'bounds'`}
+            of {`'equalities'`, `'bounds'`}
             to |Mapping|
-            of {:data:`'abs'`, :data:`'rel'`} to pairs consisting of
+            of {`'abs'`, `'rel'`} to pairs consisting of
             an error (`float`) and a `.Variable`
             or `.Constraint` where it is attained
 
@@ -485,8 +485,8 @@ cdef class SimplexSolver(_Solver):
         """Return a variable or constraint causing unboundedness
 
         :returns: a variable or constraint causing unboundedness (if any) and
-            the nature of the unboundedness, either :data:`'primal'` or
-            :data:`'dual'`
+            the nature of the unboundedness, either `'primal'` or
+            `'dual'`
         :rtype: length-2 `tuple` of `.Variable` or
             `.Constraint` and `str`
 
@@ -515,11 +515,11 @@ cdef class SimplexSolver(_Solver):
         A basis is defined by the statuses assigned to all variables and
         constraints; the possible statuses are
 
-        * :data:`'basic'`: basic
-        * :data:`'lower'`: non-basic with active lower bound
-        * :data:`'upper'`: non-basic with active upper bound
-        * :data:`'free'`: non-basic free (unbounded)
-        * :data:`'fixed'`: non-basic fixed
+        * `'basic'`: basic
+        * `'lower'`: non-basic with active lower bound
+        * `'upper'`: non-basic with active upper bound
+        * `'free'`: non-basic free (unbounded)
+        * `'fixed'`: non-basic fixed
 
         A basis is valid if the basis matrix is non-singular, which implies
         that the number of basic variables and constraints is equal to the
@@ -528,15 +528,15 @@ cdef class SimplexSolver(_Solver):
         :param algorithm: an algorithm for generating a basis (omit to not
             replace the current basis), chosen from
 
-            * :data:`'standard'`: sets all constraints as basic
-            * :data:`'advanced'`: sets as basic
+            * `'standard'`: sets all constraints as basic
+            * `'advanced'`: sets as basic
 
               #. all non-fixed constraints
               #. as many non-fixed variables as possible, while preserving the
                  lower triangular structure of the basis matrix
               #. appropriate fixed constraints to complete the basis
 
-            * :data:`'Bixby'`: algorithm used by CPLEX, as discussed by Bixby_
+            * `'Bixby'`: algorithm used by CPLEX, as discussed by Bixby_
 
         :type algorithm: `str`
         :param status: the mapping of statuses to change
@@ -716,18 +716,18 @@ cdef class IPointSolver(_Solver):
             * :data:`msg_lev` (`str`) – the message level,
               with possible values
 
-              * :data:`'no'`: no output
-              * :data:`'warnerror'`: warnings and errors only
-              * :data:`'normal'`: normal output
-              * :data:`'full'`: normal output and informational messages
+              * `'no'`: no output
+              * `'warnerror'`: warnings and errors only
+              * `'normal'`: normal output
+              * `'full'`: normal output and informational messages
 
             * :data:`ord_alg` (`str`) – the ordering algorithm used
               prior to Cholesky factorization, with possible values
 
-              * :data:`'orig'`: normal (original)
-              * :data:`'qmd'`: quotient minimum degree
-              * :data:`'amd'`: approximate minimum degree
-              * :data:`'symamd'`: approximate minimum degree for symmetric
+              * `'orig'`: normal (original)
+              * `'qmd'`: quotient minimum degree
+              * `'amd'`: approximate minimum degree
+              * `'symamd'`: approximate minimum degree for symmetric
                 matrices
 
         :raises ValueError: if a non-existing control name is given
@@ -778,8 +778,8 @@ cdef class IPointSolver(_Solver):
     def status(self):
         """Return the current solution status
 
-        :returns: the current solution status, either :data:`'undefined'`,
-            :data:`'optimal`, :data:`'infeasible'`, or :data:`'no feasible'`
+        :returns: the current solution status, either `'undefined'`,
+            `'optimal'`, `'infeasible'`, or `'no feasible'`
         :rtype: `str`
 
         .. todo::
@@ -823,9 +823,9 @@ cdef class IPointSolver(_Solver):
         """Return absolute and relative primal solution errors
 
         :returns: a |Mapping|
-            of {:data:`'equalities'`, :data:`'bounds'`}
+            of {`'equalities'`, `'bounds'`}
             to |Mapping|
-            of {:data:`'abs'`, :data:`'rel'`} to pairs consisting of
+            of {`'abs'`, `'rel'`} to pairs consisting of
             an error (`float`) and a `.Variable`
             or `.Constraint` where it is attained
 
@@ -862,9 +862,9 @@ cdef class IPointSolver(_Solver):
         """Return absolute and relative dual solution errors
 
         :returns: a |Mapping|
-            of {:data:`'equalities'`, :data:`'bounds'`}
+            of {`'equalities'`, `'bounds'`}
             to |Mapping|
-            of {:data:`'abs'`, :data:`'rel'`} to pairs consisting of
+            of {`'abs'`, `'rel'`} to pairs consisting of
             an error (`float`) and a `.Variable`
             or `.Constraint` where it is attained
 
@@ -944,10 +944,10 @@ cdef class IntOptSolver(_Solver):
             * :data:`msg_lev` (`str`) – the message level,
               with possible values
 
-              * :data:`'no'`: no output
-              * :data:`'warnerror'`: warnings and errors only
-              * :data:`'normal'`: normal output
-              * :data:`'full'`: normal output and informational messages
+              * `'no'`: no output
+              * `'warnerror'`: warnings and errors only
+              * `'normal'`: normal output
+              * `'full'`: normal output and informational messages
 
             * :data:`out_frq` (|Integral|) – output frequency
               [ms] of informational messages
@@ -957,26 +957,26 @@ cdef class IntOptSolver(_Solver):
             * :data:`br_tech` (`str`) – the branching technique,
               with possible values
 
-              * :data:`'first_fracvar'`: first fractional variable
-              * :data:`'last_fracvar'`: last fractional variable
-              * :data:`'most_fracvar'`: most fractional variable
-              * :data:`'Driebeek–Tomlin'`: heuristic by Driebeek_ & Tomlin
-              * :data:`'hybrid_peudocost'`: hybrid pseudocost heuristic
+              * `'first_fracvar'`: first fractional variable
+              * `'last_fracvar'`: last fractional variable
+              * `'most_fracvar'`: most fractional variable
+              * `'Driebeek-Tomlin'`: heuristic by Driebeek_ & Tomlin
+              * `'hybrid_peudocost'`: hybrid pseudocost heuristic
 
             * :data:`bt_tech` (`str`) – the backtracking technique,
               with possible values
 
-              * :data:`'depth'`: depth first search
-              * :data:`'breadth'`: breadth first search
-              * :data:`'bound'`: best local bound
-              * :data:`'projection'`: best projection heuristic
+              * `'depth'`: depth first search
+              * `'breadth'`: breadth first search
+              * `'bound'`: best local bound
+              * `'projection'`: best projection heuristic
 
             * :data:`pp_tech` (`str`) – the preprocessing technique,
               with possible values
 
-              * :data:`'none'`: disable preprocessing
-              * :data:`'root'`: preprocessing only on the root level
-              * :data:`'all'`: preprocessing on all levels
+              * `'none'`: disable preprocessing
+              * `'root'`: preprocessing only on the root level
+              * `'all'`: preprocessing on all levels
 
             * :data:`fp_heur` (`bool`) – apply `feasibility pump`_ heuristic
             * :data:`ps_heur` (`bool`) – apply `proximity search`_ heuristic
@@ -1078,8 +1078,8 @@ cdef class IntOptSolver(_Solver):
 
         :param solver: which solver to use, chosen from
 
-            * :data:`'branchcut'`: a branch-and-cut solver
-            * :data:`'intfeas1'`: a SAT solver based integer feasibility
+            * `'branchcut'`: a branch-and-cut solver
+            * `'intfeas1'`: a SAT solver based integer feasibility
               solver; applicable only to problems
 
               * that are feasibility problems (but see `obj_bound` description)
@@ -1093,15 +1093,15 @@ cdef class IntOptSolver(_Solver):
               :math:`1-x`, smaller than, equal to, or larger than :math:`1`.
 
         :type solver: `str`
-        :param obj_bound: if *solver* is :data:`'intfeas1'`, a solution is
+        :param obj_bound: if *solver* is `'intfeas1'`, a solution is
             considered feasible only if the corresponding objective value is
             not worse than this bound (not used if solver is
-            :data:`'branchcut'`)
+            `'branchcut'`)
         :type obj_bound: |Integral|
         :returns: solution status; see :meth:`IntOptSolver.status` for details
         :rtype: `str`
-        :raises ValueError: if *solver* is neither :data:`'branchcut'` nor
-            :data:`'intfeas1'`
+        :raises ValueError: if *solver* is neither `'branchcut'` nor
+            `'intfeas1'`
         :raises TypeError: if `obj_bound` is not |Integral|
         :raises ValueError: if incorrect bounds are given
         :raises ValueError: if no optimal LP relaxation basis has been provided
@@ -1114,7 +1114,7 @@ cdef class IntOptSolver(_Solver):
         :raises StopIteration: if the branch-and-cut callback terminated the
             solver
         :raises ValueError: if not all problem parameters are integer
-            (only relevant if *solver* is :data:`'intfeas1'`)
+            (only relevant if *solver* is `'intfeas1'`)
         :raises OverflowError: if an integer overflow occurred when
             transforming to CNF SAT format
 
@@ -1143,8 +1143,8 @@ cdef class IntOptSolver(_Solver):
     def status(self):
         """Return the current solution status
 
-        :returns: the current solution status, either :data:`'undefined'`,
-            :data:`'optimal`, :data:`'no feasible'`, or :data:`'feasible'`
+        :returns: the current solution status, either `'undefined'`,
+            `'optimal'`, `'no feasible'`, or `'feasible'`
         :rtype: `str`
 
         .. todo::
@@ -1176,8 +1176,8 @@ cdef class IntOptSolver(_Solver):
         :rtype: `float` or `int`
         :raises TypeError: if varstraint is neither `.Variable` nor
             `.Constraint`
-        :raises ValueError: if a variable with :data:`'integer'` or
-            :data:`'binary'` kind has a non-integer value
+        :raises ValueError: if a variable with `'integer'` or
+            `'binary'` kind has a non-integer value
 
         .. todo::
 
@@ -1198,9 +1198,9 @@ cdef class IntOptSolver(_Solver):
         """Return absolute and relative solution errors
 
         :returns: a |Mapping|
-            of {:data:`'equalities'`, :data:`'bounds'`}
+            of {`'equalities'`, `'bounds'`}
             to |Mapping|
-            of {:data:`'abs'`, :data:`'rel'`} to pairs consisting of
+            of {`'abs'`, `'rel'`} to pairs consisting of
             an error (`float`) and a `.Variable`
             or `.Constraint` where it is attained
 
