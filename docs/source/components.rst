@@ -2,7 +2,7 @@
 
 .. testsetup:: *
 
-    from epyglpki import MILProgram
+    from epyglpki import MILProgram, Varstraint
 
 Components
 ==========

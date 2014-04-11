@@ -43,6 +43,16 @@ cdef class Varstraint(_Component):
     that auxiliary variable. Therefore it is useful to have this class, which
     contains the methods common to both `.Variable` and `.Constraint` classes.
 
+    .. doctest:: Varstraint
+
+        >>> p = MILProgram()
+        >>> x = p.add_variable()
+        >>> isinstance(x, Varstraint)
+        True
+        >>> c = p.add_constraint()
+        >>> isinstance(c, Varstraint)
+        True
+
     """
 
     cdef int _unique_id
@@ -60,25 +70,21 @@ cdef class Varstraint(_Component):
     def remove(self):
         """Remove the varstraint from the problem
 
-        .. doctest:: Variable.remove
+        .. doctest:: Varstraint
 
-            >>> p = MILProgram()
-            >>> x = p.add_variable()
-            >>> p.variables()
-            [<epyglpki.Variable object at 0x...>]
+            >>> x in p.variables()
+            True
             >>> x.remove()
-            >>> p.variables()
-            []
+            >>> x in p.variables()
+            False
 
-        .. doctest:: Constraint.remove
+        .. doctest:: Varstraint
 
-            >>> p = MILProgram()
-            >>> c = p.add_constraint()
-            >>> p.constraints()
-            [<epyglpki.Constraint object at 0x...>]
+            >>> c in p.constraints()
+            True
             >>> c.remove()
-            >>> p.constraints()
-            []
+            >>> c in p.constraints()
+            False
 
         .. note::
 
@@ -86,10 +92,10 @@ cdef class Varstraint(_Component):
             referencing `.Varstraint` objects, which in some sense become
             ‘zombie’ objects; they should best be deleted manually:
 
-            .. doctest:: Constraint.remove
+            .. doctest:: Varstraint
 
-                >>> p.constraints()
-                []
+                >>> c in p.constraints()
+                False
                 >>> c
                 <epyglpki.Constraint object at 0x...>
                 >>> c.name()
@@ -126,10 +132,8 @@ cdef class Varstraint(_Component):
         :raises TypeError: if *lower* or *upper* is not |Real| or `False`
         :raises ValueError: if *lower* is larger than *upper*
 
-        .. doctest:: Variable.bounds
+        .. doctest:: Varstraint
 
-            >>> p = MILProgram()
-            >>> x = p.add_variable()
             >>> x.bounds()
             (False, False)
             >>> x.bounds(lower=0, upper=5.5)
@@ -137,10 +141,8 @@ cdef class Varstraint(_Component):
             >>> x.bounds(upper=False)
             (0.0, False)
 
-        .. doctest:: Constraint.bounds
+        .. doctest:: Varstraint
 
-            >>> p = MILProgram()
-            >>> c = p.add_constraint()
             >>> c.bounds()
             (False, False)
             >>> c.bounds(lower=-1/2, upper=1/2)
@@ -234,10 +236,8 @@ cdef class Varstraint(_Component):
         :raises TypeError: if *name* is not a `str`
         :raises ValueError: if *name* exceeds 255 bytes encoded in UTF-8
 
-        .. doctest:: Variable.name
+        .. doctest:: Varstraint
 
-            >>> p = MILProgram()
-            >>> x = p.add_variable()
             >>> x.name()
             ''
             >>> x.name('Stake')
@@ -245,10 +245,8 @@ cdef class Varstraint(_Component):
             >>> x.name()
             'Stake'
 
-        .. doctest:: Constraint.name
+        .. doctest:: Varstraint
 
-            >>> p = MILProgram()
-            >>> c = p.add_constraint()
             >>> c.name()
             ''
             >>> c.name('Budget')
@@ -260,6 +258,7 @@ cdef class Varstraint(_Component):
         if name is not None:
             self._set_name(name)
         return self._get_name()
+
 
 cdef class Variable(Varstraint):
     """One of the problem's variables"""
