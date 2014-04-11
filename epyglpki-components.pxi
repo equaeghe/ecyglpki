@@ -57,10 +57,60 @@ cdef class Varstraint(_Component):
         return str(self._unique_id) + ':' + self.name()
 
     #  how to really del?
-    cdef _zombify(self, void (*del_function)(glpk.ProbObj*, int, const int[])):
-        cdef int ind[2]
-        ind[1] = self._program._ind(self)
-        del_function(self._problem, 1, ind)
+    def remove(self):
+        """Remove the varstraint from the problem
+
+
+        .. doctest:: Variable.remove
+
+            >>> p = MILProgram()
+            >>> x = p.add_variable()
+            >>> p.variables()
+            [<epyglpki.Variable object at 0x...>]
+            >>> x.remove()
+            >>> p.variables()
+            []
+
+        .. doctest:: Constraint.remove
+
+            >>> p = MILProgram()
+            >>> c = p.add_constraint()
+            >>> p.constraints()
+            [<epyglpki.Constraint object at 0x...>]
+            >>> c.remove()
+            >>> p.constraints()
+            []
+
+        .. note::
+
+            Removing a varstraint from a problem object does not delete the
+            referencing `.Varstraint` objects, which in some sense become
+            ‘zombie’ objects; they should best be deleted manually:
+
+            .. doctest:: Constraint.remove
+
+                >>> p.constraints()
+                []
+                >>> c
+                <epyglpki.Constraint object at 0x...>
+                >>> c.name()
+                Traceback (most recent call last):
+                  ...
+                ValueError: <epyglpki.Constraint object at 0x...> is not in list
+                <BLANKLINE>
+                During handling of the above exception, another exception occurred:
+                <BLANKLINE>
+                Traceback (most recent call last):
+                  ...
+                IndexError: This is possibly a zombie; kill it using 'del'.
+                >>> del c
+                >>> c
+                Traceback (most recent call last):
+                  ...
+                NameError: name 'c' is not defined
+
+        """
+        self._remove()
         self._program._del_varstraint(self)
 
     def bounds(self, lower=None, upper=None):
@@ -197,49 +247,10 @@ cdef class Variable(Varstraint):
     def __cinit__(self, program):
         glpk.add_cols(self._problem, 1)
 
-    def remove(self):
-        """Remove the variable from the problem
-
-        .. doctest:: Variable.remove
-
-            >>> p = MILProgram()
-            >>> x = p.add_variable()
-            >>> p.variables()
-            [<epyglpki.Variable object at 0x...>]
-            >>> x.remove()
-            >>> p.variables()
-            []
-
-        .. note::
-
-            Removing a variable from a problem object does not delete the
-            referencing Variable objects, which in some sense become 'zombie'
-            objects; they should best be deleted manually:
-
-            .. doctest:: Variable.remove
-
-                >>> p.variables()
-                []
-                >>> x
-                <epyglpki.Variable object at 0x...>
-                >>> x.name()
-                Traceback (most recent call last):
-                  ...
-                ValueError: <epyglpki.Variable object at 0x...> is not in list
-                <BLANKLINE>
-                During handling of the above exception, another exception occurred:
-                <BLANKLINE>
-                Traceback (most recent call last):
-                  ...
-                IndexError: This is possibly a zombie; kill it using 'del'.
-                >>> del x
-                >>> x
-                Traceback (most recent call last):
-                  ...
-                NameError: name 'x' is not defined
-
-        """
-        self._zombify(glpk.del_cols)
+    def _remove(self):
+        cdef int ind[2]
+        ind[1] = self._program._col(self)
+        glpk.del_cols(self._problem, 1, ind)
 
     def _get_lb(self, int ind):
         return glpk.get_col_lb(self._problem, ind)
@@ -363,49 +374,10 @@ cdef class Constraint(Varstraint):
     def __cinit__(self, program):
         glpk.add_rows(self._problem, 1)
 
-    def remove(self):
-        """Remove the constraint from the problem
-
-        .. doctest:: Constraint.remove
-
-            >>> p = MILProgram()
-            >>> c = p.add_constraint()
-            >>> p.constraints()
-            [<epyglpki.Constraint object at 0x...>]
-            >>> c.remove()
-            >>> p.constraints()
-            []
-
-        .. note::
-
-            Removing a constraint from a problem object does not delete the
-            referencing Constraint objects, which in some sense become 'zombie'
-            objects; they should best be deleted manually:
-
-            .. doctest:: Constraint.remove
-
-                >>> p.constraints()
-                []
-                >>> c
-                <epyglpki.Constraint object at 0x...>
-                >>> c.name()
-                Traceback (most recent call last):
-                  ...
-                ValueError: <epyglpki.Constraint object at 0x...> is not in list
-                <BLANKLINE>
-                During handling of the above exception, another exception occurred:
-                <BLANKLINE>
-                Traceback (most recent call last):
-                  ...
-                IndexError: This is possibly a zombie; kill it using 'del'.
-                >>> del c
-                >>> c
-                Traceback (most recent call last):
-                  ...
-                NameError: name 'c' is not defined
-
-        """
-        self._zombify(glpk.del_rows)
+    def _remove(self):
+        cdef int ind[2]
+        ind[1] = self._program._row(self)
+        glpk.del_rows(self._problem, 1, ind)
 
     def _get_lb(self, int ind):
         return glpk.get_row_lb(self._problem, ind)
