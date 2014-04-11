@@ -60,7 +60,6 @@ cdef class Varstraint(_Component):
     def remove(self):
         """Remove the varstraint from the problem
 
-
         .. doctest:: Variable.remove
 
             >>> p = MILProgram()
