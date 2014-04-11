@@ -63,12 +63,44 @@ cdef class Varstraint(_Component):
         del_function(self._problem, 1, ind)
         self._program._del_varstraint(self)
 
-    cdef _bounds(self,
-                 double (*get_lb_function)(glpk.ProbObj*, int),
-                 double (*get_ub_function)(glpk.ProbObj*, int),
-                 void (*set_bnds_function)(glpk.ProbObj*,
-                                           int, int, double, double),
-                 lower=None, upper=None):
+    def bounds(self, lower=None, upper=None):
+        """Change or retrieve varstraint bounds
+
+        :param lower: the varstraint's lower bound
+            (`False` to remove bound; omit for retrieval only)
+        :type lower: |Real| or `False`
+        :param upper: the varstraint's upper bound
+            (`False` to remove bound; omit for retrieval only)
+        :type upper: |Real| or `False`
+        :returns: the varstraint's bounds
+        :rtype: length-2 `tuple` of `float` (or `False`)
+        :raises TypeError: if *lower* or *upper* is not |Real| or `False`
+        :raises ValueError: if *lower* is larger than *upper*
+
+        .. doctest:: Variable.bounds
+
+            >>> p = MILProgram()
+            >>> x = p.add_variable()
+            >>> x.bounds()
+            (False, False)
+            >>> x.bounds(lower=0, upper=5.5)
+            (0.0, 5.5)
+            >>> x.bounds(upper=False)
+            (0.0, False)
+
+        .. doctest:: Constraint.bounds
+
+            >>> p = MILProgram()
+            >>> c = p.add_constraint()
+            >>> c.bounds()
+            (False, False)
+            >>> c.bounds(lower=-1/2, upper=1/2)
+            (-0.5, 0.5)
+            >>> c.bounds(lower=False)
+            (False, 0.5)
+
+
+        """
         cdef double lb
         cdef double ub
         ind = self._program._ind(self)
@@ -76,7 +108,7 @@ cdef class Varstraint(_Component):
             lb = -DBL_MAX
         else:
             if lower is None:
-                lb = get_lb_function(self._problem, ind)
+                lb = self._get_lb(ind)
             elif isinstance(lower, numbers.Real):
                 lb = lower
             else:
@@ -86,7 +118,7 @@ cdef class Varstraint(_Component):
             ub = +DBL_MAX
         else:
             if upper is None:
-                ub = get_ub_function(self._problem, ind)
+                ub = self._get_ub(ind)
             elif isinstance(upper, numbers.Real):
                 ub = upper
             else:
@@ -98,7 +130,7 @@ cdef class Varstraint(_Component):
         if vartype == glpk.DB:
             if lb == ub:
                 vartype = glpk.FX
-        set_bnds_function(self._problem, ind, vartype, lb, ub)
+        self._set_bnds(ind, vartype, lb, ub)
         return (lb if lower else False, ub if upper else False)
 
     cdef _coeffs(self,
@@ -209,34 +241,14 @@ cdef class Variable(Varstraint):
         """
         self._zombify(glpk.del_cols)
 
-    def bounds(self, lower=None, upper=None):
-        """Change or retrieve variable bounds
+    def _get_lb(self, int ind):
+        return glpk.get_col_lb(self._problem, ind)
 
-        :param lower: the variable's lower bound
-            (`False` to remove bound; omit for retrieval only)
-        :type lower: |Real| or `False`
-        :param upper: the variable's upper bound
-            (`False` to remove bound; omit for retrieval only)
-        :type upper: |Real| or `False`
-        :returns: the variable's bounds
-        :rtype: length-2 `tuple` of `float` (or `False`)
-        :raises TypeError: if *lower* or *upper* is not |Real| or `False`
-        :raises ValueError: if *lower* is larger than *upper*
+    def _get_ub(self, int ind):
+        return glpk.get_col_ub(self._problem, ind)
 
-        .. doctest:: Variable.bounds
-
-            >>> p = MILProgram()
-            >>> x = p.add_variable()
-            >>> x.bounds()
-            (False, False)
-            >>> x.bounds(lower=0, upper=5.5)
-            (0.0, 5.5)
-            >>> x.bounds(upper=False)
-            (0.0, False)
-
-        """
-        return self._bounds(glpk.get_col_lb, glpk.get_col_ub,
-                            glpk.set_col_bnds, lower, upper)
+    def _set_bnds(self, int ind, int vartype, double lb, double ub):
+        glpk.set_col_bnds(self._problem, ind, vartype, lb, ub)
 
     def kind(self, kind=None):
         """Change or retrieve variable kind
@@ -395,34 +407,14 @@ cdef class Constraint(Varstraint):
         """
         self._zombify(glpk.del_rows)
 
-    def bounds(self, lower=None, upper=None):
-        """Change or retrieve constraint bounds
+    def _get_lb(self, int ind):
+        return glpk.get_row_lb(self._problem, ind)
 
-        :param lower: the constraint's lower bound
-            (`False` to remove bound; omit for retrieval only)
-        :type lower: |Real| or `False`
-        :param upper: the constraint's upper bound
-            (`False` to remove bound; omit for retrieval only)
-        :type upper: |Real| or `False`
-        :returns: the constraint's bounds
-        :rtype: length-2 `tuple` of `float` (or `False`)
-        :raises TypeError: if *lower* or *upper* is not |Real| or `False`
-        :raises ValueError: if *lower* is larger than *upper*
+    def _get_ub(self, int ind):
+        return glpk.get_row_ub(self._problem, ind)
 
-        .. doctest:: Constraint.bounds
-
-            >>> p = MILProgram()
-            >>> c = p.add_constraint()
-            >>> c.bounds()
-            (False, False)
-            >>> c.bounds(lower=-1/2, upper=1/2)
-            (-0.5, 0.5)
-            >>> c.bounds(lower=False)
-            (False, 0.5)
-
-        """
-        return self._bounds(glpk.get_row_lb, glpk.get_row_ub,
-                            glpk.set_row_bnds, lower, upper)
+    def _set_bnds(self, int ind, int vartype, double lb, double ub):
+        glpk.set_row_bnds(self._problem, ind, vartype, lb, ub)
 
     def coeffs(self, coeffs=None):
         """Change or retrieve constraint coefficients (constraint matrix row)
