@@ -178,12 +178,10 @@ cdef class SimplexSolver(_Solver):
 
               and possible second components
 
-              * :data:`'Forrest–Tomlin'`: `Forrest–Tomlin
-                <http://dx.doi.org/10.1007/BF01584548>`_ update applied to U
+              * :data:`'Forrest–Tomlin'`: `Forrest–Tomlin`_ update applied to U
                 (only with plain LU factorization)
-              * :data:`'Bartels-Golub'`:
-                `Bartels–Golub <http://dx.doi.org/10.1145/362946.362974>`_
-                update applied to Schur complement
+              * :data:`'Bartels-Golub'`: `Bartels–Golub`_ update
+                applied to Schur complement
               * :data:`'Givens'`: Givens rotation update
                 applied to Schur complement
 
@@ -207,6 +205,9 @@ cdef class SimplexSolver(_Solver):
         .. todo::
 
             Add doctest
+
+        .. _Forrest–Tomlin: http://dx.doi.org/10.1007/BF01584548
+        .. _Bartels–Golub: http://dx.doi.org/10.1145/362946.362974
 
         """
         if defaults:
@@ -535,8 +536,7 @@ cdef class SimplexSolver(_Solver):
                  lower triangular structure of the basis matrix
               #. appropriate fixed constraints to complete the basis
 
-            * :data:`'Bixby'`: algorithm used by CPLEX, as discussed by
-              `Bixby <http://dx.doi.org/10.1287/ijoc.4.3.267>`_
+            * :data:`'Bixby'`: algorithm used by CPLEX, as discussed by Bixby_
 
         :type algorithm: |str|
         :param status: the mapping of statuses to change
@@ -569,6 +569,8 @@ cdef class SimplexSolver(_Solver):
             basis is left in a valid state. So it is not necessary to run this
             method before, e.g., re-optimizating after only the objective has
             been changed.
+
+        .. _Bixby: http://dx.doi.org/10.1287/ijoc.4.3.267
 
         """
         if algorithm is not None:
@@ -958,8 +960,7 @@ cdef class IntOptSolver(_Solver):
               * :data:`'first_fracvar'`: first fractional variable
               * :data:`'last_fracvar'`: last fractional variable
               * :data:`'most_fracvar'`: most fractional variable
-              * :data:`'Driebeek–Tomlin'`: heuristic by `Driebeek
-                <http://www.jstor.org/discover/10.2307/2627887>`_ & Tomlin
+              * :data:`'Driebeek–Tomlin'`: heuristic by Driebeek_ & Tomlin
               * :data:`'hybrid_peudocost'`: hybrid pseudocost heuristic
 
             * :data:`bt_tech` (|str|) – the backtracking technique,
@@ -977,11 +978,8 @@ cdef class IntOptSolver(_Solver):
               * :data:`'root'`: preprocessing only on the root level
               * :data:`'all'`: preprocessing on all levels
 
-            * :data:`fp_heur` (|bool|) – apply `feasibility pump
-              <http://dx.doi.org/10.1007/s10107-004-0570-3>`_ heuristic
-            * :data:`ps_heur` (|bool|) – apply `proximity search
-              <http://www.dei.unipd.it/~fisch/papers/proximity_search.pdf>`_
-              heuristic
+            * :data:`fp_heur` (|bool|) – apply `feasibility pump`_ heuristic
+            * :data:`ps_heur` (|bool|) – apply `proximity search`_ heuristic
             * :data:`ps_tm_lim` (|Integral|) –  time limit [ms]
               for the proximity search heuristic
             * :data:`gmi_cuts` (|bool|) –
@@ -1012,6 +1010,10 @@ cdef class IntOptSolver(_Solver):
         .. todo::
 
             Add doctest
+
+        .. _Driebeek: http://dx.doi.org/10.1287/ijoc.4.3.267
+        .. _feasibility pump: http://dx.doi.org/10.1007/s10107-004-0570-3
+        .. _proximity search: http://www.dei.unipd.it/~fisch/papers/proximity_search.pdf
 
         """
         if defaults:
