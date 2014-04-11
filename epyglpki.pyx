@@ -272,9 +272,9 @@ cdef class MILProgram:
 
         :param coeffs: set variable coefficients; see `.Variable.coeffs`
         :param lower_bound: set variable lower bound;
-            see `.Variable.bounds`, parameter *lower*
+            see `.Varstraint.bounds`, parameter *lower*
         :param upper_bound: set variable upper bound;
-            see `.Variable.bounds`, parameter *upper*
+            see `.Varstraint.bounds`, parameter *upper*
         :param kind: set variable kind; see `.Variable.kind`
         :param name: set variable name; see `.Variable.name`
         :returns: variable object
@@ -323,9 +323,9 @@ cdef class MILProgram:
 
         :param coeffs: set constraint coefficients; see `.Constraint.coeffs`
         :param lower_bound: set constraint lower bound;
-            see `.Constraint.bounds`, parameter *lower*
+            see `.Varstraint.bounds`, parameter *lower*
         :param upper_bound: set constraint upper bound;
-            see `.Constraint.bounds`, parameter *upper*
+            see `.Varstraint.bounds`, parameter *upper*
         :param name: set constraint name; see `.Constraint.name`
         :returns: constraint object
         :rtype: `.Constraint`
