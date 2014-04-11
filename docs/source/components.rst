@@ -7,23 +7,23 @@
 Components
 ==========
 
-Varstraint
-----------
+Varstraints
+-----------
 
 .. autoclass:: Varstraint
 
-Variable
---------
+Variables
+---------
 
 .. autoclass:: Variable
 
 
-Constraint
-----------
+Constraints
+-----------
 
 .. autoclass:: Constraint
 
-Objective
----------
+The Objective
+-------------
 
 .. autoclass:: Objective
