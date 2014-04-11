@@ -580,7 +580,7 @@ cdef class MILProgram(Named):
                 factors[constraint] = factor
         return factors
 
-    def objective(self, coeffs={}, constant=0, direction='minimize',
+    def objective(self, coeffs=None, constant=0, direction='minimize',
                   name=''):
         """Obtain objective object
 
