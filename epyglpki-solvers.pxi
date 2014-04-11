@@ -22,7 +22,15 @@
 ###############################################################################
 
 
-cdef class _Solver(_ProgramComponent):
+cdef class _Solver:
+
+    cdef MILProgram _program
+    cdef glpk.ProbObj* _problem
+
+    def __cinit__(self, program):
+        self._program = program
+        self._problem = <glpk.ProbObj*>PyCapsule_GetPointer(
+                                                program._problem_ptr(), NULL)
 
     cdef _value(self, varstraint,
                 double (*variable_func)(glpk.ProbObj*, int),

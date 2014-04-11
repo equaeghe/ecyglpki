@@ -618,17 +618,6 @@ cdef class MILProgram:
         return intopt_solver
 
 
-cdef class _ProgramComponent:
-
-    cdef MILProgram _program
-    cdef glpk.ProbObj* _problem
-
-    def __cinit__(self, program):
-        self._program = program
-        self._problem = <glpk.ProbObj*>PyCapsule_GetPointer(
-                                                program._problem_ptr(), NULL)
-
-
 include "epyglpki-components.pxi"
 
 

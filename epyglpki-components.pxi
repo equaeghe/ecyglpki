@@ -22,7 +22,29 @@
 ###############################################################################
 
 
-cdef class _Varstraint(_ProgramComponent):
+cdef class _Component:
+
+    cdef MILProgram _program
+    cdef glpk.ProbObj* _problem
+
+    def __cinit__(self, program):
+        self._program = program
+        self._problem = <glpk.ProbObj*>PyCapsule_GetPointer(
+                                                program._problem_ptr(), NULL)
+
+
+cdef class _Varstraint(_Component):
+    """One of the program's variables or constraints
+
+    Any constraint :math:`a\leq c'x\leq b` can be represented as a combination
+    of an ‘auxiliary’ variable :math:`z_c`, an equality constraint
+    :math:`z_c=c'x` linking that auxiliary variable to the (vector of)
+    ‘structural’ variables :math:`x`, and :math:`a\leq z_c\leq b` bounds on
+    that auxiliary variable. Therefore it is useful to have this class, a
+    common class for both structural and auxiliary variables, which contains
+    the methods common to both `.Variable` and `.Constraint` classes.
+
+    """
 
     cdef int _unique_id
 
@@ -459,7 +481,7 @@ cdef class Constraint(_Varstraint):
         return self._name(glpk.get_row_name, glpk.set_row_name, name)
 
 
-cdef class Objective(_ProgramComponent):
+cdef class Objective(_Component):
     """The problem's objective function"""
 
     def direction(self, direction=None):
