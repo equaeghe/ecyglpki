@@ -273,5 +273,24 @@ intersphinx_mapping = {'http://docs.python.org/3.3/': None}
 
 # Substitutions
 rst_prolog = """
+    .. |None| replace:: :const:`None`
+    .. |True| replace:: :const:`True`
+    .. |False| replace:: :const:`False`
+    .. |bool| replace:: :class:`bool`
+    .. |int| replace:: :class:`int`
+    .. |float| replace:: :class:`float`
+    .. |tuple| replace:: :class:`tuple`
+    .. |str| replace:: :class:`str`
+    .. |list| replace:: :class:`list`
+    .. |dict| replace:: :class:`dict`
+    .. |Integral| replace:: :class:`~numbers.Integral`
     .. |Real| replace:: :class:`~numbers.Real`
+    .. |Sequence| replace:: :class:`~collections.abc.Sequence`
+    .. |Mapping| replace:: :class:`~collections.abc.Mapping`
+    .. |Variable| replace:: :class:`~epyglpki.Variable`
+    .. |Constraint| replace:: :class:`~epyglpki.Constraint`
+    .. |Objective| replace:: :class:`~epyglpki.Objective`
+    .. |SimplexSolver| replace:: :class:`~epyglpki.SimplexSolver`
+    .. |IPointSolver| replace:: :class:`~epyglpki.IPointSolver`
+    .. |IntOptSolver| replace:: :class:`~epyglpki.IntOptSolver`
 """
