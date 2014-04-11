@@ -224,21 +224,42 @@ cdef class Varstraint(_Component):
             glpk.free(inds)
         return coeffs
 
-    cdef _name(self,
-               const char* (*get_name_function)(glpk.ProbObj*, int),
-               void (*set_name_function)(glpk.ProbObj*, int, const char*),
-               name=None):
-        cdef char* chars
-        ind = self._program._ind(self)
-        if name is '':
-            set_name_function(self._problem, ind, NULL)
-        elif name is not None:
-            name = name2chars(name)
-            chars = name
-            set_name_function(self._problem, ind, chars)
-        chars = get_name_function(self._problem, ind)
-        return '' if chars is NULL else chars.decode()
+    def name(self, name=None):
+        """Change or retrieve varstraint name
 
+        :param name: the new varstraint name (omit for retrieval only)
+        :type name: `str`
+        :returns: the varstraint name
+        :rtype: `str`
+        :raises TypeError: if *name* is not a `str`
+        :raises ValueError: if *name* exceeds 255 bytes encoded in UTF-8
+
+        .. doctest:: Variable.name
+
+            >>> p = MILProgram()
+            >>> x = p.add_variable()
+            >>> x.name()
+            ''
+            >>> x.name('Stake')
+            'Stake'
+            >>> x.name()
+            'Stake'
+
+        .. doctest:: Constraint.name
+
+            >>> p = MILProgram()
+            >>> c = p.add_constraint()
+            >>> c.name()
+            ''
+            >>> c.name('Budget')
+            'Budget'
+            >>> c.name()
+            'Budget'
+
+        """
+        if name is not None:
+            self._set_name(name)
+        return self._get_name()
 
 cdef class Variable(Varstraint):
     """One of the problem's variables"""
@@ -342,29 +363,21 @@ cdef class Variable(Varstraint):
                             Constraint.__name__, self._program._constraints,
                             coeffs)
 
-    def name(self, name=None):
-        """Change or retrieve variable name
+    def _get_name(self):
+        cdef char* chars
+        col = self._program._col(self)
+        chars = glpk.get_col_name(self._problem, col)
+        return '' if chars is NULL else chars.decode()
 
-        :param name: the new variable name (omit for retrieval only)
-        :type name: `str`
-        :returns: the variable name
-        :rtype: `str`
-        :raises TypeError: if *name* is not a `str`
-        :raises ValueError: if *name* exceeds 255 bytes encoded in UTF-8
-
-        .. doctest:: Variable.name
-
-            >>> p = MILProgram()
-            >>> x = p.add_variable()
-            >>> x.name()
-            ''
-            >>> x.name('Stake')
-            'Stake'
-            >>> x.name()
-            'Stake'
-
-        """
-        return self._name(glpk.get_col_name, glpk.set_col_name, name)
+    def _set_name(self, name):
+        cdef char* chars
+        col = self._program._col(self)
+        if name is '':
+            glpk.set_col_name(self._problem, col, NULL)
+        else:
+            name = name2chars(name)
+            chars = name
+            glpk.set_col_name(self._problem, col, chars)
 
 
 cdef class Constraint(Varstraint):
@@ -418,29 +431,21 @@ cdef class Constraint(Varstraint):
                             Variable.__name__, self._program._variables,
                             coeffs)
 
-    def name(self, name=None):
-        """Change or retrieve constraint name
+    def _get_name(self):
+        cdef char* chars
+        row = self._program._row(self)
+        chars = glpk.get_row_name(self._problem, row)
+        return '' if chars is NULL else chars.decode()
 
-        :param name: the new constraint name (omit for retrieval only)
-        :type name: `str`
-        :returns: the constraint name
-        :rtype: `str`
-        :raises TypeError: if *name* is not a `str`
-        :raises ValueError: if *name* exceeds 255 bytes encoded in UTF-8
-
-        .. doctest:: Constraint.name
-
-            >>> p = MILProgram()
-            >>> c = p.add_constraint()
-            >>> c.name()
-            ''
-            >>> c.name('Budget')
-            'Budget'
-            >>> c.name()
-            'Budget'
-
-        """
-        return self._name(glpk.get_row_name, glpk.set_row_name, name)
+    def _set_name(self, name):
+        cdef char* chars
+        row = self._program._row(self)
+        if name is '':
+            glpk.set_row_name(self._problem, row, NULL)
+        else:
+            name = name2chars(name)
+            chars = name
+            glpk.set_row_name(self._problem, row, chars)
 
 
 cdef class Objective(_Component):
