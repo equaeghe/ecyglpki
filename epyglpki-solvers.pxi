@@ -404,11 +404,10 @@ cdef class SimplexSolver(_Solver):
         """Return primal value for the current solution
 
         :param varstraint: variable or constraint to return the primal value of
-        :type varstraint: `.Variable` or `.Constraint`
+        :type varstraint: `.Varstraint`
         :returns: the value of *varstraint* for the current solution
         :rtype: `float` or `int`
-        :raises TypeError: if varstraint is neither `.Variable` nor
-            `.Constraint`
+        :raises TypeError: if varstraint is not `.Varstraint`
 
         .. todo::
 
@@ -423,7 +422,7 @@ cdef class SimplexSolver(_Solver):
 
         :returns: a |Mapping| of {`'equalities'`, `'bounds'`} to |Mapping|
             of {`'abs'`, `'rel'`} to pairs consisting of an error (`float`)
-            and a `.Variable` or `.Constraint` where it is attained
+            and a `.Varstraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current primal solution does not satisfy the Karush-Kuhn-Tucker
@@ -441,11 +440,10 @@ cdef class SimplexSolver(_Solver):
         """Return dual value for the current solution
 
         :param varstraint: variable or constraint to return the dual value of
-        :type varstraint: `.Variable` or `.Constraint`
+        :type varstraint: `.Varstraint`
         :returns: the value of *varstraint* for the current solution
         :rtype: `float` or `int`
-        :raises TypeError: if varstraint is neither `.Variable` nor
-            `.Constraint`
+        :raises TypeError: if varstraint is not `.Varstraint`
 
         .. todo::
 
@@ -459,7 +457,7 @@ cdef class SimplexSolver(_Solver):
 
         :returns: a |Mapping| of {`'equalities'`, `'bounds'`} to |Mapping|
             of {`'abs'`, `'rel'`} to pairs consisting of an error (`float`)
-            and a `.Variable` or `.Constraint` where it is attained
+            and a `.Varstraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current dual solution does not satisfy the Karush-Kuhn-Tucker
@@ -478,7 +476,7 @@ cdef class SimplexSolver(_Solver):
 
         :returns: a variable or constraint causing unboundedness (if any) and
             the nature of the unboundedness, either `'primal'` or `'dual'`
-        :rtype: length-2 `tuple` of `.Variable` or `.Constraint` and `str`
+        :rtype: length-2 `tuple` of `.Varstraint` and `str`
 
         .. todo::
 
@@ -531,18 +529,17 @@ cdef class SimplexSolver(_Solver):
         :type algorithm: `str`
         :param status: the mapping of statuses to change
             (omit to not modify the basis)
-        :type status: |Mapping| from `.Variable` or `.Constraint` to `str`
+        :type status: |Mapping| from `.Varstraint` to `str`
         :param warmup: whether to ‘warm up’ the basis, so that `.solve` can be
             used without presolving
         :type warmup: `bool`
         :returns: a mapping of the basis statuses of all variables and
             constraints
-        :rtype: `dict` from `.Variable` or `.Constraint` to `str`
+        :rtype: `dict` from `.Varstraint` to `str`
         :raises ValueError: if *algorithm* is neither `'standard'`,
             `'advanced'`, nor `'Bixby'`
         :raises TypeError: if *status* is not |Mapping|
-        :raises TypeError: if *status* keys are neither `.Variable` nor
-            `.Constraint`
+        :raises TypeError: if *status* keys are not `.Varstraint`
         :raises ValueError: if the basis is invalid
         :raises ValueError: if the basis matrix is singular
         :raises ValueError: if the basis matrix is ill-conditioned
@@ -645,12 +642,11 @@ cdef class SimplexSolver(_Solver):
         """Write a sensitivity analysis report to file in readable format
 
         :param varstraints: sequence of variables and/or constraints to analyze
-        :type varstraints: |Sequence| of `.Variable` and/or `.Constraint`
+        :type varstraints: |Sequence| of `.Varstraint`
         :param fname: the name of the file to write to
         :type fname: `str`
         :raises Exception: if the current solution is not optimal
-        :raises TypeError: if *varstraints* is not  |Sequence| of
-            `.Variable` and/or `.Constraint`
+        :raises TypeError: if *varstraints* is not |Sequence| of `.Varstraint`
         :raises ValueError: if the current basis is invalid
         :raises ValueError: if the current basis matrix is singular
         :raises ValueError: if the current basis matrix is ill-conditioned
@@ -790,11 +786,10 @@ cdef class IPointSolver(_Solver):
         """Return primal value for the current solution
 
         :param varstraint: variable or constraint to return the primal value of
-        :type varstraint: `.Variable` or `.Constraint`
+        :type varstraint: `.Varstraint`
         :returns: the value of *varstraint* for the current solution
         :rtype: `float` or `int`
-        :raises TypeError: if varstraint is neither `.Variable` nor
-            `.Constraint`
+        :raises TypeError: if varstraint is not `.Varstraint`
 
         .. todo::
 
@@ -808,7 +803,7 @@ cdef class IPointSolver(_Solver):
 
         :returns: a |Mapping| of {`'equalities'`, `'bounds'`} to |Mapping|
             of {`'abs'`, `'rel'`} to pairs consisting of an error (`float`)
-            and a `.Variable` or `.Constraint` where it is attained
+            and a `.Varstraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current primal solution does not satisfy the Karush-Kuhn-Tucker
@@ -826,11 +821,10 @@ cdef class IPointSolver(_Solver):
         """Return dual value for the current solution
 
         :param varstraint: variable or constraint to return the dual value of
-        :type varstraint: `.Variable` or `.Constraint`
+        :type varstraint: `.Varstraint`
         :returns: the value of *varstraint* for the current solution
         :rtype: `float` or `int`
-        :raises TypeError: if varstraint is neither `.Variable` nor
-            `.Constraint`
+        :raises TypeError: if varstraint is not `.Varstraint`
 
         .. todo::
 
@@ -844,7 +838,7 @@ cdef class IPointSolver(_Solver):
 
         :returns: a |Mapping| of {`'equalities'`, `'bounds'`} to |Mapping|
             of {`'abs'`, `'rel'`} to pairs consisting of an error (`float`)
-            and a `.Variable` or `.Constraint` where it is attained
+            and a `.Varstraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current dual solution does not satisfy the Karush-Kuhn-Tucker
@@ -1141,11 +1135,10 @@ cdef class IntOptSolver(_Solver):
         """Return the variable or constraint value for the current solution
 
         :param varstraint: variable or constraint to return the value of
-        :type varstraint: `.Variable` or `.Constraint`
+        :type varstraint: `.Varstraint`
         :returns: the value of *varstraint* for the current solution
         :rtype: `float` or `int`
-        :raises TypeError: if varstraint is neither `.Variable` nor
-            `.Constraint`
+        :raises TypeError: if varstraint is not `.Varstraint`
         :raises ValueError: if a variable with `'integer'` or `'binary'` kind
             has a non-integer value
 
@@ -1169,7 +1162,7 @@ cdef class IntOptSolver(_Solver):
 
         :returns: a |Mapping| of {`'equalities'`, `'bounds'`} to |Mapping|
             of {`'abs'`, `'rel'`} to pairs consisting of an error (`float`)
-            and a `.Variable` or `.Constraint` where it is attained
+            and a `.Varstraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current solution does not satisfy the Karush-Kuhn-Tucker conditions
