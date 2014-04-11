@@ -181,10 +181,10 @@ cdef class SimplexSolver(_Solver):
               * `'Givens'`: Givens rotation update applied to Schur complement
 
             * **piv_tol** (|Real|) – Markowitz threshold pivoting tolerance
-              (value must lie between :math:`0` and :math:`1`)
+              (value must lie between 0 and 1)
             * **piv_lim** (|Integral|) – number of pivot
               candidates that need to be considered on choosing a pivot element
-              (at least :math:`1`)
+              (at least 1)
             * **suhl** (`bool`) – use Suhl heuristic
             * **eps_tol** (|Real|) – tolerance below which numbers are replaced
               by zero
@@ -1053,7 +1053,7 @@ cdef class IntOptSolver(_Solver):
               and furthermore efficient mainly for problems with constraints
               that are covering, packing, or partitioning inequalities, i.e.,
               sums of binary variables :math:`x` or their ‘negation’
-              :math:`1-x`, smaller than, equal to, or larger than :math:`1`.
+              :math:`1-x`, smaller than, equal to, or larger than 1.
 
         :type solver: `str`
         :param obj_bound: if *solver* is `'intfeas1'`, a solution is
