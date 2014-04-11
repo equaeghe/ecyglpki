@@ -210,8 +210,7 @@ cdef class Variable(_Varstraint):
         :type upper: |Real| or `False`
         :returns: the variable's bounds
         :rtype: length-2 `tuple` of `float` (or `False`)
-        :raises TypeError: if *lower* or *upper* is not
-            |Real| or `False`
+        :raises TypeError: if *lower* or *upper* is not |Real| or `False`
         :raises ValueError: if *lower* is larger than *upper*
 
         .. doctest:: Variable.bounds
@@ -233,12 +232,11 @@ cdef class Variable(_Varstraint):
         """Change or retrieve variable kind
 
         :param kind: the new variable kind (omit for retrieval only)
-        :type kind: `str`,
-            either `'continuous'`, `'integer'`, or `'binary'`
+        :type kind: `str`, either `'continuous'`, `'integer'`, or `'binary'`
         :returns: the variable kind
         :rtype: `str`
-        :raises ValueError: if *kind* is not `'continuous'`,
-            `'integer'`, or `'binary'`
+        :raises ValueError: if *kind* is not `'continuous'`, `'integer'`,
+            or `'binary'`
 
         .. doctest:: Variable.kind
 
@@ -286,8 +284,7 @@ cdef class Variable(_Varstraint):
 
         :param coeffs: the mapping with coefficients to change
             (``{}`` to set all coefficients to `0`; omit for retrieval only)
-        :type coeffs: |Mapping| of
-            `.Constraint` to |Real|
+        :type coeffs: |Mapping| of `.Constraint` to |Real|
         :returns: the coefficient mapping, which only contains nonzero
             coefficients
         :rtype: `dict` of `.Constraint` to `float`
@@ -423,8 +420,7 @@ cdef class Constraint(_Varstraint):
         :param coeffs: the mapping with coefficients to change
             (``{}`` to set all coefficients to :math:`0`;
             omit for retrieval only)
-        :type coeffs: |Mapping| of
-            `.Variable` to |Real|
+        :type coeffs: |Mapping| of `.Variable` to |Real|
         :returns: the coefficient mapping, which only contains nonzero
             coefficients
         :rtype: `dict` of `.Variable` to `float`
@@ -481,14 +477,11 @@ cdef class Objective(_ProgramComponent):
     def direction(self, direction=None):
         """Change or retrieve objective direction
 
-        :param direction: the new objective direction
-            (omit for retrieval only)
-        :type direction: `str`,
-            either `'minimize'` or `'maximize'`
+        :param direction: the new objective direction (omit for retrieval only)
+        :type direction: `str`, either `'minimize'` or `'maximize'`
         :returns: the objective direction
         :rtype: `str`
-        :raises ValueError: if *direction* is not `'minimize'` or
-            `'maximize'`
+        :raises ValueError: if *direction* is not `'minimize'` or `'maximize'`
 
         .. doctest:: Objective.direction
 
@@ -513,8 +506,7 @@ cdef class Objective(_ProgramComponent):
         :param coeffs: the mapping with coefficients to change
             (``{}`` to set all coefficients to :math:`0`;
             omit for retrieval only)
-        :type coeffs: |Mapping| of
-            `.Variable` to |Real|
+        :type coeffs: |Mapping| of `.Variable` to |Real|
         :returns: the coefficient mapping, which only contains nonzero
             coefficients
         :rtype: `dict` of `.Variable` to `float`
@@ -593,8 +585,7 @@ cdef class Objective(_ProgramComponent):
     def name(self, name=None):
         """Change or retrieve objective function name
 
-        :param name: the new objective function name
-            (omit for retrieval only)
+        :param name: the new objective function name (omit for retrieval only)
         :type name: `str`
         :returns: the objective function name
         :rtype: `str`

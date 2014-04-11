@@ -315,9 +315,8 @@ cdef class SimplexSolver(_Solver):
         :param exact: whether to use exact arithmetic or not
             (only if the :data:`meth` control parameter is `'primal'`)
         :type exact: `bool`
-        :returns: solution status; see `.status` for
-            details, or `'obj_ll reached'` or `'obj_ul reached'` in
-            case that happens
+        :returns: solution status; see `.status` for details,
+            or `'obj_ll reached'` or `'obj_ul reached'` in case that happens
         :rtype: `str`
         :raises ValueError: if *exact* is `True` but the :data:`meth`
             control parameter is not `'primal'`
@@ -366,13 +365,11 @@ cdef class SimplexSolver(_Solver):
         :type detailed: `bool`
         :returns: the current solution status
 
-            * in case *detailed* is `False`, either `'undefined'`,
-              `'optimal'`, `'infeasible'`, `'no feasible'`,
-              `'feasible'`, or `'unbounded'`
+            * in case *detailed* is `False`, either `'undefined'`, `'optimal'`,
+              `'infeasible'`, `'no feasible'`, `'feasible'`, or `'unbounded'`
             * in case *detailed* is `True`, a pair of statuses is given,
               one for the primal solution and one for the dual solution, either
-              `'undefined'`, `'infeasible'`, `'no feasible'`,
-              or `'feasible'`
+              `'undefined'`, `'infeasible'`, `'no feasible'`, or `'feasible'`
 
         :rtype: `str` or length-2 `tuple` of `str`
 
@@ -423,12 +420,9 @@ cdef class SimplexSolver(_Solver):
     def primal_error(self):
         """Return absolute and relative primal solution errors
 
-        :returns: a |Mapping|
-            of {`'equalities'`, `'bounds'`}
-            to |Mapping|
-            of {`'abs'`, `'rel'`} to pairs consisting of
-            an error (`float`) and a `.Variable`
-            or `.Constraint` where it is attained
+        :returns: a |Mapping| of {`'equalities'`, `'bounds'`} to |Mapping|
+            of {`'abs'`, `'rel'`} to pairs consisting of an error (`float`)
+            and a `.Variable` or `.Constraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current primal solution does not satisfy the Karush-Kuhn-Tucker
@@ -462,12 +456,9 @@ cdef class SimplexSolver(_Solver):
     def dual_error(self):
         """Return absolute and relative dual solution errors
 
-        :returns: a |Mapping|
-            of {`'equalities'`, `'bounds'`}
-            to |Mapping|
-            of {`'abs'`, `'rel'`} to pairs consisting of
-            an error (`float`) and a `.Variable`
-            or `.Constraint` where it is attained
+        :returns: a |Mapping| of {`'equalities'`, `'bounds'`} to |Mapping|
+            of {`'abs'`, `'rel'`} to pairs consisting of an error (`float`)
+            and a `.Variable` or `.Constraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current dual solution does not satisfy the Karush-Kuhn-Tucker
@@ -485,10 +476,8 @@ cdef class SimplexSolver(_Solver):
         """Return a variable or constraint causing unboundedness
 
         :returns: a variable or constraint causing unboundedness (if any) and
-            the nature of the unboundedness, either `'primal'` or
-            `'dual'`
-        :rtype: length-2 `tuple` of `.Variable` or
-            `.Constraint` and `str`
+            the nature of the unboundedness, either `'primal'` or `'dual'`
+        :rtype: length-2 `tuple` of `.Variable` or `.Constraint` and `str`
 
         .. todo::
 
@@ -541,15 +530,13 @@ cdef class SimplexSolver(_Solver):
         :type algorithm: `str`
         :param status: the mapping of statuses to change
             (omit to not modify the basis)
-        :type status: |Mapping| from
-            `.Variable` or `.Constraint` to `str`
-        :param warmup: whether to ‘warm up’ the basis, so that
-            `.solve` can be used without presolving
+        :type status: |Mapping| from `.Variable` or `.Constraint` to `str`
+        :param warmup: whether to ‘warm up’ the basis, so that `.solve` can be
+            used without presolving
         :type warmup: `bool`
         :returns: a mapping of the basis statuses of all variables and
             constraints
-        :rtype: `dict` from `.Variable` or `.Constraint` to
-            `str`
+        :rtype: `dict` from `.Variable` or `.Constraint` to `str`
         :raises ValueError: if *algorithm* is neither `'standard'`,
             `'advanced'`, nor `'Bixby'`
         :raises TypeError: if *status* is not |Mapping|
@@ -657,14 +644,12 @@ cdef class SimplexSolver(_Solver):
         """Write a sensitivity analysis report to file in readable format
 
         :param varstraints: sequence of variables and/or constraints to analyze
-        :type varstraints: |Sequence| of
-            `.Variable` and/or `.Constraint`
+        :type varstraints: |Sequence| of `.Variable` and/or `.Constraint`
         :param fname: the name of the file to write to
         :type fname: `str`
         :raises Exception: if the current solution is not optimal
-        :raises TypeError: if *varstraints* is not 
-            |Sequence| of `.Variable` and/or
-            `.Constraint`
+        :raises TypeError: if *varstraints* is not  |Sequence| of
+            `.Variable` and/or `.Constraint`
         :raises ValueError: if the current basis is invalid
         :raises ValueError: if the current basis matrix is singular
         :raises ValueError: if the current basis matrix is ill-conditioned
@@ -727,8 +712,7 @@ cdef class IPointSolver(_Solver):
               * `'orig'`: normal (original)
               * `'qmd'`: quotient minimum degree
               * `'amd'`: approximate minimum degree
-              * `'symamd'`: approximate minimum degree for symmetric
-                matrices
+              * `'symamd'`: approximate minimum degree for symmetric matrices
 
         :raises ValueError: if a non-existing control name is given
 
@@ -822,12 +806,9 @@ cdef class IPointSolver(_Solver):
     def primal_error(self):
         """Return absolute and relative primal solution errors
 
-        :returns: a |Mapping|
-            of {`'equalities'`, `'bounds'`}
-            to |Mapping|
-            of {`'abs'`, `'rel'`} to pairs consisting of
-            an error (`float`) and a `.Variable`
-            or `.Constraint` where it is attained
+        :returns: a |Mapping| of {`'equalities'`, `'bounds'`} to |Mapping|
+            of {`'abs'`, `'rel'`} to pairs consisting of an error (`float`)
+            and a `.Variable` or `.Constraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current primal solution does not satisfy the Karush-Kuhn-Tucker
@@ -861,12 +842,9 @@ cdef class IPointSolver(_Solver):
     def dual_error(self):
         """Return absolute and relative dual solution errors
 
-        :returns: a |Mapping|
-            of {`'equalities'`, `'bounds'`}
-            to |Mapping|
-            of {`'abs'`, `'rel'`} to pairs consisting of
-            an error (`float`) and a `.Variable`
-            or `.Constraint` where it is attained
+        :returns: a |Mapping| of {`'equalities'`, `'bounds'`} to |Mapping|
+            of {`'abs'`, `'rel'`} to pairs consisting of an error (`float`)
+            and a `.Variable` or `.Constraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current dual solution does not satisfy the Karush-Kuhn-Tucker
@@ -1079,8 +1057,8 @@ cdef class IntOptSolver(_Solver):
         :param solver: which solver to use, chosen from
 
             * `'branchcut'`: a branch-and-cut solver
-            * `'intfeas1'`: a SAT solver based integer feasibility
-              solver; applicable only to problems
+            * `'intfeas1'`: a SAT solver based integer feasibility solver;
+              applicable only to problems
 
               * that are feasibility problems (but see `obj_bound` description)
               * with only binary variables
@@ -1095,8 +1073,7 @@ cdef class IntOptSolver(_Solver):
         :type solver: `str`
         :param obj_bound: if *solver* is `'intfeas1'`, a solution is
             considered feasible only if the corresponding objective value is
-            not worse than this bound (not used if solver is
-            `'branchcut'`)
+            not worse than this bound (not used if solver is `'branchcut'`)
         :type obj_bound: |Integral|
         :returns: solution status; see `.status` for details
         :rtype: `str`
@@ -1176,8 +1153,8 @@ cdef class IntOptSolver(_Solver):
         :rtype: `float` or `int`
         :raises TypeError: if varstraint is neither `.Variable` nor
             `.Constraint`
-        :raises ValueError: if a variable with `'integer'` or
-            `'binary'` kind has a non-integer value
+        :raises ValueError: if a variable with `'integer'` or `'binary'` kind
+            has a non-integer value
 
         .. todo::
 
@@ -1197,12 +1174,9 @@ cdef class IntOptSolver(_Solver):
     def error(self):
         """Return absolute and relative solution errors
 
-        :returns: a |Mapping|
-            of {`'equalities'`, `'bounds'`}
-            to |Mapping|
-            of {`'abs'`, `'rel'`} to pairs consisting of
-            an error (`float`) and a `.Variable`
-            or `.Constraint` where it is attained
+        :returns: a |Mapping| of {`'equalities'`, `'bounds'`} to |Mapping|
+            of {`'abs'`, `'rel'`} to pairs consisting of an error (`float`)
+            and a `.Variable` or `.Constraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current solution does not satisfy the Karush-Kuhn-Tucker conditions
