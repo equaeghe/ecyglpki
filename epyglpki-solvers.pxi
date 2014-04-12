@@ -95,10 +95,7 @@ cdef class _Solver:
     cdef _faccess(self,
                   int (*faccess_function)(glpk.ProbObj*, const char*),
                   fname, error_msg):
-        cdef char* chars
-        fname = name2chars(fname)
-        chars = fname
-        retcode = faccess_function(self._problem, chars)
+        retcode = faccess_function(self._problem, name2chars(fname))
         if retcode is not 0:
             raise RuntimeError(error_msg + " '" + fname + "'.")
 
@@ -661,9 +658,6 @@ cdef class SimplexSolver(_Solver):
         if not isinstance(varstraints, collections.abc.Sequence):
             raise TypeError("'varstraints' must be a sequence.")
         length = len(varstraints)
-        cdef char* chars
-        fname = name2chars(fname)
-        chars = fname
         cdef int* indlist = <int*>glpk.alloc(1+length, sizeof(int))
         try:
             for pos, varstraint in enumerate(varstraints, start=1):
@@ -673,7 +667,8 @@ cdef class SimplexSolver(_Solver):
                 retcode = glpk.factorize(self._problem)
                 if retcode is not 0:
                     raise smretcode2error[retcode]
-            glpk.print_ranges(self._problem, length, indlist, 0, chars)
+            glpk.print_ranges(self._problem, length, indlist, 0,
+                              name2chars(fname))
         finally:
             glpk.free(indlist)
 

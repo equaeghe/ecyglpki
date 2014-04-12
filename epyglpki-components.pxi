@@ -330,17 +330,13 @@ cdef class Variable(Varstraint):
                             coeffs)
 
     def _get_name(self):
-        cdef char* chars
         col = self._program._col(self)
-        chars = glpk.get_col_name(self._problem, col)
+        cdef char* chars = glpk.get_col_name(self._problem, col)
         return '' if chars is NULL else chars.decode()
 
     def _set_name(self, name):
-        cdef char* chars
         col = self._program._col(self)
-        name = name2chars(name)
-        chars = name
-        glpk.set_col_name(self._problem, col, chars)
+        glpk.set_col_name(self._problem, col, name2chars(name))
 
 
 cdef class Constraint(Varstraint):
@@ -395,17 +391,13 @@ cdef class Constraint(Varstraint):
                             coeffs)
 
     def _get_name(self):
-        cdef char* chars
         row = self._program._row(self)
-        chars = glpk.get_row_name(self._problem, row)
+        cdef char* chars = glpk.get_row_name(self._problem, row)
         return '' if chars is NULL else chars.decode()
 
     def _set_name(self, name):
-        cdef char* chars
         row = self._program._row(self)
-        name = name2chars(name)
-        chars = name
-        glpk.set_row_name(self._problem, row, chars)
+        glpk.set_row_name(self._problem, row, name2chars(name))
 
 
 cdef class Objective(_Component):
@@ -519,12 +511,8 @@ cdef class Objective(_Component):
         return glpk.get_obj_coef(self._problem, 0)
 
     def _get_name(self):
-        cdef char* chars
-        chars = glpk.get_obj_name(self._problem)
+        cdef char* chars = glpk.get_obj_name(self._problem)
         return '' if chars is NULL else chars.decode()
 
     def _set_name(self, name):
-        cdef char* chars
-        name = name2chars(name)
-        chars = name
-        glpk.set_obj_name(self._problem, chars)
+        glpk.set_obj_name(self._problem, name2chars(name))

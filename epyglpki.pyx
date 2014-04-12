@@ -34,7 +34,7 @@ def GLPK_version():
     return glpk.version().decode()
 
 
-cdef name2chars(name):
+cdef char* name2chars(name):
     cdef char* chars
     if not isinstance(name, str):
         raise TypeError("Name must be a 'str'.")
@@ -170,21 +170,19 @@ cdef class MILProgram(Named):
             Add doctest
 
         """
-        cdef char* chars
         cdef glpk.ProbObj* problem
-        fname = name2chars(fname)
-        chars = fname
         program = cls()
         problem = <glpk.ProbObj*>PyCapsule_GetPointer(
                                                 program._problem_ptr(), NULL)
         if format is 'GLPK':
-            retcode = glpk.read_prob(problem, 0, chars)
+            retcode = glpk.read_prob(problem, 0, name2chars(fname))
         elif format is 'LP':
-            retcode = glpk.read_lp(problem, NULL, chars)
+            retcode = glpk.read_lp(problem, NULL, name2chars(fname))
         elif format is 'MPS':
-            retcode = glpk.read_mps(problem, str2mpsfmt[mpsfmt], NULL, chars)
+            retcode = glpk.read_mps(problem, str2mpsfmt[mpsfmt], NULL,
+                                    name2chars(fname))
         elif format is 'CNFSAT':
-            retcode = glpk.read_cnfsat(problem, chars)
+            retcode = glpk.read_cnfsat(problem, name2chars(fname))
         else:
             raise ValueError("Only 'GLPK', 'LP', 'MPS', and 'CNFSAT' " +
                              "formats are supported.")
@@ -219,18 +217,15 @@ cdef class MILProgram(Named):
             Add doctest
 
         """
-        cdef char* chars
-        fname = name2chars(fname)
-        chars = fname
         if format is 'GLPK':
-            retcode = glpk.write_prob(self._problem, 0, chars)
+            retcode = glpk.write_prob(self._problem, 0, name2chars(fname))
         elif format is 'LP':
-            retcode = glpk.write_lp(self._problem, NULL, chars)
+            retcode = glpk.write_lp(self._problem, NULL, name2chars(fname))
         elif format is 'MPS':
-            retcode = glpk.write_mps(self._problem,
-                                     str2mpsfmt[mpsfmt], NULL, chars)
+            retcode = glpk.write_mps(self._problem, str2mpsfmt[mpsfmt], NULL,
+                                     name2chars(fname))
         if format is 'CNFSAT':
-            retcode = glpk.write_cnfsat(self._problem, chars)
+            retcode = glpk.write_cnfsat(self._problem, name2chars(fname))
         else:
             raise ValueError("Only 'GLPK', 'LP', 'MPS', and 'CNFSAT' " +
                              "formats are supported.")
@@ -245,15 +240,11 @@ cdef class MILProgram(Named):
         return self._unique_ids
 
     def _get_name(self):
-        cdef char* chars
-        chars = glpk.get_prob_name(self._problem)
+        cdef char* chars = glpk.get_prob_name(self._problem)
         return '' if chars is NULL else chars.decode()
 
     def _set_name(self, name):
-        cdef char* chars
-        name = name2chars(name)
-        chars = name
-        glpk.set_prob_name(self._problem, chars)
+        glpk.set_prob_name(self._problem, name2chars(name))
 
     def _col(self, variable, alternate=False):
         """Return the column index of a Variable"""
