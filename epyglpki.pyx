@@ -418,9 +418,9 @@ cdef class MILProgram(Named):
         return self._constraints
 
     def coeffs(self, coeffs):
-        """Change or retrieve coefficients (constraint matrix)
+        """Replace or retrieve coefficients (constraint matrix)
 
-        :param coeffs: the mapping with coefficients to change
+        :param coeffs: the mapping with the new coefficients
             (``{}`` to set all coefficients to 0)
         :type coeffs: |Mapping| of length-2 |Sequence|, containing one
             `.Variable` and one `.Constraint`, to |Real|

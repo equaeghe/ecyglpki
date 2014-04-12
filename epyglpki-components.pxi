@@ -299,9 +299,9 @@ cdef class Variable(Varstraint):
         return varkind2str[glpk.get_col_kind(self._problem, col)]
 
     def coeffs(self, coeffs=None):
-        """Change or retrieve variable coefficients (constraint matrix column)
+        """Replace or retrieve variable coefficients (constraint matrix column)
 
-        :param coeffs: the mapping with coefficients to change
+        :param coeffs: the mapping with the new coefficients
             (``{}`` to set all coefficients to 0; omit for retrieval only)
         :type coeffs: |Mapping| of `.Constraint` to |Real|
         :returns: the coefficient mapping, which only contains nonzero
@@ -367,9 +367,9 @@ cdef class Constraint(Varstraint):
         glpk.set_row_bnds(self._problem, ind, vartype, lb, ub)
 
     def coeffs(self, coeffs=None):
-        """Change or retrieve constraint coefficients (constraint matrix row)
+        """Replace or retrieve constraint coefficients (constraint matrix row)
 
-        :param coeffs: the mapping with coefficients to change
+        :param coeffs: the mapping with the new coefficients
             (``{}`` to set all coefficients to 0; omit for retrieval only)
         :type coeffs: |Mapping| of `.Variable` to |Real|
         :returns: the coefficient mapping, which only contains nonzero
