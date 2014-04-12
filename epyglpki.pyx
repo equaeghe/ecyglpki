@@ -34,7 +34,7 @@ def GLPK_version():
     return glpk.version().decode()
 
 
-cdef char* name2chars(name):
+cdef char* name2chars(name) except NULL:
     cdef char* chars
     if not isinstance(name, str):
         raise TypeError("Name must be a 'str'.")
@@ -128,8 +128,8 @@ cdef class MILProgram(Named):
 
     cdef glpk.ProbObj* _problem
     cdef int _unique_ids
-    cdef object _variables
-    cdef object _constraints
+    cdef list _variables
+    cdef list _constraints
 
     def __cinit__(self, name=None):
         self._problem = glpk.create_prob()
