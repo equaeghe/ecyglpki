@@ -338,12 +338,9 @@ cdef class Variable(Varstraint):
     def _set_name(self, name):
         cdef char* chars
         col = self._program._col(self)
-        if name is '':
-            glpk.set_col_name(self._problem, col, NULL)
-        else:
-            name = name2chars(name)
-            chars = name
-            glpk.set_col_name(self._problem, col, chars)
+        name = name2chars(name)
+        chars = name
+        glpk.set_col_name(self._problem, col, chars)
 
 
 cdef class Constraint(Varstraint):
@@ -406,12 +403,9 @@ cdef class Constraint(Varstraint):
     def _set_name(self, name):
         cdef char* chars
         row = self._program._row(self)
-        if name is '':
-            glpk.set_row_name(self._problem, row, NULL)
-        else:
-            name = name2chars(name)
-            chars = name
-            glpk.set_row_name(self._problem, row, chars)
+        name = name2chars(name)
+        chars = name
+        glpk.set_row_name(self._problem, row, chars)
 
 
 cdef class Objective(_Component):
@@ -531,9 +525,6 @@ cdef class Objective(_Component):
 
     def _set_name(self, name):
         cdef char* chars
-        if name is '':
-            glpk.set_obj_name(self._problem, NULL)
-        else:
-            name = name2chars(name)
-            chars = name
-            glpk.set_obj_name(self._problem, chars)
+        name = name2chars(name)
+        chars = name
+        glpk.set_obj_name(self._problem, chars)

@@ -251,12 +251,9 @@ cdef class MILProgram(Named):
 
     def _set_name(self, name):
         cdef char* chars
-        if name is '':
-            glpk.set_prob_name(self._problem, NULL)
-        else:
-            name = name2chars(name)
-            chars = name
-            glpk.set_prob_name(self._problem, chars)
+        name = name2chars(name)
+        chars = name
+        glpk.set_prob_name(self._problem, chars)
 
     def _col(self, variable, alternate=False):
         """Return the column index of a Variable"""
