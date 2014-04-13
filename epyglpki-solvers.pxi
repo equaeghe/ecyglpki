@@ -109,7 +109,16 @@ cdef class _Solver:
 
 
 cdef class SimplexSolver(_Solver):
-    """The problem's simplex solver"""
+    """A simplex solver
+
+    .. doctest:: SimplexSolver
+
+        >>> p = MILProgram()
+        >>> s = p.simplex
+        >>> isinstance(s, SimplexSolver)
+        True
+
+    """
 
     cdef glpk.SimplexCP _smcp
     cdef glpk.BasFacCP _bfcp
@@ -673,63 +682,80 @@ cdef class SimplexSolver(_Solver):
             glpk.free(indlist)
 
 
-cdef class IPointSolver(_Solver):
-    """The problem's interior point solver"""
+cdef class IPointControls:
+    """The interior point solver (`.IPointSolver`) control parameter object
+
+    .. doctest:: IPointControls
+
+        >>> r = IPointControls()
+
+    """
 
     cdef glpk.IPointCP _iptcp
 
-    def __cinit__(self, program):
+    def __cinit__(self):
         glpk.init_iptcp(&self._iptcp)
 
-    def controls(self, defaults=False, **controls):
-        """Change or retrieve the solver's control parameters
+    property msg_lev:
+        """The message level, a `str`
 
-        :param defaults: whether to set the parameters back to their default
-            values or not
-        :type defaults: `bool`
-        :param controls: zero or more named parameters to change from the
-            following list:
+        The possible values are
 
-            * **msg_lev** (`str`) – the message level, with possible values
+        * `'no'`: no output
+        * `'warnerror'`: warnings and errors only
+        * `'normal'`: normal output
+        * `'full'`: normal output and informational messages
 
-              * `'no'`: no output
-              * `'warnerror'`: warnings and errors only
-              * `'normal'`: normal output
-              * `'full'`: normal output and informational messages
+        .. doctest:: IPointControls
 
-            * **ord_alg** (`str`) – the ordering algorithm used prior to
-              Cholesky factorization, with possible values
-
-              * `'orig'`: normal (original)
-              * `'qmd'`: quotient minimum degree
-              * `'amd'`: approximate minimum degree
-              * `'symamd'`: approximate minimum degree for symmetric matrices
-
-        :raises ValueError: if a non-existing control name is given
-
-        .. todo::
-
-            Add doctest
+            >>> r.msg_lev
+            'full'
 
         """
-        if defaults:
-            glpk.init_iptcp(&self._iptcp)
-        for control, val in controls.items():
-            if control is 'msg_lev':
-                self._iptcp.msg_lev = str2msglev[val]
-            elif control is 'ord_alg':
-                self._iptcp.ord_alg = str2ordalg[val]
-            else:
-                raise ValueError("Non-existing control: " + repr(control))
-        controls = {}
-        controls = self._iptcp
-        controls['msg_lev'] = msglev2str[controls['msg_lev']]
-        controls['ord_alg'] = ordalg2str[controls['ord_alg']]
-        return controls
+        def __get__(self):
+            return msglev2str[self._iptcp.msg_lev]
+        def __set__(self, value):
+            self._iptcp.msg_lev = str2msglev[value]
 
-    def solve(self):
+    property ord_alg:
+        """The ordering algorithm used prior to Cholesky factorization, a `str`
+
+        The possible values are
+
+        * `'orig'`: normal (original)
+        * `'qmd'`: quotient minimum degree
+        * `'amd'`: approximate minimum degree
+        * `'symamd'`: approximate minimum degree for symmetric matrices
+
+        .. doctest:: IPointControls
+
+            >>> r.ord_alg
+            'amd'
+
+        """
+        def __get__(self):
+            return ordalg2str[self._iptcp.ord_alg]
+        def __set__(self, value):
+            self._iptcp.ord_alg = str2ordalg[value]
+
+
+cdef class IPointSolver(_Solver):
+    """An interior point solver
+
+    .. doctest:: IPointSolver
+
+        >>> p = MILProgram()
+        >>> s = p.ipoint
+        >>> isinstance(s, IPointSolver)
+        True
+
+    """
+
+    def solve(self, controls):
         """Solve the linear program
 
+        :param controls: the control parameters
+        :type controls: `.IPointControls`
         :returns: solution status; see `.status` for details
         :rtype: `str`
         :raises ValueError: if the problem has no rows/columns
@@ -744,7 +770,8 @@ cdef class IPointSolver(_Solver):
             Add doctest
 
         """
-        retcode = glpk.interior(self._problem, &self._iptcp)
+        cdef glpk.IPointCP iptcp = controls._iptcp
+        retcode = glpk.interior(self._problem, &iptcp)
         if retcode is 0:
             return self.status()
         else:
@@ -892,7 +919,16 @@ cdef class IPointSolver(_Solver):
 
 
 cdef class IntOptSolver(_Solver):
-    """The problem's integer optimization solver"""
+    """An integer optimization solver
+
+    .. doctest:: IntOptSolver
+
+        >>> p = MILProgram()
+        >>> s = p.intopt
+        >>> isinstance(s, IntOptSolver)
+        True
+
+    """
 
     cdef glpk.IntOptCP _iocp
 

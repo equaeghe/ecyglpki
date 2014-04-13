@@ -1,8 +1,8 @@
 .. module:: epyglpki
 
-.. testsetup::
+.. testsetup:: *
 
-    from epyglpki import *
+    from epyglpki import MILProgram, SimplexSolver, IPointControls, IPointSolver, IntOptSolver
 
 Solvers
 =======
@@ -15,6 +15,7 @@ Simplex
 Interior Point
 --------------
 
+.. autoclass:: IPointControls
 .. autoclass:: IPointSolver
 
 Integer Optimization

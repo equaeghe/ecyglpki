@@ -446,12 +446,12 @@ cdef class Constraint(Varstraint):
 
 
 cdef class Objective(_Component):
-    """The problem's objective function
+    """The problem's objective
 
     .. doctest:: Objective
 
         >>> p = MILProgram()
-        >>> o = p.objective()
+        >>> o = p.objective
         >>> isinstance(o, Objective)
         True
 
@@ -495,7 +495,7 @@ cdef class Objective(_Component):
             >>> p = MILProgram()
             >>> x = p.add_variable()
             >>> y = p.add_variable()
-            >>> o = p.objective()
+            >>> o = p.objective
             >>> o.coeffs()
             {}
             >>> o.coeffs({x: 3, y: 0})

@@ -61,12 +61,24 @@ cdef class MILProgram:
     cdef int _unique_ids
     cdef list _variables
     cdef list _constraints
+    cdef readonly Objective objective
+    """The problem's objective object, an `.Objective`"""
+    cdef readonly SimplexSolver simplex
+    """The problem's interior point solver object, an `.SimplexSolver`"""
+    cdef readonly IPointSolver ipoint
+    """The problem's interior point solver object, an `.IPointSolver`"""
+    cdef readonly IntOptSolver intopt
+    """The problem's interior point solver object, an `.IntOptSolver`"""
 
     def __cinit__(self, name=None):
         self._problem = glpk.create_prob()
         self._unique_ids = 0
         self._variables = []
         self._constraints = []
+        self.objective = Objective(self)
+        self.simplex = SimplexSolver(self)
+        self.ipoint = IPointSolver(self)
+        self.intopt = IntOptSolver(self)
         if name is not None:
             self.name = name
 
@@ -520,94 +532,6 @@ cdef class MILProgram:
             if factor != 1.0:
                 factors[constraint] = factor
         return factors
-
-    def objective(self, coeffs=None, constant=None, direction=None, name=None):
-        """Obtain objective object
-
-        :param coeffs: set objective coefficients; see `.Objective.coeffs`
-        :param constant: set objective constant; see `.Objective.constant`
-        :param direction: set objective direction; see `.Objective.direction`
-        :param name: set objective name; see `.Objective.name`
-        :returns: objective object
-        :rtype: `.Objective`
-
-        .. doctest:: MILProgram.objective
-
-            >>> p = MILProgram()
-            >>> o = p.objective()
-            >>> o
-            <epyglpki.Objective object at 0x...>
-
-        """
-        objective = Objective(self)
-        objective.coeffs(coeffs)
-        if constant is not None:
-            objective.constant = constant
-        if direction is not None:
-            objective.direction = direction
-        if name is not None:
-            objective = name
-        return objective
-
-    def simplex(self, **controls):
-        """Obtain simplex solver object
-
-        :param controls: set solver and basis factorization control parameters;
-            see `.SimplexSolver.controls`, parameter *controls*
-        :returns: simplex solver object
-        :rtype: `.SimplexSolver`
-
-        .. doctest:: MILProgram.simplex
-
-            >>> p = MILProgram()
-            >>> s = p.simplex()
-            >>> s
-            <epyglpki.SimplexSolver object at 0x...>
-
-        """
-        simplex_solver = SimplexSolver(self)
-        simplex_solver.controls(**controls)
-        return simplex_solver
-
-    def ipoint(self, **controls):
-        """Obtain interior point solver object
-
-        :param controls: set solver control parameters;
-            see `.IPointSolver.controls`, parameter *controls*
-        :returns: interior point solver object
-        :rtype: `.IPointSolver`
-
-        .. doctest:: MILProgram.ipoint
-
-            >>> p = MILProgram()
-            >>> s = p.ipoint()
-            >>> s
-            <epyglpki.IPointSolver object at 0x...>
-
-        """
-        ipoint_solver = IPointSolver(self)
-        ipoint_solver.controls(**controls)
-        return ipoint_solver
-
-    def intopt(self, **controls):
-        """Obtain integer optimization solver object
-
-        :param controls: set solver control parameters;
-            see `.IntOptSolver.controls`, parameter *controls*
-        :returns: integer optimization solver object
-        :rtype: `.IntOptSolver`
-
-        .. doctest:: MILProgram.intopt
-
-            >>> p = MILProgram()
-            >>> s = p.intopt()
-            >>> s
-            <epyglpki.IntOptSolver object at 0x...>
-
-        """
-        intopt_solver = IntOptSolver(self)
-        intopt_solver.controls(**controls)
-        return intopt_solver
 
 
 include "epyglpki-components.pxi"
