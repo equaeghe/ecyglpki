@@ -1144,7 +1144,7 @@ cdef class IntOptSolver(_Solver):
         """
         val = self._value(varstraint, glpk.mip_col_val, glpk.mip_row_val)
         if isinstance(varstraint, Variable):
-            if varstraint.kind() in {'binary', 'integer'}:
+            if varstraint.kind in {'binary', 'integer'}:
                 if val.isinteger():
                     val = int(val)
                 else:

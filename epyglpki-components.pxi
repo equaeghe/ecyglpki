@@ -237,17 +237,6 @@ cdef class Variable(Varstraint):
         >>> isinstance(x, Variable)
         True
 
-    .. doctest:: Variable
-
-        >>> x.name  # the GLPK default
-        ''
-        >>> x.name = 'Stake'
-        >>> x.name
-        'Stake'
-        >>> del x.name  # clear name
-        >>> x.name
-        ''
-
     """
 
     def __cinit__(self, program):
@@ -267,56 +256,49 @@ cdef class Variable(Varstraint):
     def _set_bnds(self, int ind, int vartype, double lb, double ub):
         glpk.set_col_bnds(self._problem, ind, vartype, lb, ub)
 
-    def kind(self, kind=None):
-        """Change or retrieve variable kind
+    property kind:
+        """The variable kind, either `'continuous'`, `'integer'`, or `'binary'`
 
-        :param kind: the new variable kind (omit for retrieval only)
-        :type kind: `str`, either `'continuous'`, `'integer'`, or `'binary'`
-        :returns: the variable kind
-        :rtype: `str`
-        :raises ValueError: if *kind* is not `'continuous'`, `'integer'`,
-            or `'binary'`
+        .. doctest:: Variable
 
-        .. doctest:: Variable.kind
-
-            >>> p = MILProgram()
-            >>> x = p.add_variable()
-            >>> x.kind()
+            >>> x.kind  # the GLPK default
             'continuous'
-            >>> x.kind('integer')
+            >>> x.kind = 'integer'
+            >>> x.kind
             'integer'
 
         .. note::
 
-            A variable has `'binary'` kind if and only if it is an
-            integer variable with lower bound zero and upper bound one:
+            A variable has `'binary'` kind if and only if it is an integer
+            variable with lower bound zero and upper bound one:
 
-            .. doctest:: Variable.kind
+            .. doctest:: Variable
 
-                >>> x.kind()
+                >>> x.kind
                 'integer'
                 >>> x.bounds(lower=0, upper=1)
                 (0.0, 1.0)
-                >>> x.kind()
+                >>> x.kind
                 'binary'
                 >>> x.bounds(upper=3)
                 (0.0, 3.0)
-                >>> x.kind()
+                >>> x.kind
                 'integer'
-                >>> x.kind('binary')
-                'binary'
+                >>> x.kind = 'binary'
                 >>> x.bounds()
                 (0.0, 1.0)
 
         """
-        col = self._program._col(self)
-        if kind is not None:
+        def __get__(self):
+            col = self._program._col(self)
+            return varkind2str[glpk.get_col_kind(self._problem, col)]
+        def __set__(self, kind):
+            col = self._program._col(self)
             if kind in str2varkind:
                 glpk.set_col_kind(self._problem, col, str2varkind[kind])
             else:
-                raise ValueError("Kind must be 'continuous'," +
-                                 "'integer', or 'binary'.")
-        return varkind2str[glpk.get_col_kind(self._problem, col)]
+                raise ValueError("Kind must be 'continuous', 'integer', " +
+                                 "or 'binary'.")
 
     def coeffs(self, coeffs=None):
         """Replace or retrieve variable coefficients (constraint matrix column)
@@ -350,7 +332,20 @@ cdef class Variable(Varstraint):
                             coeffs)
 
     property name:
-        """The variable name, a `str` of ≤255 bytes UTF-8 encoded"""
+        """The variable name, a `str` of ≤255 bytes UTF-8 encoded
+
+        .. doctest:: Variable
+
+            >>> x.name  # the GLPK default
+            ''
+            >>> x.name = 'Stake'
+            >>> x.name
+            'Stake'
+            >>> del x.name  # clear name
+            >>> x.name
+            ''
+
+        """
         def __get__(self):
             col = self._program._col(self)
             cdef char* chars = glpk.get_col_name(self._problem, col)
@@ -372,17 +367,6 @@ cdef class Constraint(Varstraint):
         >>> c = p.add_constraint()
         >>> isinstance(c, Constraint)
         True
-
-    .. doctest:: Constraint
-
-        >>> c.name  # the GLPK default
-        ''
-        >>> c.name = 'Budget'
-        >>> c.name
-        'Budget'
-        >>> del c.name  # clear name
-        >>> c.name
-        ''
 
     """
 
@@ -435,7 +419,20 @@ cdef class Constraint(Varstraint):
                             coeffs)
 
     property name:
-        """The constraint name, a `str` of ≤255 bytes UTF-8 encoded"""
+        """The constraint name, a `str` of ≤255 bytes UTF-8 encoded
+
+        .. doctest:: Constraint
+
+            >>> c.name  # the GLPK default
+            ''
+            >>> c.name = 'Budget'
+            >>> c.name
+            'Budget'
+            >>> del c.name  # clear name
+            >>> c.name
+            ''
+
+        """
         def __get__(self):
             row = self._program._row(self)
             cdef char* chars = glpk.get_row_name(self._problem, row)
@@ -458,40 +455,20 @@ cdef class Objective(_Component):
         >>> isinstance(o, Objective)
         True
 
-    .. doctest:: Objective
-
-        >>> o.direction  # the GLPK default
-        'minimize'
-        >>> o.direction = 'maximize'
-        >>> o.direction
-        'maximize'
-
-    .. doctest:: Objective
-
-        >>> o.name  # the GLPK default
-        ''
-        >>> o.name = 'σκοπός'
-        >>> o.name
-        'σκοπός'
-        >>> del o.name  # clear name
-        >>> o.name
-        ''
-
-    .. doctest:: Objective
-
-        >>> o.constant  # the GLPK default
-        0.0
-        >>> o.constant = 3
-        >>> o.constant
-        3.0
-        >>> del o.constant
-        >>> o.constant
-        0.0
-
     """
 
     property direction:
-        """The objective direction, either `'minimize'` or `'maximize'`"""
+        """The objective direction, either `'minimize'` or `'maximize'`
+
+        .. doctest:: Objective
+
+            >>> o.direction  # the GLPK default
+            'minimize'
+            >>> o.direction = 'maximize'
+            >>> o.direction
+            'maximize'
+
+        """
         def __get__(self):
             return optdir2str[glpk.get_obj_dir(self._problem)]
         def __set__(self, direction):
@@ -555,7 +532,20 @@ cdef class Objective(_Component):
         return coeffs
 
     property constant:
-        """The objective function constant, a |Real| number"""
+        """The objective function constant, a |Real| number
+
+        .. doctest:: Objective
+
+            >>> o.constant  # the GLPK default
+            0.0
+            >>> o.constant = 3
+            >>> o.constant
+            3.0
+            >>> del o.constant
+            >>> o.constant
+            0.0
+
+        """
         def __get__(self):
             return glpk.get_obj_coef(self._problem, 0)
         def __set__(self, constant):
@@ -567,7 +557,20 @@ cdef class Objective(_Component):
             glpk.set_obj_coef(self._problem, 0, 0.0)
 
     property name:
-        """The objective function name, a `str` of ≤255 bytes UTF-8 encoded"""
+        """The objective function name, a `str` of ≤255 bytes UTF-8 encoded
+
+        .. doctest:: Objective
+
+            >>> o.name  # the GLPK default
+            ''
+            >>> o.name = 'σκοπός'
+            >>> o.name
+            'σκοπός'
+            >>> del o.name  # clear name
+            >>> o.name
+            ''
+
+        """
         def __get__(self):
             cdef char* chars = glpk.get_obj_name(self._problem)
             return '' if chars is NULL else chars.decode()

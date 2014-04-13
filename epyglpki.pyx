@@ -55,17 +55,6 @@ cdef class MILProgram:
         >>> isinstance(p, MILProgram)
         True
 
-    .. doctest:: MILProgram
-
-        >>> p.name
-        'Linear Program'
-        >>> p.name = 'Programme Linéaire'
-        >>> p.name
-        'Programme Linéaire'
-        >>> del p.name  # clear name
-        >>> p.name
-        ''
-
     """
 
     cdef glpk.ProbObj* _problem
@@ -183,7 +172,20 @@ cdef class MILProgram:
         return self._unique_ids
 
     property name:
-        """The problem name, a `str` of ≤255 bytes UTF-8 encoded"""
+        """The problem name, a `str` of ≤255 bytes UTF-8 encoded
+
+        .. doctest:: MILProgram
+
+            >>> p.name
+            'Linear Program'
+            >>> p.name = 'Programme Linéaire'
+            >>> p.name
+            'Programme Linéaire'
+            >>> del p.name  # clear name
+            >>> p.name
+            ''
+
+        """
         def __get__(self):
             cdef char* chars = glpk.get_prob_name(self._problem)
             return '' if chars is NULL else chars.decode()
@@ -252,7 +254,7 @@ cdef class MILProgram:
             raise TypeError("No index available for this object type.")
 
     def add_variable(self, coeffs={}, lower_bound=False, upper_bound=False,
-                     kind='continuous', name=None):
+                     kind=None, name=None):
         """Add and obtain new variable object
 
         :param coeffs: set variable coefficients; see `.Variable.coeffs`
@@ -278,7 +280,8 @@ cdef class MILProgram:
         assert len(self._variables) is glpk.get_num_cols(self._problem)
         variable.coeffs(None if not coeffs else coeffs)
         variable.bounds(lower_bound, upper_bound)
-        variable.kind(kind)
+        if kind is not None:
+            variable.kind = kind
         if name is not None:
             variable.name = name
         return variable
