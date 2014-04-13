@@ -46,83 +46,25 @@ cdef char* name2chars(name) except NULL:
     return chars
 
 
-cdef class Named:
-    """Object that can be given a name
-
-    .. doctest:: Named
-
-        >>> p = MILProgram('Linear Program')
-        >>> x = p.add_variable()
-        >>> c = p.add_constraint()
-        >>> o = p.objective()
-        >>> all(isinstance(thing, Named) for thing in {p, x, c, o})
-        True
-
-    """
-
-    def name(self, name=None):
-        """Change or retrieve object name
-
-        :param name: the new object name (omit for retrieval only)
-        :type name: `str`
-        :returns: the object name
-        :rtype: `str`
-        :raises TypeError: if *name* is not a `str`
-        :raises ValueError: if *name* exceeds 255 bytes encoded in UTF-8
-
-        .. doctest:: Named
-
-            >>> p.name()
-            'Linear Program'
-            >>> p.name('Programme Linéaire')
-            'Programme Linéaire'
-            >>> p.name()
-            'Programme Linéaire'
-            >>> p.name('')
-            ''
-
-        .. doctest:: Named
-
-            >>> x.name()
-            ''
-            >>> x.name('Stake')
-            'Stake'
-            >>> x.name()
-            'Stake'
-
-        .. doctest:: Named
-
-            >>> c.name()
-            ''
-            >>> c.name('Budget')
-            'Budget'
-            >>> c.name()
-            'Budget'
-
-        .. doctest:: Named
-
-            >>> o.name()
-            ''
-            >>> o.name('σκοπός')
-            'σκοπός'
-            >>> o.name()
-            'σκοπός'
-
-        """
-        if name is not None:
-            self._set_name(name)
-        return self._get_name()
-
-
-cdef class MILProgram(Named):
+cdef class MILProgram:
     """Main problem object
-
 
     .. doctest:: MILProgram
 
-        >>> p = MILProgram()
-        >>> p
-        <epyglpki.MILProgram object at 0x...>
+        >>> p = MILProgram('Linear Program')
+        >>> isinstance(p, MILProgram)
+        True
+
+    .. doctest:: MILProgram
+
+        >>> p.name
+        'Linear Program'
+        >>> p.name = 'Programme Linéaire'
+        >>> p.name
+        'Programme Linéaire'
+        >>> del p.name  # clear name
+        >>> p.name
+        ''
 
     """
 
@@ -136,7 +78,8 @@ cdef class MILProgram(Named):
         self._unique_ids = 0
         self._variables = []
         self._constraints = []
-        self.name(name)
+        if name is not None:
+            self.name = name
 
     def _problem_ptr(self):
         """Encapsulate the pointer to the problem object
@@ -239,12 +182,15 @@ cdef class MILProgram(Named):
         self._unique_ids += 1
         return self._unique_ids
 
-    def _get_name(self):
-        cdef char* chars = glpk.get_prob_name(self._problem)
-        return '' if chars is NULL else chars.decode()
-
-    def _set_name(self, name):
-        glpk.set_prob_name(self._problem, name2chars(name))
+    property name:
+        """The problem name, a `str` of ≤255 bytes UTF-8 encoded"""
+        def __get__(self):
+            cdef char* chars = glpk.get_prob_name(self._problem)
+            return '' if chars is NULL else chars.decode()
+        def __set__(self, name):
+            glpk.set_prob_name(self._problem, name2chars(name))
+        def __del__(self):
+            glpk.set_prob_name(self._problem, NULL)
 
     def _col(self, variable, alternate=False):
         """Return the column index of a Variable"""
@@ -306,7 +252,7 @@ cdef class MILProgram(Named):
             raise TypeError("No index available for this object type.")
 
     def add_variable(self, coeffs={}, lower_bound=False, upper_bound=False,
-                     kind='continuous', name=''):
+                     kind='continuous', name=None):
         """Add and obtain new variable object
 
         :param coeffs: set variable coefficients; see `.Variable.coeffs`
@@ -315,7 +261,7 @@ cdef class MILProgram(Named):
         :param upper_bound: set variable upper bound;
             see `.Varstraint.bounds`, parameter *upper*
         :param kind: set variable kind; see `.Variable.kind`
-        :param name: set variable name; see `.Named.name`
+        :param name: set variable name; see `.Variable.name`
         :returns: variable object
         :rtype: `.Variable`
 
@@ -333,7 +279,8 @@ cdef class MILProgram(Named):
         variable.coeffs(None if not coeffs else coeffs)
         variable.bounds(lower_bound, upper_bound)
         variable.kind(kind)
-        variable.name(None if not name else name)
+        if name is not None:
+            variable.name = name
         return variable
 
     def variables(self):
@@ -357,7 +304,7 @@ cdef class MILProgram(Named):
         return self._variables
 
     def add_constraint(self, coeffs={}, lower_bound=False, upper_bound=False,
-                       name=''):
+                       name=None):
         """Add and obtain new constraint object
 
         :param coeffs: set constraint coefficients; see `.Constraint.coeffs`
@@ -365,7 +312,7 @@ cdef class MILProgram(Named):
             see `.Varstraint.bounds`, parameter *lower*
         :param upper_bound: set constraint upper bound;
             see `.Varstraint.bounds`, parameter *upper*
-        :param name: set constraint name; see `.Named.name`
+        :param name: set constraint name; see `.Constraint.name`
         :returns: constraint object
         :rtype: `.Constraint`
 
@@ -382,7 +329,8 @@ cdef class MILProgram(Named):
         assert len(self._constraints) is glpk.get_num_rows(self._problem)
         constraint.coeffs(None if not coeffs else coeffs)
         constraint.bounds(lower_bound, upper_bound)
-        constraint.name(None if not name else name)
+        if name is not None:
+            constraint.name = name
         return constraint
 
     def constraints(self):
@@ -570,14 +518,13 @@ cdef class MILProgram(Named):
                 factors[constraint] = factor
         return factors
 
-    def objective(self, coeffs=None, constant=0, direction='minimize',
-                  name=''):
+    def objective(self, coeffs=None, constant=None, direction=None, name=None):
         """Obtain objective object
 
         :param coeffs: set objective coefficients; see `.Objective.coeffs`
         :param constant: set objective constant; see `.Objective.constant`
         :param direction: set objective direction; see `.Objective.direction`
-        :param name: set objective name; see `.Named.name`
+        :param name: set objective name; see `.Objective.name`
         :returns: objective object
         :rtype: `.Objective`
 
@@ -591,9 +538,12 @@ cdef class MILProgram(Named):
         """
         objective = Objective(self)
         objective.coeffs(coeffs)
-        objective.constant(constant)
-        objective.direction(direction)
-        objective.name(name)
+        if constant is not None:
+            objective.constant = constant
+        if direction is not None:
+            objective.direction = direction
+        if name is not None:
+            objective = name
         return objective
 
     def simplex(self, **controls):

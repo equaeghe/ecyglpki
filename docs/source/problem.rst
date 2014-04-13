@@ -2,7 +2,7 @@
 
 .. testsetup:: *
 
-    from epyglpki import MILProgram, Named
+    from epyglpki import MILProgram
 
 Specifying Problems
 ===================
@@ -11,8 +11,3 @@ Problems
 --------
 
 .. autoclass:: MILProgram
-
-Naming Things
--------------
-
-.. autoclass:: Named

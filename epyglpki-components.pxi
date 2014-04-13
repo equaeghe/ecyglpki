@@ -22,7 +22,7 @@
 ###############################################################################
 
 
-cdef class _Component(Named):
+cdef class _Component:
 
     cdef MILProgram _program
     cdef glpk.ProbObj* _problem
@@ -64,7 +64,7 @@ cdef class Varstraint(_Component):
         return self._unique_id
 
     def __str__(self):
-        return str(self._unique_id) + ':' + self.name()
+        return str(self._unique_id) + ':' + self.name
 
     #  how to really del?
     def remove(self):
@@ -98,7 +98,7 @@ cdef class Varstraint(_Component):
                 False
                 >>> c
                 <epyglpki.Constraint object at 0x...>
-                >>> c.name()
+                >>> c.name # doctest: +SKIP
                 Traceback (most recent call last):
                   ...
                 ValueError: <epyglpki.Constraint object at 0x...> is not in list
@@ -228,7 +228,27 @@ cdef class Varstraint(_Component):
 
 
 cdef class Variable(Varstraint):
-    """One of the problem's variables"""
+    """One of the problem's variables
+
+    .. doctest:: Variable
+
+        >>> p = MILProgram()
+        >>> x = p.add_variable()
+        >>> isinstance(x, Variable)
+        True
+
+    .. doctest:: Variable
+
+        >>> x.name  # the GLPK default
+        ''
+        >>> x.name = 'Stake'
+        >>> x.name
+        'Stake'
+        >>> del x.name  # clear name
+        >>> x.name
+        ''
+
+    """
 
     def __cinit__(self, program):
         glpk.add_cols(self._problem, 1)
@@ -329,18 +349,42 @@ cdef class Variable(Varstraint):
                             Constraint.__name__, self._program._constraints,
                             coeffs)
 
-    def _get_name(self):
-        col = self._program._col(self)
-        cdef char* chars = glpk.get_col_name(self._problem, col)
-        return '' if chars is NULL else chars.decode()
-
-    def _set_name(self, name):
-        col = self._program._col(self)
-        glpk.set_col_name(self._problem, col, name2chars(name))
+    property name:
+        """The variable name, a `str` of ≤255 bytes UTF-8 encoded"""
+        def __get__(self):
+            col = self._program._col(self)
+            cdef char* chars = glpk.get_col_name(self._problem, col)
+            return '' if chars is NULL else chars.decode()
+        def __set__(self, name):
+            col = self._program._col(self)
+            glpk.set_col_name(self._problem, col, name2chars(name))
+        def __del__(self):
+            col = self._program._col(self)
+            glpk.set_col_name(self._problem, col, NULL)
 
 
 cdef class Constraint(Varstraint):
-    """One of the problem's constraints"""
+    """One of the problem's constraints
+
+    .. doctest:: Constraint
+
+        >>> p = MILProgram()
+        >>> c = p.add_constraint()
+        >>> isinstance(c, Constraint)
+        True
+
+    .. doctest:: Constraint
+
+        >>> c.name  # the GLPK default
+        ''
+        >>> c.name = 'Budget'
+        >>> c.name
+        'Budget'
+        >>> del c.name  # clear name
+        >>> c.name
+        ''
+
+    """
 
     def __cinit__(self, program):
         glpk.add_rows(self._problem, 1)
@@ -390,44 +434,71 @@ cdef class Constraint(Varstraint):
                             Variable.__name__, self._program._variables,
                             coeffs)
 
-    def _get_name(self):
-        row = self._program._row(self)
-        cdef char* chars = glpk.get_row_name(self._problem, row)
-        return '' if chars is NULL else chars.decode()
-
-    def _set_name(self, name):
-        row = self._program._row(self)
-        glpk.set_row_name(self._problem, row, name2chars(name))
+    property name:
+        """The constraint name, a `str` of ≤255 bytes UTF-8 encoded"""
+        def __get__(self):
+            row = self._program._row(self)
+            cdef char* chars = glpk.get_row_name(self._problem, row)
+            return '' if chars is NULL else chars.decode()
+        def __set__(self, name):
+            row = self._program._row(self)
+            glpk.set_row_name(self._problem, row, name2chars(name))
+        def __del__(self):
+            row = self._program._row(self)
+            glpk.set_row_name(self._problem, row, NULL)
 
 
 cdef class Objective(_Component):
-    """The problem's objective function"""
+    """The problem's objective function
 
-    def direction(self, direction=None):
-        """Change or retrieve objective direction
+    .. doctest:: Objective
 
-        :param direction: the new objective direction (omit for retrieval only)
-        :type direction: `str`, either `'minimize'` or `'maximize'`
-        :returns: the objective direction
-        :rtype: `str`
-        :raises ValueError: if *direction* is not `'minimize'` or `'maximize'`
+        >>> p = MILProgram()
+        >>> o = p.objective()
+        >>> isinstance(o, Objective)
+        True
 
-        .. doctest:: Objective.direction
+    .. doctest:: Objective
 
-            >>> p = MILProgram()
-            >>> o = p.objective()
-            >>> o.direction()
-            'minimize'
-            >>> o.direction('maximize')
-            'maximize'
+        >>> o.direction  # the GLPK default
+        'minimize'
+        >>> o.direction = 'maximize'
+        >>> o.direction
+        'maximize'
 
-        """
-        if direction is not None:
+    .. doctest:: Objective
+
+        >>> o.name  # the GLPK default
+        ''
+        >>> o.name = 'σκοπός'
+        >>> o.name
+        'σκοπός'
+        >>> del o.name  # clear name
+        >>> o.name
+        ''
+
+    .. doctest:: Objective
+
+        >>> o.constant  # the GLPK default
+        0.0
+        >>> o.constant = 3
+        >>> o.constant
+        3.0
+        >>> del o.constant
+        >>> o.constant
+        0.0
+
+    """
+
+    property direction:
+        """The objective direction, either `'minimize'` or `'maximize'`"""
+        def __get__(self):
+            return optdir2str[glpk.get_obj_dir(self._problem)]
+        def __set__(self, direction):
             if direction in str2optdir:
                 glpk.set_obj_dir(self._problem, str2optdir[direction])
             else:
                 raise ValueError("Direction must be 'minimize' or 'maximize'.")
-        return optdir2str[glpk.get_obj_dir(self._problem)]
 
     def coeffs(self, coeffs=None):
         """Change or retrieve objective function coefficients
@@ -483,36 +554,24 @@ cdef class Objective(_Component):
                 coeffs[variable] = val
         return coeffs
 
-    def constant(self, constant=None):
-        """Change or retrieve objective function constant
-
-        :param constant: the new objective function constant
-            (omit for retrieval only)
-        :type constant: |Real|
-        :returns: the objective function constant
-        :rtype: `float`
-        :raises TypeError: if *constant* is not |Real|
-
-        .. doctest:: Objective.constant
-
-            >>> p = MILProgram()
-            >>> o = p.objective()
-            >>> o.constant()
-            0.0
-            >>> o.constant(3)
-            3.0
-
-        """
-        if constant is not None:
+    property constant:
+        """The objective function constant, a |Real| number"""
+        def __get__(self):
+            return glpk.get_obj_coef(self._problem, 0)
+        def __set__(self, constant):
             if isinstance(constant, numbers.Real):
                 glpk.set_obj_coef(self._problem, 0, constant)
             else:
                 raise TypeError("Objective constant must be a real number.")
-        return glpk.get_obj_coef(self._problem, 0)
+        def __del__(self):
+            glpk.set_obj_coef(self._problem, 0, 0.0)
 
-    def _get_name(self):
-        cdef char* chars = glpk.get_obj_name(self._problem)
-        return '' if chars is NULL else chars.decode()
-
-    def _set_name(self, name):
-        glpk.set_obj_name(self._problem, name2chars(name))
+    property name:
+        """The objective function name, a `str` of ≤255 bytes UTF-8 encoded"""
+        def __get__(self):
+            cdef char* chars = glpk.get_obj_name(self._problem)
+            return '' if chars is NULL else chars.decode()
+        def __set__(self, name):
+            glpk.set_obj_name(self._problem, name2chars(name))
+        def __del__(self):
+            glpk.set_obj_name(self._problem, NULL)
