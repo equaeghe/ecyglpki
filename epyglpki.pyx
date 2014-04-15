@@ -72,6 +72,7 @@ cdef class MILProgram:
 
     def __cinit__(self, name=None):
         self._problem = glpk.create_prob()
+        glpk.create_index(self._problem)
         self._unique_ids = 0
         self._variables = []
         self._constraints = []
