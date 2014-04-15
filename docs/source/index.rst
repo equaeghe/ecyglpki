@@ -16,8 +16,9 @@ Contents:
 
   problem
   components
-  solvers
-
+  simplex
+  ipoint
+  intopt
 
 Indices and tables
 ==================
