@@ -184,6 +184,10 @@ cdef class MILProgram:
         self._unique_ids += 1
         return self._unique_ids
 
+    def _generate_alias(self):
+        self._unique_ids += 1
+        return 'ŉ' + str(self._unique_ids)  # ŉ is used to prefix aliases
+
     property name:
         """The problem name, a `str` of ≤255 bytes UTF-8 encoded
 
