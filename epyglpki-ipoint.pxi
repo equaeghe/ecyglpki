@@ -97,10 +97,10 @@ cdef class IPointSolver(_Solver):
 
     """
 
-    def solve(self, controls):
+    def solve(self, controls=IPointControls()):
         """Solve the linear program
 
-        :param controls: the control parameters
+        :param controls: the control parameters (uses defaults if omitted)
         :type controls: `.IPointControls`
         :returns: solution status; see `.status` for details
         :rtype: `str`
