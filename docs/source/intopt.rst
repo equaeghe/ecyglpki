@@ -2,7 +2,7 @@
 
 .. testsetup:: *
 
-    from epyglpki import MILProgram, IntOptSolver
+    from epyglpki import MILProgram, IntOptSolver, IntOptControls
 
 Integer Optimization Solver
 ===========================
@@ -14,3 +14,5 @@ Solver
 
 Controls
 --------
+
+.. autoclass:: IntOptControls

@@ -22,6 +22,230 @@
 ###############################################################################
 
 
+cdef class IntOptControls:
+    """The integer optimization solver (`.IntOptSolver`) control parameter object
+
+    .. doctest:: IntOptControls
+
+        >>> r = IntOptControls()
+
+    """
+
+    cdef glpk.IntOptCP _iocp
+
+    def __cinit__(self):
+        glpk.init_iocp(&self._iocp)
+
+    property msg_lev:
+        """The message level, a `str`
+
+        The possible values are
+
+        * `'no'`: no output
+        * `'warnerror'`: warnings and errors only
+        * `'normal'`: normal output
+        * `'full'`: normal output and informational messages
+
+        .. doctest:: IntOptControls
+
+            >>> r.msg_lev  # the GLPK default
+            'full'
+            >>> r.msg_lev = 'no'
+            >>> r.msg_lev
+            'no'
+
+        """
+        def __get__(self):
+            return msglev2str[self._iocp.msg_lev]
+        def __set__(self, value):
+            self._iocp.msg_lev = str2msglev[value]
+
+    property out_frq:
+        """Output frequency [ms] of informational messages, an `int`"""
+        def __get__(self):
+            return self._iocp.out_frq
+        def __set__(self, value):
+            self._iocp.out_frq = int(value)
+
+    property out_dly:
+        """Output delay [ms] of current LP relaxation solution, an `int`"""
+        def __get__(self):
+            return self._iocp.out_dly
+        def __set__(self, value):
+            self._iocp.out_dly = int(value)
+
+    property tm_lim:
+        """Time limit [ms], an `int`"""
+        def __get__(self):
+            return self._iocp.tm_lim
+        def __set__(self, value):
+            self._iocp.tm_lim = int(value)
+
+    property br_tech:
+        """The branching technique, a `str`
+
+        The possible values are
+
+        * `'first_fracvar'`: first fractional variable
+        * `'last_fracvar'`: last fractional variable
+        * `'most_fracvar'`: most fractional variable
+        * `'Driebeek-Tomlin'`: heuristic by Driebeek_ & Tomlin
+        * `'hybrid_peudocost'`: hybrid pseudocost heuristic
+
+        .. _Driebeek: http://dx.doi.org/10.1287/ijoc.4.3.267
+
+        """
+        def __get__(self):
+            return brtech2str[self._iocp.br_tech]
+        def __set__(self, value):
+            self._iocp.br_tech = str2brtech[value]
+
+    property bt_tech:
+        """The backtracking technique, a `str`
+
+        The possible values are
+
+        * `'depth'`: depth first search
+        * `'breadth'`: breadth first search
+        * `'bound'`: best local bound
+        * `'projection'`: best projection heuristic
+
+        """
+        def __get__(self):
+            return bttech2str[self._iocp.bt_tech]
+        def __set__(self, value):
+            self._iocp.bt_tech = str2bttech[value]
+
+    property pp_tech:
+        """The preprocessing technique, a `str`
+
+        The possible values are
+
+        * `'none'`: disable preprocessing
+        * `'root'`: preprocessing only on the root level
+        * `'all'`: preprocessing on all levels
+
+        """
+        def __get__(self):
+            return pptech2str[self._iocp.pp_tech]
+        def __set__(self, value):
+            self._iocp.pp_tech = str2pptech[value]
+
+    property fp_heur:
+        """Whether to apply the `feasibility pump`_ heuristic, a `bool`
+
+        .. _feasibility pump: http://dx.doi.org/10.1007/s10107-004-0570-3
+
+        """
+        def __get__(self):
+            return self._iocp.fp_heur
+        def __set__(self, value):
+            self._iocp.fp_heur = bool(value)
+
+    property ps_heur:
+        """Whether to apply the `proximity search`_ heuristic, a `bool`
+
+        .. _proximity search: http://www.dei.unipd.it/~fisch/papers/proximity_search.pdf
+
+        """
+        def __get__(self):
+            return self._iocp.ps_heur
+        def __set__(self, value):
+            self._iocp.ps_heur = bool(value)
+
+    property ps_tm_lim:
+        """Time limit [ms] for the proximity earch heuristic, an `int`"""
+        def __get__(self):
+            return self._iocp.ps_tm_lim
+        def __set__(self, value):
+            self._iocp.ps_tm_lim = int(value)
+
+    property gmi_cuts:
+        """Whether to generate Gomory’s mixed integer cuts, a `bool`"""
+        def __get__(self):
+            return self._iocp.gmi_cuts
+        def __set__(self, value):
+            self._iocp.gmi_cuts = bool(value)
+
+    property mir_cuts:
+        """Whether to generate mixed integer rounding cuts, a `bool`"""
+        def __get__(self):
+            return self._iocp.mir_cuts
+        def __set__(self, value):
+            self._iocp.mir_cuts = bool(value)
+
+    property cov_cuts:
+        """Whether to generate mixed cover cuts, a `bool`"""
+        def __get__(self):
+            return self._iocp.cov_cuts
+        def __set__(self, value):
+            self._iocp.cov_cuts = bool(value)
+
+    property clq_cuts:
+        """Whether to generate generate clique cuts, a `bool`"""
+        def __get__(self):
+            return self._iocp.clq_cuts
+        def __set__(self, value):
+            self._iocp.clq_cuts = bool(value)
+
+    property tol_int:
+        """Abs. tolerance for LP solution integer feasibility, a |Real| number
+
+        This is the absolute tolerance used to check if the optimal solution to the current LP relaxation is integer feasible.
+
+        """
+        def __get__(self):
+            return self._iocp.tol_int
+        def __set__(self, value):
+            self._iocp.tol_int = float(value)
+
+    property tol_obj:
+        """Rel. tolerance of LP objective optimality, a |Real| number
+
+        This is the relative tolerance used to check if the objective value in
+        the optimal solution to the current LP relaxation is not better than in
+        the best known integer feasible solution.
+
+        """
+        def __get__(self):
+            return self._iocp.tol_obj
+        def __set__(self, value):
+            self._iocp.tol_obj = float(value)
+
+    property mip_gap:
+        """The relative MIP-gap tolerance, a |Real| number
+
+        The search stops once the relative MIP-gap falls below this value.
+
+        """
+        def __get__(self):
+            return self._iocp.mip_gap
+        def __set__(self, value):
+            self._iocp.mip_gap = float(value)
+
+    property presolve:
+        """Whether to use the MIP presolver, a `bool`
+
+        Using the MIP presolver may simplify the problem
+
+        """
+        def __get__(self):
+            return self._iocp.presolve
+        def __set__(self, value):
+            self._iocp.presolve = bool(value)
+
+    property binarize:
+        """Whether to binarize integer variables, a `bool`
+
+        This option is only used if *presolve* is `True`.
+
+        """
+        def __get__(self):
+            return self._iocp.binarize
+        def __set__(self, value):
+            self._iocp.binarize = bool(value)
+
+
 cdef class IntOptSolver(_Solver):
     """An integer optimization solver
 
@@ -34,148 +258,12 @@ cdef class IntOptSolver(_Solver):
 
     """
 
-    cdef glpk.IntOptCP _iocp
-
-    def __cinit__(self, program):
-        glpk.init_iocp(&self._iocp)
-
-    def controls(self, defaults=False, **controls):
-        """Change or retrieve the solver's control parameters
-
-        :param defaults: whether to set the parameters back to their default
-            values or not
-        :type defaults: `bool`
-        :param controls: zero or more named parameters to change from the
-            following list:
-
-            * **msg_lev** (`str`) – the message level, with possible values
-
-              * `'no'`: no output
-              * `'warnerror'`: warnings and errors only
-              * `'normal'`: normal output
-              * `'full'`: normal output and informational messages
-
-            * **out_frq** (|Integral|) – output frequency [ms] of informational
-              messages
-            * **out_dly** (|Integral|) – output delay [ms] of current LP
-              relaxation solution
-            * **tm_lim** (|Integral|) – time limit [ms]
-            * **br_tech** (`str`) – the branching technique, with possible
-              values
-
-              * `'first_fracvar'`: first fractional variable
-              * `'last_fracvar'`: last fractional variable
-              * `'most_fracvar'`: most fractional variable
-              * `'Driebeek-Tomlin'`: heuristic by Driebeek_ & Tomlin
-              * `'hybrid_peudocost'`: hybrid pseudocost heuristic
-
-            * **bt_tech** (`str`) – the backtracking technique, with possible
-              values
-
-              * `'depth'`: depth first search
-              * `'breadth'`: breadth first search
-              * `'bound'`: best local bound
-              * `'projection'`: best projection heuristic
-
-            * **pp_tech** (`str`) – the preprocessing technique, with possible
-              values
-
-              * `'none'`: disable preprocessing
-              * `'root'`: preprocessing only on the root level
-              * `'all'`: preprocessing on all levels
-
-            * **fp_heur** (`bool`) – apply `feasibility pump`_ heuristic
-            * **ps_heur** (`bool`) – apply `proximity search`_ heuristic
-            * **ps_tm_lim** (|Integral|) –  time limit [ms] for the proximity
-              search heuristic
-            * **gmi_cuts** (`bool`) – generate Gomory’s mixed integer cuts
-            * **mir_cuts** (`bool`) – generate mixed integer rounding cuts
-            * **cov_cuts** (`bool`) – generate mixed cover cuts
-            * **clq_cuts** (`bool`) – generate clique cuts
-            * **tol_int** (|Real|) – absolute tolerance used to check if the
-              optimal solution to the current LP relaxation is integer feasible
-            * **tol_obj** (|Real|) – relative tolerance used to check if the
-              objective value in the optimal solution to the current LP
-              relaxation is not better than in the best known integer feasible
-              solution.
-            * **mip_gap** (|Real|) – relative MIP-gap tolerance
-              (search stops once the relative MIP-gap falls below this value)
-            * **presolve** (`bool`) – use MIP presolver, may simplify the
-              problem
-            * **binarize** (`bool`) – binarize integer variables
-              (only used if *presolve* is `True`)
-
-        :raises ValueError: if a non-existing control name is given
-
-        .. todo::
-
-            Add doctest
-
-        .. _Driebeek: http://dx.doi.org/10.1287/ijoc.4.3.267
-        .. _feasibility pump: http://dx.doi.org/10.1007/s10107-004-0570-3
-        .. _proximity search: http://www.dei.unipd.it/~fisch/papers/proximity_search.pdf
-
-        """
-        if defaults:
-            glpk.init_iocp(&self._iocp)
-        for control, val in controls.items():
-            if control is 'msg_lev':
-                self._iocp.msg_lev = str2msglev[val]
-            elif control is 'br_tech':
-                self._iocp.br_tech = str2brtech[val]
-            elif control is 'bt_tech':
-                self._iocp.bt_tech = str2bttech[val]
-            elif control is 'pp_tech':
-                self._iocp.pp_tech = str2pptech[val]
-            elif control in {'tol_int', 'tol_obj', 'mip_gap'}:
-                if not isinstance(val, numbers.Real):
-                    raise TypeError("'" + control + "' value must be real.")
-                elif control is 'tol_int':
-                    self._iocp.tol_int = val
-                elif control is 'tol_obj':
-                    self._iocp.tol_obj = val
-                elif control is 'mip_gap':
-                    self._iocp.mip_gap = val
-            elif control in {'tm_lim', 'out_frq', 'out_dly'}:
-                if not isinstance(val, numbers.Integral):
-                    raise TypeError("'" + control + "' value must be integer.")
-                elif control is 'tm_lim':
-                    self._iocp.tm_lim = val
-                elif control is 'out_frq':
-                    self._iocp.out_frq = val
-                elif control is 'out_dly':
-                    self._iocp.out_dly = val
-            elif control in {'mir_cuts', 'gmi_cuts', 'cov_cuts', 'clq_cuts',
-                             'presolve', 'binarize', 'fp_heur'}:
-                if not isinstance(val, bool):
-                    raise TypeError("'" + control + "' value must be Boolean.")
-                elif control is 'mir_cuts':
-                    self._iocp.mir_cuts = val
-                elif control is 'gmi_cuts':
-                    self._iocp.gmi_cuts = val
-                elif control is 'cov_cuts':
-                    self._iocp.cov_cuts = val
-                elif control is 'clq_cuts':
-                    self._iocp.clq_cuts = val
-                elif control is 'presolve':
-                    self._iocp.presolve = val
-                elif control is 'binarize':
-                    self._iocp.binarize = val
-                elif control is 'fp_heur':
-                    self._iocp.fp_heur = val
-            else:
-                raise ValueError("Non-existing control: " + repr(control))
-        controls = {}
-        controls = self._iocp
-        controls['msg_lev'] = msglev2str[controls['msg_lev']]
-        controls['br_tech'] = brtech2str[controls['br_tech']]
-        controls['bt_tech'] = bttech2str[controls['bt_tech']]
-        controls['pp_tech'] = pptech2str[controls['pp_tech']]
-        return controls
-
-    def solve(self, solver='branchcut', obj_bound=None):
+    def solve(self, controls=IntOptControls(),
+              solver='branchcut', obj_bound=None):
         """Solve the mixed-integer linear program
 
+        :param controls: the control parameters (uses defaults if omitted)
+        :type controls: `.IntOptControls`
         :param solver: which solver to use, chosen from
 
             * `'branchcut'`: a branch-and-cut solver
@@ -222,8 +310,9 @@ cdef class IntOptSolver(_Solver):
             Add doctest
 
         """
+        cdef glpk.IntOptCP iocp = controls._iocp
         if solver is 'branchcut':
-            retcode = glpk.intopt(self._problem, &self._iocp)
+            retcode = glpk.intopt(self._problem, &iocp)
         elif solver is 'intfeas1':
             if obj_bound is None:
                 retcode = glpk.intfeas1(self._problem, False, 0)
