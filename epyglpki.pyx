@@ -185,8 +185,21 @@ cdef class MILProgram:
         return self._unique_ids
 
     def _generate_alias(self):
+        """Generate an alias to be used as a unique identifier
+
+        It is useful to have a unique identifier for every Variable and
+        Constraint. We use strings so that we can also use them as Variable or
+        Constraint name if no name is given. The reason is that then we can
+        rely on GLPK's name index and do not need to keep track of indices. To
+        limit the possibility that a user chooses a name that could also be an
+        alias, we use the format 'ŉ' + some integer value. The unicode
+        character 'ŉ' was chosen specifically because it is deprecated (but
+        will not be removed from the tables). The integer value is unique for
+        the lifetime of the MILProgram object.
+
+        """
         self._unique_ids += 1
-        return 'ŉ' + str(self._unique_ids)  # ŉ is used to prefix aliases
+        return 'ŉ' + str(self._unique_ids)
 
     property name:
         """The problem name, a `str` of ≤255 bytes UTF-8 encoded

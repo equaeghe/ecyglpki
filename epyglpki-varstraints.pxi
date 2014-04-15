@@ -24,10 +24,10 @@
 
 cdef class Variables(_Component):
 
-    cdef set _variables
+    cdef list _variables
 
     def __cinit__(self, program):
-        self._variables = set()
+        self._variables = []
 
     def __len__(self):
         return len(self._variables)
@@ -35,5 +35,19 @@ cdef class Variables(_Component):
     def __iter__(self):
         return self._variables.__iter__()
 
-    def __contains__(self, key):
-        return key in self._variables
+    def __contains__(self, variable):
+        return variable._col is not None
+
+    def __getitem__(self, name):
+        col = glpk.find_col(self._problem, name2chars(name))
+        return None if col is None else self._variables[col-1]
+                                        # GLPK indices start at 1
+
+    def __delitem__(self, name):
+        self._variables[name].remove()
+
+    def add(self, attributes**):
+        variable = Variable()
+        self._variables.append(variable)
+        for attribute, value in attributes:
+            setattr(variable, attribute, value)

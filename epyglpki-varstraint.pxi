@@ -40,11 +40,8 @@ cdef class Variable(_Component):
     property _col:
         """Return the column index"""
         def __get__(self):
-            try:
-                return glpk.find_col(self._problem, name2chars(self._name))
-            except ValueError:
-                raise IndexError("This is possibly a zombie; " +
-                                 "kill it using 'del'.")
+            col = glpk.find_col(self._problem, name2chars(self._name))
+            return None if col is 0 else col
 
     property _ind:
         """Return the variable index
@@ -120,3 +117,10 @@ cdef class Variable(_Component):
                 raise ValueError("Kind must be 'continuous', 'integer', " +
                                  "or 'binary'.")
 
+    def remove(self):
+        """Remove the variable from the problem"""
+        col = self._col
+        cdef int ind[2]
+        ind[1] = col
+        glpk.del_cols(self._problem, 1, ind)
+        del self._problem.variables[col-1]  # GLPK indices start at 1
