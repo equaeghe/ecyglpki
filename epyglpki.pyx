@@ -535,6 +535,17 @@ cdef class MILProgram:
         return factors
 
 
+cdef class _Component:
+
+    cdef MILProgram _program
+    cdef glpk.ProbObj* _problem
+
+    def __cinit__(self, program):
+        self._program = program
+        self._problem = <glpk.ProbObj*>PyCapsule_GetPointer(
+                                                program._problem_ptr(), NULL)
+
+
 include "epyglpki-components.pxi"
 
 
