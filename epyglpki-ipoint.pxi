@@ -48,8 +48,11 @@ cdef class IPointControls:
 
         .. doctest:: IPointControls
 
-            >>> r.msg_lev
+            >>> r.msg_lev  # the GLPK default
             'full'
+            >>> r.msg_lev = 'no'
+            >>> r.msg_lev
+            'no'
 
         """
         def __get__(self):
@@ -69,8 +72,11 @@ cdef class IPointControls:
 
         .. doctest:: IPointControls
 
-            >>> r.ord_alg
+            >>> r.ord_alg  # the GLPK default
             'amd'
+            >>> r.ord_alg = 'qmd'
+            >>> r.ord_alg
+            'qmd'
 
         """
         def __get__(self):
@@ -117,32 +123,32 @@ cdef class IPointSolver(_Solver):
         else:
             raise iptretcode2error[retcode]
 
-    def status(self):
-        """Return the current solution status
+    property status:
+        """The current solution status, a `str`
 
-        :returns: the current solution status, either `'undefined'`,
-            `'optimal'`, `'infeasible'`, or `'no feasible'`
-        :rtype: `str`
+        The possible values are `'undefined'`, `'optimal'`, `'infeasible'`,
+        and `'no feasible'`.
 
-        .. todo::
+        .. doctest:: IPointSolver
 
-            Add doctest
-
-        """
-        return solstat2str[glpk.ipt_status(self._problem)]
-
-    def objective(self):
-        """Return the objective value for the current solution
-
-        :returns: the objective value for the current solution
-        :rtype: `float`
-
-        .. todo::
-
-            Add doctest
+            >>> s.status
+            'undefined'
 
         """
-        return glpk.ipt_obj_val(self._problem)
+        def __get__(self):
+            return solstat2str[glpk.ipt_status(self._problem)]
+
+    property objective:
+        """The objective value for the current solution, a |Real| number
+
+        .. doctest:: IPointSolver
+
+            >>> s.objective
+            0.0
+
+        """
+        def __get__(self):
+            return glpk.ipt_obj_val(self._problem)
 
     def primal(self, varstraint):
         """Return primal value for the current solution
