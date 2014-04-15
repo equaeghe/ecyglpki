@@ -279,46 +279,62 @@ cdef class SimplexSolver(_Solver):
         else:
             raise smretcode2error[retcode]
 
-    def status(self, detailed=False):
-        """Return the current solution status
+    property status:
+        """The current solution status, a `str`
 
-        :param detailed: whether to give a detailed solution status
-        :type detailed: `bool`
-        :returns: the current solution status
+        The possible values are `'undefined'`, `'optimal'`, `'infeasible'`,
+        `'no feasible'`, `'feasible'`, or `'unbounded'`.
 
-            * in case *detailed* is `False`, either `'undefined'`, `'optimal'`,
-              `'infeasible'`, `'no feasible'`, `'feasible'`, or `'unbounded'`
-            * in case *detailed* is `True`, a pair of statuses is given,
-              one for the primal solution and one for the dual solution, either
-              `'undefined'`, `'infeasible'`, `'no feasible'`, or `'feasible'`
+        .. doctest:: SimplexSolver
 
-        :rtype: `str` or length-2 `tuple` of `str`
-
-        .. todo::
-
-            Add doctest
+            >>> s.status
+            'undefined'
 
         """
-        status = solstat2str[glpk.sm_status(self._problem)]
-        if detailed:
-            return (status, (solstat2str[glpk.sm_prim_stat(self._problem)],
-                             solstat2str[glpk.sm_dual_stat(self._problem)]))
-        else:
-            return status
+        def __get__(self):
+            return solstat2str[glpk.sm_status(self._problem)]
 
-    def objective(self):
-        """Return the objective value for the current solution
+    property status_primal:
+        """The current primal solution status, a `str`
 
-        :returns: the objective value for the current solution
-        :rtype: `float`
+        The possible values are `'undefined'`, `'infeasible'`, `'no feasible'`,
+        or `'feasible'`.
 
-        .. todo::
+        .. doctest:: SimplexSolver
 
-            Add doctest
+            >>> s.status_primal
+            'undefined'
 
         """
-        return glpk.sm_obj_val(self._problem)
+        def __get__(self):
+            return solstat2str[glpk.sm_prim_stat(self._problem)]
 
+    property status_dual:
+        """The current solution status, a `str`
+
+        The possible values are `'undefined'`, `'infeasible'`, `'no feasible'`,
+        or `'feasible'`.
+
+        .. doctest:: SimplexSolver
+
+            >>> s.status_dual
+            'undefined'
+
+        """
+        def __get__(self):
+            return solstat2str[glpk.sm_dual_stat(self._problem)]
+
+    property objective:
+        """The objective value for the current solution, a |Real| number
+
+        .. doctest:: SimplexSolver
+
+            >>> s.objective
+            0.0
+
+        """
+        def __get__(self):
+            return glpk.sm_obj_val(self._problem)
 
     def primal(self, varstraint):
         """Return primal value for the current solution

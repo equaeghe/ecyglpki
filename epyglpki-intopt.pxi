@@ -328,32 +328,32 @@ cdef class IntOptSolver(_Solver):
         else:
             raise ioretcode2error[retcode]
 
-    def status(self):
-        """Return the current solution status
+    property status:
+        """The current solution status, a `str`
 
-        :returns: the current solution status, either `'undefined'`,
-            `'optimal'`, `'no feasible'`, or `'feasible'`
-        :rtype: `str`
+        The possible values are `'undefined'`, `'optimal'`, `'no feasible'`,
+        and `'feasible'`.
 
-        .. todo::
+        .. doctest:: IntOptSolver
 
-            Add doctest
-
-        """
-        return solstat2str[glpk.mip_status(self._problem)]
-
-    def objective(self):
-        """Return the objective value for the current solution
-
-        :returns: the objective value for the current solution
-        :rtype: `float`
-
-        .. todo::
-
-            Add doctest
+            >>> s.status
+            'undefined'
 
         """
-        return glpk.mip_obj_val(self._problem)
+        def __get__(self):
+            return solstat2str[glpk.mip_status(self._problem)]
+
+    property objective:
+        """The objective value for the current solution, a |Real| number
+
+        .. doctest:: IntOptSolver
+
+            >>> s.objective
+            0.0
+
+        """
+        def __get__(self):
+            return glpk.mip_obj_val(self._problem)
 
     def value(self, varstraint):
         """Return the variable or constraint value for the current solution
