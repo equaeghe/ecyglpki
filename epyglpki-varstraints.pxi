@@ -85,6 +85,10 @@ cdef class Variables(_Varstraints):
     cdef _del_inds(self, int numinds, const int* inds):
         glpk.del_cols(self._problem, numinds, inds)
 
+    def _link(self):
+        variable = Variable()
+        self._add(variable, {})
+
     def add(self, attributes**):
         """Add a new variable to the problem
 
@@ -94,6 +98,7 @@ cdef class Variables(_Varstraints):
         :rtype: `.Variable`
 
         """
+        glpk.add_cols(self._problem, 1)
         variable = Variable()
         self._add(variable, attributes)
         return variable
@@ -107,6 +112,10 @@ cdef class Constraints(_Varstraints):
     cdef _del_inds(self, int numinds, const int* inds):
         glpk.del_rows(self._problem, numinds, inds)
 
+    def _link(self):
+        constraint = Constraint()
+        self._add(constraint, {})
+
     def add(self, attributes**):
         """Add a new constraint to the problem
 
@@ -116,6 +125,7 @@ cdef class Constraints(_Varstraints):
         :rtype: `.Constraint`
 
         """
+        glpk.add_rows(self._problem, 1)
         constraint = Constraint()
         self._add(constraint, attributes)
         return constraint

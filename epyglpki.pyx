@@ -59,8 +59,10 @@ cdef class MILProgram:
 
     cdef glpk.ProbObj* _problem
     cdef int _unique_ids
-    cdef list _variables
-    cdef list _constraints
+    cdef readonly Variables variables
+    """The problem's variables, collected in a `.Variables` object"""
+    cdef readonly Constraints constraints
+    """The problem's constraints, collected in a `.Constraints` object"""
     cdef readonly Objective objective
     """The problem's objective object, an `.Objective`"""
     cdef readonly SimplexSolver simplex
@@ -74,8 +76,8 @@ cdef class MILProgram:
         self._problem = glpk.create_prob()
         glpk.create_index(self._problem)
         self._unique_ids = 0
-        self._variables = []
-        self._constraints = []
+        self.variables = Variables(self)
+        self.constraints = Constraints(self)
         self.objective = Objective(self)
         self.simplex = SimplexSolver(self)
         self.ipoint = IPointSolver(self)
@@ -132,12 +134,10 @@ cdef class MILProgram:
             raise ValueError("Only 'GLPK', 'LP', 'MPS', and 'CNFSAT' " +
                              "formats are supported.")
         if retcode is 0:
-            for col in range(glpk.get_num_cols(problem)):
-                variable = Variable(program)
-                program._variables.append(variable)
-            for row in range(glpk.get_num_rows(problem)):
-                constraint = Constraint(program)
-                program._constraints.append(constraint)
+            for col in range(1, 1+glpk.get_num_cols(problem)):
+                program.variables._link()
+            for row in range(1, 1+glpk.get_num_rows(problem)):
+                program.constraints._link()
         else:
             raise RuntimeError("Error reading " + format + " file.")
         return program
@@ -563,7 +563,145 @@ cdef class _Component:
                                                 program._problem_ptr(), NULL)
 
 
-include "epyglpki-components.pxi"
+include "epyglpki-varstraints.pxi"
+
+
+include "epyglpki-varstraint.pxi"
+
+
+cdef class Objective(_Component):
+    """The problem's objective
+
+    .. doctest:: Objective
+
+        >>> p = MILProgram()
+        >>> o = p.objective
+        >>> isinstance(o, Objective)
+        True
+
+    """
+
+    property direction:
+        """The objective direction, either `'minimize'` or `'maximize'`
+
+        .. doctest:: Objective
+
+            >>> o.direction  # the GLPK default
+            'minimize'
+            >>> o.direction = 'maximize'
+            >>> o.direction
+            'maximize'
+
+        """
+        def __get__(self):
+            return optdir2str[glpk.get_obj_dir(self._problem)]
+        def __set__(self, direction):
+            if direction in str2optdir:
+                glpk.set_obj_dir(self._problem, str2optdir[direction])
+            else:
+                raise ValueError("Direction must be 'minimize' or 'maximize'.")
+
+    def coeffs(self, coeffs=None):
+        """Change or retrieve objective function coefficients
+
+        :param coeffs: the mapping with coefficients to change
+            (``{}`` to set all coefficients to 0; omit for retrieval only)
+        :type coeffs: |Mapping| of `.Variable` to |Real|
+        :returns: the coefficient mapping, which only contains nonzero
+            coefficients
+        :rtype: `dict` of `.Variable` to `float`
+        :raises TypeError: if *coeffs* is not |Mapping|
+        :raises TypeError: if a coefficient key is not `.Variable`
+        :raises TypeError: if a coefficient value is not |Real|
+
+        .. doctest:: Objective.coeffs
+
+            >>> p = MILProgram()
+            >>> x = p.add_variable()
+            >>> y = p.add_variable()
+            >>> o = p.objective
+            >>> o.coeffs()
+            {}
+            >>> o.coeffs({x: 3, y: 0})
+            {<epyglpki.Variable object at 0x...>: 3.0}
+            >>> o.coeffs({})
+            {}
+
+        """
+        if coeffs is not None:
+            if not isinstance(coeffs, collections.abc.Mapping):
+                raise TypeError("Coefficients must be given using a " +
+                                "collections.abc.Mapping.")
+            elif not coeffs:
+                for variable in self._program._variables:
+                    coeffs[variable] = 0.0
+            for variable, val in coeffs.items():
+                if not isinstance(variable, Variable):
+                    raise TypeError("Coefficient keys must be 'Variable' " +
+                                    "instead of '"
+                                    + type(variable).__name__ + "'.")
+                else:
+                    col = self._program._col(variable)
+                    if isinstance(val, numbers.Real):
+                        glpk.set_obj_coef(self._problem, col, val)
+                    else:
+                        raise TypeError("Coefficient values must be " +
+                                        "'numbers.Real' instead of '" +
+                                        type(val).__name__ + "'.")
+        coeffs = {}
+        for col, variable in enumerate(self._program._variables, start=1):
+            val = glpk.get_obj_coef(self._problem, col)
+            if val != 0.0:
+                coeffs[variable] = val
+        return coeffs
+
+    property constant:
+        """The objective function constant, a |Real| number
+
+        .. doctest:: Objective
+
+            >>> o.constant  # the GLPK default
+            0.0
+            >>> o.constant = 3
+            >>> o.constant
+            3.0
+            >>> del o.constant
+            >>> o.constant
+            0.0
+
+        """
+        def __get__(self):
+            return glpk.get_obj_coef(self._problem, 0)
+        def __set__(self, constant):
+            if isinstance(constant, numbers.Real):
+                glpk.set_obj_coef(self._problem, 0, constant)
+            else:
+                raise TypeError("Objective constant must be a real number.")
+        def __del__(self):
+            glpk.set_obj_coef(self._problem, 0, 0.0)
+
+    property name:
+        """The objective function name, a `str` of ≤255 bytes UTF-8 encoded
+
+        .. doctest:: Objective
+
+            >>> o.name  # the GLPK default
+            ''
+            >>> o.name = 'σκοπός'
+            >>> o.name
+            'σκοπός'
+            >>> del o.name  # clear name
+            >>> o.name
+            ''
+
+        """
+        def __get__(self):
+            cdef char* chars = glpk.get_obj_name(self._problem)
+            return '' if chars is NULL else chars.decode()
+        def __set__(self, name):
+            glpk.set_obj_name(self._problem, name2chars(name))
+        def __del__(self):
+            glpk.set_obj_name(self._problem, NULL)
 
 
 include "epyglpki-solvers.pxi"
