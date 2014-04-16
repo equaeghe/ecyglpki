@@ -46,7 +46,7 @@ cdef class _Varstraints(_Component)
             if ind is None:
                 raise KeyError("Unknown name: " + arg)
         else:
-            raise TypeError("Arguments are are integers or strings; "
+            raise TypeError("Arguments are integers or strings; "
                             + str(arg) + " is " + type(arg).__name__ + '.')
         return self._varstraints[ind-1]  # GLPK indices start at 1
 

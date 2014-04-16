@@ -45,6 +45,13 @@ cdef char* name2chars(name) except NULL:
         chars = name
     return chars
 
+cdef _coeffscheck(cls, coeffs):
+    if not isinstance(coeffs, collections.abc.Mapping):
+        raise TypeError("Coefficients must be passed in a Mapping, not " +
+                        type(coeffs).__name__)
+    if not all(isinstance(value, numbers.Real) for value in coeffs.values()):
+        raise TypeError("Coefficient values must be Real numbers.")
+
 
 cdef class MILProgram:
     """Main problem object
@@ -180,9 +187,12 @@ cdef class MILProgram:
     def __dealloc__(self):
         glpk.delete_prob(self._problem)
 
-    def _generate_unique_id(self):
-        self._unique_ids += 1
-        return self._unique_ids
+    def _varstraints(self, ind):
+        n = len(self.constraints)
+        if ind > n:
+            return self.variables[ind-n]
+        else:
+            return self.constraints[ind]
 
     def _generate_alias(self):
         """Generate an alias to be used as a unique identifier
@@ -224,240 +234,56 @@ cdef class MILProgram:
         def __del__(self):
             glpk.set_prob_name(self._problem, NULL)
 
-    def _col(self, variable, alternate=False):
-        """Return the column index of a Variable"""
-        try:
-            col = 1 + self._variables.index(variable)
-            if alternate: # GLPK sometimes indexes variables after constraints
-                col += len(self._constraints)
-            return col
-                # GLPK indices start at 1
-        except ValueError:
-            raise IndexError("This is possibly a zombie; kill it using 'del'.")
-
-    def _variable(self, col, alternate=False):
-        """Return the Variable corresponding to a column index"""
-        if alternate: # GLPK sometimes indexes variables after constraints
-            rows = len(self._constraints)
-            if col <= rows:
-                raise IndexError("Alternate column index cannot be smaller " +
-                                 "than total number of rows")
-            else:
-                col -= rows
-        return None if col is 0 else self._variables[col-1]
-
-    def _row(self, constraint):
-        """Return the row index of a Constraint"""
-        try:
-            return 1 + self._constraints.index(constraint)
-                # GLPK indices start at 1
-        except ValueError:
-            raise IndexError("This is possibly a zombie; kill it using 'del'.")
-
-    def _constraint(self, row):
-        """Return the Constraint corresponding to a row index"""
-        return None if row is 0 else self._constraints[row-1]
-
-    def _ind(self, varstraint, alternate=False):
-        """Return the column/row index of a Variable/Constraint"""
-        if isinstance(varstraint, Variable):
-            return self._col(varstraint, alternate)
-        elif isinstance(varstraint, Constraint):
-            return self._row(varstraint)
-        else:
-            raise TypeError("No index available for this object type.")
-
-    def _varstraint(self, ind):
-        """Return the Variable/Constraint corresponding to an alternate index"""
-        if ind > len(self._constraints):
-            return self._variable(ind, alternate=True)
-        else:
-            return self._constraint(ind)
-
-    def _del_varstraint(self, varstraint):
-        """Remove a Variable or Constraint from the problem"""
-        if isinstance(varstraint, Variable):
-            self._variables.remove(varstraint)
-        elif isinstance(varstraint, Constraint):
-            self._constraints.remove(varstraint)
-        else:
-            raise TypeError("No index available for this object type.")
-
-    def add_variable(self, coeffs={}, lower_bound=False, upper_bound=False,
-                     kind=None, name=None):
-        """Add and obtain new variable object
-
-        :param coeffs: set variable coefficients; see `.Variable.coeffs`
-        :param lower_bound: set variable lower bound;
-            see `.Varstraint.bounds`, parameter *lower*
-        :param upper_bound: set variable upper bound;
-            see `.Varstraint.bounds`, parameter *upper*
-        :param kind: set variable kind; see `.Variable.kind`
-        :param name: set variable name; see `.Variable.name`
-        :returns: variable object
-        :rtype: `.Variable`
-
-        .. doctest:: MILProgram.add_variable
-
-            >>> p = MILProgram()
-            >>> x = p.add_variable()
-            >>> x
-            <epyglpki.Variable object at 0x...>
-
-        """
-        variable = Variable(self)
-        self._variables.append(variable)
-        assert len(self._variables) is glpk.get_num_cols(self._problem)
-        variable.coeffs(None if not coeffs else coeffs)
-        variable.bounds(lower_bound, upper_bound)
-        if kind is not None:
-            variable.kind = kind
-        if name is not None:
-            variable.name = name
-        return variable
-
-    def variables(self):
-        """A list of the problem's variables
-
-        :returns: a list of the problem's variables
-        :rtype: `list` of `.Variable`
-
-        .. doctest:: MILProgram.variables
-
-            >>> p = MILProgram()
-            >>> x = p.add_variable()
-            >>> p.variables()
-            [<epyglpki.Variable object at 0x...>]
-            >>> y = p.add_variable()
-            >>> v = p.variables()
-            >>> (x in v) and (y in v)
-            True
-
-        """
-        return self._variables
-
-    def add_constraint(self, coeffs={}, lower_bound=False, upper_bound=False,
-                       name=None):
-        """Add and obtain new constraint object
-
-        :param coeffs: set constraint coefficients; see `.Constraint.coeffs`
-        :param lower_bound: set constraint lower bound;
-            see `.Varstraint.bounds`, parameter *lower*
-        :param upper_bound: set constraint upper bound;
-            see `.Varstraint.bounds`, parameter *upper*
-        :param name: set constraint name; see `.Constraint.name`
-        :returns: constraint object
-        :rtype: `.Constraint`
-
-        .. doctest:: MILProgram.add_constraint
-
-            >>> p = MILProgram()
-            >>> c = p.add_constraint()
-            >>> c
-            <epyglpki.Constraint object at 0x...>
-
-        """
-        constraint = Constraint(self)
-        self._constraints.append(constraint)
-        assert len(self._constraints) is glpk.get_num_rows(self._problem)
-        constraint.coeffs(None if not coeffs else coeffs)
-        constraint.bounds(lower_bound, upper_bound)
-        if name is not None:
-            constraint.name = name
-        return constraint
-
-    def constraints(self):
-        """Return a list of the problem's constraints
-
-        :returns: a list of the problem's constraints
-        :rtype: `list` of `.Constraint`
-
-        .. doctest:: MILProgram.constraints
-
-            >>> p = MILProgram()
-            >>> c = p.add_constraint()
-            >>> p.constraints()
-            [<epyglpki.Constraint object at 0x...>]
-            >>> d = p.add_constraint()
-            >>> w = p.constraints()
-            >>> (c in w) and (d in w)
-            True
-
-        """
-        return self._constraints
-
-    def coeffs(self, coeffs):
-        """Replace or retrieve coefficients (constraint matrix)
-
-        :param coeffs: the mapping with the new coefficients
-            (``{}`` to set all coefficients to 0)
-        :type coeffs: |Mapping| of length-2 |Sequence|, containing one
-            `.Variable` and one `.Constraint`, to |Real|
-        :raises TypeError: if *coeffs* is not |Mapping|
-        :raises TypeError: if a coefficient key component is not a pair of
-              `.Variable` and `.Constraint`
-        :raises TypeError: if a coefficient value is not |Real|
-        :raises ValueError: if the coefficient key does not have two
-              components
+    property coeffs:
+        """Nonzero coefficients, a |Mapping| of (`.Constraint`,`.Variable`) to |Real|
 
         .. doctest:: MILProgram.coeffs
 
             >>> p = MILProgram()
-            >>> x = p.add_variable()
-            >>> y = p.add_variable()
-            >>> c = p.add_constraint()
-            >>> d = p.add_constraint()
-            >>> p.coeffs({(x, c): 3, (d, y): 5.5, (x, d): 0})
-            >>> x.coeffs()[c] == c.coeffs()[x] == 3
+            >>> x = p.variables.add()
+            >>> y = p.variables.add()
+            >>> c = p.constraints.add()
+            >>> d = p.constraints.add()
+            >>> p.coeffs({(c, x): 3, (d, y): 5.5, (d, x): 0})
+            >>> x.coeffs[c] == c.coeffs[x] == 3
             True
-            >>> y.coeffs()[d] == d.coeffs()[y] == 5.5
+            >>> y.coeffs[d] == d.coeffs[y] == 5.5
             True
-            >>> len(x.coeffs()) == len(d.coeffs()) == 1
+            >>> len(x.coeffs) == len(d.coeffs) == 1
             True
+            # TODO: document del as well
 
         """
-        if isinstance(coeffs, collections.abc.Mapping):
-            elements = len(coeffs)
-        else:
-            raise TypeError("Coefficients must be given using a " +
-                            "collections.abc.Mapping.")
-        cdef double* vals = <double*>glpk.alloc(1+elements, sizeof(double))
-        cdef int* cols = <int*>glpk.alloc(1+elements, sizeof(int))
-        cdef int* rows = <int*>glpk.alloc(1+elements, sizeof(int))
-        try:
-            if elements is 0:
-                glpk.load_matrix(self._problem, elements, NULL, NULL, NULL)
-            else:
-                nz_elements = elements
-                for ind, item in enumerate(coeffs.items(), start=1):
-                    val = vals[ind] = item[1]
-                    if not isinstance(val, numbers.Real):
-                        raise TypeError("Coefficient values must be " +
-                                        "'numbers.Real' instead of '" +
-                                        type(val).__name__ + "'.")
-                    elif val == 0.0:
-                        nz_elements -= 1
-                    if len(item[0]) is not 2:
-                        raise ValueError("Coefficient key must have " +
-                                         "exactly two components.")
-                    elif (isinstance(item[0][0], Variable) and
-                        isinstance(item[0][1], Constraint)):
-                        cols[ind] = self._col(item[0][0])
-                        rows[ind] = self._row(item[0][1])
-                    elif (isinstance(item[0][0], Constraint) and
-                            isinstance(item[0][1], Variable)):
-                        rows[ind] = self._row(item[0][0])
-                        cols[ind] = self._col(item[0][1])
+        def __set__(self, coeffs):
+            _coeffscheck(coeffs)
+            if not all(isinstance(key, tuple) & (len(key) is 2)
+                       for key in coeffs.keys()):
+                raise TypeError("Coefficient keys must be pairs, " +
+                                "i.e., length-2 tuples.")
+            k = len(coeffs)
+            cdef int* rows = <int*>glpk.alloc(1+k, sizeof(int))
+            cdef int* cols = <int*>glpk.alloc(1+k, sizeof(int))
+            cdef double* vals = <double*>glpk.alloc(1+k, sizeof(double))
+            try:
+                for i, item in enumerate(coeffs.items(), start=1):
+                    if isinstance(item[0][0], Constraint):
+                        row = item[0][0]._ind
                     else:
-                        raise TypeError("Coefficient position components " +
-                                        "must be one Variable and one " +
-                                        "Constraint.")
-                glpk.load_matrix(self._problem, elements, rows, cols, vals)
-                assert nz_elements is glpk.get_num_nz(self._problem)
-        finally:
-            glpk.free(vals)
-            glpk.free(cols)
-            glpk.free(rows)
+                        row = self.constraints(item[0][0])
+                    rows[i] = row
+                    if isinstance(item[0][1], Variable):
+                        col = item[0][1]._ind
+                    else:
+                        col = self.variables(item[0][1])
+                    cols[i] = col
+                    vals[i] = item[1]
+                glpk.load_matrix(self._problem, k, rows, cols, vals)
+            finally:
+                glpk.free(rows)
+                glpk.free(cols)
+                glpk.free(vals)
+        def __del__(self):
+            glpk.load_matrix(self._problem, 0, NULL, NULL, NULL)
 
     def scaling(self, *algorithms, factors=None):
         """Change, apply and unapply scaling factors
@@ -488,10 +314,10 @@ cdef class MILProgram:
         .. doctest:: MILProgram.scaling
 
             >>> p = MILProgram()
-            >>> x = p.add_variable()
-            >>> y = p.add_variable()
-            >>> c = p.add_constraint()
-            >>> d = p.add_constraint()
+            >>> x = p.variables.add()
+            >>> y = p.variables.add()
+            >>> c = p.constraints.add()
+            >>> d = p.constraints.add()
             >>> p.coeffs({(x, c): 3e-100, (d, y): 5.5, (x, d): 1.5e200})
             >>> p.scaling()
             {}
@@ -529,11 +355,9 @@ cdef class MILProgram:
                 if not isinstance(factor, numbers.Real):
                     raise TypeError("Scaling factors must be real numbers.")
                 if isinstance(varstraint, Variable):
-                    glpk.set_col_sf(self._problem, self._col(varstraint),
-                                    factor)
+                    glpk.set_col_sf(self._problem, varstraint._ind, factor)
                 elif isinstance(varstraint, Constraint):
-                    glpk.set_row_sf(self._problem, self._row(varstraint),
-                                    factor)
+                    glpk.set_row_sf(self._problem, varstraint._ind, factor)
                 else:
                     raise TypeError("Only 'Variable' and 'Constraint' can " +
                                     "have a scaling factor.")
@@ -541,11 +365,11 @@ cdef class MILProgram:
             raise TypeError("Factors must be given using a " +
                             "collections.abc.Mapping.")
         factors = {}
-        for col, variable in enumerate(self._variables, start=1):
+        for col, variable in enumerate(self.variables, start=1):
             factor = glpk.get_col_sf(self._problem, col)
             if factor != 1.0:
                 factors[variable] = factor
-        for row, constraint in enumerate(self._constraints, start=1):
+        for row, constraint in enumerate(self.constraints, start=1):
             factor = glpk.get_row_sf(self._problem, row)
             if factor != 1.0:
                 factors[constraint] = factor
@@ -617,8 +441,8 @@ cdef class Objective(_Component):
         .. doctest:: Objective.coeffs
 
             >>> p = MILProgram()
-            >>> x = p.add_variable()
-            >>> y = p.add_variable()
+            >>> x = p.variables.add()
+            >>> y = p.variables.add()
             >>> o = p.objective
             >>> o.coeffs()
             {}
@@ -633,7 +457,7 @@ cdef class Objective(_Component):
                 raise TypeError("Coefficients must be given using a " +
                                 "collections.abc.Mapping.")
             elif not coeffs:
-                for variable in self._program._variables:
+                for variable in self._program.variables:
                     coeffs[variable] = 0.0
             for variable, val in coeffs.items():
                 if not isinstance(variable, Variable):
@@ -641,15 +465,14 @@ cdef class Objective(_Component):
                                     "instead of '"
                                     + type(variable).__name__ + "'.")
                 else:
-                    col = self._program._col(variable)
                     if isinstance(val, numbers.Real):
-                        glpk.set_obj_coef(self._problem, col, val)
+                        glpk.set_obj_coef(self._problem, variable._ind, val)
                     else:
                         raise TypeError("Coefficient values must be " +
                                         "'numbers.Real' instead of '" +
                                         type(val).__name__ + "'.")
         coeffs = {}
-        for col, variable in enumerate(self._program._variables, start=1):
+        for col, variable in enumerate(self._program.variables, start=1):
             val = glpk.get_obj_coef(self._problem, col)
             if val != 0.0:
                 coeffs[variable] = val

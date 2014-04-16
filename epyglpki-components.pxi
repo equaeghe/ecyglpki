@@ -22,6 +22,171 @@
 ###############################################################################
 
 
+cdef class MILProgramOld:
+
+    def _col(self, variable, alternate=False):
+        """Return the column index of a Variable"""
+        try:
+            col = 1 + self._variables.index(variable)
+            if alternate: # GLPK sometimes indexes variables after constraints
+                col += len(self._constraints)
+            return col
+                # GLPK indices start at 1
+        except ValueError:
+            raise IndexError("This is possibly a zombie; kill it using 'del'.")
+
+    def _variable(self, col, alternate=False):
+        """Return the Variable corresponding to a column index"""
+        if alternate: # GLPK sometimes indexes variables after constraints
+            rows = len(self._constraints)
+            if col <= rows:
+                raise IndexError("Alternate column index cannot be smaller " +
+                                 "than total number of rows")
+            else:
+                col -= rows
+        return None if col is 0 else self._variables[col-1]
+
+    def _row(self, constraint):
+        """Return the row index of a Constraint"""
+        try:
+            return 1 + self._constraints.index(constraint)
+                # GLPK indices start at 1
+        except ValueError:
+            raise IndexError("This is possibly a zombie; kill it using 'del'.")
+
+    def _constraint(self, row):
+        """Return the Constraint corresponding to a row index"""
+        return None if row is 0 else self._constraints[row-1]
+
+    def _ind(self, varstraint, alternate=False):
+        """Return the column/row index of a Variable/Constraint"""
+        if isinstance(varstraint, Variable):
+            return self._col(varstraint, alternate)
+        elif isinstance(varstraint, Constraint):
+            return self._row(varstraint)
+        else:
+            raise TypeError("No index available for this object type.")
+
+    def _varstraint(self, ind):
+        """Return the Variable/Constraint corresponding to an alternate index"""
+        if ind > len(self._constraints):
+            return self._variable(ind, alternate=True)
+        else:
+            return self._constraint(ind)
+
+    def _del_varstraint(self, varstraint):
+        """Remove a Variable or Constraint from the problem"""
+        if isinstance(varstraint, Variable):
+            self._variables.remove(varstraint)
+        elif isinstance(varstraint, Constraint):
+            self._constraints.remove(varstraint)
+        else:
+            raise TypeError("No index available for this object type.")
+
+    def add_variable(self, coeffs={}, lower_bound=False, upper_bound=False,
+                     kind=None, name=None):
+        """Add and obtain new variable object
+
+        :param coeffs: set variable coefficients; see `.Variable.coeffs`
+        :param lower_bound: set variable lower bound;
+            see `.Varstraint.bounds`, parameter *lower*
+        :param upper_bound: set variable upper bound;
+            see `.Varstraint.bounds`, parameter *upper*
+        :param kind: set variable kind; see `.Variable.kind`
+        :param name: set variable name; see `.Variable.name`
+        :returns: variable object
+        :rtype: `.Variable`
+
+        .. doctest:: MILProgram.add_variable
+
+            >>> p = MILProgram()
+            >>> x = p.add_variable()
+            >>> x
+            <epyglpki.Variable object at 0x...>
+
+        """
+        variable = Variable(self)
+        self._variables.append(variable)
+        assert len(self._variables) is glpk.get_num_cols(self._problem)
+        variable.coeffs(None if not coeffs else coeffs)
+        variable.bounds(lower_bound, upper_bound)
+        if kind is not None:
+            variable.kind = kind
+        if name is not None:
+            variable.name = name
+        return variable
+
+    def variables(self):
+        """A list of the problem's variables
+
+        :returns: a list of the problem's variables
+        :rtype: `list` of `.Variable`
+
+        .. doctest:: MILProgram.variables
+
+            >>> p = MILProgram()
+            >>> x = p.add_variable()
+            >>> p.variables()
+            [<epyglpki.Variable object at 0x...>]
+            >>> y = p.add_variable()
+            >>> v = p.variables()
+            >>> (x in v) and (y in v)
+            True
+
+        """
+        return self._variables
+
+    def add_constraint(self, coeffs={}, lower_bound=False, upper_bound=False,
+                       name=None):
+        """Add and obtain new constraint object
+
+        :param coeffs: set constraint coefficients; see `.Constraint.coeffs`
+        :param lower_bound: set constraint lower bound;
+            see `.Varstraint.bounds`, parameter *lower*
+        :param upper_bound: set constraint upper bound;
+            see `.Varstraint.bounds`, parameter *upper*
+        :param name: set constraint name; see `.Constraint.name`
+        :returns: constraint object
+        :rtype: `.Constraint`
+
+        .. doctest:: MILProgram.add_constraint
+
+            >>> p = MILProgram()
+            >>> c = p.add_constraint()
+            >>> c
+            <epyglpki.Constraint object at 0x...>
+
+        """
+        constraint = Constraint(self)
+        self._constraints.append(constraint)
+        assert len(self._constraints) is glpk.get_num_rows(self._problem)
+        constraint.coeffs(None if not coeffs else coeffs)
+        constraint.bounds(lower_bound, upper_bound)
+        if name is not None:
+            constraint.name = name
+        return constraint
+
+    def constraints(self):
+        """Return a list of the problem's constraints
+
+        :returns: a list of the problem's constraints
+        :rtype: `list` of `.Constraint`
+
+        .. doctest:: MILProgram.constraints
+
+            >>> p = MILProgram()
+            >>> c = p.add_constraint()
+            >>> p.constraints()
+            [<epyglpki.Constraint object at 0x...>]
+            >>> d = p.add_constraint()
+            >>> w = p.constraints()
+            >>> (c in w) and (d in w)
+            True
+
+        """
+        return self._constraints
+
+
 cdef class Varstraint(_Component):
     """One of the program's variables or constraints
 

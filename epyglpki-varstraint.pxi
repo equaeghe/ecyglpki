@@ -32,20 +32,6 @@ cdef class _Varstraint(_Component):
         cdef int* ptr = &self._problem
         return hash((ptr, self._alias))
 
-    @classmethod
-    cdef _coeffscheck(cls, coeffs):
-        if not isinstance(coeffs, collections.abc.Mapping):
-            raise TypeError("Coefficients must be passed in a Mapping, not " +
-                            type(coeffs).__name__)
-
-    @classmethod
-    cdef _coeff2real(cls, coeff)
-        if isinstance(coeff, numbers.Real):
-            return coeff
-        else:
-            raise TypeError("Coefficient values must be Real instead of " +
-                            type(item[1]).__name__)
-
 
 cdef class Variable(_Varstraint):
 
@@ -53,12 +39,17 @@ cdef class Variable(_Varstraint):
     """The variable bounds, a `.Bounds` object"""
 
     def __cinit__(self, program):
-        self._name = self._alias = self._program._generate_alias()
+        self._alias = self._program._generate_alias()
         col = len(self.program.variables) + 1
-                        # +1 because variable not yet added to
+                        # + 1 because variable not yet added to
                         # self._program.variables._varstraints at this point
-        # TODO: deal with name properly when using _link
-        glpk.set_col_name(self._problem, col, name2chars(self._name))
+        cdef char* chars
+        chars = glpk.get_col_name(self._problem, col)
+        if chars is NULL:
+            self._name = self._alias
+            glpk.set_col_name(self._problem, col, name2chars(self._name))
+        else:
+            self._name = chars.decode()
         bounds = Bounds(self)
 
     property _ind:
@@ -165,7 +156,7 @@ cdef class Variable(_Varstraint):
                 glpk.free(inds)
             return coeffs
         def __set__(self, coeffs):
-            _Varstraint._coeffscheck(coeffs)
+            _coeffscheck(coeffs)
             k = len(coeffs)
             cdef int* rows =  <int*>glpk.alloc(1+k, sizeof(int))
             cdef double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
@@ -175,12 +166,12 @@ cdef class Variable(_Varstraint):
                         row = item[0]._ind
                     else:
                         row = self._program.constraints(item[0])
-                    inds[i] = row
-                    vals[i] = _Varstraint.coeff2real(item[1])
-                glpk.set_mat_col(self._problem, self._ind, 0, inds, vals)
+                    rows[i] = row
+                    vals[i] = item[1]
+                glpk.set_mat_col(self._problem, self._ind, 0, rows, vals)
             finally:
+                glpk.free(rows)
                 glpk.free(vals)
-                glpk.free(inds)
         def __del__(self):
             glpk.set_mat_col(self._problem, self._ind, 0, NULL, NULL)
 
@@ -196,11 +187,16 @@ cdef class Constraint(_Varstraint):
 
     def __cinit__(self, program):
         self._alias = self._program._generate_alias()
-        row = len(self._program.constraints)
-                        # +1 because variable not yet added to
+        row = len(self._program.constraints) + 1
+                        # + 1 because variable not yet added to
                         # self._program.constraints._varstraints at this point
-        # TODO: deal with name properly when using _link
-        glpk.set_row_name(self._problem, row, name2chars(self._name))
+        cdef char* chars
+        chars = glpk.get_row_name(self._problem, row)
+        if chars is NULL:
+            self._name = self._alias
+            glpk.set_row_name(self._problem, row, name2chars(self._name))
+        else:
+            self._name = chars.decode()
         bounds = Bounds(self)
 
     property _ind:
@@ -256,7 +252,7 @@ cdef class Constraint(_Varstraint):
                 glpk.free(inds)
             return coeffs
         def __set__(self, coeffs):
-            _Varstraint._coeffscheck(coeffs)
+            _coeffscheck(coeffs)
             k = len(coeffs)
             cdef int* cols =  <int*>glpk.alloc(1+k, sizeof(int))
             cdef double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
@@ -266,12 +262,12 @@ cdef class Constraint(_Varstraint):
                         col = item[0]._ind
                     else:
                         col = self._program.variables(item[0])
-                    inds[i] = col
-                    vals[i] = _Varstraint.coeff2real(item[1])
-                glpk.set_mat_row(self._problem, self._ind, 0, inds, vals)
+                    cols[i] = col
+                    vals[i] = item[1]
+                glpk.set_mat_row(self._problem, self._ind, 0, cols, vals)
             finally:
+                glpk.free(cols)
                 glpk.free(vals)
-                glpk.free(inds)
         def __del__(self):
             glpk.set_mat_row(self._problem, self._ind, 0, NULL, NULL)
 
