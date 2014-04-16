@@ -32,6 +32,20 @@ cdef class _Varstraint(_Component):
         cdef int* ptr = &self._problem
         return hash((ptr, self._alias))
 
+    @classmethod
+    cdef _coeffscheck(cls, coeffs):
+        if not isinstance(coeffs, collections.abc.Mapping):
+            raise TypeError("Coefficients must be passed in a Mapping, not " +
+                            type(coeffs).__name__)
+
+    @classmethod
+    cdef _coeff2real(cls, coeff)
+        if isinstance(coeff, numbers.Real):
+            return coeff
+        else:
+            raise TypeError("Coefficient values must be Real instead of " +
+                            type(item[1]).__name__)
+
 
 cdef class Variable(_Varstraint):
 
@@ -134,6 +148,40 @@ cdef class Variable(_Varstraint):
     cdef _set_bounds(int vartype, double lb, double ub):
         glpk.set_col_bnds(self._problem, self._col, vartype, lb, ub)
 
+    property coeffs:
+        """Nonzero coefficients, a |Mapping| of `.Constraint` to |Real|"""
+        def __get__(self):
+            k = glpk.get_mat_col(self._problem, self._ind, NULL, NULL)
+            cdef int* rows =  <int*>glpk.alloc(1+k, sizeof(int))
+            cdef double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
+            try:
+                glpk.get_mat_col(self._problem, self._ind, rows, vals)
+                coeffs = {self._problem.constraints[rows[i]]: vals[i]
+                          for i in range(1, 1+k)}
+            finally:
+                glpk.free(vals)
+                glpk.free(inds)
+            return coeffs
+        def __set__(self, coeffs):
+            _Varstraint._coeffscheck(coeffs)
+            k = len(coeffs)
+            cdef int* rows =  <int*>glpk.alloc(1+k, sizeof(int))
+            cdef double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
+            try:
+                for i, item in enumerate(coeffs, start=1):
+                    if isinstance(item[0], Constraint):
+                        row = item[0]._ind
+                    else:
+                        row = self._program.constraints(item[0])
+                    inds[i] = row
+                    vals[i] = _Varstraint.coeff2real(item[1])
+                glpk.set_mat_col(self._problem, self._ind, 0, inds, vals)
+            finally:
+                glpk.free(vals)
+                glpk.free(inds)
+        def __del__(self):
+            glpk.set_mat_col(self._problem, self._ind, 0, NULL, NULL)
+
     def remove(self):
         """Remove the variable from the problem"""
         del self._problem.variables[self._name]
@@ -188,6 +236,40 @@ cdef class Constraint(_Varstraint):
 
     cdef _set_bounds(int vartype, double lb, double ub):
         glpk.set_row_bnds(self._problem, self._row, vartype, lb, ub)
+
+    property coeffs:
+        """Nonzero coefficients, a |Mapping| of `.Variable` to |Real|"""
+        def __get__(self):
+            k = glpk.get_mat_row(self._problem, self._ind, NULL, NULL)
+            cdef int* cols =  <int*>glpk.alloc(1+k, sizeof(int))
+            cdef double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
+            try:
+                glpk.get_mat_row(self._problem, self._ind, cols, vals)
+                coeffs = {self._problem.variables[cols[i]]: vals[i]
+                          for i in range(1, 1+k)}
+            finally:
+                glpk.free(vals)
+                glpk.free(inds)
+            return coeffs
+        def __set__(self, coeffs):
+            _Varstraint._coeffscheck(coeffs)
+            k = len(coeffs)
+            cdef int* cols =  <int*>glpk.alloc(1+k, sizeof(int))
+            cdef double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
+            try:
+                for i, item in enumerate(coeffs, start=1):
+                    if isinstance(item[0], Variable):
+                        col = item[0]._ind
+                    else:
+                        col = self._program.variables(item[0])
+                    inds[i] = col
+                    vals[i] = _Varstraint.coeff2real(item[1])
+                glpk.set_mat_row(self._problem, self._ind, 0, inds, vals)
+            finally:
+                glpk.free(vals)
+                glpk.free(inds)
+        def __del__(self):
+            glpk.set_mat_row(self._problem, self._ind, 0, NULL, NULL)
 
     def remove(self):
         """Remove the constraint from the problem"""
