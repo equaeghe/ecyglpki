@@ -22,62 +22,6 @@
 ###############################################################################
 
 
-cdef class Bounds(_Component):
-
-    cdef _Varstraint _varstraint
-
-    def __cinit__(self, variable):
-        self._variable = variable
-
-    def __str__(self):
-        return str((self.lower, self.upper))
-
-    def __repr__(self):
-        return type(self).__name__ + str(self)
-
-    @classmethod
-    cdef double _arg2double(cls, value):
-        if value is None:
-            return -DBL_MAX
-        elif isinstance(value, numbers.Real):
-            return value
-        else:
-            raise TypeError("Bound value must be 'None' or 'Real'.")
-
-    def __call__(self, lower, upper):
-        cdef double lb
-        cdef double ub
-        lb = Bounds._arg2double(lower)
-        ub = Bounds._arg2double(upper)
-        if lb > ub:
-            raise ValueError("Lower bound must not dominate upper bound.")
-        vartype = pair2vartype[(lower, upper)]
-        if vartype == glpk.DB:
-            if lb == ub:
-                vartype = glpk.FX
-        self._varstraint._set_bounds(vartype, lb, ub)
-
-    property lower:
-        """The lower bound"""
-        def __get__(self):
-            lb = self._varstraint._lower_bound()
-            return None if lb == -DBL_MAX else lb
-        def __set__(self, value):
-            self(value, self.upper)
-        def __del__(self):
-            self.lower = None
-
-    property upper:
-        """The upper bound"""
-        def __get__(self):
-            ub = self._varstraint._upper_bound()
-            return None if ub == +DBL_MAX else ub
-        def __set__(self, value):
-            self(self.lower, value)
-        def __del__(self):
-            self.upper = None
-
-
 cdef class _Varstraint(_Component):
 
     cdef str _alias  # unique identifier; invariant after initialization
@@ -101,20 +45,20 @@ cdef class Variable(_Varstraint):
         glpk.set_col_name(self._problem, col, name2chars(self._name))
         bounds = Bounds(self)
 
-    property _col:
+    property _ind:
         """Return the column index"""
         def __get__(self):
             col = glpk.find_col(self._problem, name2chars(self._name))
             return None if col is 0 else col
 
-    property _ind:
+    property _col_after_rows:
         """Return the variable index
 
         (GLPK sometimes indexes variables after constraints.)
 
         """
         def __get__(self):
-            return glpk.get_row_num(self._problem) + self._col
+            return len(self._problem._constraints) + self._col
 
     property name:
         """The variable name, a `str` of ≤255 bytes UTF-8 encoded
@@ -207,7 +151,7 @@ cdef class Constraint(_Varstraint):
         glpk.set_row_name(self._problem, row, name2chars(self._name))
         bounds = Bounds(self)
 
-    property _row:
+    property _ind:
         """Return the row index"""
         def __get__(self):
             row = glpk.find_row(self._problem, name2chars(self._name))
@@ -248,3 +192,59 @@ cdef class Constraint(_Varstraint):
     def remove(self):
         """Remove the constraint from the problem"""
         del self._problem.constraints[self._name]
+
+
+cdef class Bounds(_Component):
+
+    cdef _Varstraint _varstraint
+
+    def __cinit__(self, varstraint):
+        self._varstraint = varstraint
+
+    def __str__(self):
+        return str((self.lower, self.upper))
+
+    def __repr__(self):
+        return type(self).__name__ + str(self)
+
+    @classmethod
+    cdef double _arg2double(cls, value):
+        if value is None:
+            return -DBL_MAX
+        elif isinstance(value, numbers.Real):
+            return value
+        else:
+            raise TypeError("Bound value must be 'None' or 'Real'.")
+
+    def __call__(self, lower, upper):
+        cdef double lb
+        cdef double ub
+        lb = Bounds._arg2double(lower)
+        ub = Bounds._arg2double(upper)
+        if lb > ub:
+            raise ValueError("Lower bound must not dominate upper bound.")
+        vartype = pair2vartype[(lower, upper)]
+        if vartype == glpk.DB:
+            if lb == ub:
+                vartype = glpk.FX
+        self._varstraint._set_bounds(vartype, lb, ub)
+
+    property lower:
+        """The lower bound"""
+        def __get__(self):
+            lb = self._varstraint._lower_bound()
+            return None if lb == -DBL_MAX else lb
+        def __set__(self, value):
+            self(value, self.upper)
+        def __del__(self):
+            self.lower = None
+
+    property upper:
+        """The upper bound"""
+        def __get__(self):
+            ub = self._varstraint._upper_bound()
+            return None if ub == +DBL_MAX else ub
+        def __set__(self, value):
+            self(self.lower, value)
+        def __del__(self):
+            self.upper = None

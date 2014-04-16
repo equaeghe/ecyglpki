@@ -22,30 +22,30 @@
 ###############################################################################
 
 
-cdef class Variables(_Component):
+cdef class _Varstraints(_Component)
 
-    cdef list _variables
+    cdef list _varstraints
 
     def __cinit__(self, program):
-        self._variables = []
+        self._varstraints = []
 
     def __len__(self):
-        return len(self._variables)
+        return len(self._varstraints)
 
     def __iter__(self):
-        return self._variables.__iter__()
+        return self._varstraints.__iter__()
 
-    def __contains__(self, variable):
-        return variable._col is not None
+    def __contains__(self, varstraint):
+        return varstraint._ind is not None
 
     def _getoneitem(self, name):
         if not isinstance(name, str):
-            raise TypeError("Variable names are strings; "
+            raise TypeError("Names are strings; "
                             + str(name) + " is " + type(name).__name__ + '.')
-        col = glpk.find_col(self._problem, name2chars(name))
-        if col is None:
-            raise KeyError("Unknown Variable name: " + name)
-        return self._variables[col-1]  # GLPK indices start at 1
+        ind = self._find_ind(name)
+        if ind is None:
+            raise KeyError("Unknown name: " + name)
+        return self._varstraints[ind-1]  # GLPK indices start at 1
 
     def __getitem__(self, names*):
         n = len(names)
@@ -58,15 +58,29 @@ cdef class Variables(_Component):
                 yield self._getoneitem(self, name)
 
     def __delitem__(self, names*):
-        namecols = {name: self[name]._col for name in names
-                                          if self[name]._col is not None}
-        numcols = len(namecols)
-        cdef int inds[1+numcols]
-        for ind, namecol in enumerate(namecols.items(), start=1):
+        nameinds = {name: self[name]._ind for name in names
+                                          if self[name]._ind is not None}
+        numinds = len(nameinds)
+        cdef int inds[1+numinds]
+        for ind, nameind in enumerate(nameinds.items(), start=1):
                                       # GLPK indices start at 1
-            inds[ind] = namecol[1]
-            del self._variables[namecol[0]]
-        glpk.del_cols(self._problem, numcols, inds)
+            inds[ind] = nameind[1]
+            del self._varstraints[nameind[0]]
+        self._del_cols(numinds, inds)
+
+    def _add(self, varstraint, attributes):
+        self._varstraints.append(varstraint)
+        for attribute, value in attributes:
+            setattr(varstraint, attribute, value)
+
+
+cdef class Variables(_Varstraints):
+
+    cdef _find_ind(self, name):
+        return glpk.find_col(self._problem, name2chars(name))
+
+    cdef _del_inds(self, int numinds, const char* inds):
+        glpk.del_cols(self._problem, numinds, inds)
 
     def add(self, attributes**):
         """Add a new variable to the problem
@@ -78,57 +92,17 @@ cdef class Variables(_Component):
 
         """
         variable = Variable()
-        self._variables.append(variable)
-        for attribute, value in attributes:
-            setattr(variable, attribute, value)
+        self._add(variable, attributes)
         return variable
 
 
-cdef class Constraints(_Component):
+cdef class Constraints(_Varstraints):
 
-    cdef list _constraints
+    cdef _find_ind(self, name):
+        return glpk.find_row(self._problem, name2chars(name))
 
-    def __cinit__(self, program):
-        self._constraints = []
-
-    def __len__(self):
-        return len(self._constraints)
-
-    def __iter__(self):
-        return self._constraints.__iter__()
-
-    def __contains__(self, constraint):
-        return constraint._row is not None
-
-    def _getoneitem(self, name):
-        if not isinstance(name, str):
-            raise TypeError("Constraint names are strings; "
-                            + str(name) + " is " + type(name).__name__ + '.')
-        row = glpk.find_row(self._problem, name2chars(name))
-        if row is None:
-            raise KeyError("Unknown Constraint name: " + name)
-        return self._constraints[row-1]  # GLPK indices start at 1
-
-    def __getitem__(self, names*):
-        n = len(names)
-        if n is 0:
-            raise SyntaxError("At least one name argument is required")
-        elif n is 1:
-            return self._getoneitem(self, names[0])
-        else:
-            for name in names:
-                yield self._getoneitem(self, name)
-
-    def __delitem__(self, names*):
-        namerows = {name: self[name]._row for name in names
-                                          if self[name]._row is not None}
-        numrows = len(namerows)
-        cdef int inds[1+numrows]
-        for ind, namerow in enumerate(namerows.items(), start=1):
-                                      # GLPK indices start at 1
-            inds[ind] = namerow[1]
-            del self._constraints[namerow[0]]
-        glpk.del_rows(self._problem, numrows, inds)
+    cdef _del_inds(self, int numinds, const char* inds):
+        glpk.del_rows(self._problem, numinds, inds)
 
     def add(self, attributes**):
         """Add a new constraint to the problem
@@ -140,7 +114,5 @@ cdef class Constraints(_Component):
 
         """
         constraint = Constraint()
-        self._constraints.append(constraint)
-        for attribute, value in attributes:
-            setattr(constraint, attribute, value)
+        self._add(constraint, attributes)
         return constraint
