@@ -38,34 +38,37 @@ cdef class _Varstraints(_Component)
     def __contains__(self, varstraint):
         return varstraint._ind is not None
 
-    def _getoneitem(self, name):
-        if not isinstance(name, str):
-            raise TypeError("Names are strings; "
-                            + str(name) + " is " + type(name).__name__ + '.')
-        ind = self._find_ind(name)
-        if ind is None:
-            raise KeyError("Unknown name: " + name)
+    def _getoneitem(self, arg):
+        if isinstance(name, numbers.Integral):
+            ind = arg
+        if isinstance(name, str):
+            ind = self._find_ind(arg)
+            if ind is None:
+                raise KeyError("Unknown name: " + arg)
+        else:
+            raise TypeError("Arguments are are integers or strings; "
+                            + str(arg) + " is " + type(arg).__name__ + '.')
         return self._varstraints[ind-1]  # GLPK indices start at 1
 
-    def __getitem__(self, names*):
-        n = len(names)
+    def __getitem__(self, args*):
+        n = len(args)
         if n is 0:
-            raise SyntaxError("At least one name argument is required")
+            raise SyntaxError("At least one argument is required")
         elif n is 1:
-            return self._getoneitem(self, names[0])
+            return self._getoneitem(self, args[0])
         else:
-            for name in names:
-                yield self._getoneitem(self, name)
+            for arg in args:
+                yield self._getoneitem(self, arg)
 
-    def __delitem__(self, names*):
-        nameinds = {name: self[name]._ind for name in names
-                                          if self[name]._ind is not None}
-        numinds = len(nameinds)
+    def __delitem__(self, args*):
+        arginds = {arg: self[arg]._ind for arg in args
+                                       if self[arg]._ind is not None}
+        numinds = len(arginds)
         cdef int inds[1+numinds]
-        for ind, nameind in enumerate(nameinds.items(), start=1):
-                                      # GLPK indices start at 1
-            inds[ind] = nameind[1]
-            del self._varstraints[nameind[0]]
+        for ind, argind in enumerate(arginds.items(), start=1):
+                                     # GLPK indices start at 1
+            inds[ind] = argind[1]
+            del self._varstraints[argind[0]]
         self._del_cols(numinds, inds)
 
     def _add(self, varstraint, attributes):
@@ -79,7 +82,7 @@ cdef class Variables(_Varstraints):
     cdef _find_ind(self, name):
         return glpk.find_col(self._problem, name2chars(name))
 
-    cdef _del_inds(self, int numinds, const char* inds):
+    cdef _del_inds(self, int numinds, const int* inds):
         glpk.del_cols(self._problem, numinds, inds)
 
     def add(self, attributes**):
@@ -101,7 +104,7 @@ cdef class Constraints(_Varstraints):
     cdef _find_ind(self, name):
         return glpk.find_row(self._problem, name2chars(name))
 
-    cdef _del_inds(self, int numinds, const char* inds):
+    cdef _del_inds(self, int numinds, const int* inds):
         glpk.del_rows(self._problem, numinds, inds)
 
     def add(self, attributes**):
