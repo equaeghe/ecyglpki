@@ -22,20 +22,84 @@
 ###############################################################################
 
 
-cdef class Variable(_Component):
+cdef class Bounds(_Component):
+
+    cdef _Varstraint _varstraint
+
+    def __cinit__(self, variable):
+        self._variable = variable
+
+    def __str__(self):
+        return str((self.lower, self.upper))
+
+    def __repr__(self):
+        return type(self).__name__ + str(self)
+
+    @classmethod
+    cdef double _arg2double(cls, value):
+        if value is None:
+            return -DBL_MAX
+        elif isinstance(value, numbers.Real):
+            return value
+        else:
+            raise TypeError("Bound value must be 'None' or 'Real'.")
+
+    def __call__(self, lower, upper):
+        cdef double lb
+        cdef double ub
+        lb = Bounds._arg2double(lower)
+        ub = Bounds._arg2double(upper)
+        if lb > ub:
+            raise ValueError("Lower bound must not dominate upper bound.")
+        vartype = pair2vartype[(lower, upper)]
+        if vartype == glpk.DB:
+            if lb == ub:
+                vartype = glpk.FX
+        self._varstraint._set_bounds(vartype, lb, ub)
+
+    property lower:
+        """The lower bound"""
+        def __get__(self):
+            lb = self._varstraint._lower_bound()
+            return None if lb == -DBL_MAX else lb
+        def __set__(self, value):
+            self(value, self.upper)
+        def __del__(self):
+            self.lower = None
+
+    property upper:
+        """The upper bound"""
+        def __get__(self):
+            ub = self._varstraint._upper_bound()
+            return None if ub == +DBL_MAX else ub
+        def __set__(self, value):
+            self(self.lower, value)
+        def __del__(self):
+            self.upper = None
+
+
+cdef class _Varstraint(_Component):
 
     cdef str _alias  # unique identifier; invariant after initialization
-    cdef str _name
-        #  always identical to glpk.get_col_name(self._problem, self._col)
+    cdef str _name  # always identical to
+                    # glpk.get_col/row_name(self._problem, self._col/row)
+
+    def __hash__(self):
+        cdef int* ptr = &self._problem
+        return hash((ptr, self._alias))
+
+
+cdef class Variable(_Varstraint):
+
+    cdef readonly Bounds bounds
+    """The variable bounds, a `.Bounds` object"""
 
     def __cinit__(self, program):
         glpk.add_cols(self._problem, 1)
         self._name = self._alias = self._program._generate_alias()
         col = glpk.get_col_num(self._problem)
         glpk.set_col_name(self._problem, col, name2chars(self._name))
-
-    def __hash__(self):
-        return hash(self._alias)
+        bounds = Bounds(self)
 
     property _col:
         """Return the column index"""
@@ -117,10 +181,70 @@ cdef class Variable(_Component):
                 raise ValueError("Kind must be 'continuous', 'integer', " +
                                  "or 'binary'.")
 
+    cdef double _lower_bound(self):
+        return glpk.get_col_lb(self._problem, self._col)
+
+    cdef double _upper_bound(self):
+        return glpk.get_col_ub(self._problem, self._col)
+
+    cdef _set_bounds(int vartype, double lb, double ub):
+        glpk.set_col_bnds(self._problem, self._col, vartype, lb, ub)
+
     def remove(self):
         """Remove the variable from the problem"""
-        col = self._col
-        cdef int ind[2]
-        ind[1] = col
-        glpk.del_cols(self._problem, 1, ind)
-        del self._problem.variables[col-1]  # GLPK indices start at 1
+        del self._problem.variables[self._name]
+
+
+cdef class Constraint(_Varstraint):
+
+    cdef readonly Bounds bounds
+    """The constraint bounds, a `.Bounds` object"""
+
+    def __cinit__(self, program):
+        glpk.add_rows(self._problem, 1)
+        self._name = self._alias = self._program._generate_alias()
+        row = glpk.get_row_num(self._problem)
+        glpk.set_row_name(self._problem, row, name2chars(self._name))
+        bounds = Bounds(self)
+
+    property _row:
+        """Return the row index"""
+        def __get__(self):
+            row = glpk.find_row(self._problem, name2chars(self._name))
+            return None if row is 0 else row
+
+    property name:
+        """The constraint name, a `str` of ≤255 bytes UTF-8 encoded
+
+        .. doctest:: Constraint
+
+            >>> c.name  # the GLPK default
+            ''
+            >>> c.name = 'Budget'
+            >>> c.name
+            'Budget'
+            >>> del c.name  # clear name
+            >>> c.name
+            ''
+
+        """
+        def __get__(self):
+            return '' if self._name is self._alias else self._name
+        def __set__(self, name):
+            self._name = self._alias if name is '' else name
+            glpk.set_row_name(self._problem, self._row, name2chars(self._name))
+        def __del__(self):
+            self.name = self._alias
+
+    cdef double _lower_bound(self):
+        return glpk.get_row_lb(self._problem, self._row)
+
+    cdef double _upper_bound(self):
+        return glpk.get_row_ub(self._problem, self._row)
+
+    cdef _set_bounds(int vartype, double lb, double ub):
+        glpk.set_row_bnds(self._problem, self._row, vartype, lb, ub)
+
+    def remove(self):
+        """Remove the constraint from the problem"""
+        del self._problem.constraints[self._name]
