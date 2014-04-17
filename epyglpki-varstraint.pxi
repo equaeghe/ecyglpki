@@ -312,6 +312,34 @@ cdef class Constraint(_Varstraint):
 
 
 cdef class Bounds:
+    """The bounds of a variable or constraint
+
+    .. doctest:: Bounds
+
+        >>> p = MILProgram()
+        >>> x = p.variables.add()
+        >>> b = x.bounds
+        >>> isinstance(b, Bounds)
+        True
+        >>> b.lower, b.upper  # the GLPK default
+        (-inf, inf)
+
+    Changing both lower and upper bounds can be done by passing them as an
+    argument to the `.Bounds` object, using `None` for no bound:
+
+    .. doctest:: Bounds
+
+        >>> b(0, 4)
+        >>> b.lower, b.upper
+        (0.0, 4.0)
+        >>> b(None, None)
+        >>> b.lower, b.upper
+        (-inf, inf)
+
+    The lower and upper bounds can retrieved also be changed using the
+    attributes below:
+
+    """
 
     cdef _Varstraint _varstraint
 
@@ -329,13 +357,13 @@ cdef class Bounds:
         cdef double ub
         if isinstance(lower, numbers.Real):
             lb = lower
-        elif lower is None:
+        elif (lower is None) or (lower <= -DBL_MAX):
             lb = -DBL_MAX
         else:
             raise TypeError("Lower bound value must be 'None' or 'Real'.")
         if isinstance(upper, numbers.Real):
             ub = upper
-        elif upper is None:
+        elif (upper is None) or (lower >= +DBL_MAX):
             ub = +DBL_MAX
         else:
             raise TypeError("Upper bound value must be 'None' or 'Real'.")
@@ -348,20 +376,42 @@ cdef class Bounds:
         self._varstraint._set_bounds(vartype, lb, ub)
 
     property lower:
-        """The lower bound"""
+        """The lower bound
+
+        .. doctest:: Bounds
+
+            >>> b.lower = -1
+            >>> b.lower
+            -1.0
+            >>> del b.lower  # remove the lower bound
+            >>> b.lower
+            -inf
+
+        """
         def __get__(self):
             cdef double lb = self._varstraint._lower_bound()
-            return None if lb == -DBL_MAX else lb
+            return -float('inf') if lb == -DBL_MAX else lb
         def __set__(self, value):
             self(value, self.upper)
         def __del__(self):
             self.lower = None
 
     property upper:
-        """The upper bound"""
+        """The upper bound
+
+        .. doctest:: Bounds
+
+            >>> b.upper = 5/2
+            >>> b.upper
+            2.5
+            >>> del b.upper  # remove the upper bound
+            >>> b.upper
+            inf
+
+        """
         def __get__(self):
             cdef double ub = self._varstraint._upper_bound()
-            return None if ub == +DBL_MAX else ub
+            return float('inf') if ub == +DBL_MAX else ub
         def __set__(self, value):
             self(self.lower, value)
         def __del__(self):

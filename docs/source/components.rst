@@ -2,7 +2,7 @@
 
 .. testsetup:: *
 
-    from epyglpki import MILProgram, Variable, Constraint, Objective
+    from epyglpki import MILProgram, Variable, Constraint, Bounds, Objective
 
 Components
 ==========
