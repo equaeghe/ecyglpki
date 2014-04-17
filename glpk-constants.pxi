@@ -43,10 +43,10 @@ cdef str2scalopt = {
 
 # variable types
 cdef pair2vartype = {
-    (False, False): glpk.FR,
-    (True, False): glpk.LO,
-    (False, True): glpk.UP,
-    (True, True): glpk.DB
+    (True, True): glpk.FR,
+    (False, True): glpk.LO,
+    (True, False): glpk.UP,
+    (False, False): glpk.DB
     }
 
 # variable kinds

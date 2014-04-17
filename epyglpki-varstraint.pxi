@@ -29,10 +29,20 @@ cdef class _Varstraint(_Component):
                     # glpk.get_col/row_name(self._problem, self._col/row)
 
     def __hash__(self):
-        return hash((PyCapsule_New(self._problem, NULL, NULL), self._alias))
+        return hash((id(self._program), self._alias))
 
 
 cdef class Variable(_Varstraint):
+    """One of the problem's variables
+
+    .. doctest:: Variable
+
+        >>> p = MILProgram()
+        >>> x = p.variables.add()
+        >>> isinstance(x, Variable)
+        True
+
+    """
 
     cdef readonly Bounds bounds
     """The variable bounds, a `.Bounds` object"""
@@ -48,13 +58,15 @@ cdef class Variable(_Varstraint):
             glpk.set_col_name(self._problem, col, name2chars(self._name))
         else:
             self._name = chars.decode()
-        bounds = Bounds(self)
+        self.bounds = Bounds(self)
 
     property _ind:
         """Return the column index"""
         def __get__(self):
             col = glpk.find_col(self._problem, name2chars(self._name))
-            return None if col is 0 else col
+            if col is 0:
+                raise IndexError("Variable does not belong to this program.")
+            return col
 
     property _varstraintind:
         """Return the variable index
@@ -83,8 +95,9 @@ cdef class Variable(_Varstraint):
         def __get__(self):
             return '' if self._name is self._alias else self._name
         def __set__(self, name):
+            col = self._ind  # get col with old name
             self._name = self._alias if name is '' else name
-            glpk.set_col_name(self._problem, self._col, name2chars(self._name))
+            glpk.set_col_name(self._problem, col, name2chars(self._name))
         def __del__(self):
             self.name = self._alias
 
@@ -108,36 +121,38 @@ cdef class Variable(_Varstraint):
 
                 >>> x.kind
                 'integer'
-                >>> x.bounds(lower=0, upper=1)
+                >>> x.bounds(0, 1)
+                >>> x.bounds.lower, x.bounds.upper
                 (0.0, 1.0)
                 >>> x.kind
                 'binary'
-                >>> x.bounds(upper=3)
+                >>> x.bounds.upper = 3
+                >>> x.bounds.lower, x.bounds.upper
                 (0.0, 3.0)
                 >>> x.kind
                 'integer'
                 >>> x.kind = 'binary'
-                >>> x.bounds()
+                >>> x.bounds.lower, x.bounds.upper
                 (0.0, 1.0)
 
         """
         def __get__(self):
-            return varkind2str[glpk.get_col_kind(self._problem, self._col)]
+            return varkind2str[glpk.get_col_kind(self._problem, self._ind)]
         def __set__(self, kind):
             if kind in str2varkind:
-                glpk.set_col_kind(self._problem, self._col, str2varkind[kind])
+                glpk.set_col_kind(self._problem, self._ind, str2varkind[kind])
             else:
                 raise ValueError("Kind must be 'continuous', 'integer', " +
                                  "or 'binary'.")
 
-    cdef double _lower_bound(self):
-        return glpk.get_col_lb(self._problem, self._col)
+    def _lower_bound(self):
+        return glpk.get_col_lb(self._problem, self._ind)
 
-    cdef double _upper_bound(self):
-        return glpk.get_col_ub(self._problem, self._col)
+    def _upper_bound(self):
+        return glpk.get_col_ub(self._problem, self._ind)
 
-    cdef _set_bounds(self, int vartype, double lb, double ub):
-        glpk.set_col_bnds(self._problem, self._col, vartype, lb, ub)
+    def _set_bounds(self, int vartype, double lb, double ub):
+        glpk.set_col_bnds(self._problem, self._ind, vartype, lb, ub)
 
     property coeffs:
         """Nonzero coefficients, a |Mapping| of `.Constraint` to |Real|"""
@@ -179,6 +194,16 @@ cdef class Variable(_Varstraint):
 
 
 cdef class Constraint(_Varstraint):
+    """One of the problem's constraints
+
+    .. doctest:: Constraint
+
+        >>> p = MILProgram()
+        >>> c = p.constraints.add()
+        >>> isinstance(c, Constraint)
+        True
+
+    """
 
     cdef readonly Bounds bounds
     """The constraint bounds, a `.Bounds` object"""
@@ -194,13 +219,15 @@ cdef class Constraint(_Varstraint):
             glpk.set_row_name(self._problem, row, name2chars(self._name))
         else:
             self._name = chars.decode()
-        bounds = Bounds(self)
+        self.bounds = Bounds(self)
 
     property _ind:
         """Return the row index"""
         def __get__(self):
             row = glpk.find_row(self._problem, name2chars(self._name))
-            return None if row is 0 else row
+            if row is 0:
+                raise IndexError("Constraint does not belong to this program.")
+            return row
 
     property _varstraintind:
         """Return the variable index
@@ -230,19 +257,20 @@ cdef class Constraint(_Varstraint):
         def __get__(self):
             return '' if self._name is self._alias else self._name
         def __set__(self, name):
+            row = self._ind  # get row with old name
             self._name = self._alias if name is '' else name
-            glpk.set_row_name(self._problem, self._row, name2chars(self._name))
+            glpk.set_row_name(self._problem, row, name2chars(self._name))
         def __del__(self):
             self.name = self._alias
 
-    cdef double _lower_bound(self):
-        return glpk.get_row_lb(self._problem, self._row)
+    def _lower_bound(self):
+        return glpk.get_row_lb(self._problem, self._ind)
 
-    cdef double _upper_bound(self):
-        return glpk.get_row_ub(self._problem, self._row)
+    def _upper_bound(self):
+        return glpk.get_row_ub(self._problem, self._ind)
 
-    cdef _set_bounds(self, int vartype, double lb, double ub):
-        glpk.set_row_bnds(self._problem, self._row, vartype, lb, ub)
+    def _set_bounds(self, int vartype, double lb, double ub):
+        glpk.set_row_bnds(self._problem, self._ind, vartype, lb, ub)
 
     property coeffs:
         """Nonzero coefficients, a |Mapping| of `.Variable` to |Real|"""
@@ -283,7 +311,7 @@ cdef class Constraint(_Varstraint):
         del self._program.constraints[self._name]
 
 
-cdef class Bounds(_Component):
+cdef class Bounds:
 
     cdef _Varstraint _varstraint
 
@@ -313,11 +341,11 @@ cdef class Bounds(_Component):
             raise TypeError("Upper bound value must be 'None' or 'Real'.")
         if lb > ub:
             raise ValueError("Lower bound must not dominate upper bound.")
-        vartype = pair2vartype[(lower, upper)]
+        vartype = pair2vartype[(lower is None, upper is None)]
         if vartype == glpk.DB:
             if lb == ub:
                 vartype = glpk.FX
-        self._varstraint._set_bounds(vartype, lower, upper)
+        self._varstraint._set_bounds(vartype, lb, ub)
 
     property lower:
         """The lower bound"""

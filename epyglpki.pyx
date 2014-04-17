@@ -248,7 +248,10 @@ cdef class MILProgram:
             True
             >>> len(x.coeffs) == len(d.coeffs) == 1
             True
-            # TODO: document del as well
+
+        .. todo::
+
+            Document ``del`` as well.
 
         """
         def __set__(self, coeffs):
@@ -315,15 +318,13 @@ cdef class MILProgram:
             >>> y = p.variables.add()
             >>> c = p.constraints.add()
             >>> d = p.constraints.add()
-            >>> p.coeffs = {(x, c): 3e-100, (d, y): 5.5, (x, d): 1.5e200}
+            >>> p.coeffs = {(c, x): 3e-100, (d, y): 5.5, (d, x): 1.5e200}
             >>> p.scaling()
             {}
-            >>> p.scaling('skip', 'geometric', 'equilibration',
-            ...           factors={y: 3}) # doctest: +NORMALIZE_WHITESPACE
-            {<epyglpki.Variable object at 0x...>: 3.329...e-67,
-             <epyglpki.Variable object at 0x...>: 3.0,
-             <epyglpki.Constraint object at 0x...>: 1.001...e+166,
-             <epyglpki.Constraint object at 0x...>: 2.002...e-134}
+            >>> factors = p.scaling('skip', 'geometric', 'equilibration',
+            ...                     factors={y: 3}) # doctest: +NORMALIZE_WHITESPACE
+            >>> factors[x], factors[y], factors[c], factors[d]
+            (3.329...e-67, 3.0, 1.001...e+166, 2.002...e-134)
             >>> p.scaling(factors={})
             {}
 

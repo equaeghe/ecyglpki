@@ -36,13 +36,16 @@ cdef class _Varstraints(_Component):
         return self._varstraints.__iter__()
 
     def __contains__(self, varstraint):
-        return varstraint._ind is not None
+        try:
+            varstraint._ind
+        except IndexError:
+            return False
+        else:
+            return True
 
     def _getoneitem(self, name):
         if isinstance(name, str):
             ind = self._find_ind(name)
-            if ind is None:
-                raise KeyError("Unknown name: " + name)
         else:
             raise TypeError("Names must be strings; "
                             + str(name) + " is " + type(name).__name__ + '.')
@@ -65,8 +68,7 @@ cdef class _Varstraints(_Component):
             raise TypeError("Indices must be Integral.")
 
     def __delitem__(self, names):
-        inds = [ind for ind in (self[name]._ind for name in names)
-                            if ind is not None]
+        inds = [self[name]._ind for name in names]
         for ind in inds:
             del self._varstraints[ind-1]  # GLPK indices start at 1
         self._del_inds(inds)
