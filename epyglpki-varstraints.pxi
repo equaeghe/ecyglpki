@@ -103,7 +103,7 @@ cdef class Variables(_Varstraints):
 
         """
         glpk.add_cols(self._problem, 1)
-        variable = Variable()
+        variable = Variable(self._program)
         self._add(variable, attributes)
         return variable
 
@@ -134,6 +134,6 @@ cdef class Constraints(_Varstraints):
 
         """
         glpk.add_rows(self._problem, 1)
-        constraint = Constraint()
+        constraint = Constraint(self._program)
         self._add(constraint, attributes)
         return constraint

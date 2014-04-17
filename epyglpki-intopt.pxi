@@ -359,10 +359,10 @@ cdef class IntOptSolver(_Solver):
         """Return the variable or constraint value for the current solution
 
         :param varstraint: variable or constraint to return the value of
-        :type varstraint: `.Varstraint`
+        :type varstraint: `.Variable` or `.Constraint`
         :returns: the value of *varstraint* for the current solution
         :rtype: `float` or `int`
-        :raises TypeError: if varstraint is not `.Varstraint`
+        :raises TypeError: if varstraint is not `.Variable` or `.Constraint`
         :raises ValueError: if a variable with `'integer'` or `'binary'` kind
             has a non-integer value
 
@@ -386,7 +386,7 @@ cdef class IntOptSolver(_Solver):
 
         :returns: a |Mapping| of {`'equalities'`, `'bounds'`} to |Mapping|
             of {`'abs'`, `'rel'`} to pairs consisting of an error (`float`)
-            and a `.Varstraint` where it is attained
+            and a `.Variable` or `.Constraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current solution does not satisfy the Karush-Kuhn-Tucker conditions

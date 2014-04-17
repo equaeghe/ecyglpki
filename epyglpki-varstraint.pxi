@@ -38,8 +38,8 @@ cdef class Variable(_Varstraint):
     """The variable bounds, a `.Bounds` object"""
 
     def __cinit__(self, program):
-        self._alias = self._program._generate_alias()
-        col = len(self.program.variables) + 1
+        self._alias = program._generate_alias()
+        col = len(program.variables) + 1
                         # + 1 because variable not yet added to
                         # self._program.variables._varstraints at this point
         cdef char* chars = glpk.get_col_name(self._problem, col)
@@ -184,8 +184,8 @@ cdef class Constraint(_Varstraint):
     """The constraint bounds, a `.Bounds` object"""
 
     def __cinit__(self, program):
-        self._alias = self._program._generate_alias()
-        row = len(self._program.constraints) + 1
+        self._alias = program._generate_alias()
+        row = len(program.constraints) + 1
                         # + 1 because variable not yet added to
                         # self._program.constraints._varstraints at this point
         cdef char* chars = glpk.get_row_name(self._problem, row)

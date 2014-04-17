@@ -154,10 +154,10 @@ cdef class IPointSolver(_Solver):
         """Return primal value for the current solution
 
         :param varstraint: variable or constraint to return the primal value of
-        :type varstraint: `.Varstraint`
+        :type varstraint: `.Variable` or `.Constraint`
         :returns: the value of *varstraint* for the current solution
         :rtype: `float` or `int`
-        :raises TypeError: if varstraint is not `.Varstraint`
+        :raises TypeError: if varstraint is not `.Variable` or `.Constraint`
 
         .. todo::
 
@@ -171,7 +171,7 @@ cdef class IPointSolver(_Solver):
 
         :returns: a |Mapping| of {`'equalities'`, `'bounds'`} to |Mapping|
             of {`'abs'`, `'rel'`} to pairs consisting of an error (`float`)
-            and a `.Varstraint` where it is attained
+            and a `.Variable` or `.Constraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current primal solution does not satisfy the Karush-Kuhn-Tucker
@@ -189,10 +189,10 @@ cdef class IPointSolver(_Solver):
         """Return dual value for the current solution
 
         :param varstraint: variable or constraint to return the dual value of
-        :type varstraint: `.Varstraint`
+        :type varstraint: `.Variable` or `.Constraint`
         :returns: the value of *varstraint* for the current solution
         :rtype: `float` or `int`
-        :raises TypeError: if varstraint is not `.Varstraint`
+        :raises TypeError: if varstraint is not `.Variable` or `.Constraint`
 
         .. todo::
 
@@ -206,7 +206,7 @@ cdef class IPointSolver(_Solver):
 
         :returns: a |Mapping| of {`'equalities'`, `'bounds'`} to |Mapping|
             of {`'abs'`, `'rel'`} to pairs consisting of an error (`float`)
-            and a `.Varstraint` where it is attained
+            and a `.Variable` or `.Constraint` where it is attained
 
         The errors returned by this function quantify to what degree the
         current dual solution does not satisfy the Karush-Kuhn-Tucker

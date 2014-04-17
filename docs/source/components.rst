@@ -2,26 +2,29 @@
 
 .. testsetup:: *
 
-    from epyglpki import MILProgram, Varstraint, Variable, Constraint, Objective
+    from epyglpki import MILProgram, Variable, Constraint, Objective
 
 Components
 ==========
 
-Varstraints
------------
-
-.. autoclass:: Varstraint
-
 Variables
 ---------
 
-.. autoclass:: Variable
+.. autoclass:: Variables
 
+.. autoclass:: Variable
 
 Constraints
 -----------
 
+.. autoclass:: Constraints
+
 .. autoclass:: Constraint
+
+Bounds
+------
+
+.. autoclass:: Bounds
 
 The Objective
 -------------
