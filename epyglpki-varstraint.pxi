@@ -29,8 +29,7 @@ cdef class _Varstraint(_Component):
                     # glpk.get_col/row_name(self._problem, self._col/row)
 
     def __hash__(self):
-        cdef int* ptr = &self._problem
-        return hash((ptr, self._alias))
+        return hash((PyCapsule_New(self._problem, NULL, NULL), self._alias))
 
 
 cdef class Variable(_Varstraint):
@@ -43,8 +42,7 @@ cdef class Variable(_Varstraint):
         col = len(self.program.variables) + 1
                         # + 1 because variable not yet added to
                         # self._program.variables._varstraints at this point
-        cdef char* chars
-        chars = glpk.get_col_name(self._problem, col)
+        cdef char* chars = glpk.get_col_name(self._problem, col)
         if chars is NULL:
             self._name = self._alias
             glpk.set_col_name(self._problem, col, name2chars(self._name))
@@ -58,14 +56,14 @@ cdef class Variable(_Varstraint):
             col = glpk.find_col(self._problem, name2chars(self._name))
             return None if col is 0 else col
 
-    property _col_after_rows:
+    property _varstraintind:
         """Return the variable index
 
         (GLPK sometimes indexes variables after constraints.)
 
         """
         def __get__(self):
-            return len(self._problem._constraints) + self._col
+            return len(self._program.constraints) + self._ind
 
     property name:
         """The variable name, a `str` of ≤255 bytes UTF-8 encoded
@@ -138,7 +136,7 @@ cdef class Variable(_Varstraint):
     cdef double _upper_bound(self):
         return glpk.get_col_ub(self._problem, self._col)
 
-    cdef _set_bounds(int vartype, double lb, double ub):
+    cdef _set_bounds(self, int vartype, double lb, double ub):
         glpk.set_col_bnds(self._problem, self._col, vartype, lb, ub)
 
     property coeffs:
@@ -149,14 +147,14 @@ cdef class Variable(_Varstraint):
             cdef double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
             try:
                 glpk.get_mat_col(self._problem, self._ind, rows, vals)
-                coeffs = {self._problem.constraints[rows[i]]: vals[i]
+                coeffs = {self._program.constraints._from_ind(rows[i]): vals[i]
                           for i in range(1, 1+k)}
             finally:
+                glpk.free(rows)
                 glpk.free(vals)
-                glpk.free(inds)
             return coeffs
         def __set__(self, coeffs):
-            _coeffscheck(coeffs)
+            coeffscheck(coeffs)
             k = len(coeffs)
             cdef int* rows =  <int*>glpk.alloc(1+k, sizeof(int))
             cdef double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
@@ -164,8 +162,8 @@ cdef class Variable(_Varstraint):
                 for i, item in enumerate(coeffs, start=1):
                     if isinstance(item[0], Constraint):
                         row = item[0]._ind
-                    else:
-                        row = self._program.constraints(item[0])
+                    else:  #  assume name
+                        row = self._program.constraints._find_ind(item[0])
                     rows[i] = row
                     vals[i] = item[1]
                 glpk.set_mat_col(self._problem, self._ind, 0, rows, vals)
@@ -177,7 +175,7 @@ cdef class Variable(_Varstraint):
 
     def remove(self):
         """Remove the variable from the problem"""
-        del self._problem.variables[self._name]
+        del self._program.variables[self._name]
 
 
 cdef class Constraint(_Varstraint):
@@ -190,8 +188,7 @@ cdef class Constraint(_Varstraint):
         row = len(self._program.constraints) + 1
                         # + 1 because variable not yet added to
                         # self._program.constraints._varstraints at this point
-        cdef char* chars
-        chars = glpk.get_row_name(self._problem, row)
+        cdef char* chars = glpk.get_row_name(self._problem, row)
         if chars is NULL:
             self._name = self._alias
             glpk.set_row_name(self._problem, row, name2chars(self._name))
@@ -204,6 +201,16 @@ cdef class Constraint(_Varstraint):
         def __get__(self):
             row = glpk.find_row(self._problem, name2chars(self._name))
             return None if row is 0 else row
+
+    property _varstraintind:
+        """Return the variable index
+
+        (GLPK sometimes indexes structural variables after auxiliary ones,
+        i.e., constraints.)
+
+        """
+        def __get__(self):
+            return self._ind
 
     property name:
         """The constraint name, a `str` of ≤255 bytes UTF-8 encoded
@@ -234,7 +241,7 @@ cdef class Constraint(_Varstraint):
     cdef double _upper_bound(self):
         return glpk.get_row_ub(self._problem, self._row)
 
-    cdef _set_bounds(int vartype, double lb, double ub):
+    cdef _set_bounds(self, int vartype, double lb, double ub):
         glpk.set_row_bnds(self._problem, self._row, vartype, lb, ub)
 
     property coeffs:
@@ -245,14 +252,14 @@ cdef class Constraint(_Varstraint):
             cdef double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
             try:
                 glpk.get_mat_row(self._problem, self._ind, cols, vals)
-                coeffs = {self._problem.variables[cols[i]]: vals[i]
+                coeffs = {self._program.variables._from_ind(cols[i]): vals[i]
                           for i in range(1, 1+k)}
             finally:
+                glpk.free(cols)
                 glpk.free(vals)
-                glpk.free(inds)
             return coeffs
         def __set__(self, coeffs):
-            _coeffscheck(coeffs)
+            coeffscheck(coeffs)
             k = len(coeffs)
             cdef int* cols =  <int*>glpk.alloc(1+k, sizeof(int))
             cdef double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
@@ -260,8 +267,8 @@ cdef class Constraint(_Varstraint):
                 for i, item in enumerate(coeffs, start=1):
                     if isinstance(item[0], Variable):
                         col = item[0]._ind
-                    else:
-                        col = self._program.variables(item[0])
+                    else:  #  assume name
+                        col = self._program.variables._find_ind(item[0])
                     cols[i] = col
                     vals[i] = item[1]
                 glpk.set_mat_row(self._problem, self._ind, 0, cols, vals)
@@ -273,7 +280,7 @@ cdef class Constraint(_Varstraint):
 
     def remove(self):
         """Remove the constraint from the problem"""
-        del self._problem.constraints[self._name]
+        del self._program.constraints[self._name]
 
 
 cdef class Bounds(_Component):
@@ -289,32 +296,33 @@ cdef class Bounds(_Component):
     def __repr__(self):
         return type(self).__name__ + str(self)
 
-    @classmethod
-    cdef double _arg2double(cls, value):
-        if value is None:
-            return -DBL_MAX
-        elif isinstance(value, numbers.Real):
-            return value
-        else:
-            raise TypeError("Bound value must be 'None' or 'Real'.")
-
     def __call__(self, lower, upper):
         cdef double lb
         cdef double ub
-        lb = Bounds._arg2double(lower)
-        ub = Bounds._arg2double(upper)
+        if isinstance(lower, numbers.Real):
+            lb = lower
+        elif lower is None:
+            lb = -DBL_MAX
+        else:
+            raise TypeError("Lower bound value must be 'None' or 'Real'.")
+        if isinstance(upper, numbers.Real):
+            ub = upper
+        elif upper is None:
+            ub = +DBL_MAX
+        else:
+            raise TypeError("Upper bound value must be 'None' or 'Real'.")
         if lb > ub:
             raise ValueError("Lower bound must not dominate upper bound.")
         vartype = pair2vartype[(lower, upper)]
         if vartype == glpk.DB:
             if lb == ub:
                 vartype = glpk.FX
-        self._varstraint._set_bounds(vartype, lb, ub)
+        self._varstraint._set_bounds(vartype, lower, upper)
 
     property lower:
         """The lower bound"""
         def __get__(self):
-            lb = self._varstraint._lower_bound()
+            cdef double lb = self._varstraint._lower_bound()
             return None if lb == -DBL_MAX else lb
         def __set__(self, value):
             self(value, self.upper)
@@ -324,7 +332,7 @@ cdef class Bounds(_Component):
     property upper:
         """The upper bound"""
         def __get__(self):
-            ub = self._varstraint._upper_bound()
+            cdef double ub = self._varstraint._upper_bound()
             return None if ub == +DBL_MAX else ub
         def __set__(self, value):
             self(self.lower, value)

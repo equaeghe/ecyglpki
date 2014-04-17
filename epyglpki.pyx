@@ -35,21 +35,18 @@ def GLPK_version():
 
 
 cdef char* name2chars(name) except NULL:
-    cdef char* chars
     if not isinstance(name, str):
         raise TypeError("Name must be a 'str'.")
-    else:
-        name = name.encode()
-        if len(name) > 255:
-            raise ValueError("Name must not exceed 255 bytes.")
-        chars = name
-    return chars
+    name = name.encode()
+    if len(name) > 255:
+        raise ValueError("Name must not exceed 255 bytes.")
+    return name
 
-cdef _coeffscheck(cls, coeffs):
+cdef coeffscheck(coeffs):
     if not isinstance(coeffs, collections.abc.Mapping):
         raise TypeError("Coefficients must be passed in a Mapping, not " +
                         type(coeffs).__name__)
-    if not all(isinstance(value, numbers.Real) for value in coeffs.values()):
+    if not all([isinstance(value, numbers.Real) for value in coeffs.values()]):
         raise TypeError("Coefficient values must be Real numbers.")
 
 
@@ -187,12 +184,12 @@ cdef class MILProgram:
     def __dealloc__(self):
         glpk.delete_prob(self._problem)
 
-    def _varstraints(self, ind):
+    def _from_varstraintind(self, ind):
         n = len(self.constraints)
         if ind > n:
-            return self.variables[ind-n]
+            return self.variables._from_ind(ind-n)
         else:
-            return self.constraints[ind]
+            return self.constraints._from_ind(ind)
 
     def _generate_alias(self):
         """Generate an alias to be used as a unique identifier
@@ -255,8 +252,8 @@ cdef class MILProgram:
 
         """
         def __set__(self, coeffs):
-            _coeffscheck(coeffs)
-            if not all(isinstance(key, tuple) & (len(key) is 2)
+            coeffscheck(coeffs)
+            if not all(isinstance(key, tuple) and (len(key) is 2)
                        for key in coeffs.keys()):
                 raise TypeError("Coefficient keys must be pairs, " +
                                 "i.e., length-2 tuples.")
@@ -268,13 +265,13 @@ cdef class MILProgram:
                 for i, item in enumerate(coeffs.items(), start=1):
                     if isinstance(item[0][0], Constraint):
                         row = item[0][0]._ind
-                    else:
-                        row = self.constraints(item[0][0])
+                    else:  #  assume name
+                        row = self.constraints._find_ind(item[0][0])
                     rows[i] = row
                     if isinstance(item[0][1], Variable):
                         col = item[0][1]._ind
-                    else:
-                        col = self.variables(item[0][1])
+                    else:  #  assume name
+                        col = self.variables._find_ind(item[0][1])
                     cols[i] = col
                     vals[i] = item[1]
                 glpk.load_matrix(self._problem, k, rows, cols, vals)

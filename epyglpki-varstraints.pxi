@@ -22,7 +22,7 @@
 ###############################################################################
 
 
-cdef class _Varstraints(_Component)
+cdef class _Varstraints(_Component):
 
     cdef list _varstraints
 
@@ -38,38 +38,38 @@ cdef class _Varstraints(_Component)
     def __contains__(self, varstraint):
         return varstraint._ind is not None
 
-    def _getoneitem(self, arg):
-        if isinstance(name, numbers.Integral):
-            ind = arg
+    def _getoneitem(self, name):
         if isinstance(name, str):
-            ind = self._find_ind(arg)
+            ind = self._find_ind(name)
             if ind is None:
-                raise KeyError("Unknown name: " + arg)
+                raise KeyError("Unknown name: " + name)
         else:
-            raise TypeError("Arguments are integers or strings; "
-                            + str(arg) + " is " + type(arg).__name__ + '.')
+            raise TypeError("Names must be strings; "
+                            + str(name) + " is " + type(name).__name__ + '.')
         return self._varstraints[ind-1]  # GLPK indices start at 1
 
-    def __getitem__(self, args*):
-        n = len(args)
+    def __getitem__(self, names):
+        n = len(names)
         if n is 0:
             raise SyntaxError("At least one argument is required")
         elif n is 1:
-            return self._getoneitem(self, args[0])
+            return self._getoneitem(self, names[0])
         else:
-            for arg in args:
-                yield self._getoneitem(self, arg)
+            for name in names:
+                yield self._getoneitem(self, name)
 
-    def __delitem__(self, args*):
-        arginds = {arg: self[arg]._ind for arg in args
-                                       if self[arg]._ind is not None}
-        numinds = len(arginds)
-        cdef int inds[1+numinds]
-        for ind, argind in enumerate(arginds.items(), start=1):
-                                     # GLPK indices start at 1
-            inds[ind] = argind[1]
-            del self._varstraints[argind[0]]
-        self._del_cols(numinds, inds)
+    def _from_ind(self, ind):
+        if isinstance(ind, numbers.Integral):
+            return self._varstraints[ind-1]  # GLPK indices start at 1
+        else:
+            raise TypeError("Indices must be Integral.")
+
+    def __delitem__(self, names):
+        inds = [ind for ind in (self[name]._ind for name in names)
+                            if ind is not None]
+        for ind in inds:
+            del self._varstraints[ind-1]  # GLPK indices start at 1
+        self._del_inds(inds)
 
     def _add(self, varstraint, attributes):
         self._varstraints.append(varstraint)
@@ -82,14 +82,18 @@ cdef class Variables(_Varstraints):
     cdef _find_ind(self, name):
         return glpk.find_col(self._problem, name2chars(name))
 
-    cdef _del_inds(self, int numinds, const int* inds):
-        glpk.del_cols(self._problem, numinds, inds)
+    cdef _del_inds(self, inds):
+        k = len(inds)
+        cdef int* cinds =  <int*>glpk.alloc(1+k, sizeof(int))
+        for i, ind in enumerate(inds, start=1):
+            cinds[i] = ind
+        glpk.del_cols(self._problem, k, cinds)
 
     def _link(self):
         variable = Variable()
         self._add(variable, {})
 
-    def add(self, attributes**):
+    def add(self, **attributes):
         """Add a new variable to the problem
 
         :param attributes: zero or more named parameters from the list of
@@ -109,14 +113,18 @@ cdef class Constraints(_Varstraints):
     cdef _find_ind(self, name):
         return glpk.find_row(self._problem, name2chars(name))
 
-    cdef _del_inds(self, int numinds, const int* inds):
-        glpk.del_rows(self._problem, numinds, inds)
+    cdef _del_inds(self, inds):
+        k = len(inds)
+        cdef int* cinds =  <int*>glpk.alloc(1+k, sizeof(int))
+        for i, ind in enumerate(inds, start=1):
+            cinds[i] = ind
+        glpk.del_rows(self._problem, k, cinds)
 
     def _link(self):
         constraint = Constraint()
         self._add(constraint, {})
 
-    def add(self, attributes**):
+    def add(self, **attributes):
         """Add a new constraint to the problem
 
         :param attributes: zero or more named parameters from the list of

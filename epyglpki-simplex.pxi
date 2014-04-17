@@ -420,9 +420,9 @@ cdef class SimplexSolver(_Solver):
 
         """
         ind = glpk.sm_unbnd_ray(self._problem)
-        varstraint = self._program._varstraint(ind)
+        varstraint = self._program._from_varstraintind(ind)
         nature = 'primal'
-        constraints = len(self._program._constraints)
+        constraints = len(self._program.constraints)
         if ind is 0:
             nature = ''
         elif ind <= constraints:
@@ -508,11 +508,9 @@ cdef class SimplexSolver(_Solver):
             for varstraint, string in status.items():
                 varstat = str2varstat[string]
                 if isinstance(varstraint, Variable):
-                    col = self._program._col(varstraint)
-                    glpk.set_col_stat(self._problem, col, varstat)
+                    glpk.set_col_stat(self._problem, varstraint._ind, varstat)
                 elif isinstance(varstraint, Constraint):
-                    row = self._program._row(varstraint)
-                    glpk.set_row_stat(self._problem, row, varstat)
+                    glpk.set_row_stat(self._problem, varstraint._ind, varstat)
                 else:
                     raise TypeError("Only 'Variable' and 'Constraint' " +
                                     "can have a status.")
@@ -523,10 +521,10 @@ cdef class SimplexSolver(_Solver):
             if retcode is not 0:
                 raise smretcode2error[retcode]
         status = {}
-        for col, variable in enumerate(self._program._variables, start=1):
+        for col, variable in enumerate(self._program.variables, start=1):
             varstat = glpk.get_col_stat(self._problem, col)
             status[variable] = varstat2str[varstat]
-        for row, constraint in enumerate(self._program._constraints, start=1):
+        for row, constraint in enumerate(self._program.constraints, start=1):
             varstat = glpk.get_row_stat(self._problem, row)
             status[constraint] = varstat2str[varstat]
         return status
@@ -596,17 +594,15 @@ cdef class SimplexSolver(_Solver):
             raise Exception("Solution must be optimal.")
         if not isinstance(varstraints, collections.abc.Sequence):
             raise TypeError("'varstraints' must be a sequence.")
-        length = len(varstraints)
-        cdef int* indlist = <int*>glpk.alloc(1+length, sizeof(int))
+        k = len(varstraints)
+        cdef int* inds = <int*>glpk.alloc(1+k, sizeof(int))
         try:
-            for pos, varstraint in enumerate(varstraints, start=1):
-                ind = self._program._ind(varstraint, alternate=True)
-                indlist[pos] = ind
+            for i, varstraint in enumerate(varstraints, start=1):
+                inds[i] = varstraint._varstraintind
             if not glpk.bf_exists(self._problem):
                 retcode = glpk.factorize(self._problem)
                 if retcode is not 0:
                     raise smretcode2error[retcode]
-            glpk.print_ranges(self._problem, length, indlist, 0,
-                              name2chars(fname))
+            glpk.print_ranges(self._problem, k, inds, 0, name2chars(fname))
         finally:
-            glpk.free(indlist)
+            glpk.free(inds)

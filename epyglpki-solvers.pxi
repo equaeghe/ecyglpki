@@ -28,11 +28,9 @@ cdef class _Solver(_Component):
                 double (*variable_func)(glpk.ProbObj*, int),
                 double (*constraint_func)(glpk.ProbObj*, int)):
         if isinstance(varstraint, Variable):
-            col = self._program._col(varstraint)
-            return variable_func(self._problem, col)
+            return variable_func(self._problem, varstraint._ind)
         elif isinstance(varstraint, Constraint):
-            row = self._program._row(varstraint)
-            return constraint_func(self._problem, row)
+            return constraint_func(self._problem, varstraint._ind)
         else:
             raise TypeError("varstraint must be a Variable or Constraint")
 
@@ -59,11 +57,11 @@ cdef class _Solver(_Component):
             r_max = re_max[0]
             r_ind = re_ind[0]
             if eqtype is glpk.KKT_PE:
-                a_varstraint = self._program._constraint(a_ind)
-                r_varstraint = self._program._constraint(r_ind)
+                a_varstraint = self._program.constraints._from_ind(a_ind)
+                r_varstraint = self._program.constraints._from_ind(r_ind)
             elif eqtype is glpk.KKT_DE:
-                a_varstraint = self._program._variable(a_ind)
-                r_varstraint = self._program._variable(r_ind)
+                a_varstraint = self._program.variables._from_ind(a_ind)
+                r_varstraint = self._program.variables._from_ind(r_ind)
             error['equalities'] = {'abs': (a_max, a_varstraint),
                                    'rel': (r_max, r_varstraint)}
             # bounds
@@ -73,8 +71,8 @@ cdef class _Solver(_Component):
             a_ind = ae_ind[0]
             r_max = re_max[0]
             r_ind = re_ind[0]
-            a_varstraint = self._program._varstraint(a_ind)
-            r_varstraint = self._program._varstraint(r_ind)
+            a_varstraint = self._program._from_varstraintind(a_ind)
+            r_varstraint = self._program._from_varstraintind(r_ind)
             error['bounds'] = {'abs': (a_max, a_varstraint),
                                'rel': (r_max, r_varstraint)}
             return error
