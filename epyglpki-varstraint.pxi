@@ -368,19 +368,19 @@ cdef class Bounds:
         cdef double lb
         cdef double ub
         if isinstance(lower, numbers.Real):
-            if lower <= -DBL_MAX:
-                lb, lower = -DBL_MAX, None
-            else:
-                lb = lower
+            lb = lower
+            if lb <= -DBL_MAX:
+                lb = -DBL_MAX
+                lower = None
         elif lower is None:
             lb = -DBL_MAX
         else:
             raise TypeError("Lower bound value must be 'None' or 'Real'.")
         if isinstance(upper, numbers.Real):
-            if upper >= +DBL_MAX:
-                ub, upper = +DBL_MAX, None
-            else:
-                ub = upper
+            ub = upper
+            if ub >= +DBL_MAX:
+                ub = +DBL_MAX
+                upper = None
         elif upper is None:
             ub = +DBL_MAX
         else:
