@@ -154,6 +154,9 @@ cdef class Variable(_Varstraint):
     def _set_bounds(self, int vartype, double lb, double ub):
         glpk.set_col_bnds(self._problem, self._ind, vartype, lb, ub)
 
+    def _vartype(self):
+        return glpk.get_col_type(self._problem, self._ind)
+
     property coeffs:
         """Nonzero coefficients, a |Mapping| of `.Constraint` to |Real|"""
         def __get__(self):
@@ -272,6 +275,9 @@ cdef class Constraint(_Varstraint):
     def _set_bounds(self, int vartype, double lb, double ub):
         glpk.set_row_bnds(self._problem, self._ind, vartype, lb, ub)
 
+    def _vartype(self):
+        return glpk.get_row_type(self._problem, self._ind)
+
     property coeffs:
         """Nonzero coefficients, a |Mapping| of `.Variable` to |Real|"""
         def __get__(self):
@@ -316,12 +322,18 @@ cdef class Bounds:
 
     .. doctest:: Bounds
 
-        >>> p = MILProgram()
-        >>> x = p.variables.add()
-        >>> b = x.bounds
+        >>> b = MILProgram().variables.add().bounds
         >>> isinstance(b, Bounds)
         True
-        >>> b.lower, b.upper  # the GLPK default
+        >>> b.lower, b.upper  # the GLPK default for variables
+        (0.0, 0.0)
+
+    .. doctest:: Bounds
+
+        >>> b = MILProgram().constraints.add().bounds
+        >>> isinstance(b, Bounds)
+        True
+        >>> b.lower, b.upper  # the GLPK default for constraints
         (-inf, inf)
 
     Changing both lower and upper bounds can be done by passing them as an
@@ -356,21 +368,27 @@ cdef class Bounds:
         cdef double lb
         cdef double ub
         if isinstance(lower, numbers.Real):
-            lb = lower
-        elif (lower is None) or (lower <= -DBL_MAX):
+            if lower <= -DBL_MAX:
+                lb, lower = -DBL_MAX, None
+            else:
+                lb = lower
+        elif lower is None:
             lb = -DBL_MAX
         else:
             raise TypeError("Lower bound value must be 'None' or 'Real'.")
         if isinstance(upper, numbers.Real):
-            ub = upper
-        elif (upper is None) or (lower >= +DBL_MAX):
+            if upper >= +DBL_MAX:
+                ub, upper = +DBL_MAX, None
+            else:
+                ub = upper
+        elif upper is None:
             ub = +DBL_MAX
         else:
             raise TypeError("Upper bound value must be 'None' or 'Real'.")
         if lb > ub:
             raise ValueError("Lower bound must not dominate upper bound.")
         vartype = pair2vartype[(lower is None, upper is None)]
-        if vartype == glpk.DB:
+        if vartype is glpk.DB:
             if lb == ub:
                 vartype = glpk.FX
         self._varstraint._set_bounds(vartype, lb, ub)
@@ -416,3 +434,31 @@ cdef class Bounds:
             self(self.lower, value)
         def __del__(self):
             self.upper = None
+
+    property type:
+        """The type of bounds, a `str`
+
+        The possible values are:
+
+        * `'free'`: has no bounds
+        * `'dominating'`: has a lower bound
+        * `'dominated'`: has an upper bound
+        * `'bounded'`: has both a lower and an upper bound
+        * `'fixed'`: has identical lower and upper bounds
+
+        .. doctest:: Bounds
+
+            >>> b.lower, b.upper
+            (-inf, inf)
+            >>> b.type
+            'free'
+            >>> b.lower = 0
+            >>> b.type
+            'dominating'
+            >>> b.upper = 1
+            >>> b.type
+            'bounded'
+
+        """
+        def __get__(self):
+            return vartype2str[self._varstraint._vartype()]

@@ -48,6 +48,14 @@ cdef pair2vartype = {
     (True, False): glpk.UP,
     (False, False): glpk.DB
     }
+cdef str2vartype = {
+    'free': glpk.FR,
+    'dominating': glpk.LO,
+    'dominated': glpk.UP,
+    'bounded': glpk.DB,
+    'fixed': glpk.FX
+    }
+cdef vartype2str = {vartype: string for string, vartype in str2vartype.items()}
 
 # variable kinds
 cdef str2varkind = {
