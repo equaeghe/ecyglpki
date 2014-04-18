@@ -22,6 +22,156 @@
 ###############################################################################
 
 
+cdef class SimplexControls:
+    """The simplex solver (`.SimplexSolver`) control parameter object
+
+    .. doctest:: SimplexControls
+
+        >>> r = SimplexControls()
+
+    """
+
+    cdef glpk.SimplexCP _smcp
+
+    def __cinit__(self):
+        glpk.init_smcp(&self._smcp)
+
+    property msg_lev:
+        """The message level, a `str`
+
+        The possible values are
+
+        * `'no'`: no output
+        * `'warnerror'`: warnings and errors only
+        * `'normal'`: normal output
+        * `'full'`: normal output and informational messages
+
+        .. doctest:: SimplexControls
+
+            >>> r.msg_lev  # the GLPK default
+            'full'
+            >>> r.msg_lev = 'no'
+            >>> r.msg_lev
+            'no'
+
+        """
+        def __get__(self):
+            return msglev2str[self._smcp.msg_lev]
+        def __set__(self, value):
+            self._smcp.msg_lev = str2msglev[value]
+
+    property meth:
+        """The simplex method, a `str`
+
+        The possible values are
+
+        * `'primal'`: two-phase primal simplex
+        * `'dual'`: two-phase dual simplex
+        * `'dual_fail_primal'`: two-phase dual simplex and, if it fails,
+          switch to primal simplex
+
+        .. doctest:: SimplexControls
+
+            >>> r.meth  # the GLPK default
+            'simplex'
+            >>> r.meth = 'dual_fail_primal'
+            >>> r.meth
+            'dual_fail_primal'
+
+        """
+        def __get__(self):
+            return meth2str[self._smcp.meth]
+        def __set__(self, value):
+            self._smcp.meth = str2meth[value]
+
+    property pricing:
+        """The pricing technique, a `str`
+
+        The possible values are
+
+        * `'Dantzig'`: standard ‘textbook’
+        * `'steepest'`: projected steepest edge
+
+        .. doctest:: SimplexControls
+
+            >>> r.pricing  # the GLPK default
+            'Dantzig'
+            >>> r.pricing = 'steepest'
+            >>> r.pricing
+            'steepest'
+
+        """
+        def __get__(self):
+            return pricing2str[self._smcp.pricing]
+        def __set__(self, value):
+            self._smcp.pricing = str2pricing[value]
+
+    property r_test:
+        """The ratio test technique, a `str`
+
+        The possible values are
+
+        * `'standard'`: standard ‘textbook’
+        * `'Harris'`: Harris’s two-pass ratio test
+
+        .. doctest:: SimplexControls
+
+            >>> r.r_test  # the GLPK default
+            'standard'
+            >>> r.r_test = 'Harris'
+            >>> r.r_test
+            'Harris'
+
+        """
+        def __get__(self):
+            return rtest2str[self._smcp.r_test]
+        def __set__(self, value):
+            self._smcp.r_test = str2rtest[value]
+
+
+cdef class FactorizationControls:
+    """The basis factorization control parameter object
+
+    .. doctest:: FactorizationControls
+
+        >>> f = MILProgram().simplex.basis.factorization.controls
+        >>> r = FactorizationControls(f)
+
+    """
+
+    cdef glpk.BasFacCP _bfcp
+
+    def __cinit__(self, bfcp):
+        self._bfcp = bfcp
+
+    property type:
+        """The basis factorization type, `str` pairs
+
+        Possible first components:
+
+        * `'LU'`: plain LU factorization
+        * `'BTLU'`: block-triangular LU factorization
+
+        Possible second components
+
+        * `'Forrest-Tomlin'`: `Forrest–Tomlin`_ update applied to U
+          (only with plain LU factorization)
+        * `'Bartels-Golub'`: `Bartels–Golub`_ update applied to Schur
+          complement
+        * `'Givens'`: Givens rotation update applied to Schur complement
+
+        .. doctest:: FactorizationControls
+
+            >>> r.type  # the GLPK default
+            (None, None)
+
+        """
+        def __get__(self):
+            return bftype2strpair[self._bfcp.type]
+        def __set__(self, value):
+            self._bfcp.type = strpair2bftype[value]
+
+
 cdef class SimplexSolver(_Solver):
     """A simplex solver
 
@@ -50,30 +200,6 @@ cdef class SimplexSolver(_Solver):
         :param controls: zero or more named parameters to change from the
             following list:
 
-            * **msg_lev** (`str`) – the message level, with possible values
-
-              * `'no'`: no output
-              * `'warnerror'`: warnings and errors only
-              * `'normal'`: normal output
-              * `'full'`: normal output and informational messages
-
-            * **meth** (`str`) – simplex method, with possible values
-
-              * `'primal'`: two-phase primal simplex
-              * `'dual'`: two-phase dual simplex
-              * `'dual_fail_primal'`: two-phase dual simplex and, if it fails,
-                switch to primal simplex
-
-            * **pricing** (`str`) – pricing technique, with possible values
-
-              * `'Dantzig'`: standard ‘textbook’
-              * `'steepest'`: projected steepest edge
-
-            * **r_test** (`str`) – ratio test technique, with possible values
-
-              * `'standard'`: standard ‘textbook’
-              * `'Harris'`: Harris’s two-pass ratio test
-
             * **tol_bnd** (|Real|) – tolerance used to check if the basic
               solution is primal feasible
             * **tol_dj** (|Real|) – tolerance used to check if the basic
@@ -93,20 +219,6 @@ cdef class SimplexSolver(_Solver):
             * **presolve** (`bool`) – use LP presolver
 
             or, for basis factorization, from the following list:
-
-            * **type** (length-2 `tuple` of `str`) – basis factorization type,
-              pairs with possible first components
-
-              * `'LU'`: plain LU factorization
-              * `'BTLU'`: block-triangular LU factorization
-
-              and possible second components
-
-              * `'Forrest-Tomlin'`: `Forrest–Tomlin`_ update applied to U
-                (only with plain LU factorization)
-              * `'Bartels-Golub'`: `Bartels–Golub`_ update applied to Schur
-                complement
-              * `'Givens'`: Givens rotation update applied to Schur complement
 
             * **piv_tol** (|Real|) – Markowitz threshold pivoting tolerance
               (value must lie between 0 and 1)
@@ -137,18 +249,6 @@ cdef class SimplexSolver(_Solver):
             glpk.set_bfcp(self._problem, NULL)
             glpk.get_bfcp(self._problem, &self._bfcp)
         for control, val in controls.items():
-            # smcp enumerated parameters
-            if control is 'msg_lev':
-                self._smcp.msg_lev = str2msglev[val]
-            elif control is 'meth':
-                self._smcp.meth = str2meth[val]
-            elif control is 'pricing':
-                self._smcp.meth = str2pricing[val]
-            elif control is 'r_test':
-                self._smcp.r_test = str2rtest[val]
-            # bfcp enumerated parameters
-            elif control is 'type':
-                self._bfcp.type = strpair2bftype[val]
             # double parameters
             elif control in {
                 # smcp
@@ -219,13 +319,8 @@ cdef class SimplexSolver(_Solver):
         glpk.set_bfcp(self._problem, &self._bfcp)
         scontrols = {}
         scontrols = self._smcp
-        scontrols['msg_lev'] = msglev2str[scontrols['msg_lev']]
-        scontrols['meth'] = meth2str[scontrols['meth']]
-        scontrols['pricing'] = pricing2str[scontrols['pricing']]
-        scontrols['r_test'] = rtest2str[scontrols['r_test']]
         fcontrols = {}
         fcontrols = self._bfcp
-        fcontrols['type'] = bftype2strpair[fcontrols['type']]
         controls = {}
         controls.update(scontrols)
         controls.update(fcontrols)
