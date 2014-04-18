@@ -73,7 +73,7 @@ cdef class SimplexControls:
         .. doctest:: SimplexControls
 
             >>> r.meth  # the GLPK default
-            'simplex'
+            'primal'
             >>> r.meth = 'dual_fail_primal'
             >>> r.meth
             'dual_fail_primal'
@@ -95,10 +95,10 @@ cdef class SimplexControls:
         .. doctest:: SimplexControls
 
             >>> r.pricing  # the GLPK default
-            'Dantzig'
-            >>> r.pricing = 'steepest'
-            >>> r.pricing
             'steepest'
+            >>> r.pricing = 'Dantzig'
+            >>> r.pricing
+            'Dantzig'
 
         """
         def __get__(self):
@@ -117,10 +117,10 @@ cdef class SimplexControls:
         .. doctest:: SimplexControls
 
             >>> r.r_test  # the GLPK default
-            'standard'
-            >>> r.r_test = 'Harris'
-            >>> r.r_test
             'Harris'
+            >>> r.r_test = 'standard'
+            >>> r.r_test
+            'standard'
 
         """
         def __get__(self):
@@ -128,21 +128,124 @@ cdef class SimplexControls:
         def __set__(self, value):
             self._smcp.r_test = str2rtest[value]
 
+    property tol_bnd:
+        """Tolerance to check if the solution is primal feasible, a |Real| number"""
+        def __get__(self):
+            return self._smcp.tol_bnd
+        def __set__(self, value):
+            self._smcp.tol_bnd = float(value)
 
-cdef class FactorizationControls:
+    property tol_dj:
+        """Tolerance to check if the solution is dual feasible, a |Real| number"""
+        def __get__(self):
+            return self._smcp.tol_dj
+        def __set__(self, value):
+            self._smcp.tol_dj = float(value)
+
+    property tol_piv:
+        """Tolerance to choose eligble pivotal elements, a |Real| number"""
+        def __get__(self):
+            return self._smcp.tol_piv
+        def __set__(self, value):
+            self._smcp.tol_piv = float(value)
+
+    property obj_ll:
+        """Lower limit of the objective function, a |Real| number
+
+        (Used only if *meth* is `'dual'`.)
+
+        """
+        def __get__(self):
+            return self._smcp.obj_ll
+        def __set__(self, value):
+            self._smcp.obj_ll = float(value)
+
+    property obj_ul:
+        """Upper limit of the objective function, a |Real| number
+
+        (Used only if *meth* is `'dual'`.)
+
+        """
+        def __get__(self):
+            return self._smcp.obj_ul
+        def __set__(self, value):
+            self._smcp.obj_ul = float(value)
+
+    property it_lim:
+        """Iteration limit, an `int`"""
+        def __get__(self):
+            return self._smcp.it_lim
+        def __set__(self, value):
+            self._smcp.it_lim = int(value)
+
+    property tm_lim:
+        """Time limit [ms], an `int`"""
+        def __get__(self):
+            return self._smcp.tm_lim
+        def __set__(self, value):
+            self._smcp.tm_lim = int(value)
+
+    property out_frq:
+        """Output frequency [iterations] of informational messages, an `int`"""
+        def __get__(self):
+            return self._smcp.out_frq
+        def __set__(self, value):
+            self._smcp.out_frq = int(value)
+
+    property out_dly:
+        """Output delay [ms] of solution process information, an `int`"""
+        def __get__(self):
+            return self._smcp.out_dly
+        def __set__(self, value):
+            self._smcp.out_dly = int(value)
+
+    property presolve:
+        """Whether to use the LP presolver, a `bool`"""
+        def __get__(self):
+            return self._smcp.presolve
+        def __set__(self, value):
+            self._smcp.presolve = bool(value)
+
+
+cdef class Basis(_Component):
+    """The basis of a simplex solver"""
+
+    cdef readonly Factorization factorization
+    """The basis factorization, a `.Factorization` object"""
+
+    def __cinit__(self, program):
+        self.factorization = Factorization(self._program)
+
+
+cdef class Factorization(_Component):
+    """The basis factorization"""
+
+    property controls:
+        """The basis factorization controls"""
+        def __get__(self):
+            return FactorizationControls(self._program)
+        def __set__(self, controls):
+            #glpk.set_bfcp(self._problem, &controls._bfcp)
+            pass
+        def __del__(self):
+            glpk.set_bfcp(self._problem, NULL)
+
+
+cdef class FactorizationControls(_Component):
     """The basis factorization control parameter object
 
     .. doctest:: FactorizationControls
 
-        >>> f = MILProgram().simplex.basis.factorization.controls
-        >>> r = FactorizationControls(f)
+        >>> r = MILProgram().simplex.basis.factorization.controls
+        >>> isinstance(r, FactorizationControls)
+        True
 
     """
 
     cdef glpk.BasFacCP _bfcp
 
-    def __cinit__(self, bfcp):
-        self._bfcp = bfcp
+    def __cinit__(self, program):
+        glpk.get_bfcp(self._problem, &self._bfcp)
 
     property type:
         """The basis factorization type, `str` pairs
@@ -160,16 +263,73 @@ cdef class FactorizationControls:
           complement
         * `'Givens'`: Givens rotation update applied to Schur complement
 
+        .. _Forrest–Tomlin: http://dx.doi.org/10.1007/BF01584548
+        .. _Bartels–Golub: http://dx.doi.org/10.1145/362946.362974
+
         .. doctest:: FactorizationControls
 
             >>> r.type  # the GLPK default
-            (None, None)
+            ('LU', 'Forrest-Tomlin')
 
         """
         def __get__(self):
             return bftype2strpair[self._bfcp.type]
         def __set__(self, value):
             self._bfcp.type = strpair2bftype[value]
+
+    property piv_tol:
+        """Markowitz threshold pivoting tolerance, a |Real| number
+
+        (Value must lie between 0 and 1.)
+
+        """
+        def __get__(self):
+            return self._bfcp.piv_tol
+        def __set__(self, value):
+            self._bfcp.piv_tol = float(value)
+
+    property piv_lim:
+        """Number of pivot candidates that need to be considered, an `int` ≥1"""
+        def __get__(self):
+            return self._bfcp.piv_lim
+        def __set__(self, value):
+            self._bfcp.piv_lim = int(value)
+
+    property suhl:
+        """Whether to use Suhl heuristic, a `bool`"""
+        def __get__(self):
+            return self._bfcp.suhl
+        def __set__(self, value):
+            self._bfcp.suhl = bool(value)
+
+    property eps_tol:
+        """Tolerance below which numbers are replaced by zero, a |Real| number"""
+        def __get__(self):
+            return self._bfcp.eps_tol
+        def __set__(self, value):
+            self._bfcp.eps_tol = float(value)
+
+    property nfs_max:
+        """Maximal number of additional row-like factors, an `int`
+
+        (Used only when *type* contains `'Forrest-Tomlin'`.)
+
+        """
+        def __get__(self):
+            return self._bfcp.nfs_max
+        def __set__(self, value):
+            self._bfcp.nfs_max = int(value)
+
+    property nrs_max:
+        """Maximal number of additional row and columns, an `int`
+
+        (Used only when *type* contains `'Bartels-Golub'` or `'Givens'`.)
+
+        """
+        def __get__(self):
+            return self._bfcp.nrs_max
+        def __set__(self, value):
+            self._bfcp.nrs_max = int(value)
 
 
 cdef class SimplexSolver(_Solver):
@@ -184,151 +344,17 @@ cdef class SimplexSolver(_Solver):
 
     """
 
-    cdef glpk.SimplexCP _smcp
-    cdef glpk.BasFacCP _bfcp
+    cdef readonly Basis basis
+    """The simplex basis, a `.Basis` object"""
 
     def __cinit__(self, program):
-        glpk.init_smcp(&self._smcp)
-        glpk.get_bfcp(self._problem, &self._bfcp)
+        self.basis = Basis(self._program)
 
-    def controls(self, defaults=False, **controls):
-        """Change or retrieve the solver's control parameters
-
-        :param defaults: whether to set the parameters back to their default
-            values or not
-        :type defaults: `bool`
-        :param controls: zero or more named parameters to change from the
-            following list:
-
-            * **tol_bnd** (|Real|) – tolerance used to check if the basic
-              solution is primal feasible
-            * **tol_dj** (|Real|) – tolerance used to check if the basic
-              solution is dual feasible
-            * **tol_piv** (|Real|) – tolerance used to choose eligble pivotal
-              elements of the simplex table
-            * **obj_ll** (|Real|) – lower limit of the objective function
-              (only if *meth* is `'dual'`)
-            * **obj_ul** (|Real|) – upper limit of the objective function
-              (only if *meth* is `'dual'`)
-            * **it_lim** (|Integral|) – iteration limit
-            * **tm_lim** (|Integral|) – time limit [ms]
-            * **out_frq** (|Integral|) – output frequency [iterations] of
-              informational messages
-            * **out_dly** (|Integral|) – output delay [ms] of solution process
-              information
-            * **presolve** (`bool`) – use LP presolver
-
-            or, for basis factorization, from the following list:
-
-            * **piv_tol** (|Real|) – Markowitz threshold pivoting tolerance
-              (value must lie between 0 and 1)
-            * **piv_lim** (|Integral|) – number of pivot
-              candidates that need to be considered on choosing a pivot element
-              (at least 1)
-            * **suhl** (`bool`) – use Suhl heuristic
-            * **eps_tol** (|Real|) – tolerance below which numbers are replaced
-              by zero
-            * **nfs_max** (|Integral|) – maximal number of additional row-like
-              factors (used only when *type* is `'Forrest-Tomlin'`)
-            * **nrs_max** (|Integral|) – maximal number of additional row and
-              columns
-              (used only when *type* is `'Bartels-Golub'` or `'Givens'`)
-
-        :raises ValueError: if a non-existing control name is given
-
-        .. todo::
-
-            Add doctest
-
-        .. _Forrest–Tomlin: http://dx.doi.org/10.1007/BF01584548
-        .. _Bartels–Golub: http://dx.doi.org/10.1145/362946.362974
-
-        """
-        if defaults:
-            glpk.init_smcp(&self._smcp)
-            glpk.set_bfcp(self._problem, NULL)
-            glpk.get_bfcp(self._problem, &self._bfcp)
-        for control, val in controls.items():
-            # double parameters
-            elif control in {
-                # smcp
-                'tol_bnd', 'tol_dj', 'tol_piv', 'obj_ll', 'obj_ul',
-                # bfcp
-                'piv_tol', 'eps_tol'
-                }:
-                if not isinstance(val, numbers.Real):
-                    raise TypeError("'" + control + "' value must be real.")
-                # smcp
-                elif control is 'tol_bnd':
-                    self._smcp.tol_bnd = val
-                elif control is 'tol_dj':
-                    self._smcp.tol_dj = val
-                elif control is 'tol_piv':
-                    self._smcp.tol_piv = val
-                elif control is 'obj_ll':
-                    self._smcp.obj_ll = val
-                elif control is 'obj_ul':
-                    self._smcp.obj_ul = val
-                # bfcp
-                elif control is 'piv_tol':
-                    self._bfcp.piv_tol = val
-                elif control is 'eps_tol':
-                    self._bfcp.eps_tol = val
-            # int parameters
-            elif control in {
-                # smcp
-                'it_lim', 'tm_lim', 'out_frq', 'out_dly',
-                # bfcp
-                'piv_lim', 'nfs_max', 'nrs_max'
-                }:
-                if not isinstance(val, numbers.Integral):
-                    raise TypeError("'" + control + "' value must be integer.")
-                # smcp
-                elif control is 'it_lim':
-                    self._smcp.it_lim = val
-                elif control is 'tm_lim':
-                    self._smcp.tm_lim = val
-                elif control is 'out_frq':
-                    self._smcp.out_frq = val
-                elif control is 'out_dly':
-                    self._smcp.out_dly = val
-                # bfcp
-                elif control is 'piv_lim':
-                    self._bfcp.piv_lim = val
-                elif control is 'nfs_max':
-                    self._bfcp.nfs_max = val
-                elif control is 'nrs_max':
-                    self._bfcp.nrs_max = val
-            # bint parameters
-            elif control in {
-                # smcp
-                'presolve',
-                # bfcp
-                'suhl'
-                }:
-                if not isinstance(val, bool):
-                    raise TypeError("'" + control + "' value must be Boolean.")
-                # smcp
-                elif control is 'presolve':
-                    self._smcp.presolve = val
-                # bfcp
-                elif control is 'suhl':
-                    self._bfcp.suhl = val
-            else:
-                raise ValueError("Non-existing control: " + repr(control))
-        glpk.set_bfcp(self._problem, &self._bfcp)
-        scontrols = {}
-        scontrols = self._smcp
-        fcontrols = {}
-        fcontrols = self._bfcp
-        controls = {}
-        controls.update(scontrols)
-        controls.update(fcontrols)
-        return controls
-
-    def solve(self, exact=False):
+    def solve(self, controls=SimplexControls(), exact=False):
         """Solve the linear program
 
+        :param controls: the control parameters (uses defaults if omitted)
+        :type controls: `.SimplexControls`
         :param exact: whether to use exact arithmetic or not
             (only if the *meth* control parameter is `'primal'`)
         :type exact: `bool`
@@ -356,17 +382,17 @@ cdef class SimplexSolver(_Solver):
             Add doctest
 
         """
+        cdef glpk.SimplexCP smcp = controls._smcp
         if exact:
             if meth2str[self._smcp.meth] is not 'primal':
                 raise ValueError("Only primal simplex with exact arithmetic.")
-            retcode = glpk.simplex_exact(self._problem, &self._smcp)
+            retcode = glpk.simplex_exact(self._problem, &smcp)
         else:
-            if ((meth2str[self._smcp.meth] is not 'dual') and
-                ((self._smcp.obj_ll > -DBL_MAX) or
-                 (self._smcp.obj_ul < +DBL_MAX))):
+            if ((meth2str[smcp.meth] is not 'dual') and
+                ((smcp.obj_ll > -DBL_MAX) or (smcp.obj_ul < +DBL_MAX))):
                  raise ValueError("Objective function limits only with " +
                                   "dual simplex.")
-            retcode = glpk.simplex(self._problem, &self._smcp)
+            retcode = glpk.simplex(self._problem, &smcp)
         if retcode is 0:
             return self.status()
         elif retcode in {glpk.EOBJLL, glpk.EOBJUL}:
@@ -528,7 +554,7 @@ cdef class SimplexSolver(_Solver):
                 nature = 'dual'
         return (varstraint, nature)
 
-    def basis(self, algorithm=None, status=None, warmup=False):
+    def basis_stuff(self, algorithm=None, status=None, warmup=False):
         """Change or retrieve basis
 
         A basis is defined by the statuses assigned to all variables and
