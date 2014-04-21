@@ -52,7 +52,7 @@ cdef class Variable(_Varstraint):
         col = len(program.variables) + 1
                         # + 1 because variable not yet added to
                         # self._program.variables._varstraints at this point
-        cdef char* chars = glpk.get_col_name(self._problem, col)
+        cdef const char* chars = glpk.get_col_name(self._problem, col)
         if chars is NULL:
             self._name = self._alias
             glpk.set_col_name(self._problem, col, name2chars(self._name))
@@ -216,7 +216,7 @@ cdef class Constraint(_Varstraint):
         row = len(program.constraints) + 1
                         # + 1 because variable not yet added to
                         # self._program.constraints._varstraints at this point
-        cdef char* chars = glpk.get_row_name(self._problem, row)
+        cdef const char* chars = glpk.get_row_name(self._problem, row)
         if chars is NULL:
             self._name = self._alias
             glpk.set_row_name(self._problem, row, name2chars(self._name))

@@ -224,7 +224,7 @@ cdef class MILProgram:
 
         """
         def __get__(self):
-            cdef char* chars = glpk.get_prob_name(self._problem)
+            cdef const char* chars = glpk.get_prob_name(self._problem)
             return '' if chars is NULL else chars.decode()
         def __set__(self, name):
             glpk.set_prob_name(self._problem, name2chars(name))
@@ -517,7 +517,7 @@ cdef class Objective(_Component):
 
         """
         def __get__(self):
-            cdef char* chars = glpk.get_obj_name(self._problem)
+            cdef const char* chars = glpk.get_obj_name(self._problem)
             return '' if chars is NULL else chars.decode()
         def __set__(self, name):
             glpk.set_obj_name(self._problem, name2chars(name))
