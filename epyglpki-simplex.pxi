@@ -225,8 +225,8 @@ cdef class Factorization(_Component):
         def __get__(self):
             return FactorizationControls(self._program)
         def __set__(self, controls):
-            #glpk.set_bfcp(self._problem, &controls._bfcp)
-            pass
+            cdef glpk.BasFacCP bfcp = controls._bfcp
+            glpk.set_bfcp(self._problem, &bfcp)
         def __del__(self):
             glpk.set_bfcp(self._problem, NULL)
 
