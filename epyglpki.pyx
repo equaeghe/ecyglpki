@@ -70,7 +70,7 @@ cdef class MILProgram:
     cdef readonly Objective objective
     """The problem's objective object, an `.Objective`"""
     cdef readonly SimplexSolver simplex
-    """The problem's interior point solver object, an `.SimplexSolver`"""
+    """The problem's interior point solver object, a `.SimplexSolver`"""
     cdef readonly IPointSolver ipoint
     """The problem's interior point solver object, an `.IPointSolver`"""
     cdef readonly IntOptSolver intopt
@@ -246,12 +246,16 @@ cdef class MILProgram:
             True
             >>> y.coeffs[d] == d.coeffs[y] == 5.5
             True
-            >>> len(x.coeffs) == len(d.coeffs) == 1
+            >>> len(x.coeffs) is len(d.coeffs) is 1
+            True
+            >>> del p.coeffs
+            >>> len(x.coeffs) is len(d.coeffs) is 0
             True
 
-        .. todo::
+        .. note::
 
-            Document ``del`` as well.
+            This attribute cannot be read out directly, but only through
+            `.Variable.coeffs` and `.Constraint.coeffs` methods.
 
         """
         def __set__(self, coeffs):
