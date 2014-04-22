@@ -94,7 +94,7 @@ pygments_style = 'sphinx'
 
 # -- Autodoc options -----------------------------------------------------------
 autodoc_member_order = 'bygroup'
-autodoc_default_flags = ['members', 'undoc-members', 'show-inheritance']
+autodoc_default_flags = ['members', 'undoc-members']
 todo_include_todos = True
 
 def fix_sig(app, what, name, obj, options, signature, return_annotation):
@@ -209,8 +209,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'epyglpki.tex', 'epyglpki Documentation',
-   'Erik Quaeghebeur', 'manual'),
+  ('index', 'epyglpki.tex', 'epyglpki Documentation', 'Erik Quaeghebeur',
+   'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -239,8 +239,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'epyglpki', 'epyglpki Documentation',
-     ['Erik Quaeghebeur'], 1)
+    ('index', 'epyglpki', 'epyglpki Documentation', ['Erik Quaeghebeur'], 1)
 ]
 
 # If true, show URL addresses after external links.
