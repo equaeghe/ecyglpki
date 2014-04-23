@@ -63,8 +63,6 @@ cdef class MILProgram:
 
     cdef glpk.ProbObj* _problem
     cdef int _unique_ids
-    cdef readonly Scaling scaling
-    """The problem's scaling factors, collected in a `.Scaling` object"""
     cdef readonly Variables variables
     """The problem's variables, collected in a `.Variables` object"""
     cdef readonly Constraints constraints
@@ -82,7 +80,6 @@ cdef class MILProgram:
         self._problem = glpk.create_prob()
         glpk.create_index(self._problem)
         self._unique_ids = 0
-        self.scaling = Scaling(self)
         self.variables = Variables(self)
         self.constraints = Constraints(self)
         self.objective = Objective(self)
@@ -292,6 +289,49 @@ cdef class MILProgram:
         def __del__(self):
             glpk.load_matrix(self._problem, 0, NULL, NULL, NULL)
 
+    def scale(self, *algorithms):
+        """Apply scaling algorithms or reset scaling
+
+        :param algorithms: choose scaling algorithms to apply from among
+
+            * `'auto'`: choose algorithms automatically
+              (other arguments are ignored)
+            * `'skip'`: skip scaling if the problem is already well-scaled
+            * `'geometric'`: perform geometric mean scaling
+            * `'equilibration'`: perform equilibration scaling
+            * `'round'`: round scaling factors to the nearest power of two
+
+            If no algorithm is given, the scaling is reset to the default
+            values.
+
+        :type algorithms: zero or more `str` arguments
+
+        .. doctest:: MILProgram.scale
+
+            >>> p = MILProgram()
+            >>> x = p.variables.add()
+            >>> y = p.variables.add()
+            >>> c = p.constraints.add()
+            >>> d = p.constraints.add()
+            >>> p.coeffs = {(c, x): 3e-100, (d, y): 5.5, (d, x): 1.5e200}
+            >>> x.scale, y.scale, c.scale, d.scale  # the GLPK default
+            (1.0, 1.0, 1.0, 1.0)
+            >>> p.scale('skip', 'geometric', 'round')
+            >>> x.scale, y.scale, c.scale, d.scale
+            (2.967...e-67, 1.135...e+133, 7.371...e+165, 2.201...e-134)
+            >>> p.scale()
+            >>> x.scale, y.scale, c.scale, d.scale
+            (1.0, 1.0, 1.0, 1.0)
+
+        """
+        if len(algorithms) is 0:
+            glpk.unscale_prob(self._problem)
+        elif 'auto' in algorithms:
+            glpk.scale_prob(self._problem, str2scalopt['auto'])
+        else:
+            glpk.scale_prob(self._problem, sum(str2scalopt[algorithm]
+                                               for algorithm in algorithms))
+
 
 cdef class _Component:
 
@@ -302,93 +342,6 @@ cdef class _Component:
         self._program = program
         self._problem = <glpk.ProbObj*>PyCapsule_GetPointer(
                                                 program._problem_ptr(), NULL)
-
-
-cdef class Scaling(_Component):
-    """The problem's constraint matrix scaling factors
-
-    .. doctest:: MILProgram.scaling
-
-        >>> p = MILProgram()
-        >>> x = p.variables.add()
-        >>> y = p.variables.add()
-        >>> c = p.constraints.add()
-        >>> d = p.constraints.add()
-        >>> p.coeffs = {(c, x): 3e-100, (d, y): 5.5, (d, x): 1.5e200}
-        >>> s = p.scaling
-        >>> s[x], s[y], s[c], s[d]
-        (1.0, 1.0, 1.0, 1.0)
-        >>> s[x] = 1.5
-        >>> s[y] = 3
-        >>> s[c] = 2/3
-        >>> s[d] = 9.3e-10
-        >>> s[x], s[y], s[c], s[d]
-        (1.5, 3.0, 0.666..., 9.3e-10)
-
-    """
-
-    def __getitem__(self, varstraint):
-        cdef double factor
-        if isinstance(varstraint, Variable):
-            factor = glpk.get_col_sf(self._problem, varstraint._ind)
-            return factor
-        elif isinstance(varstraint, Constraint):
-            factor = glpk.get_row_sf(self._problem, varstraint._ind)
-            return factor
-        else:
-            raise TypeError("Only 'Variable' and 'Constraint' can have a " +
-                            "scaling factor.")
-
-    def __setitem__(self, varstraint, factor):
-        if isinstance(varstraint, Variable):
-            glpk.set_col_sf(self._problem, varstraint._ind, factor)
-        elif isinstance(varstraint, Constraint):
-            glpk.set_row_sf(self._problem, varstraint._ind, factor)
-        else:
-            raise TypeError("Only 'Variable' and 'Constraint' can have a " +
-                            "scaling factor.")
-
-    def apply(self, *algorithms):
-        """Apply scaling algorithms
-
-        :param algorithms: choose scaling algorithms to apply from among
-
-            * `'auto'`: choose algorithms automatically, the default
-              (other arguments are ignored)
-            * `'skip'`: skip scaling if the problem is already well-scaled
-            * `'geometric'`: perform geometric mean scaling
-            * `'equilibration'`: perform equilibration scaling
-            * `'round'`: round scaling factors to the nearest power of two
-
-        :type algorithms: zero or more `str` arguments
-
-        .. doctest:: MILProgram.scaling
-
-            >>> s.apply('skip', 'geometric', 'round')
-            >>> s[x], s[y], s[c], s[d]
-            (2.967...e-67, 1.135...e+133, 7.371...e+165, 2.201...e-134)
-
-        """
-        if (len(algorithms) is 0) or ('auto' in algorithms):
-            glpk.scale_prob(self._problem, str2scalopt['auto'])
-        else:
-            glpk.scale_prob(self._problem, sum(str2scalopt[algorithm]
-                                               for algorithm in algorithms))
-
-    def reset(self):
-        """Reset all scaling factors to their default value
-
-        .. doctest:: MILProgram.scaling
-
-            >>> s.apply()
-            >>> s[x], s[y], s[c], s[d]
-            (3.329...e-67, 9.081...e+132, 1.001...e+166, 2.002...e-134)
-            >>> s.reset()
-            >>> s[x], s[y], s[c], s[d]
-            (1.0, 1.0, 1.0, 1.0)
-
-        """
-        glpk.unscale_prob(self._problem)
 
 
 include "epyglpki-varstraints.pxi"

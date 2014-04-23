@@ -191,6 +191,25 @@ cdef class Variable(_Varstraint):
         def __del__(self):
             glpk.set_mat_col(self._problem, self._ind, 0, NULL, NULL)
 
+    property scale:
+        """The constraint matrix scaling factor for the variable's column
+
+        .. doctest:: Variable
+
+            >>> x.scale  # the GLPK default
+            1.0
+            >>> x.scale = 1/5
+            >>> x.scale
+            0.2
+
+        """
+        def __get__(self):
+            cdef double factor
+            factor = glpk.get_col_sf(self._problem, self._ind)
+            return factor
+        def __set__(self, factor):
+            glpk.set_col_sf(self._problem, self._ind, factor)
+
     def remove(self):
         """Remove the variable from the problem"""
         del self._program.variables[self._name]
@@ -311,6 +330,25 @@ cdef class Constraint(_Varstraint):
                 glpk.free(vals)
         def __del__(self):
             glpk.set_mat_row(self._problem, self._ind, 0, NULL, NULL)
+
+    property scale:
+        """The constraint matrix scaling factor for the constraint's row
+
+        .. doctest:: Constraint
+
+            >>> c.scale  # the GLPK default
+            1.0
+            >>> c.scale = 3
+            >>> c.scale
+            3.0
+
+        """
+        def __get__(self):
+            cdef double factor
+            factor = glpk.get_row_sf(self._problem, self._ind)
+            return factor
+        def __set__(self, factor):
+            glpk.set_row_sf(self._problem, self._ind, factor)
 
     def remove(self):
         """Remove the constraint from the problem"""

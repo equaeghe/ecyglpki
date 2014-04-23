@@ -2,7 +2,7 @@
 
 .. testsetup:: *
 
-    from epyglpki import MILProgram, Variable, Constraint, Bounds, Objective, Scaling
+    from epyglpki import MILProgram, Variable, Constraint, Bounds, Objective
 
 Components
 ==========
@@ -30,9 +30,3 @@ The Objective
 -------------
 
 .. autoclass:: Objective
-
-
-The Scaling
------------
-
-.. autoclass:: Scaling
