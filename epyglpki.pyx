@@ -382,59 +382,6 @@ cdef class Objective(_Component):
             else:
                 raise ValueError("Direction must be 'minimize' or 'maximize'.")
 
-    def coeffs(self, coeffs=None):
-        """Change or retrieve objective function coefficients
-
-        :param coeffs: the mapping with coefficients to change
-            (``{}`` to set all coefficients to 0; omit for retrieval only)
-        :type coeffs: |Mapping| of `.Variable` to |Real|
-        :returns: the coefficient mapping, which only contains nonzero
-            coefficients
-        :rtype: `dict` of `.Variable` to `float`
-        :raises TypeError: if *coeffs* is not |Mapping|
-        :raises TypeError: if a coefficient key is not `.Variable`
-        :raises TypeError: if a coefficient value is not |Real|
-
-        .. doctest:: Objective.coeffs
-
-            >>> p = MILProgram()
-            >>> x = p.variables.add()
-            >>> y = p.variables.add()
-            >>> o = p.objective
-            >>> o.coeffs()
-            {}
-            >>> o.coeffs({x: 3, y: 0})
-            {<epyglpki.Variable object at 0x...>: 3.0}
-            >>> o.coeffs({})
-            {}
-
-        """
-        if coeffs is not None:
-            if not isinstance(coeffs, collections.abc.Mapping):
-                raise TypeError("Coefficients must be given using a " +
-                                "collections.abc.Mapping.")
-            elif not coeffs:
-                for variable in self._program.variables:
-                    coeffs[variable] = 0.0
-            for variable, val in coeffs.items():
-                if not isinstance(variable, Variable):
-                    raise TypeError("Coefficient keys must be 'Variable' " +
-                                    "instead of '"
-                                    + type(variable).__name__ + "'.")
-                else:
-                    if isinstance(val, numbers.Real):
-                        glpk.set_obj_coef(self._problem, variable._ind, val)
-                    else:
-                        raise TypeError("Coefficient values must be " +
-                                        "'numbers.Real' instead of '" +
-                                        type(val).__name__ + "'.")
-        coeffs = {}
-        for col, variable in enumerate(self._program.variables, start=1):
-            val = glpk.get_obj_coef(self._problem, col)
-            if val != 0.0:
-                coeffs[variable] = val
-        return coeffs
-
     property constant:
         """The objective function constant, a |Real| number
 

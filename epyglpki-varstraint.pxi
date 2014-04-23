@@ -191,6 +191,29 @@ cdef class Variable(_Varstraint):
         def __del__(self):
             glpk.set_mat_col(self._problem, self._ind, 0, NULL, NULL)
 
+    property weight:
+        """The weight of the variable in the problem's objective
+
+        .. doctest:: Variable
+
+            >>> x.weight  # the GLPK default
+            0.0
+            >>> x.weight = -3.5
+            >>> x.weight
+            -3.5
+
+        """
+        def __get__(self):
+            cdef double weight
+            weight = glpk.get_obj_coef(self._problem, self._ind)
+            return weight
+        def __set__(self, weight):
+            if isinstance(weight, numbers.Real):
+                glpk.set_obj_coef(self._problem, self._ind, weight)
+            else:
+                raise TypeError("Coefficient values must be 'numbers.Real' " +
+                                "instead of '" + type(weight).__name__ + "'.")
+
     property scale:
         """The constraint matrix scaling factor for the variable's column
 
