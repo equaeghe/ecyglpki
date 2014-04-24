@@ -138,18 +138,6 @@ cdef class IPointSolver(_Solver):
         def __get__(self):
             return solstat2str[glpk.ipt_status(self._problem)]
 
-    property objective:
-        """The objective value for the current solution, a |Real| number
-
-        .. doctest:: IPointSolver
-
-            >>> s.objective
-            0.0
-
-        """
-        def __get__(self):
-            return glpk.ipt_obj_val(self._problem)
-
     def primal(self, varstraint):
         """Return primal value for the current solution
 

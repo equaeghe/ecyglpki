@@ -343,18 +343,6 @@ cdef class IntOptSolver(_Solver):
         def __get__(self):
             return solstat2str[glpk.mip_status(self._problem)]
 
-    property objective:
-        """The objective value for the current solution, a |Real| number
-
-        .. doctest:: IntOptSolver
-
-            >>> s.objective
-            0.0
-
-        """
-        def __get__(self):
-            return glpk.mip_obj_val(self._problem)
-
     def value(self, varstraint):
         """Return the variable or constraint value for the current solution
 

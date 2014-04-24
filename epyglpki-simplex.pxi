@@ -445,18 +445,6 @@ cdef class SimplexSolver(_Solver):
         def __get__(self):
             return solstat2str[glpk.sm_dual_stat(self._problem)]
 
-    property objective:
-        """The objective value for the current solution, a |Real| number
-
-        .. doctest:: SimplexSolver
-
-            >>> s.objective
-            0.0
-
-        """
-        def __get__(self):
-            return glpk.sm_obj_val(self._problem)
-
     def primal(self, varstraint):
         """Return primal value for the current solution
 
@@ -472,7 +460,6 @@ cdef class SimplexSolver(_Solver):
 
         """
         return self._value(varstraint, glpk.sm_col_prim, glpk.sm_row_prim)
-
 
     def primal_error(self):
         """Return absolute and relative primal solution errors

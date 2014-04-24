@@ -430,5 +430,41 @@ cdef class Objective(_Component):
         def __del__(self):
             glpk.set_obj_name(self._problem, NULL)
 
+    property simplex:
+        """The objective value produced by the simplex solver, a |Real| number
+
+        .. doctest:: Objective
+
+            >>> o.simplex
+            0.0
+
+        """
+        def __get__(self):
+            return glpk.sm_obj_val(self._problem)
+
+    property ipoint:
+        """The objective value produced by the interior point solver, a |Real| number
+
+        .. doctest:: Objective
+
+            >>> o.ipoint
+            0.0
+
+        """
+        def __get__(self):
+            return glpk.ipt_obj_val(self._problem)
+
+    property intopt:
+        """The objective value produced by the integer optimization solver, a |Real| number
+
+        .. doctest:: Objective
+
+            >>> o.intopt
+            0.0
+
+        """
+        def __get__(self):
+            return glpk.mip_obj_val(self._problem)
+
 
 include "epyglpki-solvers.pxi"
