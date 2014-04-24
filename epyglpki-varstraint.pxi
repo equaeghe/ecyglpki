@@ -230,8 +230,7 @@ cdef class Variable(_Varstraint):
 
         """
         def __get__(self):
-            cdef double factor
-            factor = glpk.get_col_sf(self._problem, self._ind)
+            cdef double factor = glpk.get_col_sf(self._problem, self._ind)
             return factor
         def __set__(self, factor):
             glpk.set_col_sf(self._problem, self._ind, factor)
@@ -376,8 +375,7 @@ cdef class Constraint(_Varstraint):
 
         """
         def __get__(self):
-            cdef double factor
-            factor = glpk.get_row_sf(self._problem, self._ind)
+            cdef double factor = glpk.get_row_sf(self._problem, self._ind)
             return factor
         def __set__(self, factor):
             glpk.set_row_sf(self._problem, self._ind, factor)
