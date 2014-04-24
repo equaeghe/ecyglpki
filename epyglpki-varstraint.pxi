@@ -260,6 +260,12 @@ cdef class Variable(_Varstraint):
     def _sm_dual(self):
         return glpk.sm_col_dual(self._problem, self._ind)
 
+    def _get_stat(self):
+        return glpk.get_col_stat(self._problem, self._ind)
+
+    def _set_stat(self, varstat):
+        glpk.set_col_stat(self._problem, self._ind, varstat)
+
 
 cdef class Constraint(_Varstraint):
     """One of the problem's constraints
@@ -423,6 +429,12 @@ cdef class Constraint(_Varstraint):
     def _sm_dual(self):
         return glpk.sm_row_dual(self._problem, self._ind)
 
+    def _get_stat(self):
+        return glpk.get_row_stat(self._problem, self._ind)
+
+    def _set_stat(self, varstat):
+        glpk.set_row_stat(self._problem, self._ind, varstat)
+
 
 cdef class Bounds:
     """The bounds of a variable or constraint
@@ -579,16 +591,16 @@ cdef class SimplexSolution:
         >>> s = MILProgram().variables.add().simplex
         >>> isinstance(s, SimplexSolution)
         True
-        >>> s.primal, s.dual  # the GLPK default before solving
-        (0.0, 0.0)
+        >>> s.primal, s.dual, s.status  # the GLPK default before solving
+        (0.0, 0.0, 'fixed')
 
     .. doctest:: SimplexSolution
 
         >>> c = MILProgram().constraints.add().simplex
         >>> isinstance(s, SimplexSolution)
         True
-        >>> s.primal, s.dual  # the GLPK default before solving
-        (0.0, 0.0)
+        >>> s.primal, s.dual, s.status  # the GLPK default before solving
+        (0.0, 0.0, 'fixed')
 
     """
 
@@ -608,6 +620,36 @@ cdef class SimplexSolution:
         def __get__(self):
             cdef double val = self._varstraint._sm_dual()
             return val
+
+    property status:
+        """The basic status, a `str`
+
+        The possible values are:
+
+        * `'basic'`: basic
+        * `'lower'`: non-basic with active lower bound
+        * `'upper'`: non-basic with active upper bound
+        * `'free'`: non-basic free (unbounded)
+        * `'fixed'`: non-basic fixed
+
+        .. doctest:: SimplexSolution
+
+            >>> s.status = 'basic'
+            >>> s.status
+            'basic'
+
+        .. note::
+
+            A basis is valid if the basis matrix is non-singular, which implies
+            that the number of basic variables and constraints is equal to the
+            total number of constraints.
+
+        """
+        def __get__(self):
+            return varstat2str[self._varstraint._get_stat()]
+        def __set__(self, status):
+            varstat = str2varstat[status]
+            self._varstraint._set_stat(varstat)
 
 
 cdef class IPointSolution:

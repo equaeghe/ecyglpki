@@ -509,21 +509,8 @@ cdef class SimplexSolver(_Solver):
                 nature = 'dual'
         return (varstraint, nature)
 
-    def basis_stuff(self, algorithm=None, status=None, warmup=False):
+    def basis_stuff(self, algorithm=None, warmup=False):
         """Change or retrieve basis
-
-        A basis is defined by the statuses assigned to all variables and
-        constraints; the possible statuses are
-
-        * `'basic'`: basic
-        * `'lower'`: non-basic with active lower bound
-        * `'upper'`: non-basic with active upper bound
-        * `'free'`: non-basic free (unbounded)
-        * `'fixed'`: non-basic fixed
-
-        A basis is valid if the basis matrix is non-singular, which implies
-        that the number of basic variables and constraints is equal to the
-        total number of constraints.
 
         :param algorithm: an algorithm for generating a basis (omit to not
             replace the current basis), chosen from
@@ -539,19 +526,12 @@ cdef class SimplexSolver(_Solver):
             * `'Bixby'`: algorithm used by CPLEX, as discussed by Bixby_
 
         :type algorithm: `str`
-        :param status: the mapping of statuses to change
-            (omit to not modify the basis)
         :type status: |Mapping| from `.Variable` or `.Constraint` to `str`
         :param warmup: whether to ‘warm up’ the basis, so that `.solve` can be
             used without presolving
         :type warmup: `bool`
-        :returns: a mapping of the basis statuses of all variables and
-            constraints
-        :rtype: `dict` from `.Variable` or `.Constraint` to `str`
         :raises ValueError: if *algorithm* is neither `'standard'`,
             `'advanced'`, nor `'Bixby'`
-        :raises TypeError: if *status* is not |Mapping|
-        :raises TypeError: if *status* keys are not `.Variable` or `.Constraint`
         :raises ValueError: if the basis is invalid
         :raises ValueError: if the basis matrix is singular
         :raises ValueError: if the basis matrix is ill-conditioned
@@ -580,30 +560,10 @@ cdef class SimplexSolver(_Solver):
             else:
                 raise ValueError(repr(algorithm)
                                  + " is not a basis generation algorithm.")
-        if isinstance(status, collections.abc.Mapping):
-            for varstraint, string in status.items():
-                varstat = str2varstat[string]
-                if isinstance(varstraint, Variable):
-                    glpk.set_col_stat(self._problem, varstraint._ind, varstat)
-                elif isinstance(varstraint, Constraint):
-                    glpk.set_row_stat(self._problem, varstraint._ind, varstat)
-                else:
-                    raise TypeError("Only 'Variable' and 'Constraint' " +
-                                    "can have a status.")
-        elif status is not None:
-            raise TypeError("Statuses must be specified using a Mapping.")
         if warmup:
             retcode = glpk.warm_up(self._problem)
             if retcode is not 0:
                 raise smretcode2error[retcode]
-        status = {}
-        for col, variable in enumerate(self._program.variables, start=1):
-            varstat = glpk.get_col_stat(self._problem, col)
-            status[variable] = varstat2str[varstat]
-        for row, constraint in enumerate(self._program.constraints, start=1):
-            varstat = glpk.get_row_stat(self._problem, row)
-            status[constraint] = varstat2str[varstat]
-        return status
 
     def print_solution(self, fname):
         """Write the solution to a file in a readable format
