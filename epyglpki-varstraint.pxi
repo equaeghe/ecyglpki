@@ -46,6 +46,8 @@ cdef class Variable(_Varstraint):
 
     cdef readonly Bounds bounds
     """The variable bounds, a `.Bounds` object"""
+    cdef readonly IntOptSolution intopt
+    """The variable's interior point solution, a `.IntOptSolution` object"""
 
     def __cinit__(self, program):
         self._alias = program._generate_alias()
@@ -59,6 +61,7 @@ cdef class Variable(_Varstraint):
         else:
             self._name = chars.decode()
         self.bounds = Bounds(self)
+        self.intopt = IntOptSolution(self)
 
     property _ind:
         """Return the column index"""
@@ -237,6 +240,9 @@ cdef class Variable(_Varstraint):
         """Remove the variable from the problem"""
         del self._program.variables[self._name]
 
+    def _mip_val(self):
+        return glpk.mip_col_val(self._problem, self._ind)
+
 
 cdef class Constraint(_Varstraint):
     """One of the problem's constraints
@@ -252,6 +258,8 @@ cdef class Constraint(_Varstraint):
 
     cdef readonly Bounds bounds
     """The constraint bounds, a `.Bounds` object"""
+    cdef readonly IntOptSolution intopt
+    """The constraint's interior point solution, a `.IntOptSolution` object"""
 
     def __cinit__(self, program):
         self._alias = program._generate_alias()
@@ -265,6 +273,7 @@ cdef class Constraint(_Varstraint):
         else:
             self._name = chars.decode()
         self.bounds = Bounds(self)
+        self.intopt = IntOptSolution(self)
 
     property _ind:
         """Return the row index"""
@@ -376,6 +385,9 @@ cdef class Constraint(_Varstraint):
     def remove(self):
         """Remove the constraint from the problem"""
         del self._program.constraints[self._name]
+
+    def _mip_val(self):
+        return glpk.mip_row_val(self._problem, self._ind)
 
 
 cdef class Bounds:
@@ -523,3 +535,36 @@ cdef class Bounds:
         """
         def __get__(self):
             return vartype2str[self._varstraint._vartype()]
+
+
+cdef class IntOptSolution:
+    """The solution produced by the integer optimization solver
+
+    .. doctest:: IntOptSolution
+
+        >>> s = MILProgram().variables.add().intopt
+        >>> isinstance(s, IntOptSolution)
+        True
+        >>> s.value  # the GLPK default before solving
+        0.0
+
+    .. doctest:: IntOptSolution
+
+        >>> c = MILProgram().constraints.add().intopt
+        >>> isinstance(s, IntOptSolution)
+        True
+        >>> s.value  # the GLPK default before solving
+        0.0
+
+    """
+
+    cdef _Varstraint _varstraint
+
+    def __cinit__(self, varstraint):
+        self._varstraint = varstraint
+
+    property value:
+        """The solution value, a |Real| number"""
+        def __get__(self):
+            cdef double val = self._varstraint._mip_val()
+            return val

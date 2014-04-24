@@ -343,32 +343,6 @@ cdef class IntOptSolver(_Solver):
         def __get__(self):
             return solstat2str[glpk.mip_status(self._problem)]
 
-    def value(self, varstraint):
-        """Return the variable or constraint value for the current solution
-
-        :param varstraint: variable or constraint to return the value of
-        :type varstraint: `.Variable` or `.Constraint`
-        :returns: the value of *varstraint* for the current solution
-        :rtype: `float` or `int`
-        :raises TypeError: if varstraint is not `.Variable` or `.Constraint`
-        :raises ValueError: if a variable with `'integer'` or `'binary'` kind
-            has a non-integer value
-
-        .. todo::
-
-            Add doctest
-
-        """
-        val = self._value(varstraint, glpk.mip_col_val, glpk.mip_row_val)
-        if isinstance(varstraint, Variable):
-            if varstraint.kind in {'binary', 'integer'}:
-                if val.isinteger():
-                    val = int(val)
-                else:
-                    raise ValueError("Variable with binary or integer kind " +
-                                     "has non-integer value " + str(val))
-        return val
-
     def error(self):
         """Return absolute and relative solution errors
 
