@@ -46,6 +46,8 @@ cdef class Variable(_Varstraint):
 
     cdef readonly Bounds bounds
     """The variable bounds, a `.Bounds` object"""
+    cdef readonly SimplexSolution simplex
+    """The variable's simplex solution, a `.SimplexSolution` object"""
     cdef readonly IPointSolution ipoint
     """The variable's interior point solution, a `.IPointSolution` object"""
     cdef readonly IntOptSolution intopt
@@ -63,6 +65,7 @@ cdef class Variable(_Varstraint):
         else:
             self._name = chars.decode()
         self.bounds = Bounds(self)
+        self.simplex = SimplexSolution(self)
         self.ipoint = IPointSolution(self)
         self.intopt = IntOptSolution(self)
 
@@ -251,6 +254,12 @@ cdef class Variable(_Varstraint):
     def _ipt_dual(self):
         return glpk.ipt_col_dual(self._problem, self._ind)
 
+    def _sm_prim(self):
+        return glpk.sm_col_prim(self._problem, self._ind)
+
+    def _sm_dual(self):
+        return glpk.sm_col_dual(self._problem, self._ind)
+
 
 cdef class Constraint(_Varstraint):
     """One of the problem's constraints
@@ -266,6 +275,8 @@ cdef class Constraint(_Varstraint):
 
     cdef readonly Bounds bounds
     """The constraint bounds, a `.Bounds` object"""
+    cdef readonly SimplexSolution simplex
+    """The constraint's simplex solution, a `.SimplexSolution` object"""
     cdef readonly IPointSolution ipoint
     """The constraint's interior point solution, a `.IPointSolution` object"""
     cdef readonly IntOptSolution intopt
@@ -283,6 +294,7 @@ cdef class Constraint(_Varstraint):
         else:
             self._name = chars.decode()
         self.bounds = Bounds(self)
+        self.simplex = SimplexSolution(self)
         self.ipoint = IPointSolution(self)
         self.intopt = IntOptSolution(self)
 
@@ -404,6 +416,12 @@ cdef class Constraint(_Varstraint):
 
     def _ipt_dual(self):
         return glpk.ipt_row_dual(self._problem, self._ind)
+
+    def _sm_prim(self):
+        return glpk.sm_row_prim(self._problem, self._ind)
+
+    def _sm_dual(self):
+        return glpk.sm_row_dual(self._problem, self._ind)
 
 
 cdef class Bounds:
@@ -551,6 +569,45 @@ cdef class Bounds:
         """
         def __get__(self):
             return vartype2str[self._varstraint._vartype()]
+
+
+cdef class SimplexSolution:
+    """The solution produced by the simplex solver
+
+    .. doctest:: SimplexSolution
+
+        >>> s = MILProgram().variables.add().simplex
+        >>> isinstance(s, SimplexSolution)
+        True
+        >>> s.primal, s.dual  # the GLPK default before solving
+        (0.0, 0.0)
+
+    .. doctest:: SimplexSolution
+
+        >>> c = MILProgram().constraints.add().simplex
+        >>> isinstance(s, SimplexSolution)
+        True
+        >>> s.primal, s.dual  # the GLPK default before solving
+        (0.0, 0.0)
+
+    """
+
+    cdef _Varstraint _varstraint
+
+    def __cinit__(self, varstraint):
+        self._varstraint = varstraint
+
+    property primal:
+        """The primal solution value, a |Real| number"""
+        def __get__(self):
+            cdef double val = self._varstraint._sm_prim()
+            return val
+
+    property dual:
+        """The dual solution value, a |Real| number"""
+        def __get__(self):
+            cdef double val = self._varstraint._sm_dual()
+            return val
 
 
 cdef class IPointSolution:

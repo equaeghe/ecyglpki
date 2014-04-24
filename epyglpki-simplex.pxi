@@ -445,22 +445,6 @@ cdef class SimplexSolver(_Solver):
         def __get__(self):
             return solstat2str[glpk.sm_dual_stat(self._problem)]
 
-    def primal(self, varstraint):
-        """Return primal value for the current solution
-
-        :param varstraint: variable or constraint to return the primal value of
-        :type varstraint: `.Variable` or `.Constraint`
-        :returns: the value of *varstraint* for the current solution
-        :rtype: `float` or `int`
-        :raises TypeError: if varstraint is not `.Variable` or `.Constraint`
-
-        .. todo::
-
-            Add doctest
-
-        """
-        return self._value(varstraint, glpk.sm_col_prim, glpk.sm_row_prim)
-
     def primal_error(self):
         """Return absolute and relative primal solution errors
 
@@ -479,22 +463,6 @@ cdef class SimplexSolver(_Solver):
 
         """
         return self._error('primal', glpk.SOL)
-
-    def dual(self, varstraint):
-        """Return dual value for the current solution
-
-        :param varstraint: variable or constraint to return the dual value of
-        :type varstraint: `.Variable` or `.Constraint`
-        :returns: the value of *varstraint* for the current solution
-        :rtype: `float` or `int`
-        :raises TypeError: if varstraint is not `.Variable` or `.Constraint`
-
-        .. todo::
-
-            Add doctest
-
-        """
-        return self._value(varstraint, glpk.sm_col_dual, glpk.sm_row_dual)
 
     def dual_error(self):
         """Return absolute and relative dual solution errors

@@ -24,16 +24,6 @@
 
 cdef class _Solver(_Component):
 
-    cdef _value(self, varstraint,
-                double (*variable_func)(glpk.ProbObj*, int),
-                double (*constraint_func)(glpk.ProbObj*, int)):
-        if isinstance(varstraint, Variable):
-            return variable_func(self._problem, varstraint._ind)
-        elif isinstance(varstraint, Constraint):
-            return constraint_func(self._problem, varstraint._ind)
-        else:
-            raise TypeError("varstraint must be a Variable or Constraint")
-
     def _error(self, soltype, solver):
         cdef double* ae_max = <double*>glpk.alloc(1, sizeof(double))
         cdef int* ae_ind = <int*>glpk.alloc(1, sizeof(int))

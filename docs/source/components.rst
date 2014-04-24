@@ -2,7 +2,7 @@
 
 .. testsetup:: *
 
-    from epyglpki import MILProgram, Variable, Constraint, Bounds, IPointSolution, IntOptSolution, Objective
+    from epyglpki import MILProgram, Variable, Constraint, Bounds, SimplexSolution, IPointSolution, IntOptSolution, Objective
 
 Components
 ==========
@@ -28,6 +28,8 @@ Bounds
 
 Solutions
 ---------
+
+.. autoclass:: SimplexSolution
 
 .. autoclass:: IPointSolution
 
