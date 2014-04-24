@@ -138,22 +138,6 @@ cdef class IPointSolver(_Solver):
         def __get__(self):
             return solstat2str[glpk.ipt_status(self._problem)]
 
-    def primal(self, varstraint):
-        """Return primal value for the current solution
-
-        :param varstraint: variable or constraint to return the primal value of
-        :type varstraint: `.Variable` or `.Constraint`
-        :returns: the value of *varstraint* for the current solution
-        :rtype: `float` or `int`
-        :raises TypeError: if varstraint is not `.Variable` or `.Constraint`
-
-        .. todo::
-
-            Add doctest
-
-        """
-        return self._value(varstraint, glpk.ipt_col_prim, glpk.ipt_row_prim)
-
     def primal_error(self):
         """Return absolute and relative primal solution errors
 
@@ -172,22 +156,6 @@ cdef class IPointSolver(_Solver):
 
         """
         return self._error('primal', glpk.IPT)
-
-    def dual(self, varstraint):
-        """Return dual value for the current solution
-
-        :param varstraint: variable or constraint to return the dual value of
-        :type varstraint: `.Variable` or `.Constraint`
-        :returns: the value of *varstraint* for the current solution
-        :rtype: `float` or `int`
-        :raises TypeError: if varstraint is not `.Variable` or `.Constraint`
-
-        .. todo::
-
-            Add doctest
-
-        """
-        return self._value(varstraint, glpk.ipt_col_dual, glpk.ipt_row_dual)
 
     def dual_error(self):
         """Return absolute and relative dual solution errors

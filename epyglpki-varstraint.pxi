@@ -46,8 +46,10 @@ cdef class Variable(_Varstraint):
 
     cdef readonly Bounds bounds
     """The variable bounds, a `.Bounds` object"""
+    cdef readonly IPointSolution ipoint
+    """The variable's interior point solution, a `.IPointSolution` object"""
     cdef readonly IntOptSolution intopt
-    """The variable's interior point solution, a `.IntOptSolution` object"""
+    """The variable's integer optimization solution, a `.IntOptSolution` object"""
 
     def __cinit__(self, program):
         self._alias = program._generate_alias()
@@ -61,6 +63,7 @@ cdef class Variable(_Varstraint):
         else:
             self._name = chars.decode()
         self.bounds = Bounds(self)
+        self.ipoint = IPointSolution(self)
         self.intopt = IntOptSolution(self)
 
     property _ind:
@@ -242,6 +245,12 @@ cdef class Variable(_Varstraint):
     def _mip_val(self):
         return glpk.mip_col_val(self._problem, self._ind)
 
+    def _ipt_prim(self):
+        return glpk.ipt_col_prim(self._problem, self._ind)
+
+    def _ipt_dual(self):
+        return glpk.ipt_col_dual(self._problem, self._ind)
+
 
 cdef class Constraint(_Varstraint):
     """One of the problem's constraints
@@ -257,8 +266,10 @@ cdef class Constraint(_Varstraint):
 
     cdef readonly Bounds bounds
     """The constraint bounds, a `.Bounds` object"""
+    cdef readonly IPointSolution ipoint
+    """The constraint's interior point solution, a `.IPointSolution` object"""
     cdef readonly IntOptSolution intopt
-    """The constraint's interior point solution, a `.IntOptSolution` object"""
+    """The constraint's integer optimization solution, a `.IntOptSolution` object"""
 
     def __cinit__(self, program):
         self._alias = program._generate_alias()
@@ -272,6 +283,7 @@ cdef class Constraint(_Varstraint):
         else:
             self._name = chars.decode()
         self.bounds = Bounds(self)
+        self.ipoint = IPointSolution(self)
         self.intopt = IntOptSolution(self)
 
     property _ind:
@@ -386,6 +398,12 @@ cdef class Constraint(_Varstraint):
 
     def _mip_val(self):
         return glpk.mip_row_val(self._problem, self._ind)
+
+    def _ipt_prim(self):
+        return glpk.ipt_row_prim(self._problem, self._ind)
+
+    def _ipt_dual(self):
+        return glpk.ipt_row_dual(self._problem, self._ind)
 
 
 cdef class Bounds:
@@ -533,6 +551,45 @@ cdef class Bounds:
         """
         def __get__(self):
             return vartype2str[self._varstraint._vartype()]
+
+
+cdef class IPointSolution:
+    """The solution produced by the interior point solver
+
+    .. doctest:: IPointSolution
+
+        >>> s = MILProgram().variables.add().ipoint
+        >>> isinstance(s, IPointSolution)
+        True
+        >>> s.primal, s.dual  # the GLPK default before solving
+        (0.0, 0.0)
+
+    .. doctest:: IPointSolution
+
+        >>> c = MILProgram().constraints.add().ipoint
+        >>> isinstance(s, IPointSolution)
+        True
+        >>> s.primal, s.dual  # the GLPK default before solving
+        (0.0, 0.0)
+
+    """
+
+    cdef _Varstraint _varstraint
+
+    def __cinit__(self, varstraint):
+        self._varstraint = varstraint
+
+    property primal:
+        """The primal solution value, a |Real| number"""
+        def __get__(self):
+            cdef double val = self._varstraint._ipt_prim()
+            return val
+
+    property dual:
+        """The dual solution value, a |Real| number"""
+        def __get__(self):
+            cdef double val = self._varstraint._ipt_dual()
+            return val
 
 
 cdef class IntOptSolution:
