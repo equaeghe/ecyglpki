@@ -503,7 +503,30 @@ cdef class SimplexControls:
 
 
 cdef class Basis(_Component):
-    """The basis of a simplex solver"""
+    """The basis of a simplex solver
+
+    .. doctest:: Basis
+
+        >>> b = MILProgram().simplex.basis
+        >>> isinstance(b, Basis)
+        True
+
+    .. todo::
+
+        Add doctest showing use of `__len__` and `__getitem__`
+
+    """
+
+    def __len__(self):
+        return len(self._program.constraints)
+
+    def __getitem__(self, col):
+        n = len(self.constraints)
+        if (col <= 0) or (col > n):
+            raise IndexError("The basis only has " + str(n) + "components, " +
+                             "indexed from 1 to " + str(n) + ".")
+        ind = glpk.get_bhead(self._problem, col)
+        return self._program._from_varstraintind(ind)
 
     property controls:
         """The basis factorization controls, a `.FactorizationControls` object"""
@@ -558,7 +581,8 @@ cdef class Basis(_Component):
         :raises ValueError: if the basis matrix is singular
         :raises ValueError: if the basis matrix is ill-conditioned
 
-        A basis must be ‘warmed up’ to use `.solve` without presolving
+        A basis must be ‘warmed up’ to use `.SimplexSolver.solve` without
+        presolving.
 
         .. todo::
 
@@ -566,15 +590,15 @@ cdef class Basis(_Component):
 
         .. note::
 
-            After `.solve` has been run successfully, the basis is left in a
-            valid state. So it is not necessary to run this method before,
-            e.g., re-optimizating after only the objective has been changed.
+            After `.SimplexSolver.solve` has been run successfully, the basis
+            is left in a valid state. So it is not necessary to run this method
+            before, e.g., re-optimizating after only the objective has been
+            changed.
 
         """
         retcode = glpk.warm_up(self._problem)
         if retcode is not 0:
             raise smretcode2error[retcode]
-
 
 cdef class FactorizationControls(_Component):
     """The basis factorization control parameter object
