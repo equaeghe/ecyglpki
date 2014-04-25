@@ -400,53 +400,92 @@ cdef class SimplexSolver(_Solver):
     def __cinit__(self, program):
         self.basis = Basis(self._program)
 
-    def solve(self, controls=SimplexControls(), exact=False):
-        """Solve the linear program
+    def solve(self, controls=None):
+        """Solve the linear program using floating point arithmetic
 
         :param controls: the control parameters (uses defaults if omitted)
         :type controls: `.SimplexControls`
-        :param exact: whether to use exact arithmetic or not
-            (only if the *meth* control parameter is `'primal'`)
-        :type exact: `bool`
         :returns: solution status; see `.status` for details,
             or `'obj_ll reached'` or `'obj_ul reached'` in case that happens
         :rtype: `str`
-        :raises ValueError: if *exact* is `True` but the *meth* control
-            parameter is not `'primal'`
-        :raises ValueError: if finite values are set for *obj_ll* or *obj_ul*
-            while the *meth* control parameter is not `'dual'`
+        :raises ValueError: if finite values are set for `obj_ll` or `obj_ul`
+            while the `meth` control parameter is not `'dual'`
         :raises ValueError: if the basis is invalid
-        :raises ValueError: if the basis matrix is singular
-        :raises ValueError: if the basis matrix is ill-conditioned
+        :raises ValueError: if the basis matrix is singular or ill-conditioned
         :raises ValueError: if incorrect bounds are given
         :raises RuntimeError: in case of solver failure
-        :raises StopIteration: if the iteration limit is exceeded
-        :raises StopIteration: if the time limit is exceeded
+        :raises StopIteration: if the iteration or time limit is exceeded
         :raises StopIteration: if the presolver detects the problem has no
-            primal feasible solution
-        :raises StopIteration: if the presolver detects the problem has no dual
-            feasible solution
+            primal or dual feasible solution
 
         .. todo::
 
             Add doctest
 
         """
-        cdef glpk.SimplexCP smcp = controls._smcp
-        if exact:
-            if meth2str[self._smcp.meth] is not 'primal':
-                raise ValueError("Only primal simplex with exact arithmetic.")
-            retcode = glpk.simplex_exact(self._problem, &smcp)
+        cdef glpk.SimplexCP smcp
+        if controls is None:
+            glpk.init_smcp(&smcp)
+        elif isinstance(controls, SimplexControls):
+            smcp = controls._smcp
         else:
-            if ((meth2str[smcp.meth] is not 'dual') and
-                ((smcp.obj_ll > -DBL_MAX) or (smcp.obj_ul < +DBL_MAX))):
-                 raise ValueError("Objective function limits only with " +
-                                  "dual simplex.")
-            retcode = glpk.simplex(self._problem, &smcp)
+            raise TypeError("Controls parameter should be given as a " +
+                            "'SimplexControls' object, not " +
+                            type(controls).__name__)
+        if ((meth2str[smcp.meth] is not 'dual') and
+            ((smcp.obj_ll > -DBL_MAX) or (smcp.obj_ul < +DBL_MAX))):
+                raise ValueError("Objective function limits only with " +
+                                "dual simplex.")
+        retcode = glpk.simplex(self._problem, &smcp)
         if retcode is 0:
             return self.status()
         elif retcode in {glpk.EOBJLL, glpk.EOBJUL}:
             return smretcode2str[retcode]
+        else:
+            raise smretcode2error[retcode]
+
+    def solve_exactly(self, controls=None):
+        """Solve the linear program using exact, integer arithmetic
+
+        :param controls: the control parameters
+            (only uses `it_lim` and `tm_lim`; uses defaults if omitted)
+        :type controls: `.SimplexControls`
+        :returns: solution status; see `.status` for details
+        :rtype: `str`
+        :raises ValueError: if the `meth` control parameter is not `'primal'`
+            (only primal simplex is implemented in exact arithmetic)
+        :raises ValueError: if the basis is invalid
+        :raises ValueError: if the basis matrix is singular
+        :raises ValueError: if incorrect bounds are given
+        :raises RuntimeError: in case of solver failure
+        :raises StopIteration: if the iteration or time limit is exceeded
+
+        .. todo::
+
+            Add doctest
+
+        .. note::
+
+            Computations in exact arithmetic are relatively time-consuming. So
+            it is advised to first find an optimal basis with the
+            `.SimplexSolver.solve` method and only then call this one, in which
+            case only a few simplex iterations need to be performed in exact arithmetic.
+
+        """
+        cdef glpk.SimplexCP smcp
+        if controls is None:
+            glpk.init_smcp(&smcp)
+        elif isinstance(controls, SimplexControls):
+            smcp = controls._smcp
+        else:
+            raise TypeError("Controls parameter should be given as a " +
+                            "'SimplexControls' object, not " +
+                            type(controls).__name__)
+        if meth2str[self._smcp.meth] is not 'primal':
+            raise ValueError("Only primal simplex with exact arithmetic.")
+        retcode = glpk.simplex_exact(self._problem, &smcp)
+        if retcode is 0:
+            return self.status()
         else:
             raise smretcode2error[retcode]
 
