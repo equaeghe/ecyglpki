@@ -12,18 +12,18 @@ Solver
 
 .. autoclass:: SimplexSolver
 
+Controls
+~~~~~~~~
+
+.. autoclass:: SimplexControls
+
+
 Basis
 -----
 
 .. autoclass:: Basis
 
-Controls
---------
-
-Solver Controls
-~~~~~~~~~~~~~~~
-.. autoclass:: SimplexControls
-
 Factorization Controls
 ~~~~~~~~~~~~~~~~~~~~~~
+
 .. autoclass:: FactorizationControls
