@@ -210,18 +210,8 @@ cdef class SimplexControls:
 cdef class Basis(_Component):
     """The basis of a simplex solver"""
 
-    cdef readonly Factorization factorization
-    """The basis factorization, a `.Factorization` object"""
-
-    def __cinit__(self, program):
-        self.factorization = Factorization(self._program)
-
-
-cdef class Factorization(_Component):
-    """The basis factorization"""
-
     property controls:
-        """The basis factorization controls"""
+        """The basis factorization controls, a `.FactorizationControls` object"""
         def __get__(self):
             return FactorizationControls(self._program)
         def __set__(self, controls):
@@ -230,13 +220,73 @@ cdef class Factorization(_Component):
         def __del__(self):
             glpk.set_bfcp(self._problem, NULL)
 
+    def generate(self, algorithm):
+        """Generate an initial basis using an algorithm
+
+        :type algorithm: `str`
+        :param algorithm: an algorithm for generating a basis, chosen from
+
+            * `'standard'`: sets all constraints as basic
+            * `'advanced'`: sets as basic
+
+              #. all non-fixed constraints
+              #. as many non-fixed variables as possible, while preserving the
+                 lower triangular structure of the basis matrix
+              #. appropriate fixed constraints to complete the basis
+
+            * `'Bixby'`: algorithm used by CPLEX, as discussed by Bixby_
+
+        :raises ValueError: if *algorithm* is neither `'standard'`,
+            `'advanced'`, nor `'Bixby'`
+
+        .. todo::
+
+            Add doctest
+
+        .. _Bixby: http://dx.doi.org/10.1287/ijoc.4.3.267
+
+        """
+        if algorithm is 'standard':
+            glpk.std_basis(self._problem)
+        elif algorithm is 'advanced':
+            glpk.adv_basis(self._problem, 0)
+        elif algorithm is 'Bixby':
+            glpk.cpx_basis(self._problem)
+        else:
+            raise ValueError(repr(algorithm)
+                             + " is not a basis generation algorithm.")
+
+    def warm_up(self):
+        """‘Warm up’ the basis
+
+        :raises ValueError: if the basis is invalid
+        :raises ValueError: if the basis matrix is singular
+        :raises ValueError: if the basis matrix is ill-conditioned
+
+        A basis must be ‘warmed up’ to use `.solve` without presolving
+
+        .. todo::
+
+            Add doctest
+
+        .. note::
+
+            After `.solve` has been run successfully, the basis is left in a
+            valid state. So it is not necessary to run this method before,
+            e.g., re-optimizating after only the objective has been changed.
+
+        """
+        retcode = glpk.warm_up(self._problem)
+        if retcode is not 0:
+            raise smretcode2error[retcode]
+
 
 cdef class FactorizationControls(_Component):
     """The basis factorization control parameter object
 
     .. doctest:: FactorizationControls
 
-        >>> r = MILProgram().simplex.basis.factorization.controls
+        >>> r = MILProgram().simplex.basis.controls
         >>> isinstance(r, FactorizationControls)
         True
 
@@ -508,62 +558,6 @@ cdef class SimplexSolver(_Solver):
             if glpk.get_col_stat(self._problem, ind) is glpk.BS:
                 nature = 'dual'
         return (varstraint, nature)
-
-    def basis_stuff(self, algorithm=None, warmup=False):
-        """Change or retrieve basis
-
-        :param algorithm: an algorithm for generating a basis (omit to not
-            replace the current basis), chosen from
-
-            * `'standard'`: sets all constraints as basic
-            * `'advanced'`: sets as basic
-
-              #. all non-fixed constraints
-              #. as many non-fixed variables as possible, while preserving the
-                 lower triangular structure of the basis matrix
-              #. appropriate fixed constraints to complete the basis
-
-            * `'Bixby'`: algorithm used by CPLEX, as discussed by Bixby_
-
-        :type algorithm: `str`
-        :type status: |Mapping| from `.Variable` or `.Constraint` to `str`
-        :param warmup: whether to ‘warm up’ the basis, so that `.solve` can be
-            used without presolving
-        :type warmup: `bool`
-        :raises ValueError: if *algorithm* is neither `'standard'`,
-            `'advanced'`, nor `'Bixby'`
-        :raises ValueError: if the basis is invalid
-        :raises ValueError: if the basis matrix is singular
-        :raises ValueError: if the basis matrix is ill-conditioned
-
-        .. todo::
-
-            Add doctest
-
-        .. note::
-
-            After `.solve` has been run successfully, the
-            basis is left in a valid state. So it is not necessary to run this
-            method before, e.g., re-optimizating after only the objective has
-            been changed.
-
-        .. _Bixby: http://dx.doi.org/10.1287/ijoc.4.3.267
-
-        """
-        if algorithm is not None:
-            if algorithm is 'standard':
-                glpk.std_basis(self._problem)
-            elif algorithm is 'advanced':
-                glpk.adv_basis(self._problem, 0)
-            elif algorithm is 'Bixby':
-                glpk.cpx_basis(self._problem)
-            else:
-                raise ValueError(repr(algorithm)
-                                 + " is not a basis generation algorithm.")
-        if warmup:
-            retcode = glpk.warm_up(self._problem)
-            if retcode is not 0:
-                raise smretcode2error[retcode]
 
     def print_solution(self, fname):
         """Write the solution to a file in a readable format

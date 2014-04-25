@@ -2,7 +2,7 @@
 
 .. testsetup:: *
 
-    from epyglpki import MILProgram, SimplexSolver, SimplexControls, Basis, Factorization, FactorizationControls
+    from epyglpki import MILProgram, SimplexSolver, SimplexControls, Basis, FactorizationControls
 
 Simplex Solver
 ==============
@@ -17,11 +17,13 @@ Basis
 
 .. autoclass:: Basis
 
-.. autoclass:: Factorization
-
 Controls
 --------
 
+Solver Controls
+~~~~~~~~~~~~~~~
 .. autoclass:: SimplexControls
 
+Factorization Controls
+~~~~~~~~~~~~~~~~~~~~~~
 .. autoclass:: FactorizationControls
