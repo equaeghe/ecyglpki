@@ -266,6 +266,9 @@ cdef class Variable(_Varstraint):
     def _set_stat(self, varstat):
         glpk.set_col_stat(self._problem, self._ind, varstat)
 
+    def _get_bind(self):
+        return glpk.get_col_bind(self._problem, self._ind)
+
 
 cdef class Constraint(_Varstraint):
     """One of the problem's constraints
@@ -435,6 +438,9 @@ cdef class Constraint(_Varstraint):
     def _set_stat(self, varstat):
         glpk.set_row_stat(self._problem, self._ind, varstat)
 
+    def _get_bind(self):
+        return glpk.get_row_bind(self._problem, self._ind)
+
 
 cdef class Bounds:
     """The bounds of a variable or constraint
@@ -588,7 +594,9 @@ cdef class SimplexSolution:
 
     .. doctest:: SimplexSolution
 
-        >>> s = MILProgram().variables.add().simplex
+        >>> p = MILProgram()
+        >>> x = p.variables.add()
+        >>> s = x.simplex
         >>> isinstance(s, SimplexSolution)
         True
         >>> s.primal, s.dual, s.status  # the GLPK default before solving
@@ -596,11 +604,12 @@ cdef class SimplexSolution:
 
     .. doctest:: SimplexSolution
 
-        >>> c = MILProgram().constraints.add().simplex
+        >>> c = p.constraints.add()
+        >>> s = c.simplex
         >>> isinstance(s, SimplexSolution)
         True
         >>> s.primal, s.dual, s.status  # the GLPK default before solving
-        (0.0, 0.0, 'fixed')
+        (0.0, 0.0, 'basic')
 
     """
 
@@ -622,21 +631,34 @@ cdef class SimplexSolution:
             return val
 
     property status:
-        """The basic status, a `str`
+        """The basic status, a `str` or `int`
 
         The possible values are:
 
-        * `'basic'`: basic
+        * `'basic'`: basic, in which case the 1-based index of the
+          corresponding column in the basis matrix is returned
         * `'lower'`: non-basic with active lower bound
         * `'upper'`: non-basic with active upper bound
-        * `'free'`: non-basic free (unbounded)
+        * `'free'`: non-basic free
         * `'fixed'`: non-basic fixed
 
         .. doctest:: SimplexSolution
 
-            >>> s.status = 'basic'
-            >>> s.status
-            'basic'
+            >>> x.bounds(None, None)
+            >>> x.name = 'variable'
+            >>> c.bounds(-1, 1)
+            >>> c.name = 'constraint'
+            >>> c.coeffs = {x: 1}
+            >>> x.simplex.status, c.simplex.status
+            ('free', 'basic')
+            >>> x.simplex.status = 'basic'
+            >>> c.simplex.status = 'lower'
+            >>> x.simplex.status, c.simplex.status
+            ('basic', 'lower')
+            >>> p.simplex.basis.warm_up() # doctest: +SKIP
+            # gives "Assertion failed: k1 < k2" on line 165 of glpk-4.54/src/bflib/sgf.c
+            >>> x.simplex.status # doctest: +SKIP
+            1
 
         .. note::
 
@@ -646,10 +668,32 @@ cdef class SimplexSolution:
 
         """
         def __get__(self):
-            return varstat2str[self._varstraint._get_stat()]
+            status = varstat2str[self._varstraint._get_stat()]
+            if not ((status is 'basic') and
+                    glpk.bf_exists(self._varstraint._problem)):
+                return status
+            else:
+                bind = self._varstraint._get_bind()
+                if bind is 0:
+                    raise RuntimeError("This varstraint is both reported as " +
+                                       "being basic and not!")
+                else:
+                    return bind
         def __set__(self, status):
+            varstraint = self._varstraint
+            vartype = varstraint.bounds.type
+            if (((status is 'free') and (vartype is not 'free'))
+                or
+                ((status is 'fixed') and (vartype is not 'fixed'))
+                or
+                ((status in {'lower', 'upper'}) and (vartype is 'free'))
+                or
+                ((status is 'lower') and (vartype is 'dominated'))
+                or
+                ((status is 'upper') and (vartype is 'dominating'))):
+                raise ValueError("Status can only be set to compatible state.")
             varstat = str2varstat[status]
-            self._varstraint._set_stat(varstat)
+            varstraint._set_stat(varstat)
 
 
 cdef class IPointSolution:
