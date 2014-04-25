@@ -173,11 +173,11 @@ cdef class MILProgram:
         elif format is 'MPS':
             retcode = glpk.write_mps(self._problem, str2mpsfmt[mpsfmt], NULL,
                                      name2chars(fname))
-        if format is 'CNFSAT':
+        elif format is 'CNFSAT':
             retcode = glpk.write_cnfsat(self._problem, name2chars(fname))
         else:
             raise ValueError("Only 'GLPK', 'LP', 'MPS', and 'CNFSAT' " +
-                             "formats are supported.")
+                             "formats are supported, not '" + format + "'.")
         if retcode is not 0:
             raise RuntimeError("Error writing " + format + " file.")
 
