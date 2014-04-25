@@ -186,7 +186,7 @@ cdef class Variable(_Varstraint):
             cdef int* rows =  <int*>glpk.alloc(1+k, sizeof(int))
             cdef double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
             try:
-                for i, item in enumerate(coeffs, start=1):
+                for i, item in enumerate(coeffs.items(), start=1):
                     if isinstance(item[0], Constraint):
                         row = item[0]._ind
                     else:  #  assume name
@@ -378,7 +378,7 @@ cdef class Constraint(_Varstraint):
             cdef int* cols =  <int*>glpk.alloc(1+k, sizeof(int))
             cdef double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
             try:
-                for i, item in enumerate(coeffs, start=1):
+                for i, item in enumerate(coeffs.items(), start=1):
                     if isinstance(item[0], Variable):
                         col = item[0]._ind
                     else:  #  assume name
