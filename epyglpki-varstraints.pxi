@@ -43,23 +43,13 @@ cdef class _Varstraints(_Component):
         else:
             return True
 
-    def _getoneitem(self, name):
+    def __getitem__(self, name):
         if isinstance(name, str):
             ind = self._find_ind(name)
         else:
-            raise TypeError("Names must be strings; "
+            raise TypeError("Name must be a string; "
                             + str(name) + " is " + type(name).__name__ + '.')
         return self._varstraints[ind-1]  # GLPK indices start at 1
-
-    def __getitem__(self, names):
-        n = len(names)
-        if n is 0:
-            raise SyntaxError("At least one argument is required")
-        elif n is 1:
-            return self._getoneitem(self, names[0])
-        else:
-            for name in names:
-                yield self._getoneitem(self, name)
 
     def _from_ind(self, ind):
         if isinstance(ind, numbers.Integral):
@@ -75,16 +65,33 @@ cdef class _Varstraints(_Component):
 
     def _add(self, varstraint, attributes):
         self._varstraints.append(varstraint)
-        for attribute, value in attributes:
+        for attribute, value in attributes.items():
             setattr(varstraint, attribute, value)
 
 
 cdef class Variables(_Varstraints):
+    """The problem's collection of variables
 
-    cdef _find_ind(self, name):
+    .. doctest:: Variables
+
+        >>> p = MILProgram()
+        >>> vs = p.variables
+        >>> x = vs.add(name='ξ')
+        >>> y = vs.add(name='υ')
+        >>> len(vs)
+        2
+        >>> {vs['ξ'], vs['υ']} == {z for z in vs} == {x, y}
+        True
+        >>> del vs['υ']
+        >>> len(vs)
+        1
+
+    """
+
+    def _find_ind(self, name):
         return glpk.find_col(self._problem, name2chars(name))
 
-    cdef _del_inds(self, inds):
+    def _del_inds(self, inds):
         k = len(inds)
         cdef int* cinds =  <int*>glpk.alloc(1+k, sizeof(int))
         for i, ind in enumerate(inds, start=1):
@@ -99,9 +106,19 @@ cdef class Variables(_Varstraints):
         """Add a new variable to the problem
 
         :param attributes: zero or more named parameters from the list of
-            `.Variable` attributes
+            writable `.Variable` attributes
         :returns: the new variable
         :rtype: `.Variable`
+
+        .. doctest:: Variables
+
+            >>> x = vs.add(name='Veranderlijke', kind='binary', weight=3)
+            >>> x.name
+            'Veranderlijke'
+            >>> x.kind
+            'binary'
+            >>> x.weight
+            3.0
 
         """
         glpk.add_cols(self._problem, 1)
@@ -111,11 +128,28 @@ cdef class Variables(_Varstraints):
 
 
 cdef class Constraints(_Varstraints):
+    """The problem's collection of constraints
 
-    cdef _find_ind(self, name):
+    .. doctest:: Constraints
+
+        >>> p = MILProgram()
+        >>> cs = p.constraints
+        >>> c = cs.add(name='δ')
+        >>> d = cs.add(name='ε')
+        >>> len(cs)
+        2
+        >>> {cs['δ'], cs['ε']} == {e for e in cs} == {c, d}
+        True
+        >>> del cs['ε']
+        >>> len(cs)
+        1
+
+    """
+
+    def _find_ind(self, name):
         return glpk.find_row(self._problem, name2chars(name))
 
-    cdef _del_inds(self, inds):
+    def _del_inds(self, inds):
         k = len(inds)
         cdef int* cinds =  <int*>glpk.alloc(1+k, sizeof(int))
         for i, ind in enumerate(inds, start=1):
@@ -130,9 +164,17 @@ cdef class Constraints(_Varstraints):
         """Add a new constraint to the problem
 
         :param attributes: zero or more named parameters from the list of
-            `.Constraint` attributes
+            writable `.Constraint` attributes
         :returns: the new constraint
         :rtype: `.Constraint`
+
+        .. doctest:: Constraints
+
+            >>> c = cs.add(name='Capacity', scale=.5)
+            >>> c.name
+            'Capacity'
+            >>> c.scale
+            0.5
 
         """
         glpk.add_rows(self._problem, 1)
