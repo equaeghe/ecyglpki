@@ -1002,7 +1002,6 @@ cdef extern from "glpk.h":
                                            int a_low, int a_cap, int a_cost,
                                            double* sol, int a_x, int v_pi)
 
-
     # find minimum-cost flow with Bertsekas-Tseng relaxation method
     int mincost_relax4 "glp_mincost_relax4" (Graph* graph, int v_rhs,
                                              int a_low, int a_cap, int a_cost,
