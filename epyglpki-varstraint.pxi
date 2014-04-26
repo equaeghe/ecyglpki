@@ -645,9 +645,7 @@ cdef class SimplexSolution:
         .. doctest:: SimplexSolution
 
             >>> x.bounds(None, None)
-            >>> x.name = 'variable'
             >>> c.bounds(-1, 1)
-            >>> c.name = 'constraint'
             >>> c.coeffs = {x: 1}
             >>> x.simplex.status, c.simplex.status
             ('free', 'basic')
