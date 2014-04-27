@@ -142,7 +142,7 @@ cdef class SimplexSolver(_Solver):
 
         """
         def __get__(self):
-            return solstat2str[glpk.sm_status(self._problem)]
+            return solstat2str[glpk.get_status(self._problem)]
 
     property status_primal:
         """The current primal solution status, a `str`
@@ -157,7 +157,7 @@ cdef class SimplexSolver(_Solver):
 
         """
         def __get__(self):
-            return solstat2str[glpk.sm_prim_stat(self._problem)]
+            return solstat2str[glpk.get_prim_stat(self._problem)]
 
     property status_dual:
         """The current solution status, a `str`
@@ -172,7 +172,7 @@ cdef class SimplexSolver(_Solver):
 
         """
         def __get__(self):
-            return solstat2str[glpk.sm_dual_stat(self._problem)]
+            return solstat2str[glpk.get_dual_stat(self._problem)]
 
     def primal_error(self):
         """Return absolute and relative primal solution errors
@@ -224,7 +224,7 @@ cdef class SimplexSolver(_Solver):
             Add doctest
 
         """
-        ind = glpk.sm_unbnd_ray(self._problem)
+        ind = glpk.get_unbnd_ray(self._problem)
         varstraint = self._program._from_varstraintind(ind)
         nature = 'primal'
         constraints = len(self._program.constraints)

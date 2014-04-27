@@ -466,37 +466,37 @@ cdef extern from "glpk.h":
     void init_smcp "glp_init_smcp" (SimplexCP* cp)
 
     #  retrieve generic status of basic solution; returns solstat
-    int sm_status "glp_get_status" (ProbObj* problem)
+    int get_status "glp_get_status" (ProbObj* problem)
 
     #  retrieve status of primal basic solution; returns solstat
-    int sm_prim_stat "glp_get_prim_stat" (ProbObj* problem)
+    int get_prim_stat "glp_get_prim_stat" (ProbObj* problem)
 
     #  retrieve status of dual basic solution; returns solstat
-    int sm_dual_stat "glp_get_dual_stat" (ProbObj* problem)
+    int get_dual_stat "glp_get_dual_stat" (ProbObj* problem)
 
     #  retrieve objective value (basic solution)
-    double sm_obj_val "glp_get_obj_val" (ProbObj* problem)
+    double get_obj_val "glp_get_obj_val" (ProbObj* problem)
 
     #  retrieve row status; returns varstat
     int get_row_stat "glp_get_row_stat" (ProbObj* problem, int row)
 
     #  retrieve row primal value (basic solution)
-    double sm_row_prim "glp_get_row_prim" (ProbObj* problem, int row)
+    double get_row_prim "glp_get_row_prim" (ProbObj* problem, int row)
 
     #  retrieve row dual value (basic solution)
-    double sm_row_dual "glp_get_row_dual" (ProbObj* problem, int row)
+    double get_row_dual "glp_get_row_dual" (ProbObj* problem, int row)
 
     #  retrieve column status; returns varstat
     int get_col_stat "glp_get_col_stat" (ProbObj* problem, int col)
 
     #  retrieve column primal value (basic solution)
-    double sm_col_prim "glp_get_col_prim" (ProbObj* problem, int col)
+    double get_col_prim "glp_get_col_prim" (ProbObj* problem, int col)
 
     #  retrieve column dual value (basic solution)
-    double sm_col_dual "glp_get_col_dual" (ProbObj* problem, int col)
+    double get_col_dual "glp_get_col_dual" (ProbObj* problem, int col)
 
     #  determine variable causing unboundedness
-    int sm_unbnd_ray "glp_get_unbnd_ray" (ProbObj* problem)
+    int get_unbnd_ray "glp_get_unbnd_ray" (ProbObj* problem)
 
 # Undocumented
 #

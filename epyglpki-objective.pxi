@@ -112,7 +112,7 @@ cdef class Objective(_Component):
 
         """
         def __get__(self):
-            return glpk.sm_obj_val(self._problem)
+            return glpk.get_obj_val(self._problem)
 
     property ipoint:
         """The objective value produced by the interior point solver, a |Real| number

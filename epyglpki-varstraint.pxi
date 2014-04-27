@@ -254,11 +254,11 @@ cdef class Variable(_Varstraint):
     def _ipt_dual(self):
         return glpk.ipt_col_dual(self._problem, self._ind)
 
-    def _sm_prim(self):
-        return glpk.sm_col_prim(self._problem, self._ind)
+    def _get_prim(self):
+        return glpk.get_col_prim(self._problem, self._ind)
 
-    def _sm_dual(self):
-        return glpk.sm_col_dual(self._problem, self._ind)
+    def _get_dual(self):
+        return glpk.get_col_dual(self._problem, self._ind)
 
     def _get_stat(self):
         return glpk.get_col_stat(self._problem, self._ind)
@@ -426,11 +426,11 @@ cdef class Constraint(_Varstraint):
     def _ipt_dual(self):
         return glpk.ipt_row_dual(self._problem, self._ind)
 
-    def _sm_prim(self):
-        return glpk.sm_row_prim(self._problem, self._ind)
+    def _get_prim(self):
+        return glpk.get_row_prim(self._problem, self._ind)
 
-    def _sm_dual(self):
-        return glpk.sm_row_dual(self._problem, self._ind)
+    def _get_dual(self):
+        return glpk.get_row_dual(self._problem, self._ind)
 
     def _get_stat(self):
         return glpk.get_row_stat(self._problem, self._ind)
@@ -621,13 +621,13 @@ cdef class SimplexSolution:
     property primal:
         """The primal solution value, a |Real| number"""
         def __get__(self):
-            cdef double val = self._varstraint._sm_prim()
+            cdef double val = self._varstraint._get_prim()
             return val
 
     property dual:
         """The dual solution value, a |Real| number"""
         def __get__(self):
-            cdef double val = self._varstraint._sm_dual()
+            cdef double val = self._varstraint._get_dual()
             return val
 
     property status:
