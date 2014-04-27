@@ -193,7 +193,7 @@ cdef class Variable(_Varstraint):
                         row = self._program.constraints._find_ind(item[0])
                     rows[i] = row
                     vals[i] = item[1]
-                glpk.set_mat_col(self._problem, self._ind, 0, rows, vals)
+                glpk.set_mat_col(self._problem, self._ind, k, rows, vals)
             finally:
                 glpk.free(rows)
                 glpk.free(vals)
@@ -388,7 +388,7 @@ cdef class Constraint(_Varstraint):
                         col = self._program.variables._find_ind(item[0])
                     cols[i] = col
                     vals[i] = item[1]
-                glpk.set_mat_row(self._problem, self._ind, 0, cols, vals)
+                glpk.set_mat_row(self._problem, self._ind, k, cols, vals)
             finally:
                 glpk.free(cols)
                 glpk.free(vals)
