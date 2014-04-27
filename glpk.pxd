@@ -421,16 +421,16 @@ cdef extern from "glpk.h":
     void delete_index "glp_delete_index" (ProbObj* problem)
 
     #  set (change) row scale factor
-    void set_row_sf "glp_set_rii" (ProbObj* problem, int row, double sf)
+    void set_rii "glp_set_rii" (ProbObj* problem, int row, double sf)
 
     #  set (change) column scale factor
-    void set_col_sf "glp_set_sjj" (ProbObj* problem, int col, double sf)
+    void set_sjj "glp_set_sjj" (ProbObj* problem, int col, double sf)
 
     #  retrieve row scale factor
-    double get_row_sf "glp_get_rii" (ProbObj* problem, int row)
+    double get_rii "glp_get_rii" (ProbObj* problem, int row)
 
     #  retrieve column scale factor
-    double get_col_sf "glp_get_sjj" (ProbObj* problem, int col)
+    double get_sjj "glp_get_sjj" (ProbObj* problem, int col)
 
     #  scale problem data
     void scale_prob "glp_scale_prob" (ProbObj* problem, int scalopt)
@@ -460,7 +460,7 @@ cdef extern from "glpk.h":
     int simplex "glp_simplex" (ProbObj* problem, const SimplexCP* cp)
 
     #  solve LP problem in exact arithmetic; returns retcode
-    int simplex_exact "glp_exact" (ProbObj* problem, const SimplexCP* cp)
+    int exact "glp_exact" (ProbObj* problem, const SimplexCP* cp)
 
     #  initialize simplex method control parameters
     void init_smcp "glp_init_smcp" (SimplexCP* cp)

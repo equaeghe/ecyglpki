@@ -123,7 +123,7 @@ cdef class SimplexSolver(_Solver):
                             type(controls).__name__)
         if meth2str[self._smcp.meth] is not 'primal':
             raise ValueError("Only primal simplex with exact arithmetic.")
-        retcode = glpk.simplex_exact(self._problem, &smcp)
+        retcode = glpk.exact(self._problem, &smcp)
         if retcode is 0:
             return self.status()
         else:
