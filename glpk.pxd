@@ -561,7 +561,7 @@ cdef extern from "glpk.h":
     #  retrieve column value (MIP solution)
     double mip_col_val "glp_mip_col_val" (ProbObj* problem, int col)
 
-    # check feasibility/optimality conditions
+    #  check feasibility/optimality conditions
     void check_kkt "glp_check_kkt" (ProbObj* problem, int sol, int cond,
                                     double* ae_max, int* ae_ind,
                                     double* re_max, int* re_ind)
