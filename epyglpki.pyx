@@ -31,8 +31,19 @@ import collections.abc
 include 'glpk-constants.pxi'
 
 
+# message levels
+cdef str2msglev = {
+    'no': glpk.MSG_OFF,
+    'warnerror': glpk.MSG_ERR,
+    'normal': glpk.MSG_ON,
+    'full': glpk.MSG_ALL
+    }
+cdef msglev2str = {msg_lev: string for string, msg_lev in str2msglev.items()}
+
+
 def GLPK_version():
     return glpk.version().decode()
+
 
 cdef class Name(unicode):
     """A name acceptable to GLPK

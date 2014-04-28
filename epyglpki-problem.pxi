@@ -605,9 +605,6 @@ cdef class Problem:
         """solve LP problem in exact arithmetic; returns retcode"""
     int exact(self._problem, const SimplexCP* cp)
 
-        """initialize simplex method control parameters"""
-    void init_smcp "glp_init_smcp" (SimplexCP* cp)
-
     def get_status(self):
         """Retrieve generic status of basic solution"""
         return solstat2str[glpk.get_status(self._problem)]
@@ -657,9 +654,6 @@ cdef class Problem:
         """solve LP problem with the interior-point method; returns retcode"""
     int interior(self._problem, const IPointCP* cp)
 
-        """initialize interior-point solver control parameters"""
-    void init_iptcp "glp_init_iptcp" (IPointCP* cp)
-
     def ipt_status(self):
         """Retrieve status of interior-point solution"""
         return solstat2str[glpk.ipt_status(self._problem)]
@@ -704,9 +698,6 @@ cdef class Problem:
 
         """solve MIP problem with the branch-and-bound method; returns retcode"""
     int intopt(self._problem, const IntOptCP* cp)
-
-        """initialize integer optimizer control parameters"""
-    void init_iocp "glp_init_iocp" (IntOptCP* cp)
 
     def mip_status(self):
         """Retrieve status of MIP solution"""
@@ -794,11 +785,9 @@ cdef class Problem:
         """Check if LP basis factorization has been updated"""
         return glpk.bf_updated(self._problem)
 
-        """retrieve LP basis factorization control parameters"""
-    void get_bfcp(self._problem, BasFacCP* cp)
-
-        """change LP basis factorization control parameters"""
-    void set_bfcp(self._problem, const BasFacCP* cp)
+    def set_bfcp(self, FactorizationControls controls):
+        """Change LP basis factorization control parameters"""
+        return glpk.set_bfcp(self._problem, &controls._bfcp)
 
     def get_bhead(self, int k):
         """Retrieve LP basis header information"""
