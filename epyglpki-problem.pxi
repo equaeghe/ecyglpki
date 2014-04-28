@@ -21,12 +21,25 @@
 #
 ###############################################################################
 
+
+import itertools
+
+
 # optimization directions
 cdef str2optdir = {
     'minimize': glpk.MIN,
     'maximize': glpk.MAX
     }
 cdef optdir2str = {optdir: string for string, optdir in str2optdir.items()}
+
+
+# variable kinds
+cdef str2varkind = {
+    'continuous': glpk.CV,
+    'integer': glpk.IV,
+    'binary': glpk.BV
+    }
+cdef varkind2str = {varkind: string for string, varkind in str2varkind.items()}
 
 
 # variable types
@@ -108,6 +121,17 @@ cdef str2scalopt = {
     'round': glpk.SF_2N,
     'skip': glpk.SF_SKIP,
     'auto': glpk.SF_AUTO
+    }
+
+
+# solution statuses
+cdef solstat2str = {
+    glpk.UNDEF: 'undefined',
+    glpk.OPT: 'optimal',
+    glpk.INFEAS: 'infeasible',
+    glpk.NOFEAS: 'no feasible',
+    glpk.FEAS: 'feasible',
+    glpk.UNBND: 'unbounded',
     }
 
 
@@ -518,35 +542,47 @@ cdef class Problem:
         """initialize simplex method control parameters"""
     void init_smcp "glp_init_smcp" (SimplexCP* cp)
 
-        """retrieve generic status of basic solution; returns solstat"""
-    int get_status(self._problem)
+    def get_status(self):
+        """Retrieve generic status of basic solution"""
+        return solstat2str[glpk.get_status(self._problem)]
 
-        """retrieve status of primal basic solution; returns solstat"""
-    int get_prim_stat(self._problem)
+    def get_prim_stat(self):
+        """Retrieve status of primal basic solution"""
+        return solstat2str[glpk.get_prim_stat(self._problem)]
 
-        """retrieve status of dual basic solution; returns solstat"""
-    int get_dual_stat(self._problem)
+    def get_dual_stat(self):
+        """Retrieve status of dual basic solution"""
+        return solstat2str[glpk.get_dual_stat(self._problem)]
 
-        """retrieve objective value (basic solution)"""
-    double get_obj_val(self._problem)
+    def get_obj_val(self):
+        """Retrieve objective value (basic solution)"""
+        return glpk.get_obj_val(self._problem)
 
-        """retrieve row status; returns varstat"""
-    int get_row_stat(self._problem, self._find_row(name))
+    def get_row_stat(self, unicode name):
+        """Retrieve row status"""
+        return varstat2str[glpk.get_row_stat(self._problem,
+                                             self._find_row(name))]
 
-        """retrieve row primal value (basic solution)"""
-    double get_row_prim(self._problem, self._find_row(name))
+    def get_row_prim(self, unicode name):
+        """Retrieve row primal value (basic solution)"""
+        return glpk.get_row_prim(self._problem, self._find_row(name))
 
-        """retrieve row dual value (basic solution)"""
-    double get_row_dual(self._problem, self._find_row(name))
+    def get_row_dual(self, unicode name):
+        """Retrieve row dual value (basic solution)"""
+        return glpk.get_row_dual(self._problem, self._find_row(name))
 
-        """retrieve column status; returns varstat"""
-    int get_col_stat(self._problem, self._find_col(name))
+    def get_col_stat(self, unicode name):
+        """Retrieve column status"""
+        return varstat2str[glpk.get_col_stat(self._problem,
+                                             self._find_col(name))]
 
-        """retrieve column primal value (basic solution)"""
-    double get_col_prim(self._problem, self._find_col(name))
+    def get_col_prim(self, unicode name):
+        """Retrieve column primal value (basic solution)"""
+        return glpk.get_col_prim(self._problem, self._find_col(name))
 
+    def get_col_dual(self, unicode name):
         """retrieve column dual value (basic solution)"""
-    double get_col_dual(self._problem, self._find_col(name))
+        return glpk.get_col_dual(self._problem, self._find_col(name))
 
         """determine variable causing unboundedness"""
     int get_unbnd_ray(self._problem)
@@ -557,35 +593,47 @@ cdef class Problem:
         """initialize interior-point solver control parameters"""
     void init_iptcp "glp_init_iptcp" (IPointCP* cp)
 
-        """retrieve status of interior-point solution; returns solstat"""
-    int ipt_status(self._problem)
+    def ipt_status(self):
+        """Retrieve status of interior-point solution"""
+        return solstat2str[glpk.ipt_status(self._problem)]
 
-        """retrieve objective value (interior point)"""
-    double ipt_obj_val(self._problem)
+    def ipt_obj_val(self):
+        """Retrieve objective value (interior point)"""
+        return glpk.ipt_obj_val(self._problem)
 
-        """retrieve row primal value (interior point)"""
-    double ipt_row_prim(self._problem, self._find_row(name))
+    def ipt_row_prim(self, unicode name):
+        """Retrieve row primal value (interior point)"""
+        return glpk.ipt_row_prim(self._problem, self._find_row(name))
 
-        """retrieve row dual value (interior point)"""
-    double ipt_row_dual(self._problem, self._find_row(name))
+    def ipt_row_dual(self, unicode name):
+        """Retrieve row dual value (interior point)"""
+        return glpk.ipt_row_dual(self._problem, self._find_row(name))
 
-        """retrieve column primal value (interior point)"""
-    double ipt_col_prim(self._problem, self._find_col(name))
+    def ipt_col_prim(self, unicode name):
+        """Retrieve column primal value (interior point)"""
+        return glpk.ipt_col_prim(self._problem, self._find_col(name))
 
-        """retrieve column dual value (interior point)"""
-    double ipt_col_dual(self._problem, self._find_col(name))
+    def ipt_col_dual(self, unicode name):
+        """Retrieve column dual value (interior point)"""
+        return glpk.ipt_col_dual(self._problem, self._find_col(name))
 
-        """set (change) column kind"""
-    void set_col_kind(self._problem, self._find_col(name), int varkind)
+    def set_col_kind(self, unicode name, unicode kind):
+        """Set (change) column kind"""
+        return glpk.set_col_kind(self._problem, self._find_col(name),
+                                 str2varkind[kind])
 
-        """retrieve column kind; returns varkind"""
-    int get_col_kind(self._problem, self._find_col(name))
+    def get_col_kind(self, unicode name):
+        """Retrieve column kind; returns varkind"""
+        return varkind2str[glpk.get_col_kind(self._problem,
+                                             self._find_col(name))]
 
-        """retrieve number of integer columns"""
-    int get_num_int(self._problem)
+    def get_num_int(self):
+        """Retrieve number of integer columns"""
+        return glpk.get_num_int(self._problem)
 
-        """retrieve number of binary columns"""
-    int get_num_bin(self._problem)
+    def get_num_bin(self):
+        """Retrieve number of binary columns"""
+        return glpk.get_num_bin(self._problem)
 
         """solve MIP problem with the branch-and-bound method; returns retcode"""
     int intopt(self._problem, const IntOptCP* cp)
@@ -593,17 +641,21 @@ cdef class Problem:
         """initialize integer optimizer control parameters"""
     void init_iocp "glp_init_iocp" (IntOptCP* cp)
 
-        """retrieve status of MIP solution; returns solstat"""
-    int mip_status(self._problem)
+    def mip_status(self):
+        """Retrieve status of MIP solution"""
+        return solstat2str[glpk.mip_status(self._problem)]
 
-        """retrieve objective value (MIP solution)"""
-    double mip_obj_val(self._problem)
+    def mip_obj_val(self):
+        """Retrieve objective value (MIP solution)"""
+        return glpk.mip_obj_val(self._problem)
 
-        """retrieve row value (MIP solution)"""
-    double mip_row_val(self._problem, self._find_row(name))
+    def mip_row_val(self, unicode name):
+        """Retrieve row value (MIP solution)"""
+        return glpk.mip_row_val(self._problem, self._find_row(name))
 
-        """retrieve column value (MIP solution)"""
-    double mip_col_val(self._problem, self._find_col(name))
+    def mip_col_val(self, unicode name):
+        """Retrieve column value (MIP solution)"""
+        return glpk.mip_col_val(self._problem, self._find_col(name))
 
         """check feasibility/optimality conditions"""
     void check_kkt(self._problem, int sol, int cond,
@@ -640,14 +692,16 @@ cdef class Problem:
         """write MIP solution to text file"""
     int write_mip(self._problem, const char* fname)
 
-        """check if LP basis factorization exists"""
-    bint bf_exists(self._problem)
+    def bf_exists(self):
+        """Check if LP basis factorization exists"""
+        return glpk.bf_exists(self._problem)
 
         """compute LP basis factorization; returns retcode"""
     int factorize(self._problem)
 
-        """check if LP basis factorization has been updated"""
-    bint bf_updated(self._problem)
+    def bf_updated(self):
+        """Check if LP basis factorization has been updated"""
+        return glpk.bf_updated(self._problem)
 
         """retrieve LP basis factorization control parameters"""
     void get_bfcp(self._problem, BasFacCP* cp)
@@ -658,11 +712,13 @@ cdef class Problem:
         """retrieve LP basis header information"""
     int get_bhead(self._problem, int k)
 
-        """retrieve row index in the basis header"""
-    int get_row_bind(self._problem, self._find_row(name))
+    def get_row_bind(self, unicode name):
+        """Retrieve row index in the basis header"""
+        return glpk.get_row_bind(self._problem, self._find_row(name))
 
-        """retrieve column index in the basis header"""
-    int get_col_bind(self._problem, self._find_col(name))
+    def get_col_bind(self, unicode name):
+        """Retrieve column index in the basis header"""
+        return glpk.get_col_bind(self._problem, self._find_col(name))
 
         """perform forward transformation (solve system B*x = b)"""
     void ftran(self._problem, double rhs_pre_x_post[])
@@ -726,8 +782,9 @@ cdef class Problem:
         """read CNF-SAT problem data in DIMACS format"""
     int read_cnfsat(self._problem, const char* fname)
 
-        """check for CNF-SAT problem instance"""
-    int check_cnfsat(self._problem)
+    def check_cnfsat(self):
+        """Check for CNF-SAT problem instance"""
+        return not bool(glpk.check_cnfsat(self._problem))
 
         """write CNF-SAT problem data in DIMACS format"""
     int write_cnfsat(self._problem, const char* fname)

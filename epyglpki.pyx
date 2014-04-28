@@ -26,7 +26,7 @@ cimport glpk
 from cpython.pycapsule cimport PyCapsule_New, PyCapsule_GetPointer
 import numbers
 import collections.abc
-import itertools
+
 
 include 'glpk-constants.pxi'
 
