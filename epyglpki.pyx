@@ -26,12 +26,37 @@ cimport glpk
 from cpython.pycapsule cimport PyCapsule_New, PyCapsule_GetPointer
 import numbers
 import collections.abc
+import itertools
 
 include 'glpk-constants.pxi'
 
 
 def GLPK_version():
     return glpk.version().decode()
+
+cdef class Name(unicode):
+    """A name acceptable to GLPK
+
+    Names acceptable to GLPK may not exceed 255 bytes. We encode a string in
+    UTF-8, so it must not exceed 255 bytes *encoded as UTF-8*.
+
+    """
+
+    cdef bytes _encoded
+
+    def __init__(self, unicode name):
+        self._encoded = name.encode()
+        n = len(self._encoded)
+        if n > 255:
+            raise ValueError("'Name' must not exceed 255 bytes encoded as " +
+                             "UTF-8, yours is " + str(n) + ".")
+
+    cdef const char* _to_chars(self) except NULL:
+        return self._encoded
+
+    @classmethod
+    def _from_chars(cls, const char* chars):
+        return '' if chars is NULL else chars.decode()
 
 
 include 'epyglpki-program.pxi'
