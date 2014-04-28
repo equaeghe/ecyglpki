@@ -181,6 +181,13 @@ cdef ioretcode2error = {
     }
 
 
+# MPS file format
+cdef str2mpsfmt = {
+    'fixed': glpk.MPS_DECK,
+    'free': glpk.MPS_FILE
+    }
+
+
 # problem coefficients
 cdef _coeffscheck(coeffs) except NULL:
     if not isinstance(coeffs, collections.abc.Mapping):
@@ -721,36 +728,57 @@ cdef class Problem:
     void check_kkt(self._problem, int sol, int cond,
                    double* ae_max, int* ae_ind, double* re_max, int* re_ind)
 
-        """write basic solution in printable format"""
-    int print_sol(self._problem, const char* fname)
+    def print_sol(self, unicode fname):
+        """Write basic solution in printable format"""
+        retcode = glpk.print_sol(self._problem, fname.encode())
+        if retcode is not 0:
+            raise RuntimeError("Error writing printable basic solution file")
 
         """read basic solution from text file"""
     int read_sol(self._problem, const char* fname)
 
-        """write basic solution to text file"""
-    int write_sol(self._problem, const char* fname)
+    def write_sol(self, unicode fname):
+        """Write basic solution to text file"""
+        retcode = glpk.write_sol(self._problem, fname.encode())
+        if retcode is not 0:
+            raise RuntimeError("Error writing basic solution file")
 
         """print sensitivity analysis report"""
     int print_ranges(self._problem, int length, const int indlist[], 0,
                      const char* fname)
 
-        """write interior-point solution in printable format"""
-    int print_ipt(self._problem, const char* fname)
+    def print_ipt(self, unicode fname):
+        """Write interior-point solution in printable format"""
+        retcode = glpk.print_ipt(self._problem, fname.encode())
+        if retcode is not 0:
+            raise RuntimeError("Error writing printable interior point " +
+                               "solution file")
 
         """read interior-point solution from text file"""
     int read_ipt(self._problem, const char* fname)
 
-        """write interior-point solution to text file"""
-    int write_ipt(self._problem, const char* fname)
+    def write_ipt(self, unicode fname):
+        """Write interior-point solution to text file"""
+        retcode = glpk.write_ipt(self._problem, fname.encode())
+        if retcode is not 0:
+            raise RuntimeError("Error writing interior point solution file")
 
-        """write MIP solution in printable format"""
-    int print_mip(self._problem, const char* fname)
+    def print_mip(self, unicode fname):
+        """Write MIP solution in printable format"""
+        retcode = glpk.print_mip(self._problem, fname.encode())
+        if retcode is not 0:
+            raise RuntimeError("Error writing printable integer " +
+                               "optimization solution file")
 
         """read MIP solution from text file"""
     int read_mip(self._problem, const char* fname)
 
-        """write MIP solution to text file"""
-    int write_mip(self._problem, const char* fname)
+    def write_mip(self, unicode fname):
+        """Write MIP solution to text file"""
+        retcode = glpk.write_mip(self._problem, fname.encode())
+        if retcode is not 0:
+            raise RuntimeError("Error writing integer optimization solution " +
+                               "file")
 
     def bf_exists(self):
         """Check if LP basis factorization exists"""
@@ -831,20 +859,30 @@ cdef class Problem:
         """read problem data in MPS format"""
     int read_mps(self._problem, int mpsfmt, NULL, const char* fname)
 
-        """write problem data in MPS format"""
-    int write_mps(self._problem, int mpsfmt, NULL, const char* fname)
+    def write_mps(self, unicode mpsfmtstr, unicode fname):
+        """Write problem data in MPS format"""
+        retcode = glpk.write_mps(self._problem,
+                                 str2mpsfmt[mpsfmtstr], NULL, fname.encode())
+        if retcode is not 0:
+            raise RuntimeError("Error writing MPS file.")
 
         """read problem data in CPLEX LP format"""
     int read_lp(self._problem, NULL, const char* fname)
 
-        """write problem data in CPLEX LP format"""
-    int write_lp(self._problem, NULL, const char* fname)
+    def write_lp(self, unicode fname):
+        """Write problem data in CPLEX LP format"""
+        retcode = glpk.write_lp(self._problem, NULL, fname.encode())
+        if retcode is not 0:
+            raise RuntimeError("Error writing LP file.")
 
         """read problem data in GLPK format"""
     int read_prob(self._problem, 0, const char* fname)
 
-        """write problem data in GLPK format"""
-    int write_prob(self._problem, 0, const char* fname)
+    def write_prob(self, unicode fname):
+        """Write problem data in GLPK format"""
+        retcode = glpk.write_prob(self._problem, 0, fname.encode())
+        if retcode is not 0:
+            raise RuntimeError("Error writing GLPK file.")
 
         """read CNF-SAT problem data in DIMACS format"""
     int read_cnfsat(self._problem, const char* fname)
@@ -853,8 +891,11 @@ cdef class Problem:
         """Check for CNF-SAT problem instance"""
         return not bool(glpk.check_cnfsat(self._problem))
 
-        """write CNF-SAT problem data in DIMACS format"""
-    int write_cnfsat(self._problem, const char* fname)
+    def write_cnfsat(self, unicode fname):
+        """Write CNF-SAT problem data in DIMACS format"""
+        retcode = glpk.write_cnfsat(self._problem, fname.encode())
+        if retcode is not 0:
+            raise RuntimeError("Error writing CNF-SAT file.")
 
     def minisat1(self):
         """Solve CNF-SAT problem with MiniSat solver"""
