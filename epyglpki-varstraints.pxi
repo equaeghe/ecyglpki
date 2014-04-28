@@ -99,7 +99,7 @@ cdef class Variables(_Varstraints):
         glpk.del_cols(self._problem, k, cinds)
 
     def _link(self):
-        variable = Variable()
+        variable = Variable(self._program)
         self._add(variable, {})
 
     def add(self, **attributes):
@@ -157,7 +157,7 @@ cdef class Constraints(_Varstraints):
         glpk.del_rows(self._problem, k, cinds)
 
     def _link(self):
-        constraint = Constraint()
+        constraint = Constraint(self._program)
         self._add(constraint, {})
 
     def add(self, **attributes):
