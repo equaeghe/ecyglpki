@@ -135,6 +135,52 @@ cdef solstat2str = {
     }
 
 
+# simplex return codes (errors)
+cdef smretcode2error = {
+    glpk.EBADB: ValueError("Basis is invalid."),
+    glpk.ESING: ValueError("Basis matrix is singular."),
+    glpk.ECOND: ValueError("Basis matrix is ill-conditioned."),
+    glpk.EBOUND: ValueError("Incorrect bounds given."),
+    glpk.EFAIL: RuntimeError("Solver failure."),
+    glpk.EITLIM: StopIteration("Iteration limit exceeded."),
+    glpk.ETMLIM: StopIteration("Time limit exceeded."),
+    glpk.ENOPFS:
+        StopIteration("Presolver: Problem has no primal feasible solution."),
+    glpk.ENODFS:
+        StopIteration("Presolver: Problem has no dual feasible solution.")
+}
+
+# simplex return codes (message)
+cdef smretcode2str = {
+    glpk.EOBJLL: "obj_ll reached",
+    glpk.EOBJUL: "obj_ul reached",
+    }
+
+# interior point return codes (errors)
+cdef iptretcode2error = {
+    glpk.EFAIL: ValueError("The problem has no rows/columns."),
+    glpk.ENOCVG: ArithmeticError("Very slow convergence or divergence."),
+    glpk.EITLIM: StopIteration("Iteration limit exceeded."),
+    glpk.EINSTAB: ArithmeticError("Numerical instability " +
+                                  "on solving Newtonian system.")
+    }
+
+# integer optimization return codes (errors)
+cdef ioretcode2error = {
+    glpk.EBOUND: ValueError("Incorrect bounds given."),
+    glpk.EROOT: ValueError("No optimal LP relaxation basis provided."),
+    glpk.ENOPFS: ValueError("LP relaxation is infeasible."),
+    glpk.ENODFS: ValueError("LP relaxation is unbounded."),
+    glpk.EFAIL: RuntimeError("Solver failure."),
+    glpk.EMIPGAP: StopIteration("Relative mip gap tolerance has been reached"),
+    glpk.ETMLIM: StopIteration("Time limit exceeded."),
+    glpk.ESTOP: StopIteration("Branch-and-cut callback terminated solver."),
+    glpk.EDATA: ValueError("All problem parameters must be integer."),
+    glpk.ERANGE: OverflowError("Integer overflow occurred when transforming " +
+                               "to CNF SAT format.")
+    }
+
+
 # problem coefficients
 cdef _coeffscheck(coeffs) except NULL:
     if not isinstance(coeffs, collections.abc.Mapping):
@@ -390,6 +436,19 @@ cdef class Problem:
         """Retrieve column name"""
         return Name._from_chars(glpk.get_col_name(self._problem, col))
 
+    cdef _get_row_or_col_name(self, int ind):  # variant of _get_row/col_name
+        """Retrieve row or column name"""
+        cdef unicode row_or_col
+        cdef unicode name
+        cdef int m = self.get_num_rows()
+        if ind > m:
+            row_or_col = 'row'
+            name = self._get_row_name(ind)
+        else:
+            row_or_col = 'col'
+            name = self._get_col_name(ind - m)
+        return row_or_col, name
+
     def get_row_type(self, unicode name):
         """Retrieve row type"""
         return vartype2str[glpk.get_row_type(self._problem,
@@ -584,8 +643,9 @@ cdef class Problem:
         """retrieve column dual value (basic solution)"""
         return glpk.get_col_dual(self._problem, self._find_col(name))
 
-        """determine variable causing unboundedness"""
-    int get_unbnd_ray(self._problem)
+    def get_unbnd_ray(self):
+        """Determine variable causing unboundedness"""
+        return self._get_row_or_col_name(glpk.get_unbnd_ray(self._problem))
 
         """solve LP problem with the interior-point method; returns retcode"""
     int interior(self._problem, const IPointCP* cp)
@@ -696,8 +756,11 @@ cdef class Problem:
         """Check if LP basis factorization exists"""
         return glpk.bf_exists(self._problem)
 
-        """compute LP basis factorization; returns retcode"""
-    int factorize(self._problem)
+    def factorize(self._problem):
+        """Compute LP basis factorization"""
+        cdef int retcode = glpk.factorize(self._problem)
+        if retcode is not 0:
+            raise smretcode2error[retcode]
 
     def bf_updated(self):
         """Check if LP basis factorization has been updated"""
@@ -709,8 +772,9 @@ cdef class Problem:
         """change LP basis factorization control parameters"""
     void set_bfcp(self._problem, const BasFacCP* cp)
 
-        """retrieve LP basis header information"""
-    int get_bhead(self._problem, int k)
+    def get_bhead(self, int k):
+        """Retrieve LP basis header information"""
+        return self._get_row_or_col_name(glpk.get_bhead(self._problem, int k))
 
     def get_row_bind(self, unicode name):
         """Retrieve row index in the basis header"""
@@ -726,8 +790,11 @@ cdef class Problem:
         """perform backward transformation (solve system B'*x = b)"""
     void btran(self._problem, double rhs_pre_x_post[])
 
-        """"warm up" LP basis; returns retcode"""
-    int warm_up(self._problem)
+    def warm_up(self._problem):
+        """“Warm up” LP basis"""
+        cdef int retcode = glpk.warm_up(self._problem)
+        if retcode is not 0:
+            raise smretcode2error[retcode]
 
         """compute row of the simplex tableau"""
     int eval_tab_row(self._problem, int k, int ind[], double val[])
@@ -789,8 +856,14 @@ cdef class Problem:
         """write CNF-SAT problem data in DIMACS format"""
     int write_cnfsat(self._problem, const char* fname)
 
-        """solve CNF-SAT problem with MiniSat solver; returns retcode"""
-    int minisat1(self._problem)
+    def minisat1(self):
+        """Solve CNF-SAT problem with MiniSat solver"""
+        cdef int retcode = glpk.minisat1(self._problem)
+        if retcode is not 0:
+            raise ioretcode2error[retcode]
 
-        """solve integer feasibility problem; returns retcode"""
-    int intfeas1(self._problem, bint use_bound, int obj_bound)
+    def intfeas1(self, bool use_bound, int obj_bound):
+        """Solve integer feasibility problem"""
+        cdef int retcode = glpk.intfeas1(self._problem, use_bound, obj_bound)
+        if retcode is not 0:
+            raise ioretcode2error[retcode]
