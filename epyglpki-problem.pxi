@@ -124,6 +124,14 @@ cdef str2scalopt = {
     }
 
 
+# solution indicators
+cdef str2solind = {
+    'simplex': glpk.SOL,
+    'ipoint': glpk.IPT,
+    'intopt': glpk.MIP
+    }
+
+
 # solution statuses
 cdef solstat2str = {
     glpk.UNDEF: 'undefined',
@@ -181,6 +189,15 @@ cdef ioretcode2error = {
     }
 
 
+# condition indicator:
+cdef pair2condind = {
+    (False, 'equalities'): glpk.KKT_PE,
+    (False, 'bounds'): glpk.KKT_PB,
+    (True, 'equalities'): glpk.KKT_DE,
+    (True, 'bounds'): glpk.KKT_DB
+}
+
+
 # MPS file format
 cdef str2mpsfmt = {
     'fixed': glpk.MPS_DECK,
@@ -189,7 +206,7 @@ cdef str2mpsfmt = {
 
 
 # problem coefficients
-cdef _coeffscheck(coeffs) except NULL:
+cdef _coeffscheck(coeffs):
     if not isinstance(coeffs, collections.abc.Mapping):
         raise TypeError("Coefficients must be passed in a 'Mapping', not " +
                         type(coeffs).__name__)
@@ -278,8 +295,12 @@ cdef class Problem:
         glpk.set_col_bnds(self._problem, self._find_col(name), vartype, lb, ub)
 
     def set_obj_coef(self, unicode name, double coeff):
-        """Set (change) obj. coefficient or constant term"""
+        """Set (change) obj. coefficient"""
         glpk.set_obj_coef(self._problem, self._find_col(name), coeff)
+
+    def set_obj_const(self, double coeff):  # variant of set_obj_coef
+        """Set (change) obj. constant term"""
+        glpk.set_obj_coef(self._problem, 0, coeff)
 
     def set_mat_row(self, unicode name, coeffs):
         """Set (replace) row of the constraint matrix
@@ -439,9 +460,17 @@ cdef class Problem:
         """Retrieve row name"""
         return Name._from_chars(glpk.get_row_name(self._problem, row))
 
+    def get_row_names(self):  # method prompted by lack of direct index access
+        """Retrieve all row names"""
+        return (self._get_row_name(i) for i in range(1, 1+self.get_num_rows()))
+
     cdef ColName _get_col_name(self, int col):
         """Retrieve column name"""
         return Name._from_chars(glpk.get_col_name(self._problem, col))
+
+    def get_col_names(self):  # method prompted by lack of direct index access
+        """Retrieve all column names"""
+        return (self._get_col_name(j) for j in range(1, 1+self.get_num_cols()))
 
     cdef Name _get_row_or_col_name(self, int ind):  # _get_row/col_name variant
         """Retrieve row or column name"""
@@ -742,9 +771,32 @@ cdef class Problem:
         """Retrieve column value (MIP solution)"""
         return glpk.mip_col_val(self._problem, self._find_col(name))
 
-        """check feasibility/optimality conditions"""
-    void check_kkt(self._problem, int sol, int cond,
-                   double* ae_max, int* ae_ind, double* re_max, int* re_ind)
+    def check_kkt(self, unicode solver, unicode condition, bool dual=False):
+        """Check feasibility/optimality conditions"""
+        if dual and (solver is 'intopt'):
+            raise ValueError("Dual conditions cannot be checked for the " +
+                             "integer optimization solution.")
+        cdef int sol = str2solind[solver]
+        cdef int cond = pair2condind[(dual, condition)]
+        cdef double ae_max
+        cdef int ae_ind
+        cdef double re_max
+        cdef int re_ind
+        glpk.check_kkt(self._problem, sol, cond,
+                       &ae_max, &ae_ind, &re_max, &re_ind)
+        if condition is 'equalities':
+            if not dual:
+                ae_name = self._get_row_name(ae_ind)
+                re_name = self._get_row_name(re_ind)
+            else:
+                ae_name = self._get_col_name(ae_ind)
+                re_name = self._get_col_name(re_ind)
+        elif condition is 'bounds':
+            ae_name = self._get_row_or_col_name(ae_ind)
+            re_name = self._get_row_or_col_name(re_ind)
+        else:
+            raise ValueError("Condition is either 'equalities' or 'bounds'.")
+        return {'abs': (ae_max, ae_name), 'rel': (re_max, re_name)}
 
     def print_sol(self, unicode fname):
         """Write basic solution in printable format"""
@@ -899,11 +951,47 @@ cdef class Problem:
         if retcode is not 0:
             raise smretcode2error[retcode]
 
-        """compute row of the simplex tableau"""
-    int eval_tab_row(self._problem, int k, int ind[], double val[])
+    def eval_tab_row(self, Name name):
+        """Compute row of the simplex tableau"""
+        cdef int ind
+        if isinstance(name, RowName):
+            ind = self._find_row(name)
+        elif isinstance(name, ColName):
+            ind = self._find_col_after_row(name)
+        else:
+            raise TypeError("'name' should be a 'RowName' or 'ColName', " +
+                            "not '" + type(name)__name__ + "'.")
+        cdef int k = glpk.eval_tab_row(self._problem, ind, NULL, NULL)
+        cdef int* inds = <int*>glpk.alloc(1+k, sizeof(int))
+        cdef double* vals = <double*>glpk.alloc(1+k, sizeof(double))
+        try:
+            glpk.eval_tab_row(self._problem, ind, inds, vals)
+            return {self._get_row_or_col_name(inds[i]): vals[i]
+                    for i in range(1, 1+k)}
+        finally:
+            glpk.free(inds)
+            glpk.free(vals)
 
-        """compute column of the simplex tableau"""
-    int eval_tab_col(self._problem, int k, int ind[], double val[])
+    def eval_tab_col(self, Name name):
+        """Compute column of the simplex tableau"""
+        cdef int ind
+        if isinstance(name, RowName):
+            ind = self._find_row(name)
+        elif isinstance(name, ColName):
+            ind = self._find_col_after_row(name)
+        else:
+            raise TypeError("'name' should be a 'RowName' or 'ColName', " +
+                            "not '" + type(name)__name__ + "'.")
+        cdef int k = glpk.eval_tab_col(self._problem, ind, NULL, NULL)
+        cdef int* inds = <int*>glpk.alloc(1+k, sizeof(int))
+        cdef double* vals = <double*>glpk.alloc(1+k, sizeof(double))
+        try:
+            glpk.eval_tab_col(self._problem, ind, inds, vals)
+            return {self._get_row_or_col_name(inds[i]): vals[i]
+                    for i in range(1, 1+k)}
+        finally:
+            glpk.free(inds)
+            glpk.free(vals)
 
         """transform explicitly specified row"""
     int transform_row(self._problem, int length, int ind[], double val[])
