@@ -236,7 +236,7 @@ cdef class Problem:
         if n is not 0:
             first = glpk.add_rows(self._problem, n)
             for row, name in enumerate(names, start=first):
-                glpk.set_row_name(self._problem, row, Name(name).to_chars())
+                glpk.set_row_name(self._problem, row, RowName(name).to_chars())
 
     def add_cols(self, *names)
         """Add new columns to problem object
@@ -249,17 +249,17 @@ cdef class Problem:
         if n is not 0:
             first = glpk.add_cols(self._problem, n)
             for col, name in enumerate(names, start=first):
-                glpk.set_col_name(self._problem, col, Name(name).to_chars())
+                glpk.set_col_name(self._problem, col, ColName(name).to_chars())
 
     def set_row_name(self, unicode old_name, unicode new_name):
         """Change row name"""
         glpk.set_row_name(self._problem, self._find_row(old_name),
-                          Name(new_name).to_chars())
+                          RowName(new_name).to_chars())
 
     def set_col_name(self, unicode old_name, unicode new_name):
         """Change column name"""
         glpk.set_col_name(self._problem, self._find_col(old_name),
-                          Name(new_name).to_chars())
+                          ColName(new_name).to_chars())
 
     def set_row_bnds(self, unicode name, lower, upper):
         """Set (change) row bounds"""
@@ -435,26 +435,21 @@ cdef class Problem:
         """Retrieve number of columns"""
         return glpk.get_num_cols(self._problem)
 
-    cdef unicode _get_row_name(self, int row):
+    cdef RowName _get_row_name(self, int row):
         """Retrieve row name"""
         return Name._from_chars(glpk.get_row_name(self._problem, row))
 
-    cdef unicode _get_col_name(self, int col):
+    cdef ColName _get_col_name(self, int col):
         """Retrieve column name"""
         return Name._from_chars(glpk.get_col_name(self._problem, col))
 
-    cdef _get_row_or_col_name(self, int ind):  # variant of _get_row/col_name
+    cdef Name _get_row_or_col_name(self, int ind):  # _get_row/col_name variant
         """Retrieve row or column name"""
-        cdef unicode row_or_col
-        cdef unicode name
         cdef int m = self.get_num_rows()
-        if ind > m:
-            row_or_col = 'row'
-            name = self._get_row_name(ind)
-        else:
-            row_or_col = 'col'
-            name = self._get_col_name(ind - m)
-        return row_or_col, name
+        if ind > m:  # column
+            return self._get_col_name(ind - m)
+        else:  # row
+            return self._get_row_name(ind)
 
     def get_row_type(self, unicode name):
         """Retrieve row type"""
@@ -530,7 +525,7 @@ cdef class Problem:
 
     cdef int _find_row(self, unicode name) except 0:
         """Find row by its name"""
-        cdef int row = glpk.find_row(self._problem, Name(name)._to_chars())
+        cdef int row = glpk.find_row(self._problem, RowName(name)._to_chars())
         if row is 0:
             raise ValueError("'" + name + "' is not a row name.")
         else:
@@ -538,11 +533,15 @@ cdef class Problem:
 
     cdef int _find_col(self, unicode name) except 0:
         """Find column by its name"""
-        cdef int col = glpk.find_col(self._problem, Name(name)._to_chars())
+        cdef int col = glpk.find_col(self._problem, ColName(name)._to_chars())
         if col is 0:
             raise ValueError("'" + name + "' is not a column name.")
         else:
             return col
+
+    cdef int _find_col_after_row(self, unicode name) except 0:  # _find_col variant
+        """Find alternate column index by its name"""
+        return self.get_num_rows() + self._find_col(name)
 
     def set_rii(self, unicode name, double sf):
         """Set (change) row scale factor"""
@@ -753,8 +752,11 @@ cdef class Problem:
         if retcode is not 0:
             raise RuntimeError("Error writing printable basic solution file")
 
-        """read basic solution from text file"""
-    int read_sol(self._problem, const char* fname)
+    def read_sol(self, unicode fname):
+        """Read basic solution from text file"""
+        retcode = glpk.read_sol(self._problem, fname.encode())
+        if retcode is not 0:
+            raise RuntimeError("Error reading basic solution file")
 
     def write_sol(self, unicode fname):
         """Write basic solution to text file"""
@@ -762,9 +764,28 @@ cdef class Problem:
         if retcode is not 0:
             raise RuntimeError("Error writing basic solution file")
 
-        """print sensitivity analysis report"""
-    int print_ranges(self._problem, int length, const int indlist[], 0,
-                     const char* fname)
+    def print_ranges(self, rownames, colnames, unicode fname):
+        """Print sensitivity analysis report"""
+        if not isinstance(rownames, collections.abc.Sequence):
+            raise TypeError("rownames must be a 'Sequence', not " +
+                            type(rownames).__name__ + ".")
+        if not isinstance(colnames, collections.abc.Sequence):
+            raise TypeError("colnames must be a 'Sequence', not " +
+                            type(rownames).__name__ + ".")
+        if not all(isinstance(name, unicode)
+                   for name in itertools.chain(rownames, colnames)):
+            raise TypeError("Row and column names must be strings.")
+        cdef int k = len(rownames)
+        cdef int l = len(colnames)
+        cdef int* inds = <int*>glpk.alloc(1+k+l, sizeof(int))
+        try:
+            for i, name in enumerate(rownames, start=1):
+                inds[i] = self._find_row(name)
+            for j, name in enumerate(colnames, start=1+k):
+                inds[j] = self._find_col_after_row(name)
+            glpk.print_ranges(self._problem, k+l, inds, 0, fname.encode())
+        finally:
+            glpk.free(inds)
 
     def print_ipt(self, unicode fname):
         """Write interior-point solution in printable format"""
@@ -773,8 +794,11 @@ cdef class Problem:
             raise RuntimeError("Error writing printable interior point " +
                                "solution file")
 
-        """read interior-point solution from text file"""
-    int read_ipt(self._problem, const char* fname)
+    def read_ipt(self, unicode fname):
+        """Read interior-point solution from text file"""
+        retcode = glpk.read_ipt(self._problem, fname.encode())
+        if retcode is not 0:
+            raise RuntimeError("Error reading interior point solution file")
 
     def write_ipt(self, unicode fname):
         """Write interior-point solution to text file"""
@@ -789,8 +813,12 @@ cdef class Problem:
             raise RuntimeError("Error writing printable integer " +
                                "optimization solution file")
 
-        """read MIP solution from text file"""
-    int read_mip(self._problem, const char* fname)
+    def read_mip(self, unicode fname):
+        """Read MIP solution from text file"""
+        retcode = glpk.read_mip(self._problem, fname.encode())
+        if retcode is not 0:
+            raise RuntimeError("Error reading integer optimization solution " +
+                               "file")
 
     def write_mip(self, unicode fname):
         """Write MIP solution to text file"""
@@ -833,11 +861,37 @@ cdef class Problem:
         """Retrieve column index in the basis header"""
         return glpk.get_col_bind(self._problem, self._find_col(name))
 
-        """perform forward transformation (solve system B*x = b)"""
-    void ftran(self._problem, double rhs_pre_x_post[])
+    def ftran(self, tuple rhs):
+        """Perform forward transformation (solve system B*x = b)"""
+        if not all(isinstance(value, numbers.Real) for value in rhs):
+            raise TypeError("Right-hand side must contain 'Real' numbers " +
+                            "only.")
+        cdef int m = self.get_num_rows()
+        if len(rhs) is not m:
+            raise ValueError("The right-hand side vector must have the same " +
+                             "number of components as the basis, " + str(m) +
+                             ".")
+        cdef double* rhs_pre_x_post =  <double*>glpk.alloc(1+m, sizeof(double))
+        for i, value in enumerate(rhs, start=1):
+            rhs_pre_x_post[i] = value
+        glpk.ftran(self._problem, rhs_pre_x_post)
+        return (rhs_pre_x_post[i] for i in range(1, 1+m))
 
-        """perform backward transformation (solve system B'*x = b)"""
-    void btran(self._problem, double rhs_pre_x_post[])
+    def btran(self, tuple rhs):
+        """Perform backward transformation (solve system B'*x = b)"""
+        if not all(isinstance(value, numbers.Real) for value in rhs):
+            raise TypeError("Right-hand side must contain 'Real' numbers " +
+                            "only.")
+        cdef int m = self.get_num_rows()
+        if len(rhs) is not m:
+            raise ValueError("The right-hand side vector must have the same " +
+                             "number of components as the basis, " + str(m) +
+                             ".")
+        cdef double* rhs_pre_x_post =  <double*>glpk.alloc(1+m, sizeof(double))
+        for i, value in enumerate(rhs, start=1):
+            rhs_pre_x_post[i] = value
+        glpk.btran(self._problem, rhs_pre_x_post)
+        return (rhs_pre_x_post[i] for i in range(1, 1+m))
 
     def warm_up(self._problem):
         """“Warm up” LP basis"""

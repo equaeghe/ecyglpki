@@ -69,6 +69,14 @@ cdef class Name(unicode):
     def _from_chars(cls, const char* chars):
         return '' if chars is NULL else chars.decode()
 
+cdef class RowName(Name):
+    """A row name acceptable to GLPK"""
+    pass
+
+cdef class ColName(Name):
+    """A column name acceptable to GLPK"""
+    pass
+
 
 include 'epyglpki-program.pxi'
 
