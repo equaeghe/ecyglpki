@@ -599,11 +599,29 @@ cdef class Problem:
         """Construct Bixby's initial LP basis"""
         glpk.cpx_basis(self._problem)
 
-        """solve LP problem with the simplex method; returns retcode"""
-    int simplex(self._problem, const SimplexCP* cp)
+    def simplex(self, SimplexControls controls)
+        """Solve LP problem with the simplex method"""
+        if ((controls.meth is not 'dual') and
+            ((controls.obj_ll > -DBL_MAX) or (controls.obj_ul < +DBL_MAX))):
+                raise ValueError("Objective function limits only with dual " +
+                                 "simplex.")
+        cdef int retcode = glpk.simplex(self._problem, &controls._smcp)
+        if retcode is 0:
+            return self.get_status()
+        elif retcode in {glpk.EOBJLL, glpk.EOBJUL}:
+            return smretcode2str[retcode]
+        else:
+            raise smretcode2error[retcode]
 
-        """solve LP problem in exact arithmetic; returns retcode"""
-    int exact(self._problem, const SimplexCP* cp)
+    def exact(self, SimplexControls controls):
+        """Solve LP problem in exact arithmetic"""
+        if controls.meth is not 'primal':
+            raise ValueError("Only primal simplex with exact arithmetic.")
+        cdef int retcode = glpk.exact(self._problem, &controls._smcp)
+        if retcode is 0:
+            return self.status()
+        else:
+            raise smretcode2error[retcode]
 
     def get_status(self):
         """Retrieve generic status of basic solution"""
@@ -651,8 +669,13 @@ cdef class Problem:
         """Determine variable causing unboundedness"""
         return self._get_row_or_col_name(glpk.get_unbnd_ray(self._problem))
 
-        """solve LP problem with the interior-point method; returns retcode"""
-    int interior(self._problem, const IPointCP* cp)
+    def interior(self, IPointControls controls)
+        """Solve LP problem with the interior-point method"""
+        cdef int retcode = glpk.interior(self._problem, &controls._iptcp)
+        if retcode is 0:
+            return self.ipt_status()
+        else:
+            raise iptretcode2error[retcode]
 
     def ipt_status(self):
         """Retrieve status of interior-point solution"""
@@ -696,8 +719,13 @@ cdef class Problem:
         """Retrieve number of binary columns"""
         return glpk.get_num_bin(self._problem)
 
-        """solve MIP problem with the branch-and-bound method; returns retcode"""
-    int intopt(self._problem, const IntOptCP* cp)
+    def intopt(self, IntOptControls controls):
+        """Solve MIP problem with the branch-and-bound method"""
+        cdef int retcode = glpk.intopt(self._problem, &controls._iocp)
+        if retcode is 0:
+            return self.status()
+        else:
+            raise ioretcode2error[retcode]
 
     def mip_status(self):
         """Retrieve status of MIP solution"""
@@ -784,6 +812,10 @@ cdef class Problem:
     def bf_updated(self):
         """Check if LP basis factorization has been updated"""
         return glpk.bf_updated(self._problem)
+
+    def get_bfcp(self):
+        """Retrieve LP basis factorization control parameters"""
+        return FactorizationControls(self._problem)
 
     def set_bfcp(self, FactorizationControls controls):
         """Change LP basis factorization control parameters"""
@@ -889,11 +921,15 @@ cdef class Problem:
     def minisat1(self):
         """Solve CNF-SAT problem with MiniSat solver"""
         cdef int retcode = glpk.minisat1(self._problem)
-        if retcode is not 0:
+        if retcode is 0:
+            return self.status()
+        else:
             raise ioretcode2error[retcode]
 
     def intfeas1(self, bool use_bound, int obj_bound):
         """Solve integer feasibility problem"""
         cdef int retcode = glpk.intfeas1(self._problem, use_bound, obj_bound)
-        if retcode is not 0:
+        if retcode is 0:
+            return self.status()
+        else:
             raise ioretcode2error[retcode]
