@@ -1082,7 +1082,7 @@ cdef class Problem:
             minimal = min_bnd, self._get_row_or_col_name(min_bnd_k)
         else:
             minimal = (-float('inf'), None)
-        if max_bnd > -DBL_MAX:
+        if max_bnd < +DBL_MAX:
             maximal = max_bnd, self._get_row_or_col_name(max_bnd_k)
         else:
             maximal = (+float('inf'), None)
@@ -1111,7 +1111,7 @@ cdef class Problem:
             minimal = min_coef, self._get_row_or_col_name(min_coef_k), minval
         else:
             minimal = -float('inf'), None, minval
-        if max_coef > -DBL_MAX:
+        if max_coef < +DBL_MAX:
             maximal = max_coef, self._get_row_or_col_name(max_coef_k), maxval
         else:
             maximal = +float('inf'), None, maxval
