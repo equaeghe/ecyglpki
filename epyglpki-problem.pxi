@@ -1001,31 +1001,160 @@ cdef class Problem:
             glpk.free(inds)
             glpk.free(vals)
 
-        """transform explicitly specified row"""
-    int transform_row(self._problem, int length, int ind[], double val[])
+    def transform_row(self, coeffs):
+        """Transform explicitly specified row"""
+        _coeffscheck(coeffs)
+        cdef int n = self.get_num_cols()
+        cdef int* inds = <int*>glpk.alloc(1+n, sizeof(int))
+        cdef double* vals = <double*>glpk.alloc(1+n, sizeof(double))
+        cdef int k
+        try:
+            for i, item in enumerate(coeffs.items(), start=1):
+                inds[i] = self._find_col(item[0])
+                vals[i] = item[1]
+            k = glpk.transform_row(self._problem, len(coeffs), inds, vals)
+            return {self._get_row_or_col_name(i): vals[i]
+                    for i in range(1, 1+k)}
+        finally:
+            glpk.free(inds)
+            glpk.free(vals)
 
-        """transform explicitly specified column"""
-    int transform_col(self._problem, int length, int ind[], double val[])
+    def transform_col(self, coeffs):
+        """Transform explicitly specified column"""
+        _coeffscheck(coeffs)
+        cdef int m = self.get_num_cols()
+        cdef int* inds = <int*>glpk.alloc(1+m, sizeof(int))
+        cdef double* vals = <double*>glpk.alloc(1+m, sizeof(double))
+        cdef int k
+        try:
+            for i, item in enumerate(coeffs.items(), start=1):
+                inds[i] = self._find_row(item[0])
+                vals[i] = item[1]
+            k = glpk.transform_col(self._problem, len(coeffs), inds, vals)
+            return {self._get_row_or_col_name(i): vals[i]
+                    for i in range(1, 1+k)}
+        finally:
+            glpk.free(inds)
+            glpk.free(vals)
 
-        """perform primal ratio test"""
-    int prim_rtest(self._problem, int length,
-                   const int ind[], const double val[],
-                   int direction, double eps)
+    def prim_rtest(self, coeffs, int direction, double eps):
+        """Perform primal ratio test"""
+        _coeffscheck(coeffs)
+        if direction not in {-1, +1}:
+            raise ValueError("'direction' should be +1 or -1, not " +
+                             str(direction) + ".")
+        cdef int m = self.get_num_rows()
+        cdef int* inds = <int*>glpk.alloc(1+m, sizeof(int))
+        cdef double* vals = <double*>glpk.alloc(1+m, sizeof(double))
+        cdef int j
+        try:
+            for i, item in enumerate(coeffs.items(), start=1):
+                if isinstance(item[0], RowName):
+                    inds[i] = self._find_row(item[0])
+                elif isinstance(item[0], ColName):
+                    inds[i] = self._find_col_after_row(item[0])
+                else:
+                    raise TypeError("'name' should be a 'RowName' or " +
+                                    "'ColName', not '" + type(name)__name__ +
+                                    "'.")
+                vals[i] = item[1]
+            j = glpk.prim_rtest(self._problem, len(coeffs), inds, vals,
+                                direction, eps)
+            return self._get_row_or_col_name(inds[j])
+        finally:
+            glpk.free(inds)
+            glpk.free(vals)
 
-        """perform dual ratio test"""
-    int dual_rtest(self._problem, int length,
-                   const int ind[], const double val[],
-                   int direction, double eps)
+    def dual_rtest(self, coeffs, int direction, double eps):
+        """Perform dual ratio test"""
+        _coeffscheck(coeffs)
+        if direction not in {-1, +1}:
+            raise ValueError("'direction' should be +1 or -1, not " +
+                             str(direction) + ".")
+        cdef int n = self.get_num_cols()
+        cdef int* inds = <int*>glpk.alloc(1+n, sizeof(int))
+        cdef double* vals = <double*>glpk.alloc(1+n, sizeof(double))
+        cdef int j
+        try:
+            for i, item in enumerate(coeffs.items(), start=1):
+                if isinstance(item[0], RowName):
+                    inds[i] = self._find_row(item[0])
+                elif isinstance(item[0], ColName):
+                    inds[i] = self._find_col_after_row(item[0])
+                else:
+                    raise TypeError("'name' should be a 'RowName' or " +
+                                    "'ColName', not '" + type(name)__name__ +
+                                    "'.")
+                vals[i] = item[1]
+            j = glpk.dual_rtest(self._problem, len(coeffs), inds, vals,
+                                direction, eps)
+            return self._get_row_or_col_name(inds[j])
+        finally:
+            glpk.free(inds)
+            glpk.free(vals)
 
-        """analyze active bound of non-basic variable"""
-    void analyze_bound(self._problem, int k, double* min_bnd, int* min_bnd_k,
-                                             double* max_bnd, int* max_bnd_k)
+    def analyze_bound(self, Name name):
+        """Analyze active bound of non-basic variable"""
+        cdef int k
+        if isinstance(name, RowName):
+            k = self._find_row(name)
+        elif isinstance(name, ColName):
+            k = self._find_col_after_row(name)
+        else:
+            raise TypeError("'name' should be a 'RowName' or 'ColName', " +
+                            "not '" + type(name)__name__ + "'.")
+        cdef double min_bnd
+        cdef int min_bnd_k
+        cdef double max_bnd
+        cdef int max_bnd_k
+        glpk.analyze_bound(self._problem, k,
+                           &min_bnd, &min_bnd_k, &max_bnd, &max_bnd_k)
+        if min_bnd > -DBL_MAX:
+            minimal = min_bnd, self._get_row_or_col_name(min_bnd_k)
+        else:
+            minimal = (-float('inf'), None)
+        if max_bnd > -DBL_MAX:
+            maximal = max_bnd, self._get_row_or_col_name(max_bnd_k)
+        else:
+            maximal = (+float('inf'), None)
+        return {'minimal': minimal, 'maximal': maximal}
 
-        """analyze objective coefficient at basic variable"""
-    void analyze_coef(self._problem, int k, double* min_coef, int* min_coef_k,
-                                            double* val_min_coef,
-                                            double* max_coef, int* max_coef_k,
-                                            double* val_max_coef)
+    def analyze_coef(self, Name name):
+        """Analyze objective coefficient at basic variable"""
+        cdef int k
+        if isinstance(name, RowName):
+            k = self._find_row(name)
+        elif isinstance(name, ColName):
+            k = self._find_col_after_row(name)
+        else:
+            raise TypeError("'name' should be a 'RowName' or 'ColName', " +
+                            "not '" + type(name)__name__ + "'.")
+        cdef double min_coef
+        cdef int min_coef_k
+        cdef double val_min_coef,
+        cdef double max_coef
+        cdef int max_coef_k
+        cdef double val_max_coef
+        glpk.analyze_coef(self._problem, k,
+                          &min_coef, &min_coef_k, &val_min_coef,
+                          &max_coef, &max_coef_k, &val_max_coef)
+        if val_min_coef <= -DBL_MAX:
+            minval = -float('inf')
+        elif val_min_coef >= DBL_MAX:
+            minval = +float('inf')
+        if val_max_coef <= -DBL_MAX:
+            maxval = -float('inf')
+        elif val_max_coef >= DBL_MAX:
+            maxval = +float('inf')
+        if min_coef > -DBL_MAX:
+            minimal = min_coef, self._get_row_or_col_name(min_coef_k), minval
+        else:
+            minimal = -float('inf'), None, minval
+        if max_coef > -DBL_MAX:
+            maximal = max_coef, self._get_row_or_col_name(max_coef_k), maxval
+        else:
+            maximal = +float('inf'), None, maxval
+        return {'minimal': minimal, 'maximal': maximal}
 
         """read problem data in MPS format"""
     int read_mps(self._problem, int mpsfmt, NULL, const char* fname)
