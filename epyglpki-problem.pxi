@@ -529,11 +529,12 @@ cdef class Problem:
     def get_mat_row(self, unicode name):
         """Retrieve row of the constraint matrix"""
         cdef int row = self._find_row(name)
-        cdef int k = glpk.get_mat_row(self._problem, row, NULL, NULL)
-        cdef int* cols =  <int*>glpk.alloc(1+k, sizeof(int))
-        cdef double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
+        cdef int n = self.get_num_cols()
+        cdef int* cols =  <int*>glpk.alloc(1+n, sizeof(int))
+        cdef double* vals =  <double*>glpk.alloc(1+n, sizeof(double))
+        cdef int k
         try:
-            glpk.get_mat_row(self._problem, row, cols, vals)
+            k = glpk.get_mat_row(self._problem, row, cols, vals)
             coeffs = {self._get_col_name(cols[i]): vals[i]
                       for i in range(1, 1+k)}
         finally:
@@ -544,11 +545,12 @@ cdef class Problem:
     def get_mat_col(self, unicode name):
         """Retrieve column of the constraint matrix"""
         cdef int col = self._find_col(name)
-        cdef int k = glpk.get_mat_col(self._problem, col, NULL, NULL)
-        cdef int* rows =  <int*>glpk.alloc(1+k, sizeof(int))
-        cdef double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
+        cdef int m = self.get_num_rows()
+        cdef int* rows =  <int*>glpk.alloc(1+m, sizeof(int))
+        cdef double* vals =  <double*>glpk.alloc(1+m, sizeof(double))
+        cdef int k
         try:
-            glpk.get_mat_col(self._problem, col, rows, vals)
+            k = glpk.get_mat_col(self._problem, col, rows, vals)
             coeffs = {self._get_row_name(rows[i]): vals[i]
                       for i in range(1, 1+k)}
         finally:
@@ -927,7 +929,7 @@ cdef class Problem:
             raise ValueError("The right-hand side vector must have the same " +
                              "number of components as the basis, " + str(m) +
                              ".")
-        cdef double* rhs_pre_x_post =  <double*>glpk.alloc(1+m, sizeof(double))
+        cdef double* rhs_pre_x_post = <double*>glpk.alloc(1+m, sizeof(double))
         for i, value in enumerate(rhs, start=1):
             rhs_pre_x_post[i] = value
         glpk.ftran(self._problem, rhs_pre_x_post)
@@ -943,7 +945,7 @@ cdef class Problem:
             raise ValueError("The right-hand side vector must have the same " +
                              "number of components as the basis, " + str(m) +
                              ".")
-        cdef double* rhs_pre_x_post =  <double*>glpk.alloc(1+m, sizeof(double))
+        cdef double* rhs_pre_x_post = <double*>glpk.alloc(1+m, sizeof(double))
         for i, value in enumerate(rhs, start=1):
             rhs_pre_x_post[i] = value
         glpk.btran(self._problem, rhs_pre_x_post)
@@ -965,11 +967,12 @@ cdef class Problem:
         else:
             raise TypeError("'name' should be a 'RowName' or 'ColName', " +
                             "not '" + type(name)__name__ + "'.")
-        cdef int k = glpk.eval_tab_row(self._problem, ind, NULL, NULL)
-        cdef int* inds = <int*>glpk.alloc(1+k, sizeof(int))
-        cdef double* vals = <double*>glpk.alloc(1+k, sizeof(double))
+        cdef int n = self.get_num_cols()
+        cdef int* inds = <int*>glpk.alloc(1+n, sizeof(int))
+        cdef double* vals = <double*>glpk.alloc(1+n, sizeof(double))
+        cdef int k
         try:
-            glpk.eval_tab_row(self._problem, ind, inds, vals)
+            k = glpk.eval_tab_row(self._problem, ind, inds, vals)
             return {self._get_row_or_col_name(inds[i]): vals[i]
                     for i in range(1, 1+k)}
         finally:
@@ -986,11 +989,12 @@ cdef class Problem:
         else:
             raise TypeError("'name' should be a 'RowName' or 'ColName', " +
                             "not '" + type(name)__name__ + "'.")
-        cdef int k = glpk.eval_tab_col(self._problem, ind, NULL, NULL)
-        cdef int* inds = <int*>glpk.alloc(1+k, sizeof(int))
-        cdef double* vals = <double*>glpk.alloc(1+k, sizeof(double))
+        cdef int m = self.get_num_rows()
+        cdef int* inds = <int*>glpk.alloc(1+m, sizeof(int))
+        cdef double* vals = <double*>glpk.alloc(1+m, sizeof(double))
+        cdef int k
         try:
-            glpk.eval_tab_col(self._problem, ind, inds, vals)
+            k = glpk.eval_tab_col(self._problem, ind, inds, vals)
             return {self._get_row_or_col_name(inds[i]): vals[i]
                     for i in range(1, 1+k)}
         finally:
