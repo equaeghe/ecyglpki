@@ -387,6 +387,10 @@ cdef class Problem:
             glpk.free(cols)
             glpk.free(vals)
 
+    def sort_matrix(self):
+        """Sort elements of the constraint matrix"""
+        glpk.sort_matrix(self._problem)
+
     def clear_matrix(self):  # variant of load_matrix
         """Clear the whole constraint matrix"""
         glpk.load_matrix(self._problem, 0, NULL, NULL, NULL)
