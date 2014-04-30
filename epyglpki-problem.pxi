@@ -886,7 +886,7 @@ cdef class Problem:
         """Check if LP basis factorization exists"""
         return glpk.bf_exists(self._problem)
 
-    def factorize(self._problem):
+    def factorize(self):
         """Compute LP basis factorization"""
         cdef int retcode = glpk.factorize(self._problem)
         if retcode is not 0:
