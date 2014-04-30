@@ -574,9 +574,15 @@ cdef class Problem:
         else:
             return col
 
-    cdef int _find_col_after_row(self, unicode name) except 0:  # _find_col variant
-        """Find alternate column index by its name"""
-        return self.get_num_rows() + self._find_col(name)
+    cdef int _find_row_or_col(self, Name name) except 0:  # _find_row/col variant
+        """Find alternate index by its name"""
+        if isinstance(name, RowName):
+            return self._find_row(name)
+        elif isinstance(name, ColName):
+            return self.get_num_rows() + self._find_col(name)
+        else:
+            raise TypeError("'name' should be a 'RowName' or 'ColName', " +
+                            "not '" + type(name)__name__ + "'.")
 
     def set_rii(self, unicode name, double sf):
         """Set (change) row scale factor"""
@@ -822,26 +828,19 @@ cdef class Problem:
         if retcode is not 0:
             raise RuntimeError("Error writing basic solution file")
 
-    def print_ranges(self, rownames, colnames, unicode fname):
+    def print_ranges(self, names, unicode fname):
         """Print sensitivity analysis report"""
-        if not isinstance(rownames, collections.abc.Sequence):
-            raise TypeError("rownames must be a 'Sequence', not " +
+        if not isinstance(names, collections.abc.Sequence):
+            raise TypeError("names must be a 'Sequence', not " +
                             type(rownames).__name__ + ".")
-        if not isinstance(colnames, collections.abc.Sequence):
-            raise TypeError("colnames must be a 'Sequence', not " +
-                            type(rownames).__name__ + ".")
-        if not all(isinstance(name, unicode)
-                   for name in itertools.chain(rownames, colnames)):
-            raise TypeError("Row and column names must be strings.")
-        cdef int k = len(rownames)
-        cdef int l = len(colnames)
-        cdef int* inds = <int*>glpk.alloc(1+k+l, sizeof(int))
+        if not all(isinstance(name, Name) for name in names):
+            raise TypeError("Row and column names must be 'Name'.")
+        cdef int k = len(names)
+        cdef int* inds = <int*>glpk.alloc(1+k, sizeof(int))
         try:
-            for i, name in enumerate(rownames, start=1):
-                inds[i] = self._find_row(name)
-            for j, name in enumerate(colnames, start=1+k):
-                inds[j] = self._find_col_after_row(name)
-            glpk.print_ranges(self._problem, k+l, inds, 0, fname.encode())
+            for i, name in enumerate(names, start=1):
+                inds[i] = self._find_row_or_col(name)
+            glpk.print_ranges(self._problem, k, inds, 0, fname.encode())
         finally:
             glpk.free(inds)
 
@@ -959,20 +958,13 @@ cdef class Problem:
 
     def eval_tab_row(self, Name name):
         """Compute row of the simplex tableau"""
-        cdef int ind
-        if isinstance(name, RowName):
-            ind = self._find_row(name)
-        elif isinstance(name, ColName):
-            ind = self._find_col_after_row(name)
-        else:
-            raise TypeError("'name' should be a 'RowName' or 'ColName', " +
-                            "not '" + type(name)__name__ + "'.")
         cdef int n = self.get_num_cols()
         cdef int* inds = <int*>glpk.alloc(1+n, sizeof(int))
         cdef double* vals = <double*>glpk.alloc(1+n, sizeof(double))
         cdef int k
         try:
-            k = glpk.eval_tab_row(self._problem, ind, inds, vals)
+            k = glpk.eval_tab_row(self._problem, self._find_row_or_col(name),
+                                  inds, vals)
             return {self._get_row_or_col_name(inds[i]): vals[i]
                     for i in range(1, 1+k)}
         finally:
@@ -981,20 +973,13 @@ cdef class Problem:
 
     def eval_tab_col(self, Name name):
         """Compute column of the simplex tableau"""
-        cdef int ind
-        if isinstance(name, RowName):
-            ind = self._find_row(name)
-        elif isinstance(name, ColName):
-            ind = self._find_col_after_row(name)
-        else:
-            raise TypeError("'name' should be a 'RowName' or 'ColName', " +
-                            "not '" + type(name)__name__ + "'.")
         cdef int m = self.get_num_rows()
         cdef int* inds = <int*>glpk.alloc(1+m, sizeof(int))
         cdef double* vals = <double*>glpk.alloc(1+m, sizeof(double))
         cdef int k
         try:
-            k = glpk.eval_tab_col(self._problem, ind, inds, vals)
+            k = glpk.eval_tab_col(self._problem, self._find_row_or_col(name),
+                                  inds, vals)
             return {self._get_row_or_col_name(inds[i]): vals[i]
                     for i in range(1, 1+k)}
         finally:
@@ -1049,14 +1034,7 @@ cdef class Problem:
         cdef int j
         try:
             for i, item in enumerate(coeffs.items(), start=1):
-                if isinstance(item[0], RowName):
-                    inds[i] = self._find_row(item[0])
-                elif isinstance(item[0], ColName):
-                    inds[i] = self._find_col_after_row(item[0])
-                else:
-                    raise TypeError("'name' should be a 'RowName' or " +
-                                    "'ColName', not '" + type(name)__name__ +
-                                    "'.")
+                inds[i] = self._find_row_or_col(item[0])
                 vals[i] = item[1]
             j = glpk.prim_rtest(self._problem, len(coeffs), inds, vals,
                                 direction, eps)
@@ -1077,14 +1055,7 @@ cdef class Problem:
         cdef int j
         try:
             for i, item in enumerate(coeffs.items(), start=1):
-                if isinstance(item[0], RowName):
-                    inds[i] = self._find_row(item[0])
-                elif isinstance(item[0], ColName):
-                    inds[i] = self._find_col_after_row(item[0])
-                else:
-                    raise TypeError("'name' should be a 'RowName' or " +
-                                    "'ColName', not '" + type(name)__name__ +
-                                    "'.")
+                inds[i] = self._find_row_or_col(item[0])
                 vals[i] = item[1]
             j = glpk.dual_rtest(self._problem, len(coeffs), inds, vals,
                                 direction, eps)
@@ -1095,19 +1066,11 @@ cdef class Problem:
 
     def analyze_bound(self, Name name):
         """Analyze active bound of non-basic variable"""
-        cdef int k
-        if isinstance(name, RowName):
-            k = self._find_row(name)
-        elif isinstance(name, ColName):
-            k = self._find_col_after_row(name)
-        else:
-            raise TypeError("'name' should be a 'RowName' or 'ColName', " +
-                            "not '" + type(name)__name__ + "'.")
         cdef double min_bnd
         cdef int min_bnd_k
         cdef double max_bnd
         cdef int max_bnd_k
-        glpk.analyze_bound(self._problem, k,
+        glpk.analyze_bound(self._problem, self._find_row_or_col(name),
                            &min_bnd, &min_bnd_k, &max_bnd, &max_bnd_k)
         if min_bnd > -DBL_MAX:
             minimal = min_bnd, self._get_row_or_col_name(min_bnd_k)
@@ -1121,21 +1084,13 @@ cdef class Problem:
 
     def analyze_coef(self, Name name):
         """Analyze objective coefficient at basic variable"""
-        cdef int k
-        if isinstance(name, RowName):
-            k = self._find_row(name)
-        elif isinstance(name, ColName):
-            k = self._find_col_after_row(name)
-        else:
-            raise TypeError("'name' should be a 'RowName' or 'ColName', " +
-                            "not '" + type(name)__name__ + "'.")
         cdef double min_coef
         cdef int min_coef_k
         cdef double val_min_coef,
         cdef double max_coef
         cdef int max_coef_k
         cdef double val_max_coef
-        glpk.analyze_coef(self._problem, k,
+        glpk.analyze_coef(self._problem, self._find_row_or_col(name),
                           &min_coef, &min_coef_k, &val_min_coef,
                           &max_coef, &max_coef_k, &val_max_coef)
         if val_min_coef <= -DBL_MAX:
