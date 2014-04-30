@@ -272,7 +272,7 @@ cdef class Problem:
         """Assign (change) objective function name"""
         glpk.set_obj_name(self._problem, Name(name).to_chars())
 
-    def set_obj_dir(self, str direction)
+    def set_obj_dir(self, unicode direction)
         """Set (change) optimization direction flag"""
         glpk.set_obj_dir(self._problem, str2optdir(direction))
 
