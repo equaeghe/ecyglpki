@@ -278,12 +278,12 @@ cdef class Problem:
 
     def set_row_name(self, unicode old_name, unicode new_name):
         """Change row name"""
-        glpk.set_row_name(self._problem, self._find_row(old_name),
+        glpk.set_row_name(self._problem, self.find_row(old_name),
                           RowName(new_name).to_chars())
 
     def set_col_name(self, unicode old_name, unicode new_name):
         """Change column name"""
-        glpk.set_col_name(self._problem, self._find_col(old_name),
+        glpk.set_col_name(self._problem, self.find_col(old_name),
                           ColName(new_name).to_chars())
 
     def set_row_bnds(self, unicode name, lower, upper):
@@ -292,7 +292,7 @@ cdef class Problem:
         cdef double lb
         cdef double ub
         vartype, lb, ub = _bounds(lower, upper)
-        glpk.set_row_bnds(self._problem, self._find_row(name), vartype, lb, ub)
+        glpk.set_row_bnds(self._problem, self.find_row(name), vartype, lb, ub)
 
     def set_col_bnds(self, unicode name, lower, upper):
         """Set (change) column bounds"""
@@ -300,11 +300,11 @@ cdef class Problem:
         cdef double lb
         cdef double ub
         vartype, lb, ub = _bounds(lower, upper)
-        glpk.set_col_bnds(self._problem, self._find_col(name), vartype, lb, ub)
+        glpk.set_col_bnds(self._problem, self.find_col(name), vartype, lb, ub)
 
     def set_obj_coef(self, unicode name, double coeff):
         """Set (change) obj. coefficient"""
-        glpk.set_obj_coef(self._problem, self._find_col(name), coeff)
+        glpk.set_obj_coef(self._problem, self.find_col(name), coeff)
 
     def set_obj_const(self, double coeff):  # variant of set_obj_coef
         """Set (change) obj. constant term"""
@@ -325,9 +325,9 @@ cdef class Problem:
         cdef const double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
         try:
             for i, item in enumerate(coeffs.items(), start=1):
-                cols[i] = self._find_col(item[0])
+                cols[i] = self.find_col(item[0])
                 vals[i] = item[1]
-            glpk.set_mat_row(self._problem, self._find_row(name),
+            glpk.set_mat_row(self._problem, self.find_row(name),
                              k, cols, vals)
         finally:
             glpk.free(cols)
@@ -335,7 +335,7 @@ cdef class Problem:
 
     def clear_mat_row(self, unicode name):  # variant of set_mat_row
         """Clear row of the constraint matrix"""
-        glpk.set_mat_row(self._problem, self._find_row(name), 0, NULL, NULL)
+        glpk.set_mat_row(self._problem, self.find_row(name), 0, NULL, NULL)
 
     def set_mat_col(self, unicode name, coeffs):
         """Set (replace) column of the constraint matrix
@@ -352,9 +352,9 @@ cdef class Problem:
         cdef const double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
         try:
             for i, item in enumerate(coeffs.items(), start=1):
-                rows[i] = self._find_row(item[0])
+                rows[i] = self.find_row(item[0])
                 vals[i] = item[1]
-            glpk.set_mat_col(self._problem, self._find_col(name),
+            glpk.set_mat_col(self._problem, self.find_col(name),
                              k, rows, vals)
         finally:
             glpk.free(cols)
@@ -362,7 +362,7 @@ cdef class Problem:
 
     def clear_mat_col(self, unicode name):  # variant of set_mat_col
         """Clear column of the constraint matrix"""
-        glpk.set_mat_col(self._problem, self._find_col(name), 0, NULL, NULL)
+        glpk.set_mat_col(self._problem, self.find_col(name), 0, NULL, NULL)
 
     def load_matrix(self, coeffs):
         """Load (replace) the whole constraint matrix
@@ -386,8 +386,8 @@ cdef class Problem:
         cdef double* vals = <double*>glpk.alloc(1+k, sizeof(double))
         try:
             for i, item in enumerate(coeffs.items(), start=1):
-                rows[i] = self._find_row(item[0][0])
-                cols[i] = self._find_col(item[0][1])
+                rows[i] = self.find_row(item[0][0])
+                cols[i] = self.find_col(item[0][1])
                 vals[i] = item[1]
             glpk.load_matrix(self._problem, k, rows, cols, vals)
         finally:
@@ -414,7 +414,7 @@ cdef class Problem:
         try:
             if n is not 0:
                 for i, name in enumerate(names, start=1):
-                    rows[i] = self._find_row(name)
+                    rows[i] = self.find_row(name)
                 del_rows(self._problem, n, rows)
         finally:
             glpk.free(rows)
@@ -430,7 +430,7 @@ cdef class Problem:
         try:
             if n is not 0:
                 for i, name in enumerate(names, start=1):
-                    cols[i] = self._find_col(name)
+                    cols[i] = self.find_col(name)
                 del_cols(self._problem, n, cols)
         finally:
             glpk.free(cols)
@@ -466,63 +466,55 @@ cdef class Problem:
         """Retrieve number of columns"""
         return glpk.get_num_cols(self._problem)
 
-    cdef RowName _get_row_name(self, int row):
+    def get_row_name(self, int row):
         """Retrieve row name"""
-        return Name._from_chars(glpk.get_row_name(self._problem, row))
+        return RowName._from_chars(glpk.get_row_name(self._problem, row))
 
-    def get_row_names(self):  # method prompted by lack of direct index access
-        """Retrieve all row names"""
-        return (self._get_row_name(i) for i in range(1, 1+self.get_num_rows()))
-
-    cdef ColName _get_col_name(self, int col):
+    def get_col_name(self, int col):
         """Retrieve column name"""
-        return Name._from_chars(glpk.get_col_name(self._problem, col))
+        return ColName._from_chars(glpk.get_col_name(self._problem, col))
 
-    def get_col_names(self):  # method prompted by lack of direct index access
-        """Retrieve all column names"""
-        return (self._get_col_name(j) for j in range(1, 1+self.get_num_cols()))
-
-    cdef Name _get_row_or_col_name(self, int ind):  # _get_row/col_name variant
+    def get_row_or_col_name(self, int ind):  # _get_row/col_name variant
         """Retrieve row or column name"""
         cdef int m = self.get_num_rows()
         if ind > m:  # column
-            return self._get_col_name(ind - m)
+            return self.get_col_name(ind - m)
         else:  # row
-            return self._get_row_name(ind)
+            return self.get_row_name(ind)
 
     def get_row_type(self, unicode name):
         """Retrieve row type"""
         return vartype2str[glpk.get_row_type(self._problem,
-                                             self._find_row(name))]
+                                             self.find_row(name))]
 
     def get_row_lb(self, unicode name):
         """Retrieve row lower bound"""
-        cdef double lb = glpk.get_row_lb(self._problem, self._find_row(name))
+        cdef double lb = glpk.get_row_lb(self._problem, self.find_row(name))
         return -float('inf') if lb == -DBL_MAX else lb
 
     def get_row_ub(self, unicode name):
         """Retrieve row upper bound"""
-        cdef double ub = glpk.get_row_ub(self._problem, self._find_row(name))
+        cdef double ub = glpk.get_row_ub(self._problem, self.find_row(name))
         return -float('inf') if ub == -DBL_MAX else ub
 
     def get_col_type(self, unicode name):
         """Retrieve column type"""
         return vartype2str[glpk.get_col_type(self._problem,
-                                             self._find_col(name))]
+                                             self.find_col(name))]
 
     def get_col_lb(self, unicode name):
         """Retrieve column lower bound"""
-        cdef double lb = glpk.get_col_lb(self._problem, self._find_col(name))
+        cdef double lb = glpk.get_col_lb(self._problem, self.find_col(name))
         return -float('inf') if lb == -DBL_MAX else lb
 
     def get_col_ub(self, unicode name):
         """Retrieve column upper bound"""
-        cdef double ub = glpk.get_col_ub(self._problem, self._find_col(name))
+        cdef double ub = glpk.get_col_ub(self._problem, self.find_col(name))
         return -float('inf') if ub == -DBL_MAX else ub
 
     def get_obj_coef(self, unicode name):
         """Retrieve obj. coefficient"""
-        return glpk.get_obj_coef(self._problem, self._find_col(name))
+        return glpk.get_obj_coef(self._problem, self.find_col(name))
 
     def get_obj_const(self):  # variant of get_obj_coef
         """Retrieve obj. constant term"""
@@ -534,14 +526,14 @@ cdef class Problem:
 
     def get_mat_row(self, unicode name):
         """Retrieve row of the constraint matrix"""
-        cdef int row = self._find_row(name)
+        cdef int row = self.find_row(name)
         cdef int n = self.get_num_cols()
         cdef int* cols =  <int*>glpk.alloc(1+n, sizeof(int))
         cdef double* vals =  <double*>glpk.alloc(1+n, sizeof(double))
         cdef int k
         try:
             k = glpk.get_mat_row(self._problem, row, cols, vals)
-            coeffs = {self._get_col_name(cols[i]): vals[i]
+            coeffs = {self.get_col_name(cols[i]): vals[i]
                       for i in range(1, 1+k)}
         finally:
             glpk.free(cols)
@@ -550,21 +542,21 @@ cdef class Problem:
 
     def get_mat_col(self, unicode name):
         """Retrieve column of the constraint matrix"""
-        cdef int col = self._find_col(name)
+        cdef int col = self.find_col(name)
         cdef int m = self.get_num_rows()
         cdef int* rows =  <int*>glpk.alloc(1+m, sizeof(int))
         cdef double* vals =  <double*>glpk.alloc(1+m, sizeof(double))
         cdef int k
         try:
             k = glpk.get_mat_col(self._problem, col, rows, vals)
-            coeffs = {self._get_row_name(rows[i]): vals[i]
+            coeffs = {self.get_row_name(rows[i]): vals[i]
                       for i in range(1, 1+k)}
         finally:
             glpk.free(rows)
             glpk.free(vals)
         return coeffs
 
-    cdef int _find_row(self, unicode name) except 0:
+    def find_row(self, unicode name):
         """Find row by its name"""
         cdef int row = glpk.find_row(self._problem, RowName(name)._to_chars())
         if row is 0:
@@ -572,7 +564,7 @@ cdef class Problem:
         else:
             return row
 
-    cdef int _find_col(self, unicode name) except 0:
+    def find_col(self, unicode name):
         """Find column by its name"""
         cdef int col = glpk.find_col(self._problem, ColName(name)._to_chars())
         if col is 0:
@@ -580,31 +572,31 @@ cdef class Problem:
         else:
             return col
 
-    cdef int _find_row_or_col(self, Name name) except 0:  # _find_row/col variant
+    def find_row_or_col(self, Name name):  # _find_row/col variant
         """Find alternate index by its name"""
         if isinstance(name, RowName):
-            return self._find_row(name)
+            return self.find_row(name)
         elif isinstance(name, ColName):
-            return self.get_num_rows() + self._find_col(name)
+            return self.get_num_rows() + self.find_col(name)
         else:
             raise TypeError("'name' should be a 'RowName' or 'ColName', " +
                             "not '" + type(name)__name__ + "'.")
 
     def set_rii(self, unicode name, double sf):
         """Set (change) row scale factor"""
-        glpk.set_rii(self._problem, self._find_row(name), sf)
+        glpk.set_rii(self._problem, self.find_row(name), sf)
 
     def set_sjj(self, unicode name, double sf):
         """Set (change) column scale factor"""
-        glpk.set_sjj(self._problem, self._find_col(name), sf)
+        glpk.set_sjj(self._problem, self.find_col(name), sf)
 
     def get_rii(self, unicode name):
         """Retrieve row scale factor"""
-        return glpk.get_rii(self._problem, self._find_row(name))
+        return glpk.get_rii(self._problem, self.find_row(name))
 
     def get_sjj(self, unicode name):
         """Retrieve column scale factor"""
-        return glpk.get_sjj(self._problem, self._find_col(name))
+        return glpk.get_sjj(self._problem, self.find_col(name))
 
     def scale_prob(self, *algorithms):
         """Scale problem data
@@ -624,13 +616,13 @@ cdef class Problem:
     def set_row_stat(self, unicode name, unicode status):
         """Set (change) row status"""
         _statuscheck(self.get_row_type(name), status)
-        glpk.set_row_stat(self._problem, self._find_row(name),
+        glpk.set_row_stat(self._problem, self.find_row(name),
                           str2varstat[status])
 
     def set_col_stat(self, unicode name, unicode status):
         """Set (change) column status"""
         _statuscheck(self.get_col_type(name), status)
-        glpk.set_col_stat(self._problem, self._find_col(name),
+        glpk.set_col_stat(self._problem, self.find_col(name),
                           str2varstat[status])
 
     def std_basis(self):
@@ -688,32 +680,32 @@ cdef class Problem:
     def get_row_stat(self, unicode name):
         """Retrieve row status"""
         return varstat2str[glpk.get_row_stat(self._problem,
-                                             self._find_row(name))]
+                                             self.find_row(name))]
 
     def get_row_prim(self, unicode name):
         """Retrieve row primal value (basic solution)"""
-        return glpk.get_row_prim(self._problem, self._find_row(name))
+        return glpk.get_row_prim(self._problem, self.find_row(name))
 
     def get_row_dual(self, unicode name):
         """Retrieve row dual value (basic solution)"""
-        return glpk.get_row_dual(self._problem, self._find_row(name))
+        return glpk.get_row_dual(self._problem, self.find_row(name))
 
     def get_col_stat(self, unicode name):
         """Retrieve column status"""
         return varstat2str[glpk.get_col_stat(self._problem,
-                                             self._find_col(name))]
+                                             self.find_col(name))]
 
     def get_col_prim(self, unicode name):
         """Retrieve column primal value (basic solution)"""
-        return glpk.get_col_prim(self._problem, self._find_col(name))
+        return glpk.get_col_prim(self._problem, self.find_col(name))
 
     def get_col_dual(self, unicode name):
         """retrieve column dual value (basic solution)"""
-        return glpk.get_col_dual(self._problem, self._find_col(name))
+        return glpk.get_col_dual(self._problem, self.find_col(name))
 
     def get_unbnd_ray(self):
         """Determine variable causing unboundedness"""
-        return self._get_row_or_col_name(glpk.get_unbnd_ray(self._problem))
+        return self.get_row_or_col_name(glpk.get_unbnd_ray(self._problem))
 
     def interior(self, IPointControls controls)
         """Solve LP problem with the interior-point method"""
@@ -733,29 +725,29 @@ cdef class Problem:
 
     def ipt_row_prim(self, unicode name):
         """Retrieve row primal value (interior point)"""
-        return glpk.ipt_row_prim(self._problem, self._find_row(name))
+        return glpk.ipt_row_prim(self._problem, self.find_row(name))
 
     def ipt_row_dual(self, unicode name):
         """Retrieve row dual value (interior point)"""
-        return glpk.ipt_row_dual(self._problem, self._find_row(name))
+        return glpk.ipt_row_dual(self._problem, self.find_row(name))
 
     def ipt_col_prim(self, unicode name):
         """Retrieve column primal value (interior point)"""
-        return glpk.ipt_col_prim(self._problem, self._find_col(name))
+        return glpk.ipt_col_prim(self._problem, self.find_col(name))
 
     def ipt_col_dual(self, unicode name):
         """Retrieve column dual value (interior point)"""
-        return glpk.ipt_col_dual(self._problem, self._find_col(name))
+        return glpk.ipt_col_dual(self._problem, self.find_col(name))
 
     def set_col_kind(self, unicode name, unicode kind):
         """Set (change) column kind"""
-        return glpk.set_col_kind(self._problem, self._find_col(name),
+        return glpk.set_col_kind(self._problem, self.find_col(name),
                                  str2varkind[kind])
 
     def get_col_kind(self, unicode name):
         """Retrieve column kind; returns varkind"""
         return varkind2str[glpk.get_col_kind(self._problem,
-                                             self._find_col(name))]
+                                             self.find_col(name))]
 
     def get_num_int(self):
         """Retrieve number of integer columns"""
@@ -783,11 +775,11 @@ cdef class Problem:
 
     def mip_row_val(self, unicode name):
         """Retrieve row value (MIP solution)"""
-        return glpk.mip_row_val(self._problem, self._find_row(name))
+        return glpk.mip_row_val(self._problem, self.find_row(name))
 
     def mip_col_val(self, unicode name):
         """Retrieve column value (MIP solution)"""
-        return glpk.mip_col_val(self._problem, self._find_col(name))
+        return glpk.mip_col_val(self._problem, self.find_col(name))
 
     def check_kkt(self, unicode solver, unicode condition, bool dual=False):
         """Check feasibility/optimality conditions"""
@@ -804,14 +796,14 @@ cdef class Problem:
                        &ae_max, &ae_ind, &re_max, &re_ind)
         if condition is 'equalities':
             if not dual:
-                ae_name = self._get_row_name(ae_ind)
-                re_name = self._get_row_name(re_ind)
+                ae_name = self.get_row_name(ae_ind)
+                re_name = self.get_row_name(re_ind)
             else:
-                ae_name = self._get_col_name(ae_ind)
-                re_name = self._get_col_name(re_ind)
+                ae_name = self.get_col_name(ae_ind)
+                re_name = self.get_col_name(re_ind)
         elif condition is 'bounds':
-            ae_name = self._get_row_or_col_name(ae_ind)
-            re_name = self._get_row_or_col_name(re_ind)
+            ae_name = self.get_row_or_col_name(ae_ind)
+            re_name = self.get_row_or_col_name(re_ind)
         else:
             raise ValueError("Condition is either 'equalities' or 'bounds'.")
         return {'abs': (ae_max, ae_name), 'rel': (re_max, re_name)}
@@ -845,7 +837,7 @@ cdef class Problem:
         cdef int* inds = <int*>glpk.alloc(1+k, sizeof(int))
         try:
             for i, name in enumerate(names, start=1):
-                inds[i] = self._find_row_or_col(name)
+                inds[i] = self.find_row_or_col(name)
             glpk.print_ranges(self._problem, k, inds, 0, fname.encode())
         finally:
             glpk.free(inds)
@@ -914,15 +906,15 @@ cdef class Problem:
 
     def get_bhead(self, int k):
         """Retrieve LP basis header information"""
-        return self._get_row_or_col_name(glpk.get_bhead(self._problem, int k))
+        return self.get_row_or_col_name(glpk.get_bhead(self._problem, int k))
 
     def get_row_bind(self, unicode name):
         """Retrieve row index in the basis header"""
-        return glpk.get_row_bind(self._problem, self._find_row(name))
+        return glpk.get_row_bind(self._problem, self.find_row(name))
 
     def get_col_bind(self, unicode name):
         """Retrieve column index in the basis header"""
-        return glpk.get_col_bind(self._problem, self._find_col(name))
+        return glpk.get_col_bind(self._problem, self.find_col(name))
 
     def ftran(self, tuple rhs):
         """Perform forward transformation (solve system B*x = b)"""
@@ -969,9 +961,9 @@ cdef class Problem:
         cdef double* vals = <double*>glpk.alloc(1+n, sizeof(double))
         cdef int k
         try:
-            k = glpk.eval_tab_row(self._problem, self._find_row_or_col(name),
+            k = glpk.eval_tab_row(self._problem, self.find_row_or_col(name),
                                   inds, vals)
-            return {self._get_row_or_col_name(inds[i]): vals[i]
+            return {self.get_row_or_col_name(inds[i]): vals[i]
                     for i in range(1, 1+k)}
         finally:
             glpk.free(inds)
@@ -984,9 +976,9 @@ cdef class Problem:
         cdef double* vals = <double*>glpk.alloc(1+m, sizeof(double))
         cdef int k
         try:
-            k = glpk.eval_tab_col(self._problem, self._find_row_or_col(name),
+            k = glpk.eval_tab_col(self._problem, self.find_row_or_col(name),
                                   inds, vals)
-            return {self._get_row_or_col_name(inds[i]): vals[i]
+            return {self.get_row_or_col_name(inds[i]): vals[i]
                     for i in range(1, 1+k)}
         finally:
             glpk.free(inds)
@@ -1001,10 +993,10 @@ cdef class Problem:
         cdef int k
         try:
             for i, item in enumerate(coeffs.items(), start=1):
-                inds[i] = self._find_col(item[0])
+                inds[i] = self.find_col(item[0])
                 vals[i] = item[1]
             k = glpk.transform_row(self._problem, len(coeffs), inds, vals)
-            return {self._get_row_or_col_name(i): vals[i]
+            return {self.get_row_or_col_name(i): vals[i]
                     for i in range(1, 1+k)}
         finally:
             glpk.free(inds)
@@ -1019,10 +1011,10 @@ cdef class Problem:
         cdef int k
         try:
             for i, item in enumerate(coeffs.items(), start=1):
-                inds[i] = self._find_row(item[0])
+                inds[i] = self.find_row(item[0])
                 vals[i] = item[1]
             k = glpk.transform_col(self._problem, len(coeffs), inds, vals)
-            return {self._get_row_or_col_name(i): vals[i]
+            return {self.get_row_or_col_name(i): vals[i]
                     for i in range(1, 1+k)}
         finally:
             glpk.free(inds)
@@ -1040,11 +1032,11 @@ cdef class Problem:
         cdef int j
         try:
             for i, item in enumerate(coeffs.items(), start=1):
-                inds[i] = self._find_row_or_col(item[0])
+                inds[i] = self.find_row_or_col(item[0])
                 vals[i] = item[1]
             j = glpk.prim_rtest(self._problem, len(coeffs), inds, vals,
                                 direction, eps)
-            return self._get_row_or_col_name(inds[j])
+            return self.get_row_or_col_name(inds[j])
         finally:
             glpk.free(inds)
             glpk.free(vals)
@@ -1061,11 +1053,11 @@ cdef class Problem:
         cdef int j
         try:
             for i, item in enumerate(coeffs.items(), start=1):
-                inds[i] = self._find_row_or_col(item[0])
+                inds[i] = self.find_row_or_col(item[0])
                 vals[i] = item[1]
             j = glpk.dual_rtest(self._problem, len(coeffs), inds, vals,
                                 direction, eps)
-            return self._get_row_or_col_name(inds[j])
+            return self.get_row_or_col_name(inds[j])
         finally:
             glpk.free(inds)
             glpk.free(vals)
@@ -1076,14 +1068,14 @@ cdef class Problem:
         cdef int min_bnd_k
         cdef double max_bnd
         cdef int max_bnd_k
-        glpk.analyze_bound(self._problem, self._find_row_or_col(name),
+        glpk.analyze_bound(self._problem, self.find_row_or_col(name),
                            &min_bnd, &min_bnd_k, &max_bnd, &max_bnd_k)
         if min_bnd > -DBL_MAX:
-            minimal = min_bnd, self._get_row_or_col_name(min_bnd_k)
+            minimal = min_bnd, self.get_row_or_col_name(min_bnd_k)
         else:
             minimal = (-float('inf'), None)
         if max_bnd < +DBL_MAX:
-            maximal = max_bnd, self._get_row_or_col_name(max_bnd_k)
+            maximal = max_bnd, self.get_row_or_col_name(max_bnd_k)
         else:
             maximal = (+float('inf'), None)
         return {'minimal': minimal, 'maximal': maximal}
@@ -1096,7 +1088,7 @@ cdef class Problem:
         cdef double max_coef
         cdef int max_coef_k
         cdef double val_max_coef
-        glpk.analyze_coef(self._problem, self._find_row_or_col(name),
+        glpk.analyze_coef(self._problem, self.find_row_or_col(name),
                           &min_coef, &min_coef_k, &val_min_coef,
                           &max_coef, &max_coef_k, &val_max_coef)
         if val_min_coef <= -DBL_MAX:
@@ -1108,11 +1100,11 @@ cdef class Problem:
         elif val_max_coef >= DBL_MAX:
             maxval = +float('inf')
         if min_coef > -DBL_MAX:
-            minimal = min_coef, self._get_row_or_col_name(min_coef_k), minval
+            minimal = min_coef, self.get_row_or_col_name(min_coef_k), minval
         else:
             minimal = -float('inf'), None, minval
         if max_coef < +DBL_MAX:
-            maximal = max_coef, self._get_row_or_col_name(max_coef_k), maxval
+            maximal = max_coef, self.get_row_or_col_name(max_coef_k), maxval
         else:
             maximal = +float('inf'), None, maxval
         return {'minimal': minimal, 'maximal': maximal}
