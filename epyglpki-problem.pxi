@@ -242,29 +242,37 @@ cdef class Problem:
         """Set (change) optimization direction flag"""
         glpk.set_obj_dir(self._problem, str2optdir(direction))
 
-    def add_rows(self, *names)
+    def add_rows(self, int number):
+        """Add new rows to problem object"""
+        glpk.add_rows(self._problem, number)
+
+    def add_named_rows(self, *names):  # variant of add_rows
         """Add new rows to problem object
 
         :param names: the names (unicode strings) of the rows to add
 
         """
+        cdef int number = len(names)
         cdef int first
-        cdef int n = len(names)
         if n is not 0:
-            first = glpk.add_rows(self._problem, n)
+            first = self.add_rows(number)
             for row, name in enumerate(names, start=first):
                 glpk.set_row_name(self._problem, row, RowName(name).to_chars())
 
-    def add_cols(self, *names)
+    def add_cols(self, int number):
+        """Add new columns to problem object"""
+        glpk.add_cols(self._problem, number)
+
+    def add_named_cols(self, *names):  # variant of add_cols
         """Add new columns to problem object
 
         :param names: the names (unicode strings) of the columns to add
 
         """
+        cdef int number = len(names)
         cdef int first
-        cdef int n = len(names)
         if n is not 0:
-            first = glpk.add_cols(self._problem, n)
+            first = self.add_cols(number)
             for col, name in enumerate(names, start=first):
                 glpk.set_col_name(self._problem, col, ColName(name).to_chars())
 
