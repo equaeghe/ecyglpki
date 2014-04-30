@@ -428,12 +428,10 @@ cdef class Problem:
             glpk.free(cols)
 
     @classmethod
-    def copy_prob(cls, ProbObj* source):
+    def copy_prob(cls, Problem source, bool copy_names):
         """Copy problem object content"""
         problem = cls()
-        glpk.copy_prob(problem, source, True)
-                                    # always copy names, as they function as
-                                    # unique identifiers for rows and columns
+        glpk.copy_prob(problem._problem, source._problem, copy_names)
         return problem
 
     def erase_prob(self):
@@ -1111,8 +1109,15 @@ cdef class Problem:
             maximal = +float('inf'), None, maxval
         return {'minimal': minimal, 'maximal': maximal}
 
-        """read problem data in MPS format"""
-    int read_mps(self._problem, int mpsfmt, NULL, const char* fname)
+    @classmethod
+    def read_mps(cls, unicode format, unicode fname):
+        """Read problem data in MPS format"""
+        problem = cls()
+        retcode = read_mps(problem._problem, str2mpsfmt[format], NULL,
+                           fname.encode())
+        if retcode is not 0:
+            raise RuntimeError("Error reading MPS file.")
+        return problem
 
     def write_mps(self, unicode mpsfmtstr, unicode fname):
         """Write problem data in MPS format"""
@@ -1121,8 +1126,14 @@ cdef class Problem:
         if retcode is not 0:
             raise RuntimeError("Error writing MPS file.")
 
-        """read problem data in CPLEX LP format"""
-    int read_lp(self._problem, NULL, const char* fname)
+    @classmethod
+    def read_lp(cls, unicode fname):
+        """Read problem data in CPLEX LP format"""
+        problem = cls()
+        retcode = read_lp(problem._problem, NULL, fname.encode())
+        if retcode is not 0:
+            raise RuntimeError("Error reading LP file.")
+        return problem
 
     def write_lp(self, unicode fname):
         """Write problem data in CPLEX LP format"""
@@ -1130,8 +1141,14 @@ cdef class Problem:
         if retcode is not 0:
             raise RuntimeError("Error writing LP file.")
 
-        """read problem data in GLPK format"""
-    int read_prob(self._problem, 0, const char* fname)
+    @classmethod
+    def read_prob(cls, unicode fname):
+        """Read problem data in GLPK format"""
+        problem = cls()
+        retcode = read_prob(problem._problem, 0, fname.encode())
+        if retcode is not 0:
+            raise RuntimeError("Error reading GLPK file.")
+        return problem
 
     def write_prob(self, unicode fname):
         """Write problem data in GLPK format"""
@@ -1139,8 +1156,14 @@ cdef class Problem:
         if retcode is not 0:
             raise RuntimeError("Error writing GLPK file.")
 
-        """read CNF-SAT problem data in DIMACS format"""
-    int read_cnfsat(self._problem, const char* fname)
+    @classmethod
+    def read_cnfsat(cls, unicode fname):
+        """Read CNF-SAT problem data in DIMACS format"""
+        problem = cls()
+        retcode = read_cnfsat(problem._problem, fname.encode())
+        if retcode is not 0:
+            raise RuntimeError("Error reading CNF-SAT file.")
+        return problem
 
     def check_cnfsat(self):
         """Check for CNF-SAT problem instance"""
