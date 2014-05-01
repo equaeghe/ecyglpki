@@ -998,7 +998,7 @@ cdef class Problem:
         glpk.btran(self._problem, rhs_pre_x_post)
         return (rhs_pre_x_post[i] for i in range(1, 1+m))
 
-    def warm_up(self._problem):
+    def warm_up(self):
         """“Warm up” LP basis"""
         cdef int retcode = glpk.warm_up(self._problem)
         if retcode is not 0:
