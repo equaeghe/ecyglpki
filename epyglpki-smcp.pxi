@@ -55,16 +55,6 @@ cdef strpair2bftype = {
 cdef bftype2strpair = {bftype: stringpair
                        for stringpair, bftype in strpair2bftype.items()}
 
-# variable status
-cdef str2varstat = {
-    'basic': glpk.BS,
-    'lower': glpk.NL,
-    'upper': glpk.NU,
-    'free': glpk.NF,
-    'fixed': glpk.NS
-    }
-cdef varstat2str = {varstat: string for string, varstat in str2varstat.items()}
-
 
 cdef class SimplexControls:
     """The simplex solver control parameter object

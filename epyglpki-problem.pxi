@@ -25,6 +25,32 @@
 import itertools
 
 
+from libc.limits cimport INT_MAX
+from libc.float cimport DBL_MAX
+
+
+# message levels
+cdef str2msglev = {
+    'no': glpk.MSG_OFF,
+    'warnerror': glpk.MSG_ERR,
+    'normal': glpk.MSG_ON,
+    'full': glpk.MSG_ALL
+    }
+cdef msglev2str = {msg_lev: string for string, msg_lev in str2msglev.items()}
+
+
+include 'epyglpki-smcp.pxi'
+
+
+include 'epyglpki-bfcp.pxi'
+
+
+include 'epyglpki-iptcp.pxi'
+
+
+include 'epyglpki-iocp.pxi'
+
+
 # optimization directions
 cdef str2optdir = {
     'minimize': glpk.MIN,
@@ -106,7 +132,7 @@ cdef compatible_status = {
     'fixed': frozenset('fixed'),
     }
 
-cdef _statuscheck(unicode vartypestr, unicode status) except NULL:
+cdef _statuscheck(str vartypestr, str status):
     if status is not 'basic':
         statuses = compatible_status[vartypestr]
         if status not in statuses:
@@ -225,20 +251,31 @@ cdef class Problem:
         self._problem = glpk.create_prob()
         glpk.create_index(self._problem)
 
+    def _problem_ptr(self):
+        """Encapsulate the pointer to the problem object
+
+        The problem object pointer `self._problem` cannot be passed as such as
+        an argument to other functions. Therefore we encapsulate it in a
+        capsule that can be passed. It has to be unencapsulated after
+        reception.
+
+        """
+        return PyCapsule_New(self._problem, NULL, NULL)
+
     def __dealloc__(self):
         glpk.delete_prob(self._problem)
 
     ### Translated GLPK functions ###
 
-    def set_prob_name(self, unicode name):
+    def set_prob_name(self, str name):
         """Assign (change) problem name"""
-        glpk.set_prob_name(self._problem, Name(name).to_chars())
+        glpk.set_prob_name(self._problem, name2chars(name))
 
-    def set_obj_name(self, unicode name):
+    def set_obj_name(self, str name):
         """Assign (change) objective function name"""
-        glpk.set_obj_name(self._problem, Name(name).to_chars())
+        glpk.set_obj_name(self._problem, name2chars(name))
 
-    def set_obj_dir(self, unicode direction)
+    def set_obj_dir(self, str direction):
         """Set (change) optimization direction flag"""
         glpk.set_obj_dir(self._problem, str2optdir(direction))
 
@@ -249,7 +286,7 @@ cdef class Problem:
     def add_named_rows(self, *names):  # variant of add_rows
         """Add new rows to problem object
 
-        :param names: the names (unicode strings) of the rows to add
+        :param names: the names (str strings) of the rows to add
 
         """
         cdef int number = len(names)
@@ -257,7 +294,7 @@ cdef class Problem:
             return
         cdef int first = self.add_rows(number)
         for row, name in enumerate(names, start=first):
-            glpk.set_row_name(self._problem, row, RowName(name).to_chars())
+            glpk.set_row_name(self._problem, row, name2chars(name))
 
     def add_cols(self, int number):
         """Add new columns to problem object"""
@@ -266,7 +303,7 @@ cdef class Problem:
     def add_named_cols(self, *names):  # variant of add_cols
         """Add new columns to problem object
 
-        :param names: the names (unicode strings) of the columns to add
+        :param names: the names (str strings) of the columns to add
 
         """
         cdef int number = len(names)
@@ -274,17 +311,17 @@ cdef class Problem:
             return
         cdef int first = self.add_cols(number)
         for col, name in enumerate(names, start=first):
-            glpk.set_col_name(self._problem, col, ColName(name).to_chars())
+            glpk.set_col_name(self._problem, col, name2chars(name))
 
-    def set_row_name(self, row, unicode name):
+    def set_row_name(self, row, str name):
         """Change row name"""
         row = self.find_row_as_needed(row)
-        glpk.set_row_name(self._problem, row, RowName(name).to_chars())
+        glpk.set_row_name(self._problem, row, name2chars(name))
 
-    def set_col_name(self, col, unicode name):
+    def set_col_name(self, col, str name):
         """Change column name"""
         col = self.find_col_as_needed(col)
-        glpk.set_col_name(self._problem, col, ColName(name).to_chars())
+        glpk.set_col_name(self._problem, col, name2chars(name))
 
     def set_row_bnds(self, row, lower, upper):
         """Set (change) row bounds"""
@@ -316,15 +353,15 @@ cdef class Problem:
     def set_mat_row(self, row, coeffs):
         """Set (replace) row of the constraint matrix
 
-        :param coeffs: |Mapping| from column names (unicode strings) to
+        :param coeffs: |Mapping| from column names (str strings) to
             coefficient values (|Real|).
 
         """
         _coeffscheck(coeffs)
         row = self.find_row_as_needed(row)
         cdef int k = len(coeffs)
-        cdef const int* cols =  <int*>glpk.alloc(1+k, sizeof(int))
-        cdef const double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
+        cdef int* cols = <int*>glpk.alloc(1+k, sizeof(int))
+        cdef double* vals = <double*>glpk.alloc(1+k, sizeof(double))
         try:
             for i, item in enumerate(coeffs.items(), start=1):
                 cols[i] = self.find_col_as_needed(item[0])
@@ -342,22 +379,22 @@ cdef class Problem:
     def set_mat_col(self, col, coeffs):
         """Set (replace) column of the constraint matrix
 
-        :param coeffs: |Mapping| from row names (unicode strings) to
+        :param coeffs: |Mapping| from row names (str strings) to
             coefficient values (|Real|).
 
         """
         col = self.find_col_as_needed(col)
         _coeffscheck(coeffs)
         cdef int k = len(coeffs)
-        cdef const int* rows =  <int*>glpk.alloc(1+k, sizeof(int))
-        cdef const double* vals =  <double*>glpk.alloc(1+k, sizeof(double))
+        cdef int* rows = <int*>glpk.alloc(1+k, sizeof(int))
+        cdef double* vals = <double*>glpk.alloc(1+k, sizeof(double))
         try:
             for i, item in enumerate(coeffs.items(), start=1):
                 rows[i] = self.find_row_as_needed(item[0])
                 vals[i] = item[1]
             glpk.set_mat_col(self._problem, col, k, rows, vals)
         finally:
-            glpk.free(cols)
+            glpk.free(rows)
             glpk.free(vals)
 
     def clear_mat_col(self, col):  # variant of set_mat_col
@@ -368,7 +405,7 @@ cdef class Problem:
     def load_matrix(self, coeffs):
         """Load (replace) the whole constraint matrix
 
-        :param coeffs: |Mapping| from row and column name (unicode string)
+        :param coeffs: |Mapping| from row and column name (str string)
             pairs (length-2 `tuple`) to coefficient values (|Real|).
 
         """
@@ -403,42 +440,44 @@ cdef class Problem:
     def del_rows(self, *rows):
         """Delete specified rows from problem object
 
-        :param names: the names (unicode strings) of the rows to delete
+        :param names: the names (str strings) of the rows to delete
 
         """
         cdef int k = len(rows)
         if k is 0:
             return
-        cdef const int* rowinds =  <int*>glpk.alloc(1+k, sizeof(int))
+        cdef int* rowinds = <int*>glpk.alloc(1+k, sizeof(int))
         try:
             for i, row in enumerate(rows, start=1):
                 rowinds[i] = self.find_row_as_needed(row)
-            del_rows(self._problem, k, rowinds)
+            glpk.del_rows(self._problem, k, rowinds)
         finally:
             glpk.free(rowinds)
 
     def del_cols(self, *cols):
         """Delete specified columns from problem object
 
-        :param names: the names (unicode strings) of the columns to delete
+        :param names: the names (str strings) of the columns to delete
 
         """
         cdef int k = len(cols)
         if k is 0:
             return
-        cdef const int* colinds =  <int*>glpk.alloc(1+k, sizeof(int))
+        cdef int* colinds = <int*>glpk.alloc(1+k, sizeof(int))
         try:
             for i, col in enumerate(cols, start=1):
                 colinds[i] = self.find_col_as_needed(col)
-            del_cols(self._problem, k, colinds)
+            glpk.del_cols(self._problem, k, colinds)
         finally:
-            glpk.free(cols)
+            glpk.free(colinds)
 
     @classmethod
-    def copy_prob(cls, Problem source, bool copy_names):
+    def copy_prob(cls, Problem source, bint copy_names):
         """Copy problem object content"""
         problem = cls()
-        glpk.copy_prob(problem._problem, source._problem, copy_names)
+        cdef glpk.ProbObj* _problem = <glpk.ProbObj*>PyCapsule_GetPointer(
+                                                problem._problem_ptr(), NULL)
+        glpk.copy_prob(_problem, source._problem, copy_names)
         return problem
 
     def erase_prob(self):
@@ -447,11 +486,11 @@ cdef class Problem:
 
     def get_prob_name(self):
         """Retrieve problem name"""
-        return Name._from_chars(glpk.get_prob_name(self._problem))
+        return chars2name(glpk.get_prob_name(self._problem))
 
     def get_obj_name(self):
         """Retrieve objective function name"""
-        return Name._from_chars(glpk.get_obj_name(self._problem))
+        return chars2name(glpk.get_obj_name(self._problem))
 
     def get_obj_dir(self):
         """Retrieve optimization direction flag"""
@@ -467,31 +506,31 @@ cdef class Problem:
 
     def get_row_name(self, int row):
         """Retrieve row name"""
-        return RowName._from_chars(glpk.get_row_name(self._problem, row))
+        return chars2name(glpk.get_row_name(self._problem, row))
 
     def get_row_name_if_available(self, int row):
         name = self.get_row_name(row)
-        return row if name == '' else name  # `RowName('') is ''` is False
+        return row if name is '' else name
 
     def get_col_name(self, int col):
         """Retrieve column name"""
-        return ColName._from_chars(glpk.get_col_name(self._problem, col))
+        return chars2name(glpk.get_col_name(self._problem, col))
 
     def get_col_name_if_available(self, int col):
         name = self.get_col_name(col)
-        return col if name == '' else name  # `ColName('') is ''` is False
+        return col if name is '' else name
 
     def get_row_or_col_name(self, int ind):  # _get_row/col_name variant
         """Retrieve row or column name"""
         cdef int m = self.get_num_rows()
         if ind > m:  # column
-            return self.get_col_name(ind - m)
+            return 'col', self.get_col_name(ind - m)
         else:  # row
-            return self.get_row_name(ind)
+            return 'row', self.get_row_name(ind)
 
     def get_row_or_col_name_if_available(self, int ind):
-        name = self.get_row_or_col_name(ind)
-        return ind if name == '' else name  # `Name('') is ''` is False
+        row_or_col, name = self.get_row_or_col_name(ind)
+        return row_or_col, ind if name is '' else name
 
     def get_row_type(self, row):
         """Retrieve row type"""
@@ -572,55 +611,61 @@ cdef class Problem:
             glpk.free(vals)
         return coeffs
 
-    def find_row(self, unicode name):
+    def find_row(self, str name):
         """Find row by its name"""
-        cdef int row = glpk.find_row(self._problem, RowName(name)._to_chars())
+        cdef int row = glpk.find_row(self._problem, name2chars(name))
         if row is 0:
             raise ValueError("'" + name + "' is not a row name.")
         else:
             return row
 
-    def self.find_row_as_needed(self, row):
-        if isinstance(row, unicode):
+    def find_row_as_needed(self, row):
+        if isinstance(row, int):
+            return row
+        elif isinstance(row, str):
             return self.find_row(row)
-        elif not isinstance(row, int):
+        else:
             raise TypeError("'row' must be a number ('int') or a name " +
-                            "(unicode 'str'), not '" + type(row).__name__ +
+                            "(str 'str'), not '" + type(row).__name__ +
                             "'.")
 
-    def find_col(self, unicode name):
+    def find_col(self, str name):
         """Find column by its name"""
-        cdef int col = glpk.find_col(self._problem, ColName(name)._to_chars())
+        cdef int col = glpk.find_col(self._problem, name2chars(name))
         if col is 0:
             raise ValueError("'" + name + "' is not a column name.")
         else:
             return col
 
-    def find_col_as_needed(self, row):
-        if isinstance(col, unicode):
+    def find_col_as_needed(self, col):
+        if isinstance(col, int):
+            return col
+        elif isinstance(col, str):
             return self.find_col(col)
-        elif not isinstance(col, int):
+        else:
             raise TypeError("'col' must be a number ('int') or a name " +
-                            "(unicode 'str'), not '" + type(row).__name__ +
+                            "(str 'str'), not '" + type(col).__name__ +
                             "'.")
 
-    def find_row_or_col(self, Name name):  # _find_row/col variant
+    def find_row_or_col(self, str row_or_col, str name):  # _find_row/col variant
         """Find alternate index by its name"""
-        if isinstance(name, RowName):
+        if row_or_col is 'row':
             return self.find_row(name)
-        elif isinstance(name, ColName):
+        elif row_or_col is 'col':
             return self.get_num_rows() + self.find_col(name)
         else:
-            raise TypeError("'name' should be a 'RowName' or 'ColName', " +
-                            "not '" + type(name)__name__ + "'.")
+            raise ValueError("'row_or_col' should be a 'row' or 'col', not '" +
+                             str(name) + "'.")
 
     def find_row_or_col_as_needed(self, ind):
-        if isinstance(ind, Name):
-            return self.find_row_or_col(ind)
-        elif not isinstance(ind, int):
-            raise TypeError("'ind' must be a number ('int') or a name " +
-                            "('RowName' or 'ColName'), not '" +
-                            type(row).__name__ + "'.")
+        if isinstance(ind, int):
+            return ind
+        elif isinstance(ind, tuple) and (len(ind) is 2):
+            return self.find_row_or_col(ind[0], ind[1])
+        else:
+            raise TypeError("'ind' must be a number ('int') or a " +
+                            "('row'/'col', name)-pair, not '" +
+                            type(ind).__name__ + "'.")
 
     def set_rii(self, row, double sf):
         """Set (change) row scale factor"""
@@ -657,16 +702,16 @@ cdef class Problem:
         """Unscale problem data"""
         glpk.unscale_prob(self._problem)
 
-    def set_row_stat(self, row, unicode status):
+    def set_row_stat(self, row, str status):
         """Set (change) row status"""
         row = self.find_row_as_needed(row)
-        _statuscheck(self.get_row_type(name), status)
+        _statuscheck(self.get_row_type(row), status)
         glpk.set_row_stat(self._problem, row, str2varstat[status])
 
-    def set_col_stat(self, col, unicode status):
+    def set_col_stat(self, col, str status):
         """Set (change) column status"""
         col = self.find_col_as_needed(col)
-        _statuscheck(self.get_col_type(name), status)
+        _statuscheck(self.get_col_type(col), status)
         glpk.set_col_stat(self._problem, col, str2varstat[status])
 
     def std_basis(self):
@@ -681,7 +726,7 @@ cdef class Problem:
         """Construct Bixby's initial LP basis"""
         glpk.cpx_basis(self._problem)
 
-    def simplex(self, SimplexControls controls)
+    def simplex(self, SimplexControls controls):
         """Solve LP problem with the simplex method"""
         if ((controls.meth is not 'dual') and
             ((controls.obj_ll > -DBL_MAX) or (controls.obj_ul < +DBL_MAX))):
@@ -756,7 +801,7 @@ cdef class Problem:
         return self.get_row_or_col_name_if_available(
                                             glpk.get_unbnd_ray(self._problem))
 
-    def interior(self, IPointControls controls)
+    def interior(self, IPointControls controls):
         """Solve LP problem with the interior-point method"""
         cdef int retcode = glpk.interior(self._problem, &controls._iptcp)
         if retcode is 0:
@@ -792,10 +837,10 @@ cdef class Problem:
         col = self.find_col_as_needed(col)
         return glpk.ipt_col_dual(self._problem, col)
 
-    def set_col_kind(self, col, unicode kind):
+    def set_col_kind(self, col, str kind):
         """Set (change) column kind"""
         col = self.find_col_as_needed(col)
-        return glpk.set_col_kind(self._problem, col, str2varkind[kind])
+        glpk.set_col_kind(self._problem, col, str2varkind[kind])
 
     def get_col_kind(self, col):
         """Retrieve column kind; returns varkind"""
@@ -836,7 +881,7 @@ cdef class Problem:
         col = self.find_col_as_needed(col)
         return glpk.mip_col_val(self._problem, col)
 
-    def check_kkt(self, unicode solver, unicode condition, bool dual=False):
+    def check_kkt(self, str solver, str condition, bint dual=False):
         """Check feasibility/optimality conditions"""
         if dual and (solver is 'intopt'):
             raise ValueError("Dual conditions cannot be checked for the " +
@@ -863,25 +908,25 @@ cdef class Problem:
             raise ValueError("Condition is either 'equalities' or 'bounds'.")
         return {'abs': (ae_max, ae_id), 'rel': (re_max, re_id)}
 
-    def print_sol(self, unicode fname):
+    def print_sol(self, str fname):
         """Write basic solution in printable format"""
-        retcode = glpk.print_sol(self._problem, fname.encode())
+        retcode = glpk.print_sol(self._problem, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing printable basic solution file")
 
-    def read_sol(self, unicode fname):
+    def read_sol(self, str fname):
         """Read basic solution from text file"""
-        retcode = glpk.read_sol(self._problem, fname.encode())
+        retcode = glpk.read_sol(self._problem, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error reading basic solution file")
 
-    def write_sol(self, unicode fname):
+    def write_sol(self, str fname):
         """Write basic solution to text file"""
-        retcode = glpk.write_sol(self._problem, fname.encode())
+        retcode = glpk.write_sol(self._problem, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing basic solution file")
 
-    def print_ranges(self, row_or_cols, unicode fname):
+    def print_ranges(self, row_or_cols, str fname):
         """Print sensitivity analysis report"""
         if not isinstance(row_or_cols, collections.abc.Sequence):
             raise TypeError("'row_or_cols' must be a 'Sequence', not " +
@@ -891,46 +936,46 @@ cdef class Problem:
         try:
             for i, row_or_col in enumerate(row_or_cols, start=1):
                 inds[i] = self.find_row_or_col_as_needed(row_or_col)
-            glpk.print_ranges(self._problem, k, inds, 0, fname.encode())
+            glpk.print_ranges(self._problem, k, inds, 0, str2chars(fname))
         finally:
             glpk.free(inds)
 
-    def print_ipt(self, unicode fname):
+    def print_ipt(self, str fname):
         """Write interior-point solution in printable format"""
-        retcode = glpk.print_ipt(self._problem, fname.encode())
+        retcode = glpk.print_ipt(self._problem, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing printable interior point " +
                                "solution file")
 
-    def read_ipt(self, unicode fname):
+    def read_ipt(self, str fname):
         """Read interior-point solution from text file"""
-        retcode = glpk.read_ipt(self._problem, fname.encode())
+        retcode = glpk.read_ipt(self._problem, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error reading interior point solution file")
 
-    def write_ipt(self, unicode fname):
+    def write_ipt(self, str fname):
         """Write interior-point solution to text file"""
-        retcode = glpk.write_ipt(self._problem, fname.encode())
+        retcode = glpk.write_ipt(self._problem, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing interior point solution file")
 
-    def print_mip(self, unicode fname):
+    def print_mip(self, str fname):
         """Write MIP solution in printable format"""
-        retcode = glpk.print_mip(self._problem, fname.encode())
+        retcode = glpk.print_mip(self._problem, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing printable integer " +
                                "optimization solution file")
 
-    def read_mip(self, unicode fname):
+    def read_mip(self, str fname):
         """Read MIP solution from text file"""
-        retcode = glpk.read_mip(self._problem, fname.encode())
+        retcode = glpk.read_mip(self._problem, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error reading integer optimization solution " +
                                "file")
 
-    def write_mip(self, unicode fname):
+    def write_mip(self, str fname):
         """Write MIP solution to text file"""
-        retcode = glpk.write_mip(self._problem, fname.encode())
+        retcode = glpk.write_mip(self._problem, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing integer optimization solution " +
                                "file")
@@ -951,16 +996,16 @@ cdef class Problem:
 
     def get_bfcp(self):
         """Retrieve LP basis factorization control parameters"""
-        return FactorizationControls(self._problem)
+        return FactorizationControls(self)
 
     def set_bfcp(self, FactorizationControls controls):
         """Change LP basis factorization control parameters"""
-        return glpk.set_bfcp(self._problem, &controls._bfcp)
+        glpk.set_bfcp(self._problem, &controls._bfcp)
 
     def get_bhead(self, int k):
         """Retrieve LP basis header information"""
         return self.get_row_or_col_name_if_available(
-                                        glpk.get_bhead(self._problem, int k))
+                                            glpk.get_bhead(self._problem, k))
 
     def get_row_bind(self, row):
         """Retrieve row index in the basis header"""
@@ -1172,57 +1217,65 @@ cdef class Problem:
         return {'minimal': minimal, 'maximal': maximal}
 
     @classmethod
-    def read_mps(cls, unicode format, unicode fname):
+    def read_mps(cls, str format, str fname):
         """Read problem data in MPS format"""
         problem = cls()
-        retcode = read_mps(problem._problem, str2mpsfmt[format], NULL,
-                           fname.encode())
+        cdef glpk.ProbObj* _problem = <glpk.ProbObj*>PyCapsule_GetPointer(
+                                                problem._problem_ptr(), NULL)
+        retcode = glpk.read_mps(_problem, str2mpsfmt[format], NULL,
+                                str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error reading MPS file.")
         return problem
 
-    def write_mps(self, unicode format, unicode fname):
+    def write_mps(self, str format, str fname):
         """Write problem data in MPS format"""
         retcode = glpk.write_mps(self._problem, str2mpsfmt[format], NULL,
-                                 fname.encode())
+                                 str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing MPS file.")
 
     @classmethod
-    def read_lp(cls, unicode fname):
+    def read_lp(cls, str fname):
         """Read problem data in CPLEX LP format"""
         problem = cls()
-        retcode = read_lp(problem._problem, NULL, fname.encode())
+        cdef glpk.ProbObj* _problem = <glpk.ProbObj*>PyCapsule_GetPointer(
+                                                problem._problem_ptr(), NULL)
+        retcode = glpk.read_lp(_problem, NULL, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error reading LP file.")
         return problem
 
-    def write_lp(self, unicode fname):
+    def write_lp(self, str fname):
         """Write problem data in CPLEX LP format"""
-        retcode = glpk.write_lp(self._problem, NULL, fname.encode())
+        retcode = glpk.write_lp(self._problem, NULL, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing LP file.")
 
     @classmethod
-    def read_prob(cls, unicode fname):
+    def read_prob(cls, str fname):
         """Read problem data in GLPK format"""
         problem = cls()
-        retcode = read_prob(problem._problem, 0, fname.encode())
+        cdef glpk.ProbObj* _problem = <glpk.ProbObj*>PyCapsule_GetPointer(
+                                                problem._problem_ptr(), NULL)
+        retcode = glpk.read_prob(_problem, 0, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error reading GLPK file.")
         return problem
 
-    def write_prob(self, unicode fname):
+    def write_prob(self, str fname):
         """Write problem data in GLPK format"""
-        retcode = glpk.write_prob(self._problem, 0, fname.encode())
+        retcode = glpk.write_prob(self._problem, 0, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing GLPK file.")
 
     @classmethod
-    def read_cnfsat(cls, unicode fname):
+    def read_cnfsat(cls, str fname):
         """Read CNF-SAT problem data in DIMACS format"""
         problem = cls()
-        retcode = read_cnfsat(problem._problem, fname.encode())
+        cdef glpk.ProbObj* _problem = <glpk.ProbObj*>PyCapsule_GetPointer(
+                                                problem._problem_ptr(), NULL)
+        retcode = glpk.read_cnfsat(_problem, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error reading CNF-SAT file.")
         return problem
@@ -1231,9 +1284,9 @@ cdef class Problem:
         """Check for CNF-SAT problem instance"""
         return not bool(glpk.check_cnfsat(self._problem))
 
-    def write_cnfsat(self, unicode fname):
+    def write_cnfsat(self, str fname):
         """Write CNF-SAT problem data in DIMACS format"""
-        retcode = glpk.write_cnfsat(self._problem, fname.encode())
+        retcode = glpk.write_cnfsat(self._problem, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing CNF-SAT file.")
 
@@ -1245,7 +1298,7 @@ cdef class Problem:
         else:
             raise ioretcode2error[retcode]
 
-    def intfeas1(self, bool use_bound, int obj_bound):
+    def intfeas1(self, bint use_bound, int obj_bound):
         """Solve integer feasibility problem"""
         cdef int retcode = glpk.intfeas1(self._problem, use_bound, obj_bound)
         if retcode is 0:

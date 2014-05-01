@@ -22,69 +22,6 @@
 ###############################################################################
 
 
-cdef class IPointControls:
-    """The interior point solver (`.IPointSolver`) control parameter object
-
-    .. doctest:: IPointControls
-
-        >>> r = IPointControls()
-
-    """
-
-    cdef glpk.IPointCP _iptcp
-
-    def __cinit__(self):
-        glpk.init_iptcp(&self._iptcp)
-
-    property msg_lev:
-        """The message level, a `str`
-
-        The possible values are
-
-        * `'no'`: no output
-        * `'warnerror'`: warnings and errors only
-        * `'normal'`: normal output
-        * `'full'`: normal output and informational messages
-
-        .. doctest:: IPointControls
-
-            >>> r.msg_lev  # the GLPK default
-            'full'
-            >>> r.msg_lev = 'no'
-            >>> r.msg_lev
-            'no'
-
-        """
-        def __get__(self):
-            return msglev2str[self._iptcp.msg_lev]
-        def __set__(self, value):
-            self._iptcp.msg_lev = str2msglev[value]
-
-    property ord_alg:
-        """The ordering algorithm used prior to Cholesky factorization, a `str`
-
-        The possible values are
-
-        * `'orig'`: normal (original)
-        * `'qmd'`: quotient minimum degree
-        * `'amd'`: approximate minimum degree
-        * `'symamd'`: approximate minimum degree for symmetric matrices
-
-        .. doctest:: IPointControls
-
-            >>> r.ord_alg  # the GLPK default
-            'amd'
-            >>> r.ord_alg = 'qmd'
-            >>> r.ord_alg
-            'qmd'
-
-        """
-        def __get__(self):
-            return ordalg2str[self._iptcp.ord_alg]
-        def __set__(self, value):
-            self._iptcp.ord_alg = str2ordalg[value]
-
-
 cdef class IPointSolver(_Solver):
     """An interior point solver
 

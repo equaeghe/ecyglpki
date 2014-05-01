@@ -22,14 +22,6 @@
 ###############################################################################
 
 
-cdef char* name2chars(name) except NULL:
-    if not isinstance(name, str):
-        raise TypeError("Name must be a 'str'.")
-    name = name.encode()
-    if len(name) > 255:
-        raise ValueError("Name must not exceed 255 bytes.")
-    return name
-
 cdef coeffscheck(coeffs):
     if not isinstance(coeffs, collections.abc.Mapping):
         raise TypeError("Coefficients must be passed in a Mapping, not " +

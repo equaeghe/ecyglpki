@@ -28,54 +28,32 @@ import numbers
 import collections.abc
 
 
-include 'glpk-constants.pxi'
-
-
-# message levels
-cdef str2msglev = {
-    'no': glpk.MSG_OFF,
-    'warnerror': glpk.MSG_ERR,
-    'normal': glpk.MSG_ON,
-    'full': glpk.MSG_ALL
-    }
-cdef msglev2str = {msg_lev: string for string, msg_lev in str2msglev.items()}
-
-
 def GLPK_version():
     return glpk.version().decode()
 
 
-cdef class Name(unicode):
-    """A name acceptable to GLPK
+cdef char* str2chars(str string) except NULL:
+    cdef bytes encoded_string = string.encode()
+    return encoded_string
+
+
+cdef char* name2chars(str name) except NULL:
+    """Check whether a name is acceptable to GLPK
 
     Names acceptable to GLPK may not exceed 255 bytes. We encode a string in
     UTF-8, so it must not exceed 255 bytes *encoded as UTF-8*.
 
     """
+    cdef bytes encoded_name = name.encode()
+    if len(encoded_name) > 255:
+        raise ValueError("Name must not exceed 255 bytes.")
+    return encoded_name
 
-    cdef bytes _encoded
+cdef str chars2name(const char* chars):
+    return '' if chars is NULL else chars.decode()
 
-    def __init__(self, unicode name):
-        self._encoded = name.encode()
-        n = len(self._encoded)
-        if n > 255:
-            raise ValueError("'Name' must not exceed 255 bytes encoded as " +
-                             "UTF-8, yours is " + str(n) + ".")
 
-    cdef const char* _to_chars(self) except NULL:
-        return self._encoded
-
-    @classmethod
-    def _from_chars(cls, const char* chars):
-        return '' if chars is NULL else chars.decode()
-
-cdef class RowName(Name):
-    """A row name acceptable to GLPK"""
-    pass
-
-cdef class ColName(Name):
-    """A column name acceptable to GLPK"""
-    pass
+include 'epyglpki-problem.pxi'
 
 
 include 'epyglpki-program.pxi'

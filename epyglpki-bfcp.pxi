@@ -27,8 +27,10 @@ cdef class FactorizationControls:
 
     cdef glpk.BasFacCP _bfcp
 
-    def __cinit__(self, problem):
-        glpk.get_bfcp(problem, &self._bfcp)
+    def __cinit__(self, Problem problem):
+        cdef glpk.ProbObj* _problem = <glpk.ProbObj*>PyCapsule_GetPointer(
+                                                problem._problem_ptr(), NULL)
+        glpk.get_bfcp(_problem, &self._bfcp)
 
     property type:
         """The basis factorization type, `str` pairs
