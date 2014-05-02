@@ -899,11 +899,11 @@ cdef class Problem:
                        &ae_max, &ae_ind, &re_max, &re_ind)
         if condition is 'equalities':
             if not dual:
-                ae_id = self.get_row_name_if_available(ae_ind)
-                re_id = self.get_row_name_if_available(re_ind)
+                ae_id = 'row', self.get_row_name_if_available(ae_ind)
+                re_id = 'row', self.get_row_name_if_available(re_ind)
             else:
-                ae_id = self.get_col_name_if_available(ae_ind)
-                re_id = self.get_col_name_if_available(re_ind)
+                ae_id = 'col', self.get_col_name_if_available(ae_ind)
+                re_id = 'col', self.get_col_name_if_available(re_ind)
         elif condition is 'bounds':
             ae_id = self.get_row_or_col_name_if_available(ae_ind)
             re_id = self.get_row_or_col_name_if_available(re_ind)
