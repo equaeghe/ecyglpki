@@ -26,8 +26,10 @@ import itertools
 
 
 from libc.limits cimport INT_MAX
-from libc.float cimport DBL_MAX
+cdef int int_MAX = int(INT_MAX)
 
+from libc.float cimport DBL_MAX
+cdef float double_MAX = float(DBL_MAX)
 
 # message levels
 cdef str2msglev = {
@@ -86,21 +88,21 @@ cdef vartype2str = {
 cdef _bounds(lower, upper):
     if isinstance(lower, numbers.Real):
         lb = lower
-        if lb <= -DBL_MAX:
-            lb = -DBL_MAX
+        if lb <= -double_MAX:
+            lb = -double_MAX
             lower = None
     elif lower is None:
-        lb = -DBL_MAX
+        lb = -double_MAX
     else:
         raise TypeError("Lower bound must be 'None' or 'Real', not " +
                         type(lower).__name__ + ".")
     if isinstance(upper, numbers.Real):
         ub = upper
-        if ub >= +DBL_MAX:
-            ub = +DBL_MAX
+        if ub >= +double_MAX:
+            ub = +double_MAX
             upper = None
     elif upper is None:
-        ub = +DBL_MAX
+        ub = +double_MAX
     else:
         raise TypeError("Upper bound must be 'None' or 'Real', not " +
                         type(lower).__name__ + ".")
@@ -729,7 +731,8 @@ cdef class Problem:
     def simplex(self, SimplexControls controls):
         """Solve LP problem with the simplex method"""
         if ((controls.meth is not 'dual') and
-            ((controls.obj_ll > -DBL_MAX) or (controls.obj_ul < +DBL_MAX))):
+            ((controls.obj_ll > -double_MAX) or
+             (controls.obj_ul < +double_MAX))):
                 raise ValueError("Objective function limits only with dual " +
                                  "simplex.")
         cdef int retcode = glpk.simplex(self._problem, &controls._smcp)
