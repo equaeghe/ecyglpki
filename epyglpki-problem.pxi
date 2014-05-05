@@ -248,10 +248,13 @@ cdef class Problem:
     ### Object definition, creation, setup, and cleanup ###
 
     cdef glpk.ProbObj* _problem
+    cdef public bint prefer_names
+    """Switch to have methods return row and column names, if available"""
 
     def __cinit__(self):
         self._problem = glpk.create_prob()
         glpk.create_index(self._problem)
+        self.prefer_names = False
 
     def _problem_ptr(self):
         """Encapsulate the pointer to the problem object
@@ -511,16 +514,22 @@ cdef class Problem:
         return chars2name(glpk.get_row_name(self._problem, row))
 
     def get_row_name_if_available(self, int row):
-        name = self.get_row_name(row)
-        return row if name is '' else name
+        if self.prefer_names:
+            name = self.get_row_name(row)
+            return row if name is '' else name
+        else:
+            return row
 
     def get_col_name(self, int col):
         """Retrieve column name"""
         return chars2name(glpk.get_col_name(self._problem, col))
 
     def get_col_name_if_available(self, int col):
-        name = self.get_col_name(col)
-        return col if name is '' else name
+        if self.prefer_names:
+            name = self.get_col_name(col)
+            return col if name is '' else name
+        else:
+            return col
 
     def get_row_or_col_name(self, int ind):  # _get_row/col_name variant
         """Retrieve row or column name"""
@@ -531,8 +540,15 @@ cdef class Problem:
             return 'row', self.get_row_name(ind)
 
     def get_row_or_col_name_if_available(self, int ind):
-        row_or_col, name = self.get_row_or_col_name(ind)
-        return row_or_col, ind if name is '' else name
+        if self.prefer_names:
+            row_or_col, name = self.get_row_or_col_name(ind)
+            return row_or_col, ind if name is '' else row_or_col, name
+        else:
+            m = self.get_num_rows()
+            if ind > m:  # column
+                return 'col', ind - m
+            else:  # row
+                return 'row', ind
 
     def get_row_type(self, row):
         """Retrieve row type"""
@@ -649,25 +665,19 @@ cdef class Problem:
                             "(str 'str'), not '" + type(col).__name__ +
                             "'.")
 
-    def find_row_or_col(self, str row_or_col, str name):  # _find_row/col variant
-        """Find alternate index by its name"""
-        if row_or_col is 'row':
-            return self.find_row(name)
-        elif row_or_col is 'col':
-            return self.get_num_rows() + self.find_col(name)
-        else:
-            raise ValueError("'row_or_col' should be a 'row' or 'col', not '" +
-                             str(name) + "'.")
-
     def find_row_or_col_as_needed(self, ind):
         if isinstance(ind, int):
             return ind
-        elif isinstance(ind, tuple) and (len(ind) is 2):
-            return self.find_row_or_col(ind[0], ind[1])
-        else:
-            raise TypeError("'ind' must be a number ('int') or a " +
-                            "('row'/'col', name)-pair, not '" +
+        elif not isinstance(ind, tuple) or (len(ind) is not 2):
+            raise TypeError("'ind' must be a number ('int') or a pair, not '" +
                             type(ind).__name__ + "'.")
+        elif ind[0] is 'row':
+            return self.find_row_as_needed(ind[1])
+        elif ind[0] is 'col':
+            return self.get_num_rows() + self.find_col_as_needed(ind[1])
+        else:
+            raise ValueError("'ind[0]' must be 'row' or 'col', not '" +
+                             str(ind[0]) + "'.")
 
     def set_rii(self, row, double sf):
         """Set (change) row scale factor"""
