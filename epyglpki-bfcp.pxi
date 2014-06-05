@@ -22,6 +22,18 @@
 ###############################################################################
 
 
+# basis factorization approach
+cdef strpair2bftype = {
+    ('LU', 'Forrest-Tomlin'): glpk.BF_LUF + glpk.BF_FT,
+    ('LU', 'Bartels-Golub'): glpk.BF_LUF + glpk.BF_BG,
+    ('LU', 'Givens'): glpk.BF_LUF + glpk.BF_GR,
+    ('BTLU', 'Bartels-Golub'): glpk.BF_BTF + glpk.BF_BG,
+    ('BTLU', 'Givens'): glpk.BF_BTF + glpk.BF_GR
+    }
+cdef bftype2strpair = {bftype: stringpair
+                       for stringpair, bftype in strpair2bftype.items()}
+
+
 cdef class FactorizationControls:
     """The basis factorization control parameter object"""
 
