@@ -21,6 +21,14 @@
 #
 ###############################################################################
 
+# basis factorization approach
+cdef str2bftype = {
+    'Forrest-Tomlin': glpk.BF_FT,
+    'Bartels-Golub': glpk.BF_BG,
+    'Givens': glpk.BF_GR
+    }
+cdef bftype2str = {bftype: string for string, bftype in str2bftype.items()}
+
 
 cdef class FactorizationControls:
     """The basis factorization control parameter object"""
@@ -33,20 +41,14 @@ cdef class FactorizationControls:
         glpk.get_bfcp(_problem, &self._bfcp)
 
     property type:
-        """The basis factorization type, `str` pairs
+        """The basis factorization type, a `str`
 
-        Possible first components:
+        Possible components
 
-        * `'LU'`: plain LU factorization
-        * `'BTLU'`: block-triangular LU factorization
-
-        Possible second components
-
-        * `'Forrest-Tomlin'`: `Forrest–Tomlin`_ update applied to U
-          (only with plain LU factorization)
-        * `'Bartels-Golub'`: `Bartels–Golub`_ update applied to Schur
+        * `'Forrest-Tomlin'`: LUF + `Forrest–Tomlin`_ update applied to U
+        * `'Bartels-Golub'`: LUF + `Bartels–Golub`_ update applied to Schur
           complement
-        * `'Givens'`: Givens rotation update applied to Schur complement
+        * `'Givens'`: LUF + Givens rotation update applied to Schur complement
 
         .. _Forrest–Tomlin: http://dx.doi.org/10.1007/BF01584548
         .. _Bartels–Golub: http://dx.doi.org/10.1145/362946.362974
@@ -54,13 +56,13 @@ cdef class FactorizationControls:
         .. doctest:: FactorizationControls
 
             >>> r.type  # the GLPK default
-            ('LU', 'Forrest-Tomlin')
+            'Forrest-Tomlin'
 
         """
         def __get__(self):
-            return bftype2strpair[self._bfcp.type]
+            return bftype2str[self._bfcp.type]
         def __set__(self, value):
-            self._bfcp.type = strpair2bftype[value]
+            self._bfcp.type = str2bftype[value]
 
     property piv_tol:
         """Markowitz threshold pivoting tolerance, a |Real| number

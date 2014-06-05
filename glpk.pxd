@@ -75,8 +75,6 @@ cdef extern from "glpk.h":
     enum: UNBND "GLP_UNBND"    #  solution is unbounded
 
     #  factorization type (argument name is 'type'):
-    enum: BF_LUF "GLP_BF_LUF"  #  plain LU-factorization
-    enum: BF_BTF "GLP_BF_BTF"  #  block triangular LU factorization
     enum: BF_FT "GLP_BF_FT"    #  Forrest-Tomlin (LUF only)
     enum: BF_BG "GLP_BF_BG"    #  Schur compl. + Bartels-Golub
     enum: BF_GR "GLP_BF_GR"    #  Schur compl. + Givens rotation
@@ -497,14 +495,6 @@ cdef extern from "glpk.h":
 
     #  determine variable causing unboundedness
     int get_unbnd_ray "glp_get_unbnd_ray" (ProbObj* problem)
-
-# Undocumented
-#
-#    # get simplex solver iteration count
-#    int get_it_cnt "glp_get_it_cnt" (ProbObj* problem)
-#
-#    # set simplex solver iteration count
-#    void set_it_cnt "glp_set_it_cnt" (ProbObj* problem, int it_cnt)
 
     #  solve LP problem with the interior-point method; returns retcode
     int interior "glp_interior" (ProbObj* problem, const IPointCP* cp)
