@@ -872,7 +872,7 @@ cdef class Problem:
         """Solve MIP problem with the branch-and-bound method"""
         cdef int retcode = glpk.intopt(self._problem, &controls._iocp)
         if retcode is 0:
-            return self.status()
+            return self.mip_status()
         else:
             raise ioretcode2error[retcode]
 
@@ -1307,7 +1307,7 @@ cdef class Problem:
         """Solve CNF-SAT problem with MiniSat solver"""
         cdef int retcode = glpk.minisat1(self._problem)
         if retcode is 0:
-            return self.status()
+            return self.mip_status()
         else:
             raise ioretcode2error[retcode]
 
@@ -1315,6 +1315,6 @@ cdef class Problem:
         """Solve integer feasibility problem"""
         cdef int retcode = glpk.intfeas1(self._problem, use_bound, obj_bound)
         if retcode is 0:
-            return self.status()
+            return self.mip_status()
         else:
             raise ioretcode2error[retcode]
