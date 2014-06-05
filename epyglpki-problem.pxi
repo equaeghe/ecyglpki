@@ -29,7 +29,7 @@ from libc.limits cimport INT_MAX
 cdef int int_MAX = int(INT_MAX)
 
 from libc.float cimport DBL_MAX
-cdef float double_MAX = float(DBL_MAX)
+cdef double double_MAX = DBL_MAX
 
 # message levels
 cdef str2msglev = {
@@ -130,7 +130,7 @@ cdef compatible_status = {
     'free': frozenset('free'),
     'dominating': frozenset('lower'),
     'dominated': frozenset('upper'),
-    'bounded': frozenset('lower', 'upper'),
+    'bounded': frozenset(['lower', 'upper']),
     'fixed': frozenset('fixed'),
     }
 
@@ -282,11 +282,11 @@ cdef class Problem:
 
     def set_obj_dir(self, str direction):
         """Set (change) optimization direction flag"""
-        glpk.set_obj_dir(self._problem, str2optdir(direction))
+        glpk.set_obj_dir(self._problem, str2optdir[direction])
 
     def add_rows(self, int number):
         """Add new rows to problem object"""
-        glpk.add_rows(self._problem, number)
+        return glpk.add_rows(self._problem, number)
 
     def add_named_rows(self, *names):  # variant of add_rows
         """Add new rows to problem object
@@ -303,7 +303,7 @@ cdef class Problem:
 
     def add_cols(self, int number):
         """Add new columns to problem object"""
-        glpk.add_cols(self._problem, number)
+        return glpk.add_cols(self._problem, number)
 
     def add_named_cols(self, *names):  # variant of add_cols
         """Add new columns to problem object
@@ -759,7 +759,7 @@ cdef class Problem:
             raise ValueError("Only primal simplex with exact arithmetic.")
         cdef int retcode = glpk.exact(self._problem, &controls._smcp)
         if retcode is 0:
-            return self.status()
+            return self.get_status()
         else:
             raise smretcode2error[retcode]
 
