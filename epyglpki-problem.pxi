@@ -1,4 +1,4 @@
-# epyglpki-solvers.pxi: Cython/Python interface for GLPK problems
+# epyglpki-problem.pxi: Cython interface for GLPK problems
 
 ###############################################################################
 #

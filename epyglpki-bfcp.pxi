@@ -1,4 +1,4 @@
-# epyglpki-solvers.pxi: Cython/Python interface for GLPK basis factorization controls
+# epyglpki-bfcp.pxi: Cython interface for GLPK basis factorization controls
 
 ###############################################################################
 #

@@ -1,4 +1,4 @@
-# epyglpki-solvers.pxi: Cython/Python interface for GLPK simplex solver controls
+# epyglpki-smcp.pxi: Cython interface for GLPK simplex solver controls
 
 ###############################################################################
 #
