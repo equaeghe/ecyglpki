@@ -1,4 +1,4 @@
-# epyglpki-solvers.pxi: Cython/Python interface for GLPK interior point solver controls
+# epyglpki-iptcp.pxi: Cython interface for GLPK interior point solver controls
 
 ###############################################################################
 #
