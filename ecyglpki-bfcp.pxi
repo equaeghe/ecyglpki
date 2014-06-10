@@ -1,8 +1,8 @@
-# epyglpki-bfcp.pxi: Cython interface for GLPK basis factorization controls
+# ecyglpki-bfcp.pxi: Cython interface for GLPK basis factorization controls
 
 ###############################################################################
 #
-#  This code is part of epyglpki (a Cython/Python GLPK interface).
+#  This code is part of ecyglpki (a Cython GLPK interface).
 #
 #  Copyright (C) 2014 Erik Quaeghebeur. All rights reserved.
 #
@@ -35,7 +35,14 @@ cdef bftype2strpair = {bftype: stringpair
 
 
 cdef class FactorizationControls:
-    """The basis factorization control parameter object"""
+    """The basis factorization control parameter object
+
+    .. doctest:: FactorizationControls
+
+        >>> p = Problem()
+        >>> r = FactorizationControls(p)
+
+    """
 
     cdef glpk.BasFacCP _bfcp
 

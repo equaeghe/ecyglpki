@@ -1,9 +1,4 @@
-.. epyglpki documentation master file, created by
-   sphinx-quickstart on Thu Feb 13 15:59:22 2014.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to epyglpki's documentation!
+Welcome to ecyglpki's documentation!
 ====================================
 
 :Release: |release|
@@ -15,10 +10,11 @@ Contents:
   :maxdepth: 2
 
   problem
-  components
-  simplex
-  ipoint
-  intopt
+  smcp
+  bfcp
+  iptcp
+  iocp
+
 
 Indices and tables
 ==================

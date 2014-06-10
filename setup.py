@@ -1,8 +1,8 @@
-# setup.py: setup script for epyglpki
+# setup.py: setup script for ecyglpki
 
 ###############################################################################
 #
-#  This code is part of epyglpki (a Cython/Python GLPK interface).
+#  This code is part of ecyglpki (a Cython GLPK interface).
 #
 #  Copyright (C) 2014 Erik Quaeghebeur. All rights reserved.
 #
@@ -37,12 +37,12 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Mathematics"
     ]
 
-epyglpki_ext = Extension('epyglpki', ['epyglpki.pyx'], libraries=['glpk'])
+epyglpki_ext = Extension('ecyglpki', ['ecyglpki.pyx'], libraries=['glpk'])
 epyglpki_ext.cython_directives = {'embedsignature': True}
 
 setup(
-    name = 'epyglpki',
-    url = 'https://github.com/equaeghe/epyglpki',
+    name = 'ecyglpki',
+    url = 'https://github.com/equaeghe/ecyglpki',
     author = 'Erik Quaeghebeur',
     author_email = 'epyglpki@equaeghe.nospammail.net',
     license = 'GPL',

@@ -1,8 +1,8 @@
-# epyglpki-iocp.pxi: Cython interface for GLPK integer optimization solver controls
+# ecyglpki-iocp.pxi: Cython interface for GLPK integer optimization solver controls
 
 ###############################################################################
 #
-#  This code is part of epyglpki (a Cython/Python GLPK interface).
+#  This code is part of ecyglpki (a Cython GLPK interface).
 #
 #  Copyright (C) 2014 Erik Quaeghebeur. All rights reserved.
 #

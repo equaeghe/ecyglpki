@@ -11,4 +11,4 @@ To install:
 
 To use:
 -------
-Just use `epyglpki` as you would any Python module
+Just use `ecyglpki` as you would any Python module
