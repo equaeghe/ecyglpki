@@ -51,8 +51,6 @@ cdef class Tree:
     def ios_get_prob(self):
         """Access the problem object"""
         return glpk.ios_get_prob(self._tree)
-            # TODO: move problem.prefer_names to Problem methods
-            # to make Problem self-contained
     ProbObj* ios_get_prob "glp_ios_get_prob" (Tree* tree)
 
     #  determine size of the branch-and-bound tree

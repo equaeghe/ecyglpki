@@ -248,13 +248,10 @@ cdef class Problem:
     ### Object definition, creation, setup, and cleanup ###
 
     cdef glpk.ProbObj* _problem
-    cdef public bint prefer_names
-    """Switch to have methods return row and column names, if available"""
 
     def __cinit__(self):
         self._problem = glpk.create_prob()
         glpk.create_index(self._problem)
-        self.prefer_names = False
 
     def _problem_ptr(self):
         """Encapsulate the pointer to the problem object
@@ -513,8 +510,8 @@ cdef class Problem:
         """Retrieve row name"""
         return chars2name(glpk.get_row_name(self._problem, row))
 
-    def get_row_name_if_available(self, int row):
-        if self.prefer_names:
+    def get_row_name_if(self, int row, names_preferred=False):
+        if names_preferred:
             name = self.get_row_name(row)
             return row if name is '' else name
         else:
@@ -524,8 +521,8 @@ cdef class Problem:
         """Retrieve column name"""
         return chars2name(glpk.get_col_name(self._problem, col))
 
-    def get_col_name_if_available(self, int col):
-        if self.prefer_names:
+    def get_col_name_if(self, int col, names_preferred=False):
+        if names_preferred:
             name = self.get_col_name(col)
             return col if name is '' else name
         else:
@@ -539,8 +536,8 @@ cdef class Problem:
         else:  # row
             return 'row', self.get_row_name(ind)
 
-    def get_row_or_col_name_if_available(self, int ind):
-        if self.prefer_names:
+    def get_row_or_col_name_if(self, int ind, names_preferred=False):
+        if names_preferred:
             row_or_col, name = self.get_row_or_col_name(ind)
             return row_or_col, ind if name is '' else row_or_col, name
         else:
@@ -597,7 +594,7 @@ cdef class Problem:
         """Retrieve number of constraint coefficients"""
         return glpk.get_num_nz(self._problem)
 
-    def get_mat_row(self, row):
+    def get_mat_row(self, row, names_preferred=False):
         """Retrieve row of the constraint matrix"""
         row = self.find_row_as_needed(row)
         cdef int n = self.get_num_cols()
@@ -606,14 +603,14 @@ cdef class Problem:
         cdef int k
         try:
             k = glpk.get_mat_row(self._problem, row, cols, vals)
-            coeffs = {self.get_col_name_if_available(cols[i]): vals[i]
+            coeffs = {self.get_col_name_if(cols[i], names_preferred): vals[i]
                       for i in range(1, 1+k)}
         finally:
             glpk.free(cols)
             glpk.free(vals)
         return coeffs
 
-    def get_mat_col(self, col):
+    def get_mat_col(self, col, names_preferred=False):
         """Retrieve column of the constraint matrix"""
         col = self.find_col_as_needed(col)
         cdef int m = self.get_num_rows()
@@ -622,7 +619,7 @@ cdef class Problem:
         cdef int k
         try:
             k = glpk.get_mat_col(self._problem, col, rows, vals)
-            coeffs = {self.get_row_name_if_available(rows[i]): vals[i]
+            coeffs = {self.get_row_name_if(rows[i], names_preferred): vals[i]
                       for i in range(1, 1+k)}
         finally:
             glpk.free(rows)
@@ -809,10 +806,10 @@ cdef class Problem:
         col = self.find_col_as_needed(col)
         return glpk.get_col_dual(self._problem, col)
 
-    def get_unbnd_ray(self):
+    def get_unbnd_ray(self, names_preferred=False):
         """Determine variable causing unboundedness"""
-        return self.get_row_or_col_name_if_available(
-                                            glpk.get_unbnd_ray(self._problem))
+        return self.get_row_or_col_name_if(glpk.get_unbnd_ray(self._problem),
+                                           names_preferred)
 
     def interior(self, IPointControls controls):
         """Solve LP problem with the interior-point method"""
@@ -894,7 +891,8 @@ cdef class Problem:
         col = self.find_col_as_needed(col)
         return glpk.mip_col_val(self._problem, col)
 
-    def check_kkt(self, str solver, str condition, bint dual=False):
+    def check_kkt(self, str solver, str condition, bint dual=False,
+                  names_preferred=False):
         """Check feasibility/optimality conditions"""
         if dual and (solver is 'intopt'):
             raise ValueError("Dual conditions cannot be checked for the " +
@@ -909,14 +907,14 @@ cdef class Problem:
                        &ae_max, &ae_ind, &re_max, &re_ind)
         if condition is 'equalities':
             if not dual:
-                ae_id = 'row', self.get_row_name_if_available(ae_ind)
-                re_id = 'row', self.get_row_name_if_available(re_ind)
+                ae_id = 'row', self.get_row_name_if(ae_ind, names_preferred)
+                re_id = 'row', self.get_row_name_if(re_ind, names_preferred)
             else:
-                ae_id = 'col', self.get_col_name_if_available(ae_ind)
-                re_id = 'col', self.get_col_name_if_available(re_ind)
+                ae_id = 'col', self.get_col_name_if(ae_ind, names_preferred)
+                re_id = 'col', self.get_col_name_if(re_ind, names_preferred)
         elif condition is 'bounds':
-            ae_id = self.get_row_or_col_name_if_available(ae_ind)
-            re_id = self.get_row_or_col_name_if_available(re_ind)
+            ae_id = self.get_row_or_col_name_if(ae_ind, names_preferred)
+            re_id = self.get_row_or_col_name_if(re_ind, names_preferred)
         else:
             raise ValueError("Condition is either 'equalities' or 'bounds'.")
         return {'abs': (ae_max, ae_id), 'rel': (re_max, re_id)}
@@ -1015,10 +1013,10 @@ cdef class Problem:
         """Change LP basis factorization control parameters"""
         glpk.set_bfcp(self._problem, &controls._bfcp)
 
-    def get_bhead(self, int k):
+    def get_bhead(self, int k, names_preferred=False):
         """Retrieve LP basis header information"""
-        return self.get_row_or_col_name_if_available(
-                                            glpk.get_bhead(self._problem, k))
+        return self.get_row_or_col_name_if(glpk.get_bhead(self._problem, k),
+                                           names_preferred)
 
     def get_row_bind(self, row):
         """Retrieve row index in the basis header"""
@@ -1068,7 +1066,7 @@ cdef class Problem:
         if retcode is not 0:
             raise smretcode2error[retcode]
 
-    def eval_tab_row(self, ind):
+    def eval_tab_row(self, ind, names_preferred=False):
         """Compute row of the simplex tableau"""
         ind = self.find_row_or_col_as_needed(ind)
         cdef int n = self.get_num_cols()
@@ -1077,13 +1075,13 @@ cdef class Problem:
         cdef int k
         try:
             k = glpk.eval_tab_row(self._problem, ind, inds, vals)
-            return {self.get_row_or_col_name_if_available(inds[i]): vals[i]
-                    for i in range(1, 1+k)}
+            return {self.get_row_or_col_name_if(inds[i], names_preferred):
+                        vals[i] for i in range(1, 1+k)}
         finally:
             glpk.free(inds)
             glpk.free(vals)
 
-    def eval_tab_col(self, ind):
+    def eval_tab_col(self, ind, names_preferred=False):
         """Compute column of the simplex tableau"""
         ind = self.find_row_or_col_as_needed(ind)
         cdef int m = self.get_num_rows()
@@ -1092,13 +1090,13 @@ cdef class Problem:
         cdef int k
         try:
             k = glpk.eval_tab_col(self._problem, ind, inds, vals)
-            return {self.get_row_or_col_name_if_available(inds[i]): vals[i]
-                    for i in range(1, 1+k)}
+            return {self.get_row_or_col_name_if(inds[i], names_preferred):
+                        vals[i] for i in range(1, 1+k)}
         finally:
             glpk.free(inds)
             glpk.free(vals)
 
-    def transform_row(self, coeffs):
+    def transform_row(self, coeffs, names_preferred=False):
         """Transform explicitly specified row"""
         _coeffscheck(coeffs)
         cdef int n = self.get_num_cols()
@@ -1110,13 +1108,13 @@ cdef class Problem:
                 inds[i] = self.find_col_as_needed(item[0])
                 vals[i] = item[1]
             k = glpk.transform_row(self._problem, len(coeffs), inds, vals)
-            return {self.get_row_or_col_name_if_available(inds[i]): vals[i]
-                    for i in range(1, 1+k)}
+            return {self.get_row_or_col_name_if(inds[i], names_preferred):
+                        vals[i] for i in range(1, 1+k)}
         finally:
             glpk.free(inds)
             glpk.free(vals)
 
-    def transform_col(self, coeffs):
+    def transform_col(self, coeffs, names_preferred=False):
         """Transform explicitly specified column"""
         _coeffscheck(coeffs)
         cdef int m = self.get_num_cols()
@@ -1128,13 +1126,14 @@ cdef class Problem:
                 inds[i] = self.find_row_as_needed(item[0])
                 vals[i] = item[1]
             k = glpk.transform_col(self._problem, len(coeffs), inds, vals)
-            return {self.get_row_or_col_name_if_available(inds[i]): vals[i]
-                    for i in range(1, 1+k)}
+            return {self.get_row_or_col_name_if(inds[i], names_preferred):
+                        vals[i] for i in range(1, 1+k)}
         finally:
             glpk.free(inds)
             glpk.free(vals)
 
-    def prim_rtest(self, coeffs, int direction, double eps):
+    def prim_rtest(self, coeffs, int direction, double eps,
+                   names_preferred=False):
         """Perform primal ratio test"""
         _coeffscheck(coeffs)
         if direction not in {-1, +1}:
@@ -1150,12 +1149,12 @@ cdef class Problem:
                 vals[i] = item[1]
             j = glpk.prim_rtest(self._problem, len(coeffs), inds, vals,
                                 direction, eps)
-            return self.get_row_or_col_name_if_available(inds[j])
+            return self.get_row_or_col_name_if(inds[j], names_preferred)
         finally:
             glpk.free(inds)
             glpk.free(vals)
 
-    def dual_rtest(self, coeffs, int direction, double eps):
+    def dual_rtest(self, coeffs, int direction, double eps, names_preferred=False):
         """Perform dual ratio test"""
         _coeffscheck(coeffs)
         if direction not in {-1, +1}:
@@ -1171,12 +1170,12 @@ cdef class Problem:
                 vals[i] = item[1]
             j = glpk.dual_rtest(self._problem, len(coeffs), inds, vals,
                                 direction, eps)
-            return self.get_row_or_col_name_if_available(inds[j])
+            return self.get_row_or_col_name_if(inds[j], names_preferred)
         finally:
             glpk.free(inds)
             glpk.free(vals)
 
-    def analyze_bound(self, ind):
+    def analyze_bound(self, ind, names_preferred=False):
         """Analyze active bound of non-basic variable"""
         ind = self.find_row_or_col_as_needed(ind)
         cdef double min_bnd
@@ -1186,16 +1185,18 @@ cdef class Problem:
         glpk.analyze_bound(self._problem, ind,
                            &min_bnd, &min_bnd_k, &max_bnd, &max_bnd_k)
         if min_bnd > -double_MAX:
-            minimal = min_bnd, self.get_row_or_col_name_if_available(min_bnd_k)
+            minimal = min_bnd, self.get_row_or_col_name_if(min_bnd_k,
+                                                           names_preferred)
         else:
             minimal = (-float('inf'), None)
         if max_bnd < +double_MAX:
-            maximal = max_bnd, self.get_row_or_col_name_if_available(max_bnd_k)
+            maximal = max_bnd, self.get_row_or_col_name_if(max_bnd_k,
+                                                           names_preferred)
         else:
             maximal = (+float('inf'), None)
         return {'minimal': minimal, 'maximal': maximal}
 
-    def analyze_coef(self, ind):
+    def analyze_coef(self, ind, names_preferred=False):
         """Analyze objective coefficient at basic variable"""
         ind = self.find_row_or_col_as_needed(ind)
         cdef double min_coef
@@ -1217,13 +1218,15 @@ cdef class Problem:
             maxval = +float('inf')
         if min_coef > -double_MAX:
             minimal = (min_coef,
-                       self.get_row_or_col_name_if_available(min_coef_k),
+                       self.get_row_or_col_name_if(min_coef_k,
+                                                   names_preferred),
                        minval)
         else:
             minimal = -float('inf'), None, minval
         if max_coef < +double_MAX:
             maximal = (max_coef,
-                       self.get_row_or_col_name_if_available(max_coef_k),
+                       self.get_row_or_col_name_if(max_coef_k,
+                                                   names_preferred),
                        maxval)
         else:
             maximal = +float('inf'), None, maxval
