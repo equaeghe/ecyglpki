@@ -559,13 +559,13 @@ cdef class Problem:
         """Retrieve row lower bound"""
         row = self.find_row_as_needed(row)
         cdef double lb = glpk.get_row_lb(self._problem, row)
-        return -float('inf') if lb == -DBL_MAX else lb
+        return -float('inf') if lb == -double_MAX else lb
 
     def get_row_ub(self, row):
         """Retrieve row upper bound"""
         row = self.find_row_as_needed(row)
         cdef double ub = glpk.get_row_ub(self._problem, row)
-        return -float('inf') if ub == -DBL_MAX else ub
+        return -float('inf') if ub == -double_MAX else ub
 
     def get_col_type(self, col):
         """Retrieve column type"""
@@ -576,13 +576,13 @@ cdef class Problem:
         """Retrieve column lower bound"""
         col = self.find_col_as_needed(col)
         cdef double lb = glpk.get_col_lb(self._problem, col)
-        return -float('inf') if lb == -DBL_MAX else lb
+        return -float('inf') if lb == -double_MAX else lb
 
     def get_col_ub(self, col):
         """Retrieve column upper bound"""
         col = self.find_col_as_needed(col)
         cdef double ub = glpk.get_col_ub(self._problem, col)
-        return -float('inf') if ub == -DBL_MAX else ub
+        return -float('inf') if ub == -double_MAX else ub
 
     def get_obj_coef(self, col):
         """Retrieve obj. coefficient"""
@@ -1185,11 +1185,11 @@ cdef class Problem:
         cdef int max_bnd_k
         glpk.analyze_bound(self._problem, ind,
                            &min_bnd, &min_bnd_k, &max_bnd, &max_bnd_k)
-        if min_bnd > -DBL_MAX:
+        if min_bnd > -double_MAX:
             minimal = min_bnd, self.get_row_or_col_name_if_available(min_bnd_k)
         else:
             minimal = (-float('inf'), None)
-        if max_bnd < +DBL_MAX:
+        if max_bnd < +double_MAX:
             maximal = max_bnd, self.get_row_or_col_name_if_available(max_bnd_k)
         else:
             maximal = (+float('inf'), None)
@@ -1207,21 +1207,21 @@ cdef class Problem:
         glpk.analyze_coef(self._problem, ind,
                           &min_coef, &min_coef_k, &val_min_coef,
                           &max_coef, &max_coef_k, &val_max_coef)
-        if val_min_coef <= -DBL_MAX:
+        if val_min_coef <= -double_MAX:
             minval = -float('inf')
-        elif val_min_coef >= DBL_MAX:
+        elif val_min_coef >= double_MAX:
             minval = +float('inf')
-        if val_max_coef <= -DBL_MAX:
+        if val_max_coef <= -double_MAX:
             maxval = -float('inf')
-        elif val_max_coef >= DBL_MAX:
+        elif val_max_coef >= double_MAX:
             maxval = +float('inf')
-        if min_coef > -DBL_MAX:
+        if min_coef > -double_MAX:
             minimal = (min_coef,
                        self.get_row_or_col_name_if_available(min_coef_k),
                        minval)
         else:
             minimal = -float('inf'), None, minval
-        if max_coef < +DBL_MAX:
+        if max_coef < +double_MAX:
             maximal = (max_coef,
                        self.get_row_or_col_name_if_available(max_coef_k),
                        maxval)
