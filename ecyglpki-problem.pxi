@@ -1,8 +1,8 @@
-# epyglpki-problem.pxi: Cython interface for GLPK problems
+# ecyglpki-problem.pxi: Cython interface for GLPK problems
 
 ###############################################################################
 #
-#  This code is part of epyglpki (a Cython/Python GLPK interface).
+#  This code is part of ecyglpki (a Cython GLPK interface).
 #
 #  Copyright (C) 2014 Erik Quaeghebeur. All rights reserved.
 #
@@ -41,16 +41,16 @@ cdef str2msglev = {
 cdef msglev2str = {msg_lev: string for string, msg_lev in str2msglev.items()}
 
 
-include 'epyglpki-smcp.pxi'
+include 'ecyglpki-smcp.pxi'
 
 
-include 'epyglpki-bfcp.pxi'
+include 'ecyglpki-bfcp.pxi'
 
 
-include 'epyglpki-iptcp.pxi'
+include 'ecyglpki-iptcp.pxi'
 
 
-include 'epyglpki-iocp.pxi'
+include 'ecyglpki-iocp.pxi'
 
 
 # optimization directions

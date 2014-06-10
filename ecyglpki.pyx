@@ -1,8 +1,8 @@
-# epyglpki.pyx: Cython/Python interface for GLPK
+# ecyglpki.pyx: Cython interface for GLPK
 
 ###############################################################################
 #
-#  This code is part of epyglpki (a Cython/Python GLPK interface).
+#  This code is part of epyglpki (a Cython GLPK interface).
 #
 #  Copyright (C) 2014 Erik Quaeghebeur. All rights reserved.
 #
@@ -53,19 +53,4 @@ cdef str chars2name(const char* chars):
     return '' if chars is NULL else chars.decode()
 
 
-include 'epyglpki-problem.pxi'
-
-
-include 'epyglpki-program.pxi'
-
-
-include 'epyglpki-varstraints.pxi'
-
-
-include 'epyglpki-varstraint.pxi'
-
-
-include 'epyglpki-objective.pxi'
-
-
-include 'epyglpki-solvers.pxi'
+include 'ecyglpki-problem.pxi'

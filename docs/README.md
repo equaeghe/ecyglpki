@@ -1,7 +1,7 @@
-epyglpki docs
+ecyglpki docs
 =============
 
-Cython/Python GLPK interface Documentation
+Cython GLPK interface Documentation
 
 To run doctests:
 ----------------
