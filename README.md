@@ -1,10 +1,10 @@
-epyglpki
+ecyglpki
 ========
 
-Cython/Python GLPK interface
+Cython GLPK interface
 
 Development takes place in branches named
 
-    <GLPK version>-<Python version>-<Cython version>
+    <GLPK soname version>-<Python version>-<Cython version>
 
 Check them out.
