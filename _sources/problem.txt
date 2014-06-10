@@ -1,10 +1,10 @@
-.. module:: epyglpki
+.. module:: ecyglpki
 
 .. testsetup:: *
 
-    from epyglpki import MILProgram
+    from ecyglpki import Problem
 
 Problems
 ========
 
-.. autoclass:: MILProgram
+.. autoclass:: Problem

@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Simplex Controls &mdash; ecyglpki  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ecyglpki  documentation" href="index.html" />
+    <link rel="next" title="Basis Factorization Controls" href="bfcp.html" />
+    <link rel="prev" title="Problems" href="problem.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="bfcp.html" title="Basis Factorization Controls"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="problem.html" title="Problems"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <blockquote>
+<div></div></blockquote>
+<span class="target" id="module-ecyglpki"></span><div class="section" id="simplex-controls">
+<h1>Simplex Controls<a class="headerlink" href="#simplex-controls" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="ecyglpki.SimplexControls">
+<em class="property">class </em><tt class="descclassname">ecyglpki.</tt><tt class="descname">SimplexControls</tt><a class="headerlink" href="#ecyglpki.SimplexControls" title="Permalink to this definition">¶</a></dt>
+<dd><p>The simplex solver control parameter object</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">SimplexControls</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="ecyglpki.SimplexControls.it_lim">
+<tt class="descname">it_lim</tt><a class="headerlink" href="#ecyglpki.SimplexControls.it_lim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iteration limit, an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.SimplexControls.meth">
+<tt class="descname">meth</tt><a class="headerlink" href="#ecyglpki.SimplexControls.meth" title="Permalink to this definition">¶</a></dt>
+<dd><p>The simplex method, a <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></p>
+<p>The possible values are</p>
+<ul class="simple">
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'primal'</span></tt>: two-phase primal simplex</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'dual'</span></tt>: two-phase dual simplex</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'dual_fail_primal'</span></tt>: two-phase dual simplex and, if it fails,
+switch to primal simplex</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">meth</span>  <span class="c"># the GLPK default</span>
+<span class="go">&#39;primal&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">meth</span> <span class="o">=</span> <span class="s">&#39;dual_fail_primal&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">meth</span>
+<span class="go">&#39;dual_fail_primal&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.SimplexControls.msg_lev">
+<tt class="descname">msg_lev</tt><a class="headerlink" href="#ecyglpki.SimplexControls.msg_lev" title="Permalink to this definition">¶</a></dt>
+<dd><p>The message level, a <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></p>
+<p>The possible values are</p>
+<ul class="simple">
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'no'</span></tt>: no output</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'warnerror'</span></tt>: warnings and errors only</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'normal'</span></tt>: normal output</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'full'</span></tt>: normal output and informational messages</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">msg_lev</span>  <span class="c"># the GLPK default</span>
+<span class="go">&#39;full&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">msg_lev</span> <span class="o">=</span> <span class="s">&#39;no&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">msg_lev</span>
+<span class="go">&#39;no&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.SimplexControls.obj_ll">
+<tt class="descname">obj_ll</tt><a class="headerlink" href="#ecyglpki.SimplexControls.obj_ll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lower limit of the objective function, a <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> number</p>
+<p>(Used only if <em>meth</em> is <tt class="xref py py-obj docutils literal"><span class="pre">'dual'</span></tt>.)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.SimplexControls.obj_ul">
+<tt class="descname">obj_ul</tt><a class="headerlink" href="#ecyglpki.SimplexControls.obj_ul" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upper limit of the objective function, a <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> number</p>
+<p>(Used only if <em>meth</em> is <tt class="xref py py-obj docutils literal"><span class="pre">'dual'</span></tt>.)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.SimplexControls.out_dly">
+<tt class="descname">out_dly</tt><a class="headerlink" href="#ecyglpki.SimplexControls.out_dly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output delay [ms] of solution process information, an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.SimplexControls.out_frq">
+<tt class="descname">out_frq</tt><a class="headerlink" href="#ecyglpki.SimplexControls.out_frq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output frequency [iterations] of informational messages, an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.SimplexControls.presolve">
+<tt class="descname">presolve</tt><a class="headerlink" href="#ecyglpki.SimplexControls.presolve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to use the LP presolver, a <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.SimplexControls.pricing">
+<tt class="descname">pricing</tt><a class="headerlink" href="#ecyglpki.SimplexControls.pricing" title="Permalink to this definition">¶</a></dt>
+<dd><p>The pricing technique, a <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></p>
+<p>The possible values are</p>
+<ul class="simple">
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'Dantzig'</span></tt>: standard ‘textbook’</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'steepest'</span></tt>: projected steepest edge</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">pricing</span>  <span class="c"># the GLPK default</span>
+<span class="go">&#39;steepest&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">pricing</span> <span class="o">=</span> <span class="s">&#39;Dantzig&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">pricing</span>
+<span class="go">&#39;Dantzig&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.SimplexControls.r_test">
+<tt class="descname">r_test</tt><a class="headerlink" href="#ecyglpki.SimplexControls.r_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>The ratio test technique, a <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></p>
+<p>The possible values are</p>
+<ul class="simple">
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'standard'</span></tt>: standard ‘textbook’</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'Harris'</span></tt>: Harris’s two-pass ratio test</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">r_test</span>  <span class="c"># the GLPK default</span>
+<span class="go">&#39;Harris&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">r_test</span> <span class="o">=</span> <span class="s">&#39;standard&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">r_test</span>
+<span class="go">&#39;standard&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.SimplexControls.tm_lim">
+<tt class="descname">tm_lim</tt><a class="headerlink" href="#ecyglpki.SimplexControls.tm_lim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time limit [ms], an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.SimplexControls.tol_bnd">
+<tt class="descname">tol_bnd</tt><a class="headerlink" href="#ecyglpki.SimplexControls.tol_bnd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tolerance to check if the solution is primal feasible, a <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> number</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.SimplexControls.tol_dj">
+<tt class="descname">tol_dj</tt><a class="headerlink" href="#ecyglpki.SimplexControls.tol_dj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tolerance to check if the solution is dual feasible, a <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> number</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.SimplexControls.tol_piv">
+<tt class="descname">tol_piv</tt><a class="headerlink" href="#ecyglpki.SimplexControls.tol_piv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tolerance to choose eligble pivotal elements, a <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> number</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="problem.html"
+                        title="previous chapter">Problems</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="bfcp.html"
+                        title="next chapter">Basis Factorization Controls</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/smcp.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="bfcp.html" title="Basis Factorization Controls"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="problem.html" title="Problems"
+             >previous</a> |</li>
+        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Erik Quaeghebeur.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

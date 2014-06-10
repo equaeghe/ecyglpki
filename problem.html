@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,14 +6,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Problems &mdash; epyglpki  documentation</title>
+    <title>Problems &mdash; ecyglpki  documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -26,9 +24,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="epyglpki  documentation" href="index.html" />
-    <link rel="next" title="Components" href="components.html" />
-    <link rel="prev" title="Welcome to epyglpki’s documentation!" href="index.html" /> 
+    <link rel="top" title="ecyglpki  documentation" href="index.html" />
+    <link rel="next" title="Simplex Controls" href="smcp.html" />
+    <link rel="prev" title="Welcome to ecyglpki’s documentation!" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -41,12 +39,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="components.html" title="Components"
+          <a href="smcp.html" title="Simplex Controls"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to epyglpki’s documentation!"
+          <a href="index.html" title="Welcome to ecyglpki’s documentation!"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">epyglpki  documentation</a> &raquo;</li> 
+        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -55,468 +53,873 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <span class="target" id="module-epyglpki"></span><div class="section" id="problems">
+  <blockquote>
+<div></div></blockquote>
+<span class="target" id="module-ecyglpki"></span><div class="section" id="problems">
 <h1>Problems<a class="headerlink" href="#problems" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="epyglpki.MILProgram">
-<em class="property">class </em><tt class="descclassname">epyglpki.</tt><tt class="descname">MILProgram</tt><a class="headerlink" href="#epyglpki.MILProgram" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main problem object</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
-<span class="go">&lt;epyglpki.MILProgram object at 0x...&gt;</span>
-</pre></div>
-</div>
+<dt id="ecyglpki.Problem">
+<em class="property">class </em><tt class="descclassname">ecyglpki.</tt><tt class="descname">Problem</tt><a class="headerlink" href="#ecyglpki.Problem" title="Permalink to this definition">¶</a></dt>
+<dd><p>A GLPK problem</p>
 <dl class="method">
-<dt id="epyglpki.MILProgram.add_constraint">
-<tt class="descname">add_constraint</tt><big>(</big><em>coeffs={}</em>, <em>lower_bound=False</em>, <em>upper_bound=False</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.add_constraint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add and obtain new constraint object</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>coeffs</strong> &#8211; set constraint coefficients;
-see <a class="reference internal" href="components.html#epyglpki.Constraint.coeffs" title="epyglpki.Constraint.coeffs"><tt class="xref py py-meth docutils literal"><span class="pre">Constraint.coeffs()</span></tt></a></li>
-<li><strong>lower_bound</strong> &#8211; set constraint lower bound;
-see <a class="reference internal" href="components.html#epyglpki.Constraint.bounds" title="epyglpki.Constraint.bounds"><tt class="xref py py-meth docutils literal"><span class="pre">Constraint.bounds()</span></tt></a>, parameter <cite>lower</cite></li>
-<li><strong>upper_bound</strong> &#8211; set constraint upper bound;
-see <a class="reference internal" href="components.html#epyglpki.Constraint.bounds" title="epyglpki.Constraint.bounds"><tt class="xref py py-meth docutils literal"><span class="pre">Constraint.bounds()</span></tt></a>, parameter <cite>upper</cite></li>
-<li><strong>name</strong> &#8211; set constraint name; see <a class="reference internal" href="components.html#epyglpki.Constraint.name" title="epyglpki.Constraint.name"><tt class="xref py py-meth docutils literal"><span class="pre">Constraint.name()</span></tt></a></li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">constraint object</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="components.html#epyglpki.Constraint" title="epyglpki.Constraint"><tt class="xref py py-class docutils literal"><span class="pre">Constraint</span></tt></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span>
-<span class="go">&lt;epyglpki.Constraint object at 0x...&gt;</span>
-</pre></div>
-</div>
+<dt id="ecyglpki.Problem.add_cols">
+<tt class="descname">add_cols</tt><big>(</big><em>int number</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.add_cols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new columns to problem object</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="epyglpki.MILProgram.add_variable">
-<tt class="descname">add_variable</tt><big>(</big><em>coeffs={}</em>, <em>lower_bound=False</em>, <em>upper_bound=False</em>, <em>kind='continuous'</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.add_variable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add and obtain new variable object</p>
+<dt id="ecyglpki.Problem.add_named_cols">
+<tt class="descname">add_named_cols</tt><big>(</big><em>*names</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.add_named_cols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new columns to problem object</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>coeffs</strong> &#8211; set variable coefficients; see <a class="reference internal" href="components.html#epyglpki.Variable.coeffs" title="epyglpki.Variable.coeffs"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.coeffs()</span></tt></a></li>
-<li><strong>lower_bound</strong> &#8211; set variable lower bound;
-see <a class="reference internal" href="components.html#epyglpki.Variable.bounds" title="epyglpki.Variable.bounds"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.bounds()</span></tt></a>, parameter <cite>lower</cite></li>
-<li><strong>upper_bound</strong> &#8211; set variable upper bound;
-see <a class="reference internal" href="components.html#epyglpki.Variable.bounds" title="epyglpki.Variable.bounds"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.bounds()</span></tt></a>, parameter <cite>upper</cite></li>
-<li><strong>kind</strong> &#8211; set variable kind; see <a class="reference internal" href="components.html#epyglpki.Variable.kind" title="epyglpki.Variable.kind"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.kind()</span></tt></a></li>
-<li><strong>name</strong> &#8211; set variable name; see <a class="reference internal" href="components.html#epyglpki.Variable.name" title="epyglpki.Variable.name"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.name()</span></tt></a></li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">variable object</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="components.html#epyglpki.Variable" title="epyglpki.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a></p>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> &#8211; the names (str strings) of the columns to add</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_variable</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>
-<span class="go">&lt;epyglpki.Variable object at 0x...&gt;</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="method">
-<dt id="epyglpki.MILProgram.coeffs">
-<tt class="descname">coeffs</tt><big>(</big><em>coeffs</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.coeffs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Change or retrieve coefficients (constraint matrix)</p>
+<dt id="ecyglpki.Problem.add_named_rows">
+<tt class="descname">add_named_rows</tt><big>(</big><em>*names</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.add_named_rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new rows to problem object</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>coeffs</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a> of length-2
-<a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Sequence</span></tt></a>, containing one
-<a class="reference internal" href="components.html#epyglpki.Variable" title="epyglpki.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a> and one <a class="reference internal" href="components.html#epyglpki.Constraint" title="epyglpki.Constraint"><tt class="xref py py-class docutils literal"><span class="pre">Constraint</span></tt></a>, to
-<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Real</span></tt></a>) &#8211; the mapping with coefficients to change
-(<cite>{}</cite> to set all coefficients to <cite>0</cite>)</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#TypeError" title="(in Python v3.3)"><strong>TypeError</strong></a> &#8211; if <cite>coeffs</cite> is not <a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a></li>
-<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#TypeError" title="(in Python v3.3)"><strong>TypeError</strong></a> &#8211; if a coefficient key component is not a pair of
-<a class="reference internal" href="components.html#epyglpki.Variable" title="epyglpki.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a> and <a class="reference internal" href="components.html#epyglpki.Constraint" title="epyglpki.Constraint"><tt class="xref py py-class docutils literal"><span class="pre">Constraint</span></tt></a></li>
-<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#TypeError" title="(in Python v3.3)"><strong>TypeError</strong></a> &#8211; if a coefficient value is not <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Real</span></tt></a></li>
-<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#ValueError" title="(in Python v3.3)"><strong>ValueError</strong></a> &#8211; if the coefficient key does not have two 
-components</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> &#8211; the names (str strings) of the rows to add</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_variable</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_variable</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">coeffs</span><span class="p">({(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span> <span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="mf">5.5</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span> <span class="mi">0</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">coeffs</span><span class="p">()[</span><span class="n">c</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span><span class="o">.</span><span class="n">coeffs</span><span class="p">()[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">coeffs</span><span class="p">()[</span><span class="n">d</span><span class="p">]</span> <span class="o">==</span> <span class="n">d</span><span class="o">.</span><span class="n">coeffs</span><span class="p">()[</span><span class="n">y</span><span class="p">]</span> <span class="o">==</span> <span class="mf">5.5</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">coeffs</span><span class="p">())</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">coeffs</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span>
-<span class="go">True</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="method">
-<dt id="epyglpki.MILProgram.constraints">
-<tt class="descname">constraints</tt><big>(</big><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.constraints" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of the problem&#8217;s constraints</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a list of the problem&#8217;s constraints</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#list" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt></a> of <a class="reference internal" href="components.html#epyglpki.Constraint" title="epyglpki.Constraint"><tt class="xref py py-class docutils literal"><span class="pre">Constraint</span></tt></a></td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">constraints</span><span class="p">()</span>
-<span class="go">[&lt;epyglpki.Constraint object at 0x...&gt;]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">constraints</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">c</span> <span class="ow">in</span> <span class="n">w</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">d</span> <span class="ow">in</span> <span class="n">w</span><span class="p">)</span>
-<span class="go">True</span>
-</pre></div>
-</div>
+<dt id="ecyglpki.Problem.add_rows">
+<tt class="descname">add_rows</tt><big>(</big><em>int number</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.add_rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new rows to problem object</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="epyglpki.MILProgram.intopt">
-<tt class="descname">intopt</tt><big>(</big><em>**controls</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.intopt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Obtain integer optimization solver object</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>controls</strong> &#8211; set solver control parameters;
-see <a class="reference internal" href="solvers.html#epyglpki.IntOptSolver.controls" title="epyglpki.IntOptSolver.controls"><tt class="xref py py-meth docutils literal"><span class="pre">IntOptSolver.controls()</span></tt></a>, parameter <cite>controls</cite></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">integer optimization solver object</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="solvers.html#epyglpki.IntOptSolver" title="epyglpki.IntOptSolver"><tt class="xref py py-class docutils literal"><span class="pre">IntOptSolver</span></tt></a></td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">intopt</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
-<span class="go">&lt;epyglpki.IntOptSolver object at 0x...&gt;</span>
-</pre></div>
-</div>
+<dt id="ecyglpki.Problem.adv_basis">
+<tt class="descname">adv_basis</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.adv_basis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct advanced initial LP basis</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="epyglpki.MILProgram.ipoint">
-<tt class="descname">ipoint</tt><big>(</big><em>**controls</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.ipoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Obtain interior point solver object</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>controls</strong> &#8211; set solver control parameters;
-see <a class="reference internal" href="solvers.html#epyglpki.IPointSolver.controls" title="epyglpki.IPointSolver.controls"><tt class="xref py py-meth docutils literal"><span class="pre">IPointSolver.controls()</span></tt></a>, parameter <cite>controls</cite></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">interior point solver object</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="solvers.html#epyglpki.IPointSolver" title="epyglpki.IPointSolver"><tt class="xref py py-class docutils literal"><span class="pre">IPointSolver</span></tt></a></td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">ipoint</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
-<span class="go">&lt;epyglpki.IPointSolver object at 0x...&gt;</span>
-</pre></div>
-</div>
+<dt id="ecyglpki.Problem.analyze_bound">
+<tt class="descname">analyze_bound</tt><big>(</big><em>ind</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.analyze_bound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analyze active bound of non-basic variable</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="epyglpki.MILProgram.name">
-<tt class="descname">name</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Change or retrieve problem name</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>name</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; the new problem name (omit for retrieval only)</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the problem name</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a></p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#TypeError" title="(in Python v3.3)"><strong>TypeError</strong></a> &#8211; if <cite>name</cite> is not a <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a></li>
-<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#ValueError" title="(in Python v3.3)"><strong>ValueError</strong></a> &#8211; if <cite>name</cite> exceeds 255 bytes encoded in UTF-8</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
-<span class="go">&#39;&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="s">&#39;Programme Linéaire&#39;</span><span class="p">)</span>
-<span class="go">&#39;Programme Linéaire&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
-<span class="go">&#39;Programme Linéaire&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
-<span class="go">&#39;&#39;</span>
-</pre></div>
-</div>
+<dt id="ecyglpki.Problem.analyze_coef">
+<tt class="descname">analyze_coef</tt><big>(</big><em>ind</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.analyze_coef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analyze objective coefficient at basic variable</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="epyglpki.MILProgram.objective">
-<tt class="descname">objective</tt><big>(</big><em>coeffs={}</em>, <em>constant=0</em>, <em>direction='minimize'</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.objective" title="Permalink to this definition">¶</a></dt>
-<dd><p>Obtain objective object</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>coeffs</strong> &#8211; set objective coefficients; see <a class="reference internal" href="components.html#epyglpki.Objective.coeffs" title="epyglpki.Objective.coeffs"><tt class="xref py py-meth docutils literal"><span class="pre">Objective.coeffs()</span></tt></a></li>
-<li><strong>constant</strong> &#8211; set objective constant; see <a class="reference internal" href="components.html#epyglpki.Objective.constant" title="epyglpki.Objective.constant"><tt class="xref py py-meth docutils literal"><span class="pre">Objective.constant()</span></tt></a></li>
-<li><strong>direction</strong> &#8211; set objective direction; see <a class="reference internal" href="components.html#epyglpki.Objective.direction" title="epyglpki.Objective.direction"><tt class="xref py py-meth docutils literal"><span class="pre">Objective.direction()</span></tt></a></li>
-<li><strong>name</strong> &#8211; set objective name; see <a class="reference internal" href="components.html#epyglpki.Objective.name" title="epyglpki.Objective.name"><tt class="xref py py-meth docutils literal"><span class="pre">Objective.name()</span></tt></a></li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">objective object</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="components.html#epyglpki.Objective" title="epyglpki.Objective"><tt class="xref py py-class docutils literal"><span class="pre">Objective</span></tt></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">o</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">objective</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">o</span>
-<span class="go">&lt;epyglpki.Objective object at 0x...&gt;</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="epyglpki.MILProgram.read">
-<tt class="descname">read</tt><big>(</big><em>type cls</em>, <em>fname</em>, <em>format='GLPK'</em>, <em>mpsfmt='free'</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.read" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a problem from a file (class method)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; the name of the file to read from</li>
-<li><strong>format</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; the format of the file read from; either <tt class="xref py py-data docutils literal"><span class="pre">'GLPK'</span></tt>,
-<tt class="xref py py-data docutils literal"><span class="pre">'LP'</span></tt>, <tt class="xref py py-data docutils literal"><span class="pre">'MPS'</span></tt>, or <tt class="xref py py-data docutils literal"><span class="pre">'CNFSAT'</span></tt></li>
-<li><strong>mpsfmt</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; MPS-subformat; either <tt class="xref py py-data docutils literal"><span class="pre">'free'</span></tt> or <tt class="xref py py-data docutils literal"><span class="pre">'fixed'</span></tt>
-(ignored when <cite>format</cite> is not <tt class="xref py py-data docutils literal"><span class="pre">'MPS'</span></tt>)</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#ValueError" title="(in Python v3.3)"><strong>ValueError</strong></a> &#8211; if <cite>format</cite> is not <tt class="xref py py-data docutils literal"><span class="pre">'GLPK'</span></tt>, <tt class="xref py py-data docutils literal"><span class="pre">'LP'</span></tt>,
-<tt class="xref py py-data docutils literal"><span class="pre">'MPS'</span></tt>, or <tt class="xref py py-data docutils literal"><span class="pre">'CNFSAT'</span></tt></li>
-<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#RuntimeError" title="(in Python v3.3)"><strong>RuntimeError</strong></a> &#8211; if an error occurred reading the file</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition-todo admonition" id="index-0">
-<p class="first admonition-title">Todo</p>
-<p class="last">Add doctest</p>
-</div>
+<dt id="ecyglpki.Problem.bf_exists">
+<tt class="descname">bf_exists</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.bf_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if LP basis factorization exists</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="epyglpki.MILProgram.scaling">
-<tt class="descname">scaling</tt><big>(</big><em>*algorithms</em>, <em>factors</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.scaling" title="Permalink to this definition">¶</a></dt>
-<dd><p>Change, apply and unapply scaling factors</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>algorithms</strong> (zero or more <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a> arguments) &#8211; <p>choose scaling algorithms to apply from among</p>
-<ul>
-<li><tt class="xref py py-data docutils literal"><span class="pre">'auto'</span></tt>: choose algorithms automatically
-(other arguments are ignored)</li>
-<li><tt class="xref py py-data docutils literal"><span class="pre">'skip'</span></tt>: skip scaling if the problem is already
-well-scaled</li>
-<li><tt class="xref py py-data docutils literal"><span class="pre">'geometric'</span></tt>: perform geometric mean scaling</li>
-<li><tt class="xref py py-data docutils literal"><span class="pre">'equilibration'</span></tt>: perform equilibration scaling</li>
-<li><tt class="xref py py-data docutils literal"><span class="pre">'round'</span></tt>: round scaling factors to the nearest power of
-two</li>
-</ul>
-</li>
-<li><strong>factors</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a> of
-<a class="reference internal" href="components.html#epyglpki.Variable" title="epyglpki.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a> or <a class="reference internal" href="components.html#epyglpki.Constraint" title="epyglpki.Constraint"><tt class="xref py py-class docutils literal"><span class="pre">Constraint</span></tt></a> to <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Real</span></tt></a>) &#8211; the mapping with scaling factors to change
-(<cite>{}</cite> to set all factors to <cite>1</cite>; omit for retrieval only);
-values defined here have precedence over the ones generated by
-<cite>algorithms</cite></li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the scaling factor mapping, which only contains non-<cite>1</cite>
-factors</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#dict" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a> of <a class="reference internal" href="components.html#epyglpki.Variable" title="epyglpki.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a> or <a class="reference internal" href="components.html#epyglpki.Constraint" title="epyglpki.Constraint"><tt class="xref py py-class docutils literal"><span class="pre">Constraint</span></tt></a> to
-<tt class="xref py py-class docutils literal"><span class="pre">float</span></tt></p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#TypeError" title="(in Python v3.3)"><strong>TypeError</strong></a> &#8211; if <cite>factors</cite> is not
-<a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a></li>
-<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#TypeError" title="(in Python v3.3)"><strong>TypeError</strong></a> &#8211; if the scaling factors are not
-<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">Real</span></tt></a></li>
-<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#TypeError" title="(in Python v3.3)"><strong>TypeError</strong></a> &#8211; if a key in the scaling factor mapping is neither
-<a class="reference internal" href="components.html#epyglpki.Variable" title="epyglpki.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a> nor <a class="reference internal" href="components.html#epyglpki.Constraint" title="epyglpki.Constraint"><tt class="xref py py-class docutils literal"><span class="pre">Constraint</span></tt></a></li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_variable</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_variable</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">coeffs</span><span class="p">({(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span> <span class="mf">3e-100</span><span class="p">,</span> <span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="mf">5.5</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span> <span class="mf">1.5e200</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">scaling</span><span class="p">()</span>
-<span class="go">{}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">scaling</span><span class="p">(</span><span class="s">&#39;skip&#39;</span><span class="p">,</span> <span class="s">&#39;geometric&#39;</span><span class="p">,</span> <span class="s">&#39;equilibration&#39;</span><span class="p">,</span>
-<span class="gp">... </span>          <span class="n">factors</span><span class="o">=</span><span class="p">{</span><span class="n">y</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span> 
-<span class="go">{&lt;epyglpki.Variable object at 0x...&gt;: 3.329...e-67,</span>
-<span class="go"> &lt;epyglpki.Variable object at 0x...&gt;: 3.0,</span>
-<span class="go"> &lt;epyglpki.Constraint object at 0x...&gt;: 1.001...e+166,</span>
-<span class="go"> &lt;epyglpki.Constraint object at 0x...&gt;: 2.002...e-134}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">scaling</span><span class="p">(</span><span class="n">factors</span><span class="o">=</span><span class="p">{})</span>
-<span class="go">{}</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p>If a scaling algorithm is given, all factors are first set to <cite>1</cite>:</p>
-<div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">scaling</span><span class="p">(</span><span class="n">factors</span><span class="o">=</span><span class="p">{</span><span class="n">d</span><span class="p">:</span> <span class="mf">5.5</span><span class="p">})</span>
-<span class="go">{&lt;epyglpki.Constraint object at 0x...&gt;: 5.5}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">scaling</span><span class="p">(</span><span class="s">&#39;round&#39;</span><span class="p">)</span>
-<span class="go">{}</span>
-</pre></div>
-</div>
-</div>
+<dt id="ecyglpki.Problem.bf_updated">
+<tt class="descname">bf_updated</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.bf_updated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if LP basis factorization has been updated</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="epyglpki.MILProgram.simplex">
-<tt class="descname">simplex</tt><big>(</big><em>**controls</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.simplex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Obtain simplex solver object</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>controls</strong> &#8211; set solver and basis factorization control parameters;
-see <a class="reference internal" href="solvers.html#epyglpki.SimplexSolver.controls" title="epyglpki.SimplexSolver.controls"><tt class="xref py py-meth docutils literal"><span class="pre">SimplexSolver.controls()</span></tt></a>, parameter <cite>controls</cite></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">simplex solver object</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="solvers.html#epyglpki.SimplexSolver" title="epyglpki.SimplexSolver"><tt class="xref py py-class docutils literal"><span class="pre">SimplexSolver</span></tt></a></td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">simplex</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
-<span class="go">&lt;epyglpki.SimplexSolver object at 0x...&gt;</span>
-</pre></div>
-</div>
+<dt id="ecyglpki.Problem.btran">
+<tt class="descname">btran</tt><big>(</big><em>tuple rhs</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.btran" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform backward transformation (solve system B&#8217;<a href="#id1"><span class="problematic" id="id2">*</span></a>x = b)</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="epyglpki.MILProgram.variables">
-<tt class="descname">variables</tt><big>(</big><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.variables" title="Permalink to this definition">¶</a></dt>
-<dd><p>A list of the problem&#8217;s variables</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a list of the problem&#8217;s variables</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#list" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt></a> of <a class="reference internal" href="components.html#epyglpki.Variable" title="epyglpki.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a></td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">MILProgram</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_variable</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">variables</span><span class="p">()</span>
-<span class="go">[&lt;epyglpki.Variable object at 0x...&gt;]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_variable</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">variables</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="n">v</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">y</span> <span class="ow">in</span> <span class="n">v</span><span class="p">)</span>
-<span class="go">True</span>
-</pre></div>
-</div>
+<dt id="ecyglpki.Problem.check_cnfsat">
+<tt class="descname">check_cnfsat</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.check_cnfsat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check for CNF-SAT problem instance</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="epyglpki.MILProgram.write">
-<tt class="descname">write</tt><big>(</big><em>fname</em>, <em>format='GLPK'</em>, <em>mpsfmt='free'</em><big>)</big><a class="headerlink" href="#epyglpki.MILProgram.write" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write the problem to a file</p>
+<dt id="ecyglpki.Problem.check_kkt">
+<tt class="descname">check_kkt</tt><big>(</big><em>str solver</em>, <em>str condition</em>, <em>bool dual=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.check_kkt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check feasibility/optimality conditions</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.clear_mat_col">
+<tt class="descname">clear_mat_col</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.clear_mat_col" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear column of the constraint matrix</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.clear_mat_row">
+<tt class="descname">clear_mat_row</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.clear_mat_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear row of the constraint matrix</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.clear_matrix">
+<tt class="descname">clear_matrix</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.clear_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the whole constraint matrix</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.copy_prob">
+<tt class="descname">copy_prob</tt><big>(</big><em>Problem source</em>, <em>bool copy_names</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.copy_prob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy problem object content</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.cpx_basis">
+<tt class="descname">cpx_basis</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.cpx_basis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct Bixby&#8217;s initial LP basis</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.del_cols">
+<tt class="descname">del_cols</tt><big>(</big><em>*cols</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.del_cols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete specified columns from problem object</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; the name of the file to write to</li>
-<li><strong>format</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; the format of the file written to; either
-<tt class="xref py py-data docutils literal"><span class="pre">'GLPK'</span></tt>, <tt class="xref py py-data docutils literal"><span class="pre">'LP'</span></tt>, <tt class="xref py py-data docutils literal"><span class="pre">'MPS'</span></tt>, or <tt class="xref py py-data docutils literal"><span class="pre">'CNFSAT'</span></tt></li>
-<li><strong>mpsfmt</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; MPS-subformat; either <tt class="xref py py-data docutils literal"><span class="pre">'free'</span></tt> or <tt class="xref py py-data docutils literal"><span class="pre">'fixed'</span></tt>
-(ignored when <cite>format</cite> is not <tt class="xref py py-data docutils literal"><span class="pre">'MPS'</span></tt>)</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#ValueError" title="(in Python v3.3)"><strong>ValueError</strong></a> &#8211; if <cite>format</cite> is not <tt class="xref py py-data docutils literal"><span class="pre">'GLPK'</span></tt>, <tt class="xref py py-data docutils literal"><span class="pre">'LP'</span></tt>,
-<tt class="xref py py-data docutils literal"><span class="pre">'MPS'</span></tt>, or <tt class="xref py py-data docutils literal"><span class="pre">'CNFSAT'</span></tt></li>
-<li><a class="reference external" href="http://docs.python.org/3.3/library/exceptions.html#RuntimeError" title="(in Python v3.3)"><strong>RuntimeError</strong></a> &#8211; if an error occurred writing the file</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> &#8211; the names (str strings) of the columns to delete</td>
 </tr>
 </tbody>
 </table>
-<div class="admonition-todo admonition" id="index-1">
-<p class="first admonition-title">Todo</p>
-<p class="last">Add doctest</p>
-</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.del_rows">
+<tt class="descname">del_rows</tt><big>(</big><em>*rows</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.del_rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete specified rows from problem object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> &#8211; the names (str strings) of the rows to delete</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.dual_rtest">
+<tt class="descname">dual_rtest</tt><big>(</big><em>coeffs</em>, <em>int direction</em>, <em>double eps</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.dual_rtest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform dual ratio test</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.erase_prob">
+<tt class="descname">erase_prob</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.erase_prob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Erase problem object content</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.eval_tab_col">
+<tt class="descname">eval_tab_col</tt><big>(</big><em>ind</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.eval_tab_col" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute column of the simplex tableau</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.eval_tab_row">
+<tt class="descname">eval_tab_row</tt><big>(</big><em>ind</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.eval_tab_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute row of the simplex tableau</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.exact">
+<tt class="descname">exact</tt><big>(</big><em>SimplexControls controls</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.exact" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve LP problem in exact arithmetic</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.factorize">
+<tt class="descname">factorize</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.factorize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute LP basis factorization</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.find_col">
+<tt class="descname">find_col</tt><big>(</big><em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.find_col" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find column by its name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.find_col_as_needed">
+<tt class="descname">find_col_as_needed</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.find_col_as_needed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.find_row">
+<tt class="descname">find_row</tt><big>(</big><em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.find_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find row by its name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.find_row_as_needed">
+<tt class="descname">find_row_as_needed</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.find_row_as_needed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.find_row_or_col_as_needed">
+<tt class="descname">find_row_or_col_as_needed</tt><big>(</big><em>ind</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.find_row_or_col_as_needed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.ftran">
+<tt class="descname">ftran</tt><big>(</big><em>tuple rhs</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ftran" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform forward transformation (solve system B*x = b)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_bfcp">
+<tt class="descname">get_bfcp</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_bfcp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve LP basis factorization control parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_bhead">
+<tt class="descname">get_bhead</tt><big>(</big><em>int k</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_bhead" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve LP basis header information</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_col_bind">
+<tt class="descname">get_col_bind</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_bind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve column index in the basis header</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_col_dual">
+<tt class="descname">get_col_dual</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_dual" title="Permalink to this definition">¶</a></dt>
+<dd><p>retrieve column dual value (basic solution)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_col_kind">
+<tt class="descname">get_col_kind</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve column kind; returns varkind</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_col_lb">
+<tt class="descname">get_col_lb</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_lb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve column lower bound</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_col_name">
+<tt class="descname">get_col_name</tt><big>(</big><em>int col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve column name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_col_name_if_available">
+<tt class="descname">get_col_name_if_available</tt><big>(</big><em>int col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_name_if_available" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_col_prim">
+<tt class="descname">get_col_prim</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_prim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve column primal value (basic solution)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_col_stat">
+<tt class="descname">get_col_stat</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_stat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve column status</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_col_type">
+<tt class="descname">get_col_type</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve column type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_col_ub">
+<tt class="descname">get_col_ub</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_ub" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve column upper bound</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_dual_stat">
+<tt class="descname">get_dual_stat</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_dual_stat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve status of dual basic solution</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_mat_col">
+<tt class="descname">get_mat_col</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_mat_col" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve column of the constraint matrix</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_mat_row">
+<tt class="descname">get_mat_row</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_mat_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve row of the constraint matrix</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_num_bin">
+<tt class="descname">get_num_bin</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_num_bin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve number of binary columns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_num_cols">
+<tt class="descname">get_num_cols</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_num_cols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve number of columns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_num_int">
+<tt class="descname">get_num_int</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_num_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve number of integer columns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_num_nz">
+<tt class="descname">get_num_nz</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_num_nz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve number of constraint coefficients</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_num_rows">
+<tt class="descname">get_num_rows</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_num_rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve number of rows</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_obj_coef">
+<tt class="descname">get_obj_coef</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_obj_coef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve obj. coefficient</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_obj_const">
+<tt class="descname">get_obj_const</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_obj_const" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve obj. constant term</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_obj_dir">
+<tt class="descname">get_obj_dir</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_obj_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve optimization direction flag</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_obj_name">
+<tt class="descname">get_obj_name</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_obj_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve objective function name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_obj_val">
+<tt class="descname">get_obj_val</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_obj_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve objective value (basic solution)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_prim_stat">
+<tt class="descname">get_prim_stat</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_prim_stat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve status of primal basic solution</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_prob_name">
+<tt class="descname">get_prob_name</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_prob_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve problem name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_rii">
+<tt class="descname">get_rii</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_rii" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve row scale factor</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_row_bind">
+<tt class="descname">get_row_bind</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_bind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve row index in the basis header</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_row_dual">
+<tt class="descname">get_row_dual</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_dual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve row dual value (basic solution)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_row_lb">
+<tt class="descname">get_row_lb</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_lb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve row lower bound</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_row_name">
+<tt class="descname">get_row_name</tt><big>(</big><em>int row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve row name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_row_name_if_available">
+<tt class="descname">get_row_name_if_available</tt><big>(</big><em>int row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_name_if_available" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_row_or_col_name">
+<tt class="descname">get_row_or_col_name</tt><big>(</big><em>int ind</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_or_col_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve row or column name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_row_or_col_name_if_available">
+<tt class="descname">get_row_or_col_name_if_available</tt><big>(</big><em>int ind</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_or_col_name_if_available" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_row_prim">
+<tt class="descname">get_row_prim</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_prim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve row primal value (basic solution)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_row_stat">
+<tt class="descname">get_row_stat</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_stat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve row status</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_row_type">
+<tt class="descname">get_row_type</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve row type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_row_ub">
+<tt class="descname">get_row_ub</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_ub" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve row upper bound</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_sjj">
+<tt class="descname">get_sjj</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_sjj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve column scale factor</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_status">
+<tt class="descname">get_status</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve generic status of basic solution</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_unbnd_ray">
+<tt class="descname">get_unbnd_ray</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_unbnd_ray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine variable causing unboundedness</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.interior">
+<tt class="descname">interior</tt><big>(</big><em>IPointControls controls</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.interior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve LP problem with the interior-point method</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.intfeas1">
+<tt class="descname">intfeas1</tt><big>(</big><em>bool use_bound</em>, <em>int obj_bound</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.intfeas1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve integer feasibility problem</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.intopt">
+<tt class="descname">intopt</tt><big>(</big><em>IntOptControls controls</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.intopt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve MIP problem with the branch-and-bound method</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.ipt_col_dual">
+<tt class="descname">ipt_col_dual</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ipt_col_dual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve column dual value (interior point)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.ipt_col_prim">
+<tt class="descname">ipt_col_prim</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ipt_col_prim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve column primal value (interior point)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.ipt_obj_val">
+<tt class="descname">ipt_obj_val</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ipt_obj_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve objective value (interior point)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.ipt_row_dual">
+<tt class="descname">ipt_row_dual</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ipt_row_dual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve row dual value (interior point)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.ipt_row_prim">
+<tt class="descname">ipt_row_prim</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ipt_row_prim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve row primal value (interior point)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.ipt_status">
+<tt class="descname">ipt_status</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ipt_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve status of interior-point solution</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.load_matrix">
+<tt class="descname">load_matrix</tt><big>(</big><em>coeffs</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.load_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load (replace) the whole constraint matrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coeffs</strong> &#8211; <a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from row and column name (str string)
+pairs (length-2 <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#tuple" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">tuple</span></tt></a>) to coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.minisat1">
+<tt class="descname">minisat1</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.minisat1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve CNF-SAT problem with MiniSat solver</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.mip_col_val">
+<tt class="descname">mip_col_val</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.mip_col_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve column value (MIP solution)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.mip_obj_val">
+<tt class="descname">mip_obj_val</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.mip_obj_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve objective value (MIP solution)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.mip_row_val">
+<tt class="descname">mip_row_val</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.mip_row_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve row value (MIP solution)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.mip_status">
+<tt class="descname">mip_status</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.mip_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve status of MIP solution</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.Problem.prefer_names">
+<tt class="descname">prefer_names</tt><a class="headerlink" href="#ecyglpki.Problem.prefer_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>prefer_names: &#8216;bool&#8217;
+Switch to have methods return row and column names, if available</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.prim_rtest">
+<tt class="descname">prim_rtest</tt><big>(</big><em>coeffs</em>, <em>int direction</em>, <em>double eps</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.prim_rtest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform primal ratio test</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.print_ipt">
+<tt class="descname">print_ipt</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.print_ipt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write interior-point solution in printable format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.print_mip">
+<tt class="descname">print_mip</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.print_mip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write MIP solution in printable format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.print_ranges">
+<tt class="descname">print_ranges</tt><big>(</big><em>row_or_cols</em>, <em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.print_ranges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print sensitivity analysis report</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.print_sol">
+<tt class="descname">print_sol</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.print_sol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write basic solution in printable format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.read_cnfsat">
+<tt class="descname">read_cnfsat</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.read_cnfsat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read CNF-SAT problem data in DIMACS format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.read_ipt">
+<tt class="descname">read_ipt</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.read_ipt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read interior-point solution from text file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.read_lp">
+<tt class="descname">read_lp</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.read_lp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read problem data in CPLEX LP format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.read_mip">
+<tt class="descname">read_mip</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.read_mip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read MIP solution from text file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.read_mps">
+<tt class="descname">read_mps</tt><big>(</big><em>str format</em>, <em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.read_mps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read problem data in MPS format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.read_prob">
+<tt class="descname">read_prob</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.read_prob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read problem data in GLPK format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.read_sol">
+<tt class="descname">read_sol</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.read_sol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read basic solution from text file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.scale_prob">
+<tt class="descname">scale_prob</tt><big>(</big><em>*algorithms</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.scale_prob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scale problem data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>algorithms</strong> &#8211; the algorithms to apply, one or more from <tt class="xref py py-obj docutils literal"><span class="pre">'auto'</span></tt>:,
+<tt class="xref py py-obj docutils literal"><span class="pre">'skip'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'geometric'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'equilibration'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'round'</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.set_bfcp">
+<tt class="descname">set_bfcp</tt><big>(</big><em>FactorizationControls controls</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_bfcp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change LP basis factorization control parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.set_col_bnds">
+<tt class="descname">set_col_bnds</tt><big>(</big><em>col</em>, <em>lower</em>, <em>upper</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_col_bnds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set (change) column bounds</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.set_col_kind">
+<tt class="descname">set_col_kind</tt><big>(</big><em>col</em>, <em>str kind</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_col_kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set (change) column kind</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.set_col_name">
+<tt class="descname">set_col_name</tt><big>(</big><em>col</em>, <em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_col_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change column name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.set_col_stat">
+<tt class="descname">set_col_stat</tt><big>(</big><em>col</em>, <em>str status</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_col_stat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set (change) column status</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.set_mat_col">
+<tt class="descname">set_mat_col</tt><big>(</big><em>col</em>, <em>coeffs</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_mat_col" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set (replace) column of the constraint matrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coeffs</strong> &#8211; <a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from row names (str strings) to
+coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.set_mat_row">
+<tt class="descname">set_mat_row</tt><big>(</big><em>row</em>, <em>coeffs</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_mat_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set (replace) row of the constraint matrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coeffs</strong> &#8211; <a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from column names (str strings) to
+coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.set_obj_coef">
+<tt class="descname">set_obj_coef</tt><big>(</big><em>col</em>, <em>double coeff</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_obj_coef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set (change) obj. coefficient</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.set_obj_const">
+<tt class="descname">set_obj_const</tt><big>(</big><em>double coeff</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_obj_const" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set (change) obj. constant term</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.set_obj_dir">
+<tt class="descname">set_obj_dir</tt><big>(</big><em>str direction</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_obj_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set (change) optimization direction flag</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.set_obj_name">
+<tt class="descname">set_obj_name</tt><big>(</big><em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_obj_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign (change) objective function name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.set_prob_name">
+<tt class="descname">set_prob_name</tt><big>(</big><em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_prob_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign (change) problem name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.set_rii">
+<tt class="descname">set_rii</tt><big>(</big><em>row</em>, <em>double sf</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_rii" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set (change) row scale factor</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.set_row_bnds">
+<tt class="descname">set_row_bnds</tt><big>(</big><em>row</em>, <em>lower</em>, <em>upper</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_row_bnds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set (change) row bounds</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.set_row_name">
+<tt class="descname">set_row_name</tt><big>(</big><em>row</em>, <em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_row_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change row name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.set_row_stat">
+<tt class="descname">set_row_stat</tt><big>(</big><em>row</em>, <em>str status</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_row_stat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set (change) row status</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.set_sjj">
+<tt class="descname">set_sjj</tt><big>(</big><em>col</em>, <em>double sf</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_sjj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set (change) column scale factor</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.simplex">
+<tt class="descname">simplex</tt><big>(</big><em>SimplexControls controls</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.simplex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve LP problem with the simplex method</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.sort_matrix">
+<tt class="descname">sort_matrix</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.sort_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sort elements of the constraint matrix</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.std_basis">
+<tt class="descname">std_basis</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.std_basis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct standard initial LP basis</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.transform_col">
+<tt class="descname">transform_col</tt><big>(</big><em>coeffs</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.transform_col" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform explicitly specified column</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.transform_row">
+<tt class="descname">transform_row</tt><big>(</big><em>coeffs</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.transform_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform explicitly specified row</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.unscale_prob">
+<tt class="descname">unscale_prob</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.unscale_prob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unscale problem data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.warm_up">
+<tt class="descname">warm_up</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.warm_up" title="Permalink to this definition">¶</a></dt>
+<dd><p>“Warm up” LP basis</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.write_cnfsat">
+<tt class="descname">write_cnfsat</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.write_cnfsat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write CNF-SAT problem data in DIMACS format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.write_ipt">
+<tt class="descname">write_ipt</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.write_ipt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write interior-point solution to text file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.write_lp">
+<tt class="descname">write_lp</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.write_lp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write problem data in CPLEX LP format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.write_mip">
+<tt class="descname">write_mip</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.write_mip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write MIP solution to text file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.write_mps">
+<tt class="descname">write_mps</tt><big>(</big><em>str format</em>, <em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.write_mps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write problem data in MPS format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.write_prob">
+<tt class="descname">write_prob</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.write_prob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write problem data in GLPK format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.write_sol">
+<tt class="descname">write_sol</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.write_sol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write basic solution to text file</p>
 </dd></dl>
 
 </dd></dl>
@@ -531,10 +934,10 @@ see <a class="reference internal" href="solvers.html#epyglpki.SimplexSolver.cont
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
-                        title="previous chapter">Welcome to epyglpki&#8217;s documentation!</a></p>
+                        title="previous chapter">Welcome to ecyglpki&#8217;s documentation!</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="components.html"
-                        title="next chapter">Components</a></p>
+  <p class="topless"><a href="smcp.html"
+                        title="next chapter">Simplex Controls</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/problem.txt"
@@ -567,17 +970,17 @@ see <a class="reference internal" href="solvers.html#epyglpki.SimplexSolver.cont
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="components.html" title="Components"
+          <a href="smcp.html" title="Simplex Controls"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to epyglpki’s documentation!"
+          <a href="index.html" title="Welcome to ecyglpki’s documentation!"
              >previous</a> |</li>
-        <li><a href="index.html">epyglpki  documentation</a> &raquo;</li> 
+        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2014, Erik Quaeghebeur.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>
