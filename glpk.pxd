@@ -204,9 +204,9 @@ cdef extern from "glpk.h":
 
     #  additional row attributes
     ctypedef struct RowAttr "glp_attr":
-        int level              #  subproblem level at which the row was added
-        int origin             #  row origin flag
-        int glp_klass "klass"  #  row class descriptor
+        int level   #  subproblem level at which the row was added
+        int origin  #  row origin flag
+        int klass   #  row class descriptor
 
 # We use the Cython bint type instead of te following:
 #

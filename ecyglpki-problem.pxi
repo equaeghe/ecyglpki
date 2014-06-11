@@ -249,9 +249,13 @@ cdef class Problem:
 
     cdef glpk.ProbObj* _problem
 
-    def __cinit__(self):
-        self._problem = glpk.create_prob()
-        glpk.create_index(self._problem)
+    def __cinit__(self, problem_ptr=None):
+        if problem_ptr is None:
+            self._problem = glpk.create_prob()
+            glpk.create_index(self._problem)
+        else:
+            self._problem = <glpk.ProbObj*>PyCapsule_GetPointer(problem_ptr(),
+                                                                NULL)
 
     def _problem_ptr(self):
         """Encapsulate the pointer to the problem object

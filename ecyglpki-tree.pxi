@@ -22,7 +22,6 @@
 ###############################################################################
 
 
-
 # reason codes
 cdef reascode2str = {
     glpk.IROWGEN: 'rowgen',
@@ -34,13 +33,41 @@ cdef reascode2str = {
     glpk.IPREPRO: 'preprocess'
 }
 
+# row origin flag
+cdef origin2str = {
+    glpk.RF_REG: 'regular',
+    glpk.RF_LAZY: 'lazy',
+    glpk.RF_CUT: 'cut'
+}
+# row class descriptor
+cdef klass2str = {
+    glpk.RF_GMI: 'Gomory',
+    glpk.RF_MIR: 'rounding',
+    glpk.RF_COV: 'cover',
+    glpk.RF_CLQ: 'clique'
+}
+cdef str2klass = {string: klass for klass, string in klass2str.items()}
+
+
+#  branch selection indicator
+cdef str2branchdir = {
+    glpk.NO_BRNCH: 'no',
+    glpk.DN_BRNCH: 'down',
+    glpk.UP_BRNCH: 'up'
+}
+
 
 cdef class Tree:
     """A GLPK search tree"""
 
-    ### Object definition ###
+    ### Object definition and setup ###
 
     cdef glpk.Tree* _tree
+    cdef readonly Problem problem
+
+    def __cinit__(self):
+        problem = Problem(PyCapsule_New(glpk.ios_get_prob(self._tree),
+                                        NULL, NULL))
 
     ### Translated GLPK functions ###
 
@@ -48,73 +75,96 @@ cdef class Tree:
         """Determine reason for calling the callback routine"""
         return reascode2str[glpk.ios_reason(self._tree)]
 
-    def ios_get_prob(self):
-        """Access the problem object"""
-        return glpk.ios_get_prob(self._tree)
-    ProbObj* ios_get_prob "glp_ios_get_prob" (Tree* tree)
+    def ios_tree_size(self):
+        """Determine size of the branch-and-bound tree"""
+        cdef int a_cnt
+        cdef int n_cnt
+        cdef int t_cnt
+        glpk.ios_tree_size(self._tree, &a_cnt, &n_cnt, &t_cnt)
+        return {'active': a_cnt, 'current': n_cnt, 'total': t_cnt}
 
-    #  determine size of the branch-and-bound tree
-    void ios_tree_size "glp_ios_tree_size" (Tree* tree,
-                                            int* a_cnt, int* n_cnt, int* t_cnt)
+    def ios_curr_node(self):
+        """Determine current active subproblem"""
+        return glpk.ios_curr_node(self._tree)  # TODO: 0 retval is special
 
-    #  determine current active subproblem
-    int ios_curr_node "glp_ios_curr_node" (Tree* tree)
+    def ios_next_node(self, int node):
+        """Determine next active subproblem"""
+        return glpk.ios_next_node(self._tree, int node)  # TODO: 0 retval is special
 
-    #  determine next active subproblem
-    int ios_next_node "glp_ios_next_node" (Tree* tree, int node)
+    def ios_prev_node(self, int node):
+        """Determine previous active subproblem"""
+        return glpk.ios_prev_node(self._tree, int node)  # TODO: 0 retval is special
 
-    #  determine previous active subproblem
-    int ios_prev_node "glp_ios_prev_node" (Tree* tree, int node)
+    def ios_up_node(self, int node):
+        """Determine parent subproblem"""
+        return glpk.ios_up_node(self._tree, int node)  # TODO: 0 retval is special
 
-    #  determine parent subproblem
-    int ios_up_node "glp_ios_up_node" (Tree* tree, int node)
+    def ios_node_level(self, int node):
+        """Determine subproblem level"""
+        return glpk.ios_node_level(self._tree, int node)  # TODO: 0 retval is special
 
-    #  determine subproblem level
-    int ios_node_level "glp_ios_node_level" (Tree* tree, int node)
+    def ios_node_bound(self, int node):
+        """Determine subproblem local bound"""
+        return glpk.ios_node_bound(self._tree, int node)  # TODO: 0 retval is special
 
-    #  determine subproblem local bound
-    double ios_node_bound "glp_ios_node_bound" (Tree* tree, int node)
+    def ios_best_node(self):
+        """Find active subproblem with best local bound"""
+        return glpk.ios_best_node(self._tree)  # TODO: 0 retval is special
 
-    #  find active subproblem with best local bound
-    int ios_best_node "glp_ios_best_node" (Tree* tree)
+    def ios_mip_gap(self):
+        """Compute relative MIP gap"""
+        return glpk.ios_mip_gap(self._tree)
 
-    #  compute relative MIP gap
-    double ios_mip_gap "glp_ios_mip_gap" (Tree* tree)
+    def ios_node_data(self, int node):
+        """Access subproblem application-specific data"""
+    void* glpk.ios_node_data(self._tree, int node)  # TODO
 
-    #  access subproblem application-specific data
-    void* ios_node_data "glp_ios_node_data" (Tree* tree, int node)
+    def ios_row_attr(self, int row):  # TODO: can row be a name?
+        """Retrieve additional row attributes"""
+        cdef glpk.RowAttr* attr
+        glpk.ios_row_attr(self._tree, row, attr)
+        return {'level': attr.level,
+                'origin': origin2str[attr.origin],
+                'class': klass2str[attr.klass]}
 
-    #  retrieve additional row attributes
-    void ios_row_attr "glp_ios_row_attr" (Tree* tree, int row, RowAttr* attr)
+    def ios_pool_size(self):
+        """Determine current size of the cut pool"""
+        return glpk.ios_pool_size(self._tree)
 
-    #  determine current size of the cut pool
-    int ios_pool_size "glp_ios_pool_size" (Tree* tree)
+    def ios_add_row(self, str name, str rowclass):  # TODO: is name useful?
+        """Add row (constraint) to the cut pool"""
+        return glpk.ios_add_row(self._tree, name2chars(name),
+                                str2klass[rowclass], 0,
+                                int length, const int ind[], const double val[],  # TODO
+                                int vartype, double rhs)  # TODO
 
-    #  add row (constraint) to the cut pool
-    int ios_add_row "glp_ios_add_row" (Tree* tree, const char* name, int klass,
-                                       int flags,  #  flags must be 0!
-                                       int length,
-                                       const int ind[], const double val[],
-                                       int vartype, double rhs)
+    def ios_del_row(self, int row):
+        """Remove row (constraint) from the cut pool"""
+        glpk.ios_del_row(self._tree, int row)
 
-    #  remove row (constraint) from the cut pool
-    void ios_del_row "glp_ios_del_row" (Tree* tree, int row)
+    def ios_clear_pool(self):
+        """Remove all rows (constraints) from the cut pool"""
+        glpk.ios_clear_pool(self._tree)
 
-    #  remove all rows (constraints) from the cut pool
-    void ios_clear_pool "glp_ios_clear_pool" (Tree* tree)
+    def ios_can_branch(self, col):
+        """Check if can branch upon specified variable"""
+        col = self.problem.find_col_as_needed(col)
+        return glpk.ios_can_branch(self._tree, col)
 
-    #  check if can branch upon specified variable
-    bint ios_can_branch "glp_ios_can_branch" (Tree* tree, int col)
+    def ios_branch_upon(self, col, str branchdir):
+        """Choose variable to branch upon"""
+        col = self.problem.find_col_as_needed(col)
+        glpk.ios_branch_upon(self._tree, col, str2branchdir[branchdir])
 
-    #  choose variable to branch upon
-    void ios_branch_upon "glp_ios_branch_upon" (Tree* tree, int col,
-                                                int branch)
+    def ios_heur_sol(self, int node):
+        """Select subproblem to continue the search"""
+        glpk.ios_heur_sol(self._tree, int node)
 
-    #  select subproblem to continue the search
-    void ios_select_node "glp_ios_select_node" (Tree* tree, int node)
+    def ios_heur_sol(self, solution):  # TODO
+        """Provide solution found by heuristic"""
+        if glpk.ios_heur_sol(self._tree, const double heur_sol[]) is not 0:  # TODO
+            raise ValueError("Solution rejected.")
 
-    #  provide solution found by heuristic
-    int ios_heur_sol "glp_ios_heur_sol" (Tree* tree, const double heur_sol[])
-
-    #  terminate the solution process
-    void ios_terminate "glp_ios_terminate" (Tree* tree)
+    def ios_terminate(self):
+        """Terminate the solution process"""
+        glpk.ios_terminate(self._tree)
