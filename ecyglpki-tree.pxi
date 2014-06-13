@@ -85,43 +85,83 @@ cdef class Tree:
 
     def ios_curr_node(self):
         """Determine current active subproblem"""
-        return glpk.ios_curr_node(self._tree)  # TODO: 0 retval is special
+        node = glpk.ios_curr_node(self._tree)
+        if node is 0:
+            raise Exception("There is no current active subproblem.")
+        return node
 
     def ios_next_node(self, int node):
         """Determine next active subproblem"""
-        return glpk.ios_next_node(self._tree, int node)  # TODO: 0 retval is special
+        if node is 0:
+            return self.ios_first_node()
+        else:
+            node = glpk.ios_next_node(self._tree, node)
+            if node is 0:
+                raise Exception("There is no next active subproblem.")
+            return node
+
+    def ios_first_node(self):  # variant of ios_next_node
+        """Determine first active subproblem"""
+        node = glpk.ios_next_node(self._tree, 0)
+        if node is 0:
+            raise Exception("The search tree is empty.")
+        return node
 
     def ios_prev_node(self, int node):
         """Determine previous active subproblem"""
-        return glpk.ios_prev_node(self._tree, int node)  # TODO: 0 retval is special
+        if node is 0:
+            return self.ios_last_node()
+        else:
+            node = glpk.ios_prev_node(self._tree, node)
+            if node is 0:
+                raise Exception("There is no previous active subproblem.")
+            return node
+
+    def ios_last_node(self):  # variant of ios_prev_node
+        """Determine last active subproblem"""
+        node = glpk.ios_next_node(self._tree, 0)
+        if node is 0:
+            raise Exception("The search tree is empty.")
+        return node
 
     def ios_up_node(self, int node):
         """Determine parent subproblem"""
-        return glpk.ios_up_node(self._tree, int node)  # TODO: 0 retval is special
+        node = glpk.ios_up_node(self._tree, node)
+        if node is 0:
+            raise Exception("This is the search tree root; it has no parent.")
+        return node
 
     def ios_node_level(self, int node):
         """Determine subproblem level"""
-        return glpk.ios_node_level(self._tree, int node)  # TODO: 0 retval is special
+        return glpk.ios_node_level(self._tree, node)
 
     def ios_node_bound(self, int node):
         """Determine subproblem local bound"""
-        return glpk.ios_node_bound(self._tree, int node)  # TODO: 0 retval is special
+        return glpk.ios_node_bound(self._tree, node)
 
     def ios_best_node(self):
         """Find active subproblem with best local bound"""
-        return glpk.ios_best_node(self._tree)  # TODO: 0 retval is special
+        node = glpk.ios_best_node(self._tree)
+        if node is 0:
+            raise Exception("The search tree is empty.")
+        return node
 
     def ios_mip_gap(self):
         """Compute relative MIP gap"""
         return glpk.ios_mip_gap(self._tree)
 
-    def ios_node_data(self, int node):
+    def ios_node_data(self, int node):  # TODO: use Python object for node data?
         """Access subproblem application-specific data"""
-    void* glpk.ios_node_data(self._tree, int node)  # TODO
+        cdef glpk.CBInfo info = glpk.ios_node_data(self._tree, node)
+        if info is not NULL:
+            return CallbackInfo(PyCapsule_New(info, NULL, NULL))
+        else:
+            return None
 
-    def ios_row_attr(self, int row):  # TODO: can row be a name?
+    def ios_row_attr(self, row):
         """Retrieve additional row attributes"""
         cdef glpk.RowAttr* attr
+        row = self.problem.find_row_as_needed(row)
         glpk.ios_row_attr(self._tree, row, attr)
         return {'level': attr.level,
                 'origin': origin2str[attr.origin],
@@ -131,16 +171,27 @@ cdef class Tree:
         """Determine current size of the cut pool"""
         return glpk.ios_pool_size(self._tree)
 
-    def ios_add_row(self, str name, str rowclass):  # TODO: is name useful?
+    def ios_add_row(self, str name, str rowclass,
+                    coeffs, str vartype, double rhs):
         """Add row (constraint) to the cut pool"""
-        return glpk.ios_add_row(self._tree, name2chars(name),
-                                str2klass[rowclass], 0,
-                                int length, const int ind[], const double val[],  # TODO
-                                int vartype, double rhs)  # TODO
+        _coeffscheck(coeffs)
+        cdef int k = len(coeffs)
+        cdef int* cols = <int*>glpk.alloc(1+k, sizeof(int))
+        cdef double* vals = <double*>glpk.alloc(1+k, sizeof(double))
+        try:
+            for i, item in enumerate(coeffs.items(), start=1):
+                cols[i] = self.problem.find_col_as_needed(item[0])
+                vals[i] = item[1]
+            return glpk.ios_add_row(self._tree, name2chars(name),
+                                    str2klass[rowclass], 0,
+                                    k, cols, vals, str2vartype[vartype], rhs)
+        finally:
+            glpk.free(cols)
+            glpk.free(vals)
 
-    def ios_del_row(self, int row):
+    def ios_del_row(self, int row):  # row is row in cut pool, not in problem object!
         """Remove row (constraint) from the cut pool"""
-        glpk.ios_del_row(self._tree, int row)
+        glpk.ios_del_row(self._tree, row)
 
     def ios_clear_pool(self):
         """Remove all rows (constraints) from the cut pool"""
@@ -156,14 +207,24 @@ cdef class Tree:
         col = self.problem.find_col_as_needed(col)
         glpk.ios_branch_upon(self._tree, col, str2branchdir[branchdir])
 
-    def ios_heur_sol(self, int node):
+    def ios_select_node(self, int node):
         """Select subproblem to continue the search"""
-        glpk.ios_heur_sol(self._tree, int node)
+        glpk.ios_select_node(self._tree, node)
 
-    def ios_heur_sol(self, solution):  # TODO
+    def ios_heur_sol(self, coeffs):
         """Provide solution found by heuristic"""
-        if glpk.ios_heur_sol(self._tree, const double heur_sol[]) is not 0:  # TODO
-            raise ValueError("Solution rejected.")
+        _coeffscheck(coeffs)
+        cdef int n = self.problem.get_num_cols()
+        cdef double* heur_sol = <double*>glpk.alloc(1+n, sizeof(double))
+        try:
+            for i in range(1, 1+n):
+                heur_sol[i] = 0
+            for col, val in coeffs:
+                heur_sol[self.problem.find_col_as_needed(col)] = val
+            if glpk.ios_heur_sol(self._tree, heur_sol) is not 0:
+                raise ValueError("Solution rejected.")
+        finally:
+            glpk.free(heur_sol)
 
     def ios_terminate(self):
         """Terminate the solution process"""

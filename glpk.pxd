@@ -162,6 +162,8 @@ cdef extern from "glpk.h":
     enum: PP_ALL "GLP_PP_ALL"    #  preprocessing on all levels
 
     #  integer optimizer control parameters
+    ctypedef void* CBInfo
+    ctypedef void (*CBFunc)(Tree*, CBInfo)
     ctypedef struct IntOptCP "glp_iocp":
         int msg_lev     #  message level
         int br_tech     #  branching technique
@@ -171,10 +173,9 @@ cdef extern from "glpk.h":
         int tm_lim      #  mip.tm_lim (milliseconds)
         int out_frq     #  mip.out_frq (milliseconds)
         int out_dly     #  mip.out_dly (milliseconds)
-        #void (*cb_func)(Tree* tree, void* info)
-                        #  mip.cb_func
-        #void* cb_info   #  mip.cb_info
-        #int cb_size     #  mip.cb_size
+        CBFunc cb_func  #  mip.cb_func
+        CBInfo cb_info  #  mip.cb_info
+        int cb_size     #  mip.cb_size
         int pp_tech     #  preprocessing technique
         double mip_gap  #  relative MIP gap tolerance
         bint mir_cuts   #  MIR cuts
@@ -705,7 +706,7 @@ cdef extern from "glpk.h":
     double ios_mip_gap "glp_ios_mip_gap" (Tree* tree)
 
     #  access subproblem application-specific data
-    void* ios_node_data "glp_ios_node_data" (Tree* tree, int node)
+    CBInfo ios_node_data "glp_ios_node_data" (Tree* tree, int node)
 
     #  retrieve additional row attributes
     void ios_row_attr "glp_ios_row_attr" (Tree* tree, int row, RowAttr* attr)

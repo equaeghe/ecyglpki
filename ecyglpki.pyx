@@ -53,4 +53,14 @@ cdef str chars2name(const char* chars):
     return '' if chars is NULL else chars.decode()
 
 
+include 'ecyglpki-smcp.pxi'
+
+include 'ecyglpki-bfcp.pxi'
+
+include 'ecyglpki-iptcp.pxi'
+
+include 'ecyglpki-iocp.pxi'
+
 include 'ecyglpki-problem.pxi'
+
+#include 'ecyglpki-tree.pxi'

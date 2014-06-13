@@ -22,6 +22,25 @@
 ###############################################################################
 
 
+#cdef class CallbackFunction:
+    #"""The callback function wrapper"""
+
+    #cdef glpk.CBFunc _cb_func
+
+    #def __cinit__(self, cbfunc_ptr):
+        #self._cb_func = <glpk.CBFunc>PyCapsule_GetPointer(cbfunc_ptr(), NULL)
+
+
+#cdef class CallbackInfo:
+    #"""The callback function info reference"""
+
+    #cdef glpk.CBInfo _cb_info
+
+    #def __cinit__(self, cbinfo_ptr):
+        #self._cb_info = <glpk.CBInfo>PyCapsule_GetPointer(cbinfo_ptr(), NULL)
+
+
+
 # branching technique
 cdef str2brtech = {
     'first_fracvar': glpk.BR_FFV,
@@ -101,6 +120,52 @@ cdef class IntOptControls:
             return self._iocp.out_dly
         def __set__(self, value):
             self._iocp.out_dly = int(value)
+
+    #property cb_func:
+        #"""Callback routine"""
+        #def __get__(self):
+            #cdef glpk.CBFunc callback = self._iocp.cb_func
+            #if callback is not NULL:
+                #return CallbackFunction(PyCapsule_New(callback, NULL, NULL))
+            #else:
+                #return None
+        #def __set__(self, CallbackFunction callback):
+            #self._iocp.cb_func = callback._cb_func
+
+    #property cb_info:  # TODO: use Python object for node data?
+        #"""Transit pointer passed to the routine cb_func"""
+        #def __get__(self):
+            #cdef glpk.CBInfo info = self._iocp.cb_info
+            #if info is not NULL:
+                #return CallbackInfo(PyCapsule_New(info, NULL, NULL))
+            #else:
+                #return None
+        #def __set__(self, CallbackInfo info):
+            #self._iocp.cb_info = info._cb_info
+
+    property cb_size:  # TODO: use Python object for node data?
+        """Number of extra bytes allocated for each search tree node, an `int`
+
+        Up to 256 bytes can be allocated for each node of the branch-and-bound
+        tree to store application-specific data. On creating a node these bytes
+        are initialized by binary zeros.
+
+        .. doctest:: IntOptControls
+
+            >>> r.cb_size  # the GLPK default
+            0
+            >>> r.cb_size = 128
+            >>> r.cb_size
+            128
+
+        """
+        def __get__(self):
+            return self._iocp.cb_size
+        def __set__(self, value):
+            value = int(value)
+            if (value < 0) or (value > 256):
+                raise ValueError("'cb_size' must be an int between 0 and 256.")
+            self._iocp.cb_size = value
 
     property tm_lim:
         """Time limit [ms], an `int`"""
@@ -219,7 +284,8 @@ cdef class IntOptControls:
     property tol_int:
         """Abs. tolerance for LP solution integer feasibility, a |Real| number
 
-        This is the absolute tolerance used to check if the optimal solution to the current LP relaxation is integer feasible.
+        This is the absolute tolerance used to check if the optimal solution to
+        the current LP relaxation is integer feasible.
 
         """
         def __get__(self):

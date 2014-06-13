@@ -41,18 +41,6 @@ cdef str2msglev = {
 cdef msglev2str = {msg_lev: string for string, msg_lev in str2msglev.items()}
 
 
-include 'ecyglpki-smcp.pxi'
-
-
-include 'ecyglpki-bfcp.pxi'
-
-
-include 'ecyglpki-iptcp.pxi'
-
-
-include 'ecyglpki-iocp.pxi'
-
-
 # optimization directions
 cdef str2optdir = {
     'minimize': glpk.MIN,
@@ -84,6 +72,7 @@ cdef vartype2str = {
     glpk.DB: 'bounded',
     glpk.FX: 'fixed'
     }
+cdef str2vartype = {string: vartype for vartype, string in vartype2str.items()}
 
 cdef _bounds(lower, upper):
     if isinstance(lower, numbers.Real):
