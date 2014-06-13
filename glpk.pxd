@@ -32,7 +32,7 @@ cdef extern from "glpk.h":
     enum: MINOR_VERSION "GLP_MINOR_VERSION"
 
     #  LP/MIP problem object
-    cdef struct ProbObj "glp_prob":
+    cdef struct Prob "glp_prob":
         pass
 
     #  optimization direction flag (argument name is 'optdir'):
@@ -86,7 +86,7 @@ cdef extern from "glpk.h":
     enum: BF_GR "GLP_BF_GR"    #  Schur compl. + Givens rotation
 
     #  basis factorization control parameters
-    ctypedef struct BasFacCP "glp_bfcp":
+    ctypedef struct BfCp "glp_bfcp":
         int type        #  factorization type
         double piv_tol  #  sgf_piv_tol
         int piv_lim     #  sgf_piv_lim
@@ -116,7 +116,7 @@ cdef extern from "glpk.h":
     enum: RT_HAR "GLP_RT_HAR"  #  two-pass Harris' ratio test
 
     #  simplex method control parameters
-    ctypedef struct SimplexCP "glp_smcp":
+    ctypedef struct SmCp "glp_smcp":
         int msg_lev     #  message level
         int meth        #  simplex method option
         int pricing     #  pricing technique
@@ -139,7 +139,7 @@ cdef extern from "glpk.h":
     enum: ORD_SYMAMD "GLP_ORD_SYMAMD"  #  approx. minimum degree (SYMAMD)
 
     #  interior-point solver control parameters
-    ctypedef struct IPointCP "glp_iptcp":
+    ctypedef struct IPtCp "glp_iptcp":
         int msg_lev  #  message level
         int ord_alg  #  ordering algorithm
 
@@ -166,7 +166,7 @@ cdef extern from "glpk.h":
     enum: PP_ALL "GLP_PP_ALL"    #  preprocessing on all levels
 
     #  integer optimizer control parameters
-    ctypedef struct IntOptCP "glp_iocp":
+    ctypedef struct IoCp "glp_iocp":
         int msg_lev     #  message level
         int br_tech     #  branching technique
         int bt_tech     #  backtracking technique
@@ -206,7 +206,7 @@ cdef extern from "glpk.h":
     enum: RF_CLQ "GLP_RF_CLQ"  #  clique cut
 
     #  additional row attributes
-    ctypedef struct RowAttr "glp_attr":
+    ctypedef struct Attr "glp_attr":
         int level   #  subproblem level at which the row was added
         int origin  #  row origin flag
         int klass   #  row class descriptor
@@ -266,69 +266,66 @@ cdef extern from "glpk.h":
     enum: MPS_FILE "GLP_MPS_FILE"  #  free (modern)
 
     #  MPS format control parameters
-    ctypedef struct MPSFormCP "glp_mpscp":
+    ctypedef struct MPSCp "glp_mpscp":
       int blank       #  character code to replace blanks in symbolic names
       char* obj_name  #  objective row name
       double tol_mps  #  zero tolerance for MPS data
 
     #  CPLEX LP format control parameters
-    ctypedef struct CPXFormCP "glp_cpxcp":
+    ctypedef struct CPXCp "glp_cpxcp":
         pass
 
     #  MathProg translator workspace
-    cdef struct MPTranWksp "glp_tran":
+    cdef struct Tran "glp_tran":
         pass
 
     #  create problem object
-    ProbObj* create_prob "glp_create_prob" ()
+    Prob* create_prob "glp_create_prob" ()
 
     #  assign (change) problem name
-    void set_prob_name "glp_set_prob_name" (ProbObj* problem, const char* name)
+    void set_prob_name "glp_set_prob_name" (Prob* prob, const char* name)
 
     #  assign (change) objective function name
-    void set_obj_name "glp_set_obj_name" (ProbObj* problem, const char* name)
+    void set_obj_name "glp_set_obj_name" (Prob* prob, const char* name)
 
     #  set (change) optimization direction flag
-    void set_obj_dir "glp_set_obj_dir" (ProbObj* problem, int optdir)
+    void set_obj_dir "glp_set_obj_dir" (Prob* prob, int optdir)
 
     #  add new rows to problem object
-    int add_rows "glp_add_rows" (ProbObj* problem, int rows)
+    int add_rows "glp_add_rows" (Prob* prob, int rows)
 
     #  add new columns to problem object
-    int add_cols "glp_add_cols" (ProbObj* problem, int cols)
+    int add_cols "glp_add_cols" (Prob* prob, int cols)
 
     #  assign (change) row name
-    void set_row_name "glp_set_row_name" (ProbObj* problem,
+    void set_row_name "glp_set_row_name" (Prob* prob,
                                           int row, const char* name)
 
     #  assign (change) column name
-    void set_col_name "glp_set_col_name" (ProbObj* problem,
+    void set_col_name "glp_set_col_name" (Prob* prob,
                                           int col, const char* name)
 
     #  set (change) row bounds
-    void set_row_bnds "glp_set_row_bnds" (ProbObj* problem,
-                                          int row, int vartype,
+    void set_row_bnds "glp_set_row_bnds" (Prob* prob, int row, int vartype,
                                           double lb, double ub)
 
     #  set (change) column bounds
-    void set_col_bnds "glp_set_col_bnds" (ProbObj* problem,
-                                          int col, int vartype,
+    void set_col_bnds "glp_set_col_bnds" (Prob* prob, int col, int vartype,
                                           double lb, double ub)
 
     #  set (change) obj. coefficient or constant term
-    void set_obj_coef "glp_set_obj_coef" (ProbObj* problem,
-                                          int col, double coef)
+    void set_obj_coef "glp_set_obj_coef" (Prob* prob, int col, double coef)
 
     #  set (replace) row of the constraint matrix
-    void set_mat_row "glp_set_mat_row" (ProbObj* problem, int row, int length,
+    void set_mat_row "glp_set_mat_row" (Prob* prob, int row, int length,
                                         const int ind[], const double val[])
 
     #  set (replace) column of the constraint matrix
-    void set_mat_col "glp_set_mat_col" (ProbObj* problem, int col, int length,
+    void set_mat_col "glp_set_mat_col" (Prob* prob, int col, int length,
                                         const int ind[], const double val[])
 
     #  load (replace) the whole constraint matrix
-    void load_matrix "glp_load_matrix" (ProbObj* problem, int elements,
+    void load_matrix "glp_load_matrix" (Prob* prob, int elements,
                                         const int row_ind[],
                                         const int col_ind[],
                                         const double val[])
@@ -338,336 +335,330 @@ cdef extern from "glpk.h":
                                    const int row_ind[], const int col_ind[])
 
     #  sort elements of the constraint matrix
-    void sort_matrix "glp_sort_matrix" (ProbObj* problem)
+    void sort_matrix "glp_sort_matrix" (Prob* prob)
 
     #  delete specified rows from problem object
-    void del_rows "glp_del_rows" (ProbObj* problem,
-                                  int rows, const int row_ind[])
+    void del_rows "glp_del_rows" (Prob* prob, int rows, const int row_ind[])
 
     #  delete specified columns from problem object
-    void del_cols "glp_del_cols" (ProbObj* problem,
-                                  int cols, const int col_ind[])
+    void del_cols "glp_del_cols" (Prob* prob, int cols, const int col_ind[])
 
     #  copy problem object content
-    void copy_prob "glp_copy_prob" (ProbObj* problem,
-                                    ProbObj* source, bint copy_names)
+    void copy_prob "glp_copy_prob" (Prob* prob, Prob* source, bint copy_names)
 
     #  erase problem object content
-    void erase_prob "glp_erase_prob" (ProbObj* problem)
+    void erase_prob "glp_erase_prob" (Prob* prob)
 
     #  delete problem object
-    void delete_prob "glp_delete_prob" (ProbObj* problem)
+    void delete_prob "glp_delete_prob" (Prob* prob)
 
     #  retrieve problem name
-    const char* get_prob_name "glp_get_prob_name" (ProbObj* problem)
+    const char* get_prob_name "glp_get_prob_name" (Prob* prob)
 
     #  retrieve objective function name
-    const char* get_obj_name "glp_get_obj_name" (ProbObj* problem)
+    const char* get_obj_name "glp_get_obj_name" (Prob* prob)
 
     #  retrieve optimization direction flag; returns optdir
-    int get_obj_dir "glp_get_obj_dir" (ProbObj* problem)
+    int get_obj_dir "glp_get_obj_dir" (Prob* prob)
 
     #  retrieve number of rows
-    int get_num_rows "glp_get_num_rows" (ProbObj* problem)
+    int get_num_rows "glp_get_num_rows" (Prob* prob)
 
     #  retrieve number of columns
-    int get_num_cols "glp_get_num_cols" (ProbObj* problem)
+    int get_num_cols "glp_get_num_cols" (Prob* prob)
 
     #  retrieve row name
-    const char* get_row_name "glp_get_row_name" (ProbObj* problem, int row)
+    const char* get_row_name "glp_get_row_name" (Prob* prob, int row)
 
     #  retrieve column name
-    const char* get_col_name "glp_get_col_name" (ProbObj* problem, int col)
+    const char* get_col_name "glp_get_col_name" (Prob* prob, int col)
 
     #  retrieve row type; returns vartype
-    int get_row_type "glp_get_row_type" (ProbObj* problem, int row)
+    int get_row_type "glp_get_row_type" (Prob* prob, int row)
 
     #  retrieve row lower bound
-    double get_row_lb "glp_get_row_lb" (ProbObj* problem, int row)
+    double get_row_lb "glp_get_row_lb" (Prob* prob, int row)
 
     #  retrieve row upper bound
-    double get_row_ub "glp_get_row_ub" (ProbObj* problem, int row)
+    double get_row_ub "glp_get_row_ub" (Prob* prob, int row)
 
     #  retrieve column type; returns vartype
-    int get_col_type "glp_get_col_type" (ProbObj* problem, int col)
+    int get_col_type "glp_get_col_type" (Prob* prob, int col)
 
     #  retrieve column lower bound
-    double get_col_lb "glp_get_col_lb" (ProbObj* problem, int col)
+    double get_col_lb "glp_get_col_lb" (Prob* prob, int col)
 
     #  retrieve column upper bound
-    double get_col_ub "glp_get_col_ub" (ProbObj* problem, int col)
+    double get_col_ub "glp_get_col_ub" (Prob* prob, int col)
 
     #  retrieve obj. coefficient or constant term
-    double get_obj_coef "glp_get_obj_coef" (ProbObj* problem, int col)
+    double get_obj_coef "glp_get_obj_coef" (Prob* prob, int col)
 
     #  retrieve number of constraint coefficients
-    int get_num_nz "glp_get_num_nz" (ProbObj* problem)
+    int get_num_nz "glp_get_num_nz" (Prob* prob)
 
     #  retrieve row of the constraint matrix
-    int get_mat_row "glp_get_mat_row" (ProbObj* problem, int row,
+    int get_mat_row "glp_get_mat_row" (Prob* prob, int row,
                                        int ind[], double val[])
 
     #  retrieve column of the constraint matrix
-    int get_mat_col "glp_get_mat_col" (ProbObj* problem, int col,
+    int get_mat_col "glp_get_mat_col" (Prob* prob, int col,
                                        int ind[], double val[])
 
     #  create the name index
-    void create_index "glp_create_index" (ProbObj* problem)
+    void create_index "glp_create_index" (Prob* prob)
 
     #  find row by its name
-    int find_row "glp_find_row" (ProbObj* problem, const char* name)
+    int find_row "glp_find_row" (Prob* prob, const char* name)
 
     #  find column by its name
-    int find_col "glp_find_col" (ProbObj* problem, const char* name)
+    int find_col "glp_find_col" (Prob* prob, const char* name)
 
     #  delete the name index
-    void delete_index "glp_delete_index" (ProbObj* problem)
+    void delete_index "glp_delete_index" (Prob* prob)
 
     #  set (change) row scale factor
-    void set_rii "glp_set_rii" (ProbObj* problem, int row, double sf)
+    void set_rii "glp_set_rii" (Prob* prob, int row, double sf)
 
     #  set (change) column scale factor
-    void set_sjj "glp_set_sjj" (ProbObj* problem, int col, double sf)
+    void set_sjj "glp_set_sjj" (Prob* prob, int col, double sf)
 
     #  retrieve row scale factor
-    double get_rii "glp_get_rii" (ProbObj* problem, int row)
+    double get_rii "glp_get_rii" (Prob* prob, int row)
 
     #  retrieve column scale factor
-    double get_sjj "glp_get_sjj" (ProbObj* problem, int col)
+    double get_sjj "glp_get_sjj" (Prob* prob, int col)
 
     #  scale problem data
-    void scale_prob "glp_scale_prob" (ProbObj* problem, int scalopt)
+    void scale_prob "glp_scale_prob" (Prob* prob, int scalopt)
 
     #  unscale problem data
-    void unscale_prob "glp_unscale_prob" (ProbObj* problem)
+    void unscale_prob "glp_unscale_prob" (Prob* prob)
 
     #  set (change) row status
-    void set_row_stat "glp_set_row_stat" (ProbObj* problem,
-                                          int row, int varstat)
+    void set_row_stat "glp_set_row_stat" (Prob* prob, int row, int varstat)
 
     #  set (change) column status
-    void set_col_stat "glp_set_col_stat" (ProbObj* problem,
-                                          int col, int varstat)
+    void set_col_stat "glp_set_col_stat" (Prob* prob, int col, int varstat)
 
     #  construct standard initial LP basis
-    void std_basis "glp_std_basis" (ProbObj* problem)
+    void std_basis "glp_std_basis" (Prob* prob)
 
     #  construct advanced initial LP basis
-    void adv_basis "glp_adv_basis" (ProbObj* problem,
+    void adv_basis "glp_adv_basis" (Prob* prob,
                                     int flags)  #  flags must be 0!
 
     #  construct Bixby's initial LP basis
-    void cpx_basis "glp_cpx_basis" (ProbObj* problem)
+    void cpx_basis "glp_cpx_basis" (Prob* prob)
 
     #  solve LP problem with the simplex method; returns retcode
-    int simplex "glp_simplex" (ProbObj* problem, const SimplexCP* cp)
+    int simplex "glp_simplex" (Prob* prob, const SmCp* cp)
 
     #  solve LP problem in exact arithmetic; returns retcode
-    int exact "glp_exact" (ProbObj* problem, const SimplexCP* cp)
+    int exact "glp_exact" (Prob* prob, const SmCp* cp)
 
     #  initialize simplex method control parameters
-    void init_smcp "glp_init_smcp" (SimplexCP* cp)
+    void init_smcp "glp_init_smcp" (SmCp* cp)
 
     #  retrieve generic status of basic solution; returns solstat
-    int get_status "glp_get_status" (ProbObj* problem)
+    int get_status "glp_get_status" (Prob* prob)
 
     #  retrieve status of primal basic solution; returns solstat
-    int get_prim_stat "glp_get_prim_stat" (ProbObj* problem)
+    int get_prim_stat "glp_get_prim_stat" (Prob* prob)
 
     #  retrieve status of dual basic solution; returns solstat
-    int get_dual_stat "glp_get_dual_stat" (ProbObj* problem)
+    int get_dual_stat "glp_get_dual_stat" (Prob* prob)
 
     #  retrieve objective value (basic solution)
-    double get_obj_val "glp_get_obj_val" (ProbObj* problem)
+    double get_obj_val "glp_get_obj_val" (Prob* prob)
 
     #  retrieve row status; returns varstat
-    int get_row_stat "glp_get_row_stat" (ProbObj* problem, int row)
+    int get_row_stat "glp_get_row_stat" (Prob* prob, int row)
 
     #  retrieve row primal value (basic solution)
-    double get_row_prim "glp_get_row_prim" (ProbObj* problem, int row)
+    double get_row_prim "glp_get_row_prim" (Prob* prob, int row)
 
     #  retrieve row dual value (basic solution)
-    double get_row_dual "glp_get_row_dual" (ProbObj* problem, int row)
+    double get_row_dual "glp_get_row_dual" (Prob* prob, int row)
 
     #  retrieve column status; returns varstat
-    int get_col_stat "glp_get_col_stat" (ProbObj* problem, int col)
+    int get_col_stat "glp_get_col_stat" (Prob* prob, int col)
 
     #  retrieve column primal value (basic solution)
-    double get_col_prim "glp_get_col_prim" (ProbObj* problem, int col)
+    double get_col_prim "glp_get_col_prim" (Prob* prob, int col)
 
     #  retrieve column dual value (basic solution)
-    double get_col_dual "glp_get_col_dual" (ProbObj* problem, int col)
+    double get_col_dual "glp_get_col_dual" (Prob* prob, int col)
 
     #  determine variable causing unboundedness
-    int get_unbnd_ray "glp_get_unbnd_ray" (ProbObj* problem)
+    int get_unbnd_ray "glp_get_unbnd_ray" (Prob* prob)
 
 # Undocumented
 #
 #    # get simplex solver iteration count
-#    int get_it_cnt "glp_get_it_cnt" (ProbObj* problem)
+#    int get_it_cnt "glp_get_it_cnt" (Prob* prob)
 #
 #    # set simplex solver iteration count
-#    void set_it_cnt "glp_set_it_cnt" (ProbObj* problem, int it_cnt)
+#    void set_it_cnt "glp_set_it_cnt" (Prob* prob, int it_cnt)
 
     #  solve LP problem with the interior-point method; returns retcode
-    int interior "glp_interior" (ProbObj* problem, const IPointCP* cp)
+    int interior "glp_interior" (Prob* prob, const IPtCp* cp)
 
     #  initialize interior-point solver control parameters
-    void init_iptcp "glp_init_iptcp" (IPointCP* cp)
+    void init_iptcp "glp_init_iptcp" (IPtCp* cp)
 
     #  retrieve status of interior-point solution; returns solstat
-    int ipt_status "glp_ipt_status" (ProbObj* problem)
+    int ipt_status "glp_ipt_status" (Prob* prob)
 
     #  retrieve objective value (interior point)
-    double ipt_obj_val "glp_ipt_obj_val" (ProbObj* problem)
+    double ipt_obj_val "glp_ipt_obj_val" (Prob* prob)
 
     #  retrieve row primal value (interior point)
-    double ipt_row_prim "glp_ipt_row_prim" (ProbObj* problem, int row)
+    double ipt_row_prim "glp_ipt_row_prim" (Prob* prob, int row)
 
     #  retrieve row dual value (interior point)
-    double ipt_row_dual "glp_ipt_row_dual" (ProbObj* problem, int row)
+    double ipt_row_dual "glp_ipt_row_dual" (Prob* prob, int row)
 
     #  retrieve column primal value (interior point)
-    double ipt_col_prim "glp_ipt_col_prim" (ProbObj* problem, int col)
+    double ipt_col_prim "glp_ipt_col_prim" (Prob* prob, int col)
 
     #  retrieve column dual value (interior point)
-    double ipt_col_dual "glp_ipt_col_dual" (ProbObj* problem, int col)
+    double ipt_col_dual "glp_ipt_col_dual" (Prob* prob, int col)
 
     #  set (change) column kind
-    void set_col_kind "glp_set_col_kind" (ProbObj* problem,
-                                          int col, int varkind)
+    void set_col_kind "glp_set_col_kind" (Prob* prob, int col, int varkind)
 
     #  retrieve column kind; returns varkind
-    int get_col_kind "glp_get_col_kind" (ProbObj* problem, int col)
+    int get_col_kind "glp_get_col_kind" (Prob* prob, int col)
 
     #  retrieve number of integer columns
-    int get_num_int "glp_get_num_int" (ProbObj* problem)
+    int get_num_int "glp_get_num_int" (Prob* prob)
 
     #  retrieve number of binary columns
-    int get_num_bin "glp_get_num_bin" (ProbObj* problem)
+    int get_num_bin "glp_get_num_bin" (Prob* prob)
 
     #  solve MIP problem with the branch-and-bound method; returns retcode
-    int intopt "glp_intopt" (ProbObj* problem, const IntOptCP* cp)
+    int intopt "glp_intopt" (Prob* prob, const IoCp* cp)
 
     #  initialize integer optimizer control parameters
-    void init_iocp "glp_init_iocp" (IntOptCP* cp)
+    void init_iocp "glp_init_iocp" (IoCp* cp)
 
     #  retrieve status of MIP solution; returns solstat
-    int mip_status "glp_mip_status" (ProbObj* problem)
+    int mip_status "glp_mip_status" (Prob* prob)
 
     #  retrieve objective value (MIP solution)
-    double mip_obj_val "glp_mip_obj_val" (ProbObj* problem)
+    double mip_obj_val "glp_mip_obj_val" (Prob* prob)
 
     #  retrieve row value (MIP solution)
-    double mip_row_val "glp_mip_row_val" (ProbObj* problem, int row)
+    double mip_row_val "glp_mip_row_val" (Prob* prob, int row)
 
     #  retrieve column value (MIP solution)
-    double mip_col_val "glp_mip_col_val" (ProbObj* problem, int col)
+    double mip_col_val "glp_mip_col_val" (Prob* prob, int col)
 
     #  check feasibility/optimality conditions
-    void check_kkt "glp_check_kkt" (ProbObj* problem, int sol, int cond,
+    void check_kkt "glp_check_kkt" (Prob* prob, int sol, int cond,
                                     double* ae_max, int* ae_ind,
                                     double* re_max, int* re_ind)
 
     #  write basic solution in printable format
-    int print_sol "glp_print_sol" (ProbObj* problem, const char* fname)
+    int print_sol "glp_print_sol" (Prob* prob, const char* fname)
 
     #  read basic solution from text file
-    int read_sol "glp_read_sol" (ProbObj* problem, const char* fname)
+    int read_sol "glp_read_sol" (Prob* prob, const char* fname)
 
     #  write basic solution to text file
-    int write_sol "glp_write_sol" (ProbObj* problem, const char* fname)
+    int write_sol "glp_write_sol" (Prob* prob, const char* fname)
 
     #  print sensitivity analysis report
-    int print_ranges "glp_print_ranges" (ProbObj* problem,
+    int print_ranges "glp_print_ranges" (Prob* prob,
                                          int length, const int indlist[],
                                          int flags,  #  flags must be 0!
                                          const char* fname)
 
     #  write interior-point solution in printable format
-    int print_ipt "glp_print_ipt" (ProbObj* problem, const char* fname)
+    int print_ipt "glp_print_ipt" (Prob* prob, const char* fname)
 
     #  read interior-point solution from text file
-    int read_ipt "glp_read_ipt" (ProbObj* problem, const char* fname)
+    int read_ipt "glp_read_ipt" (Prob* prob, const char* fname)
 
     #  write interior-point solution to text file
-    int write_ipt "glp_write_ipt" (ProbObj* problem, const char* fname)
+    int write_ipt "glp_write_ipt" (Prob* prob, const char* fname)
 
     #  write MIP solution in printable format
-    int print_mip "glp_print_mip" (ProbObj* problem, const char* fname)
+    int print_mip "glp_print_mip" (Prob* prob, const char* fname)
 
     #  read MIP solution from text file
-    int read_mip "glp_read_mip" (ProbObj* problem, const char* fname)
+    int read_mip "glp_read_mip" (Prob* prob, const char* fname)
 
     #  write MIP solution to text file
-    int write_mip "glp_write_mip" (ProbObj* problem, const char* fname)
+    int write_mip "glp_write_mip" (Prob* prob, const char* fname)
 
     #  check if LP basis factorization exists
-    bint bf_exists "glp_bf_exists" (ProbObj* problem)
+    bint bf_exists "glp_bf_exists" (Prob* prob)
 
     #  compute LP basis factorization; returns retcode
-    int factorize "glp_factorize" (ProbObj* problem)
+    int factorize "glp_factorize" (Prob* prob)
 
     #  check if LP basis factorization has been updated
-    bint bf_updated "glp_bf_updated" (ProbObj* problem)
+    bint bf_updated "glp_bf_updated" (Prob* prob)
 
     #  retrieve LP basis factorization control parameters
-    void get_bfcp "glp_get_bfcp" (ProbObj* problem, BasFacCP* cp)
+    void get_bfcp "glp_get_bfcp" (Prob* prob, BfCp* cp)
 
     #  change LP basis factorization control parameters
-    void set_bfcp "glp_set_bfcp" (ProbObj* problem, const BasFacCP* cp)
+    void set_bfcp "glp_set_bfcp" (Prob* prob, const BfCp* cp)
 
     #  retrieve LP basis header information
-    int get_bhead "glp_get_bhead" (ProbObj* problem, int k)
+    int get_bhead "glp_get_bhead" (Prob* prob, int k)
 
     #  retrieve row index in the basis header
-    int get_row_bind "glp_get_row_bind" (ProbObj* problem, int row)
+    int get_row_bind "glp_get_row_bind" (Prob* prob, int row)
 
     #  retrieve column index in the basis header
-    int get_col_bind "glp_get_col_bind" (ProbObj* problem, int col)
+    int get_col_bind "glp_get_col_bind" (Prob* prob, int col)
 
     #  perform forward transformation (solve system B*x = b)
-    void ftran "glp_ftran" (ProbObj* problem, double rhs_pre_x_post[])
+    void ftran "glp_ftran" (Prob* prob, double rhs_pre_x_post[])
 
     #  perform backward transformation (solve system B'*x = b)
-    void btran "glp_btran" (ProbObj* problem, double rhs_pre_x_post[])
+    void btran "glp_btran" (Prob* prob, double rhs_pre_x_post[])
 
     #  "warm up" LP basis; returns retcode
-    int warm_up "glp_warm_up" (ProbObj* problem)
+    int warm_up "glp_warm_up" (Prob* prob)
 
     #  compute row of the simplex tableau
-    int eval_tab_row "glp_eval_tab_row" (ProbObj* problem, int k,
+    int eval_tab_row "glp_eval_tab_row" (Prob* prob, int k,
                                          int ind[], double val[])
 
     #  compute column of the simplex tableau
-    int eval_tab_col "glp_eval_tab_col" (ProbObj* problem, int k,
+    int eval_tab_col "glp_eval_tab_col" (Prob* prob, int k,
                                          int ind[], double val[])
 
     #  transform explicitly specified row
-    int transform_row "glp_transform_row" (ProbObj* problem, int length,
+    int transform_row "glp_transform_row" (Prob* prob, int length,
                                            int ind[], double val[])
 
     #  transform explicitly specified column
-    int transform_col "glp_transform_col" (ProbObj* problem, int length,
+    int transform_col "glp_transform_col" (Prob* prob, int length,
                                            int ind[], double val[])
 
     #  perform primal ratio test
-    int prim_rtest "glp_prim_rtest" (ProbObj* problem, int length,
+    int prim_rtest "glp_prim_rtest" (Prob* prob, int length,
                                      const int ind[], const double val[],
                                      int direction, double eps)
 
     #  perform dual ratio test
-    int dual_rtest "glp_dual_rtest" (ProbObj* problem, int length,
+    int dual_rtest "glp_dual_rtest" (Prob* prob, int length,
                                      const int ind[], const double val[],
                                      int direction, double eps)
 
     #  analyze active bound of non-basic variable
-    void analyze_bound "glp_analyze_bound" (ProbObj* problem, int k,
+    void analyze_bound "glp_analyze_bound" (Prob* prob, int k,
                                             double* min_bnd, int* min_bnd_k,
                                             double* max_bnd, int* max_bnd_k)
 
     #  analyze objective coefficient at basic variable
-    void analyze_coef "glp_analyze_coef" (ProbObj* problem, int k,
+    void analyze_coef "glp_analyze_coef" (Prob* prob, int k,
                                           double* min_coef, int* min_coef_k,
                                           double* val_min_coef,
                                           double* max_coef, int* max_coef_k,
@@ -677,7 +668,7 @@ cdef extern from "glpk.h":
     int ios_reason "glp_ios_reason" (Tree* tree)
 
     #  access the problem object
-    ProbObj* ios_get_prob "glp_ios_get_prob" (Tree* tree)
+    Prob* ios_get_prob "glp_ios_get_prob" (Tree* tree)
 
     #  determine size of the branch-and-bound tree
     void ios_tree_size "glp_ios_tree_size" (Tree* tree,
@@ -711,7 +702,7 @@ cdef extern from "glpk.h":
     CBInfo ios_node_data "glp_ios_node_data" (Tree* tree, int node)
 
     #  retrieve additional row attributes
-    void ios_row_attr "glp_ios_row_attr" (Tree* tree, int row, RowAttr* attr)
+    void ios_row_attr "glp_ios_row_attr" (Tree* tree, int row, Attr* attr)
 
     #  determine current size of the cut pool
     int ios_pool_size "glp_ios_pool_size" (Tree* tree)
@@ -748,86 +739,84 @@ cdef extern from "glpk.h":
 # Not used and (therefore) undocumented.
 #
 #    #  initialize MPS format control parameters
-#    void init_mpscp "glp_init_mpscp" (MPSFormCP* cp)
+#    void init_mpscp "glp_init_mpscp" (MPSCp* cp)
 
     #  read problem data in MPS format
-    int read_mps "glp_read_mps" (ProbObj* problem, int mpsfmt,
-                                 const MPSFormCP* cp,  #  cp must be NULL!
+    int read_mps "glp_read_mps" (Prob* prob, int mpsfmt,
+                                 const MPSCp* cp,  #  cp must be NULL!
                                  const char* fname)
 
     #  write problem data in MPS format
-    int write_mps "glp_write_mps" (ProbObj* problem, int mpsfmt,
-                                   const MPSFormCP* cp,  #  cp must be NULL!
+    int write_mps "glp_write_mps" (Prob* prob, int mpsfmt,
+                                   const MPSCp* cp,  #  cp must be NULL!
                                    const char* fname)
 
 # Not used and (therefore) undocumented.
 #
 #    #  initialize CPLEX LP format control parameters
-#    void init_cpxcp "glp_init_cpxcp" (CPXFormCP* cp)
+#    void init_cpxcp "glp_init_cpxcp" (CPXCp* cp)
 
     #  read problem data in CPLEX LP format
-    int read_lp "glp_read_lp" (ProbObj* problem,
-                               const CPXFormCP* cp,  #  cp must be NULL!
+    int read_lp "glp_read_lp" (Prob* prob,
+                               const CPXCp* cp,  #  cp must be NULL!
                                const char* fname)
 
     #  write problem data in CPLEX LP format
-    int write_lp "glp_write_lp" (ProbObj* problem,
-                                 const CPXFormCP* cp,  #  cp must be NULL!
+    int write_lp "glp_write_lp" (Prob* prob,
+                                 const CPXCp* cp,  #  cp must be NULL!
                                  const char* fname)
 
     #  read problem data in GLPK format
-    int read_prob "glp_read_prob" (ProbObj* problem,
+    int read_prob "glp_read_prob" (Prob* prob,
                                    int flags,  #  flags must be 0!
                                    const char* fname)
 
     #  write problem data in GLPK format
-    int write_prob "glp_write_prob" (ProbObj* problem,
+    int write_prob "glp_write_prob" (Prob* prob,
                                      int flags,  #  flags must be 0!
                                      const char* fname)
 
     #  allocate the MathProg translator workspace
-    MPTranWksp* mpl_alloc_wksp "glp_mpl_alloc_wksp" ()
+    Tran* mpl_alloc_wksp "glp_mpl_alloc_wksp" ()
 
     #  read and translate model section
-    int mpl_read_model "glp_mpl_read_model" (MPTranWksp* wksp,
+    int mpl_read_model "glp_mpl_read_model" (Tran* wksp,
                                              const char* fname, bint skip_data)
 
     #  read and translate data section
-    int mpl_read_data "glp_mpl_read_data" (MPTranWksp* wksp, const char* fname)
+    int mpl_read_data "glp_mpl_read_data" (Tran* wksp, const char* fname)
 
     #  generate the model
-    int mpl_generate "glp_mpl_generate" (MPTranWksp* wksp, const char* fname)
+    int mpl_generate "glp_mpl_generate" (Tran* wksp, const char* fname)
 
     #  build LP/MIP problem instance from the model
-    void mpl_build_prob "glp_mpl_build_prob" (MPTranWksp* wksp,
-                                              ProbObj* problem)
+    void mpl_build_prob "glp_mpl_build_prob" (Tran* wksp, Prob* prob)
 
     #  postsolve the model
-    int mpl_postsolve "glp_mpl_postsolve" (MPTranWksp* wksp, ProbObj* problem,
+    int mpl_postsolve "glp_mpl_postsolve" (Tran* wksp, Prob* prob,
                                            int solind)
 
     #  free the MathProg translator workspace
-    void mpl_free_wksp "glp_mpl_free_wksp" (MPTranWksp* wksp)
+    void mpl_free_wksp "glp_mpl_free_wksp" (Tran* wksp)
 
     #  stand-alone LP/MIP solver (main function of glpsol;
     # can be used to avoid having to call glpsol in a separate process)
     int main "glp_main" (int argc, const char* argv[])
 
     #  read CNF-SAT problem data in DIMACS format
-    int read_cnfsat "glp_read_cnfsat" (ProbObj* problem, const char* fname)
+    int read_cnfsat "glp_read_cnfsat" (Prob* prob, const char* fname)
 
     #  check for CNF-SAT problem instance
-    int check_cnfsat "glp_check_cnfsat" (ProbObj* problem)
+    int check_cnfsat "glp_check_cnfsat" (Prob* prob)
 
     #  write CNF-SAT problem data in DIMACS format
-    int write_cnfsat "glp_write_cnfsat" (ProbObj* problem, const char* fname)
+    int write_cnfsat "glp_write_cnfsat" (Prob* prob, const char* fname)
 
     #  solve CNF-SAT problem with MiniSat solver; returns retcode
-    int minisat1 "glp_minisat1" (ProbObj* problem)
+    int minisat1 "glp_minisat1" (Prob* prob)
 
     #  solve integer feasibility problem; returns retcode
-    int intfeas1 "glp_intfeas1" (ProbObj* problem,
-                                 bint use_bound, int obj_bound)
+    int intfeas1 "glp_intfeas1" (Prob* prob, bint use_bound, int obj_bound)
 
     #  initialization return codes (argument name is 'initretcode'):
     enum: INIT_OK   #  initialization successful
@@ -996,7 +985,7 @@ cdef extern from "glpk.h":
     int write_graph "glp_write_graph" (Graph* graph, const char* fname)
 
     #  convert minimum cost flow problem to LP
-    void mincost_lp "glp_mincost_lp" (ProbObj* problem, Graph* graph,
+    void mincost_lp "glp_mincost_lp" (Prob* prob, Graph* graph,
                                       bint copy_names, int v_rhs,
                                       int a_low, int a_cap, int a_cost)
 
@@ -1012,7 +1001,7 @@ cdef extern from "glpk.h":
                                              int a_x, int a_rc)
 
     #  convert maximum flow problem to LP
-    void maxflow_lp "glp_maxflow_lp" (ProbObj* problem, Graph* graph,
+    void maxflow_lp "glp_maxflow_lp" (Prob* prob, Graph* graph,
                                       bint copy_names,
                                       int source, int sink, int a_cap)
 
@@ -1030,7 +1019,7 @@ cdef extern from "glpk.h":
     enum: ASN_MMP "GLP_ASN_MMP"  #  maximum matching
 
     #  convert assignment problem to LP
-    int asnprob_lp "glp_asnprob_lp" (ProbObj* problem, int asnform,
+    int asnprob_lp "glp_asnprob_lp" (Prob* prob, int asnform,
                                      Graph* graph, bint copy_names,
                                      int v_set, int a_cost)
 

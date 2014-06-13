@@ -160,7 +160,7 @@ cdef class Tree:
 
     def ios_row_attr(self, row):
         """Retrieve additional row attributes"""
-        cdef glpk.RowAttr* attr
+        cdef glpk.Attr* attr
         row = self.problem.find_row_as_needed(row)
         glpk.ios_row_attr(self._tree, row, attr)
         return {'level': attr.level,

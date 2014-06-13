@@ -54,7 +54,7 @@ cdef class SimplexControls:
 
     """
 
-    cdef glpk.SimplexCP _smcp
+    cdef glpk.SmCp _smcp
 
     def __cinit__(self):
         glpk.init_smcp(&self._smcp)

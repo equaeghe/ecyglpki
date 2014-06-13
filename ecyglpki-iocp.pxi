@@ -78,7 +78,7 @@ cdef class IntOptControls:
 
     """
 
-    cdef glpk.IntOptCP _iocp
+    cdef glpk.IoCp _iocp
 
     def __cinit__(self):
         glpk.init_iocp(&self._iocp)

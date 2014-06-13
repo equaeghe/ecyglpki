@@ -41,7 +41,7 @@ cdef class IPointControls:
 
     """
 
-    cdef glpk.IPointCP _iptcp
+    cdef glpk.IPtCp _iptcp
 
     def __cinit__(self):
         glpk.init_iptcp(&self._iptcp)
