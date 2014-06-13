@@ -2,11 +2,11 @@
 
 ###############################################################################
 #
-#  This code is part of epyglpki (a Cython GLPK interface).
+#  This code is part of ecyglpki (a Cython GLPK interface).
 #
 #  Copyright (C) 2014 Erik Quaeghebeur. All rights reserved.
 #
-#  epyglpki is free software: you can redistribute it and/or modify it under
+#  ecyglpki is free software: you can redistribute it and/or modify it under
 #  the terms of the GNU General Public License as published by the Free
 #  Software Foundation, either version 3 of the License, or (at your option)
 #  any later version.
