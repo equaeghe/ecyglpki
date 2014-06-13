@@ -22,6 +22,10 @@
 ###############################################################################
 
 
+ctypedef void* CBInfo
+ctypedef void (*CBFunc)(Tree*, CBInfo)
+
+
 cdef extern from "glpk.h":
     #  library version numbers:
     enum: MAJOR_VERSION "GLP_MAJOR_VERSION"
@@ -162,8 +166,6 @@ cdef extern from "glpk.h":
     enum: PP_ALL "GLP_PP_ALL"    #  preprocessing on all levels
 
     #  integer optimizer control parameters
-    ctypedef void* CBInfo
-    ctypedef void (*CBFunc)(Tree*, CBInfo)
     ctypedef struct IntOptCP "glp_iocp":
         int msg_lev     #  message level
         int br_tech     #  branching technique

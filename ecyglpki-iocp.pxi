@@ -22,22 +22,22 @@
 ###############################################################################
 
 
-#cdef class CallbackFunction:
-    #"""The callback function wrapper"""
+cdef class CallbackFunction:
+    """The callback function wrapper"""
 
-    #cdef glpk.CBFunc _cb_func
+    cdef glpk.CBFunc _cb_func
 
-    #def __cinit__(self, cbfunc_ptr):
-        #self._cb_func = <glpk.CBFunc>PyCapsule_GetPointer(cbfunc_ptr(), NULL)
+    def __cinit__(self, cbfunc_ptr):
+        self._cb_func = <glpk.CBFunc>PyCapsule_GetPointer(cbfunc_ptr(), NULL)
 
 
-#cdef class CallbackInfo:
-    #"""The callback function info reference"""
+cdef class CallbackInfo:
+    """The callback function info reference"""
 
-    #cdef glpk.CBInfo _cb_info
+    cdef glpk.CBInfo _cb_info
 
-    #def __cinit__(self, cbinfo_ptr):
-        #self._cb_info = <glpk.CBInfo>PyCapsule_GetPointer(cbinfo_ptr(), NULL)
+    def __cinit__(self, cbinfo_ptr):
+        self._cb_info = <glpk.CBInfo>PyCapsule_GetPointer(cbinfo_ptr(), NULL)
 
 
 
@@ -121,27 +121,27 @@ cdef class IntOptControls:
         def __set__(self, value):
             self._iocp.out_dly = int(value)
 
-    #property cb_func:
-        #"""Callback routine"""
-        #def __get__(self):
-            #cdef glpk.CBFunc callback = self._iocp.cb_func
-            #if callback is not NULL:
-                #return CallbackFunction(PyCapsule_New(callback, NULL, NULL))
-            #else:
-                #return None
-        #def __set__(self, CallbackFunction callback):
-            #self._iocp.cb_func = callback._cb_func
+    property cb_func:
+        """Callback routine"""
+        def __get__(self):
+            cdef glpk.CBFunc callback = self._iocp.cb_func
+            if callback is not NULL:
+                return CallbackFunction(PyCapsule_New(callback, NULL, NULL))
+            else:
+                return None
+        def __set__(self, CallbackFunction callback):
+            self._iocp.cb_func = callback._cb_func
 
-    #property cb_info:  # TODO: use Python object for node data?
-        #"""Transit pointer passed to the routine cb_func"""
-        #def __get__(self):
-            #cdef glpk.CBInfo info = self._iocp.cb_info
-            #if info is not NULL:
-                #return CallbackInfo(PyCapsule_New(info, NULL, NULL))
-            #else:
-                #return None
-        #def __set__(self, CallbackInfo info):
-            #self._iocp.cb_info = info._cb_info
+    property cb_info:  # TODO: use Python object for node data?
+        """Transit pointer passed to the routine cb_func"""
+        def __get__(self):
+            cdef glpk.CBInfo info = self._iocp.cb_info
+            if info is not NULL:
+                return CallbackInfo(PyCapsule_New(info, NULL, NULL))
+            else:
+                return None
+        def __set__(self, CallbackInfo info):
+            self._iocp.cb_info = info._cb_info
 
     property cb_size:  # TODO: use Python object for node data?
         """Number of extra bytes allocated for each search tree node, an `int`

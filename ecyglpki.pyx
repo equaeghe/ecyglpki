@@ -63,4 +63,4 @@ include 'ecyglpki-iocp.pxi'
 
 include 'ecyglpki-problem.pxi'
 
-#include 'ecyglpki-tree.pxi'
+include 'ecyglpki-tree.pxi'
