@@ -257,6 +257,7 @@ cdef class Problem:
         return PyCapsule_New(self._prob, NULL, NULL)
 
     def __dealloc__(self):
+        glpk.delete_index(self._prob)
         glpk.delete_prob(self._prob)
 
     ### Translated GLPK functions ###
