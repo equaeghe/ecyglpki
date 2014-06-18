@@ -83,6 +83,14 @@ cdef class Arc:
         return PyCapsule_New(self._arc, NULL, NULL)
 
 
+#  assignment problem formulation
+cdef str2asnform = {
+    'perfect_maximize': glpk.ASN_MIN,
+    'perfect_minimize': glpk.ASN_MAX,
+    'maximum': glpk.ASN_MMP
+    }
+
+
 cdef class Graph:
     """A GLPK graph"""
 
@@ -189,11 +197,22 @@ cdef class Graph:
                             "(str 'str'), not '" + type(vertex).__name__ +
                             "'.")
 
-    #  read graph from plain text file
-    int read_graph(self._graph, const char* fname)
+    @classmethod
+    def read_graph(cls, int vertex_data_size, int arc_data_size, str fname):
+        """Read graph from plain text file"""
+        graph = cls(vertex_data_size, arc_data_size)
+        cdef glpk.Graph* _graph = <glpk.Graph*>PyCapsule_GetPointer(
+                                                    graph._graph_ptr(), NULL)
+        retcode = glpk.read_graph(_graph, str2chars(fname))
+        if retcode is not 0:
+            raise RuntimeError("Error reading graph from plain text file")
+        return graph
 
-    #  write graph to plain text file
-    int write_graph(self._graph, const char* fname)
+    def write_graph(self, str fname):
+        """Write graph to plain text file"""
+        retcode = glpk.write_graph(self._graph, str2chars(fname))
+        if retcode is not 0:
+            raise RuntimeError("Error writing graph plain text file")
 
     #  convert minimum cost flow problem to LP
     void mincost_lp(Prob* prob, self._graph, bint copy_names, int v_rhs, int a_low, int a_cap, int a_cost)
@@ -213,46 +232,110 @@ cdef class Graph:
     #  check correctness of assignment problem data
     int check_asnprob(self._graph, int v_set)
 
-    #  assignment problem formulation (argument name 'asnform'):
-    enum: ASN_MIN "GLP_ASN_MIN"  #  perfect matching (minimization)
-    enum: ASN_MAX "GLP_ASN_MAX"  #  perfect matching (maximization)
-    enum: ASN_MMP "GLP_ASN_MMP"  #  maximum matching
-
     #  convert assignment problem to LP
-    int asnprob_lp(Prob* prob, int asnform, self._graph, bint copy_names, int v_set, int a_cost)
+    int asnprob_lp(Prob* prob, str2asnform[asnform], self._graph, bint copy_names, int v_set, int a_cost)
 
     #  solve assignment problem with out-of-kilter algorithm; returns retcode
-    int asnprob_okalg(int asnform, self._graph, int v_set, int a_cost, double* sol, int a_x)
+    int asnprob_okalg(str2asnform[asnform], self._graph, int v_set, int a_cost, double* sol, int a_x)
 
-    #  find bipartite matching of maximum cardinality
-    int asnprob_hall(self._graph, int v_set, int a_x)
+    def asnprob_hall(self, int v_set, int a_x):
+        """Find bipartite matching of maximum cardinality"""
+        cardinality = asnprob_hall(self._graph, v_set, a_x)
+        if cardinality < 0:
+            raise ValueError("The specified graph is incorrect")
+        return cardinality
 
-    #  solve critical path problem
-    double cpp(self._graph, int v_t, int v_es, int v_ls)
+    def cpp(self, int v_t, int v_es, int v_ls):
+        """Solve critical path problem"""
+        return glpk.cpp(self._graph, v_t, v_es, v_ls)
 
-    #  read min-cost flow problem data in DIMACS format
-    int read_mincost(self._graph, int v_rhs, int a_low, int a_cap, int a_cost, const char* fname)
+    @classmethod
+    def read_mincost(cls, int vertex_data_size, int arc_data_size,
+                     int v_rhs, int a_low, int a_cap, int a_cost, str fname):
+        """Read min-cost flow problem data in DIMACS format"""
+        graph = cls(vertex_data_size, arc_data_size)
+        cdef glpk.Graph* _graph = <glpk.Graph*>PyCapsule_GetPointer(
+                                                    graph._graph_ptr(), NULL)
+        retcode = glpk.read_mincost(_graph, v_rhs, a_low, a_cap, a_cost,
+                                    str2chars(fname))
+        if retcode is not 0:
+            raise RuntimeError("Error reading min-cost flow problem DIMACS " +
+                               "file")
+        return graph
 
-    #  write min-cost flow problem data in DIMACS format
-    int write_mincost(self._graph, int v_rhs, int a_low, int a_cap, int a_cost, const char* fname)
+    def write_mincost(self, int v_rhs, int a_low, int a_cap, int a_cost,
+                      str fname):
+        """Write min-cost flow problem data in DIMACS format"""
+        retcode = glpk.write_mincost(self._graph, v_rhs, a_low, a_cap, a_cost,
+                                     str2chars(fname))
+        if retcode is not 0:
+            raise RuntimeError("Error writing min-cost flow problem DIMACS " +
+                               "file")
 
-    #  read maximum flow problem data in DIMACS format
-    int read_maxflow(self._graph, int* source, int* sink, int a_cap, const char* fname)
+    @classmethod
+    def read_maxflow(cls, int vertex_data_size, int arc_data_size,
+                     int a_cap, str fname):
+        """Read maximum flow problem data in DIMACS format"""
+        graph = cls(vertex_data_size, arc_data_size)
+        cdef glpk.Graph* _graph = <glpk.Graph*>PyCapsule_GetPointer(
+                                                    graph._graph_ptr(), NULL)
+        cdef int source
+        cdef int sink
+        retcode = glpk.read_maxflow(_graph, a_cap, &source, &sink,
+                                    str2chars(fname))
+        if retcode is not 0:
+            raise RuntimeError("Error reading maximum flow problem DIMACS " +
+                               "file")
+        return (graph, source, sink)
 
-    #  write maximum flow problem data in DIMACS format
-    int write_maxflow(self._graph, int source, int sink, int a_cap, const char* fname)
+    def write_maxflow(self, source, sink, int a_cap, str fname):
+        """Write maximum flow problem data in DIMACS format"""
+        source = self.find_vertex_as_needed(source)
+        sink = self.find_vertex_as_needed(sink)
+        retcode = glpk.write_maxflow(self._graph, source, sink, a_cap,
+                                     str2chars(fname))
+        if retcode is not 0:
+            raise RuntimeError("Error writing maximum flow problem DIMACS " +
+                               "file")
 
-    #  read assignment problem data in DIMACS format
-    int read_asnprob(self._graph, int v_set, int a_cost, const char* fname)
+    @classmethod
+    def read_asnprob(cls, int vertex_data_size, int arc_data_size,
+                     int v_set, int a_cost, str fname):
+        """Read assignment problem data in DIMACS format"""
+        graph = cls(vertex_data_size, arc_data_size)
+        cdef glpk.Graph* _graph = <glpk.Graph*>PyCapsule_GetPointer(
+                                                    graph._graph_ptr(), NULL)
+        retcode = glpk.read_asnprob(_graph, v_set, a_cost, str2chars(fname))
+        if retcode is not 0:
+            raise RuntimeError("Error assignment problem DIMACS file")
+        return graph
 
-    #  write assignment problem data in DIMACS format
-    int write_asnprob(self._graph, int v_set, int a_cost, const char* fname)
+    def write_asnprob(self, int v_set, int a_cost, str fname):
+        """Write assignment problem data in DIMACS format"""
+        retcode = glpk.write_asnprob(self._graph, v_set, a_cost,
+                                     str2chars(fname))
+        if retcode is not 0:
+            raise RuntimeError("Error writing assignment problem DIMACS file")
 
-    #  read graph in DIMACS clique/coloring format
-    int read_ccdata(self._graph, int v_wgt, const char* fname)
+    @classmethod
+    def read_ccdata(cls, int vertex_data_size, int arc_data_size,
+                    int v_wgt, str fname):
+        """Read graph in DIMACS clique/coloring format"""
+        graph = cls(vertex_data_size, arc_data_size)
+        cdef glpk.Graph* _graph = <glpk.Graph*>PyCapsule_GetPointer(
+                                                    graph._graph_ptr(), NULL)
+        retcode = glpk.read_ccdata(_graph, v_wgt, str2chars(fname))
+        if retcode is not 0:
+            raise RuntimeError("Error reading graph DIMACS clique/coloring " +
+                               "file")
+        return graph
 
-    #  write graph in DIMACS clique/coloring format
-    int write_ccdata(self._graph, int v_wgt, const char* fname)
+    def write_ccdata(self, int v_wgt, str fname):
+        """Write graph in DIMACS clique/coloring format"""
+        retcode = glpk.write_ccdata(self._graph, v_wgt, str2chars(fname))
+        if retcode is not 0:
+            raise RuntimeError("Error writing graph DIMACS clique/coloring " +
+                               "file")
 
     #  Klingman's network problem generator
     int netgen(self._graph, int v_rhs, int a_cap, int a_cost, const int param[1+15])
@@ -266,14 +349,17 @@ cdef class Graph:
     #  Goldfarb's maximum flow problem generator
     int rmfgen(self._graph, int* source, int* sink, int a_cap, const int param[1+5])
 
-    #  find all weakly connected components of graph
-    int weak_comp(self._graph, int v_num)
+    def weak_comp(self, int v_num):
+        """Find all weakly connected components of graph"""
+        return glpk.weak_comp(self._graph, v_num)
 
-    #  find all strongly connected components of graph
-    int strong_comp(self._graph, int v_num)
+    def strong_comp(self, int v_num):
+        """Find all strongly connected components of graph"""
+        return glpk.strong_comp(self._graph, v_num)
 
-    #  topological sorting of acyclic digraph
-    int top_sort(self._graph, int v_num)
+    def top_sort(self, int v_num):
+        """Topological sorting of acyclic digraph"""
+        return glpk.top_sort(self._graph, v_num)
 
     #  find maximum weight clique with exact algorithm; returns retcode
     int wclique_exact(self._graph, int v_wgt, double* sol, int v_set)
