@@ -624,8 +624,7 @@ cdef class Problem:
         cdef int row = glpk.find_row(self._prob, name2chars(name))
         if row is 0:
             raise ValueError("'" + name + "' is not a row name.")
-        else:
-            return row
+        return row
 
     def find_row_as_needed(self, row):
         if isinstance(row, int):
@@ -642,8 +641,7 @@ cdef class Problem:
         cdef int col = glpk.find_col(self._prob, name2chars(name))
         if col is 0:
             raise ValueError("'" + name + "' is not a column name.")
-        else:
-            return col
+        return col
 
     def find_col_as_needed(self, col):
         if isinstance(col, int):
@@ -748,10 +746,9 @@ cdef class Problem:
         if controls.meth is not 'primal':
             raise ValueError("Only primal simplex with exact arithmetic.")
         cdef int retcode = glpk.exact(self._prob, &controls._smcp)
-        if retcode is 0:
-            return self.get_status()
-        else:
+        if retcode is not 0:
             raise smretcode2error[retcode]
+        return self.get_status()
 
     def get_status(self):
         """Retrieve generic status of basic solution"""
@@ -807,10 +804,9 @@ cdef class Problem:
     def interior(self, IPointControls controls):
         """Solve LP problem with the interior-point method"""
         cdef int retcode = glpk.interior(self._prob, &controls._iptcp)
-        if retcode is 0:
-            return self.ipt_status()
-        else:
+        if retcode is not 0:
             raise iptretcode2error[retcode]
+        return self.ipt_status()
 
     def ipt_status(self):
         """Retrieve status of interior-point solution"""
@@ -861,10 +857,9 @@ cdef class Problem:
     def intopt(self, IntOptControls controls):
         """Solve MIP problem with the branch-and-bound method"""
         cdef int retcode = glpk.intopt(self._prob, &controls._iocp)
-        if retcode is 0:
-            return self.mip_status()
-        else:
+        if retcode is not 0:
             raise ioretcode2error[retcode]
+        return self.mip_status()
 
     def mip_status(self):
         """Retrieve status of MIP solution"""
@@ -1303,15 +1298,13 @@ cdef class Problem:
     def minisat1(self):
         """Solve CNF-SAT problem with MiniSat solver"""
         cdef int retcode = glpk.minisat1(self._prob)
-        if retcode is 0:
-            return self.mip_status()
-        else:
+        if retcode is not 0:
             raise ioretcode2error[retcode]
+        return self.mip_status()
 
     def intfeas1(self, bint use_bound, int obj_bound):
         """Solve integer feasibility problem"""
         cdef int retcode = glpk.intfeas1(self._prob, use_bound, obj_bound)
-        if retcode is 0:
-            return self.mip_status()
-        else:
+        if retcode is not 0:
             raise ioretcode2error[retcode]
+        return self.mip_status()
