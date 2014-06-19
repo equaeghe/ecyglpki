@@ -214,29 +214,83 @@ cdef class Graph:
         if retcode is not 0:
             raise RuntimeError("Error writing graph plain text file")
 
-    #  convert minimum cost flow problem to LP
-    void mincost_lp(Prob* prob, self._graph, bint copy_names, int v_rhs, int a_low, int a_cap, int a_cost)
+    def mincost_lp(self, bint copy_names,
+                   int v_rhs, int a_low, int a_cap, int a_cost):
+        """Convert minimum cost flow problem to LP"""
+        problem = Problem()
+        glpk.Prob* prob = <glpk.Prob*>PyCapsule_GetPointer(problem._prob_ptr(),
+                                                           NULL)
+        glpk.mincost_lp(prob, self._graph, copy_names,
+                        v_rhs, a_low, a_cap, a_cost)
+        return problem
 
-    #  find minimum-cost flow with out-of-kilter algorithm; returns retcode
-    int mincost_okalg(self._graph, int v_rhs, int a_low, int a_cap, int a_cost, double* sol, int a_x, int v_pi)
+    def mincost_okalg(self, int v_rhs, int a_low, int a_cap, int a_cost,
+                      int a_x, int v_pi)
+        """Find minimum-cost flow with out-of-kilter algorithm"""
+        cdef double sol
+        retcode = mincost_okalg(self._graph, v_rhs, a_low, a_cap, a_cost,
+                                &sol, a_x, v_pi)
+        if retcode is not 0:
+            raise ioretcode2error[retcode]
+        return sol
 
-    # find minimum-cost flow with Bertsekas-Tseng relaxation method
-    int mincost_relax4(self._graph, int v_rhs, int a_low, int a_cap, int a_cost, int crash, double* sol, int a_x, int a_rc)
+    def mincost_relax4(self, int v_rhs, int a_low, int a_cap, int a_cost,
+                       int crash, int a_x, int a_rc):
+        """Find minimum-cost flow with Bertsekas-Tseng relaxation method"""
+        cdef double sol
+        retcode = mincost_relax4(self._graph, v_rhs, a_low, a_cap, a_cost,
+                                crash, &sol, a_x, a_rc)
+        if retcode is not 0:
+            raise ioretcode2error[retcode]
+        return sol
 
-    #  convert maximum flow problem to LP
-    void maxflow_lp(Prob* prob, self._graph, bint copy_names, int source, int sink, int a_cap)
+    def maxflow_lp(self, bint copy_names, source, sink, int a_cap):
+        """Convert maximum flow problem to LP"""
+        source = self.find_vertex_as_needed(source)
+        sink = self.find_vertex_as_needed(sink)
+        problem = Problem()
+        glpk.Prob* prob = <glpk.Prob*>PyCapsule_GetPointer(problem._prob_ptr(),
+                                                           NULL)
+        glpk.maxflow_lp(prob, self._graph, copy_names, source, sink, a_cap)
+        return problem
 
-    #  find maximal flow with Ford-Fulkerson algorithm; returns retcode
-    int maxflow_ffalg(self._graph, int source, int sink, int a_cap, double* sol, int a_x, int v_cut)
+    def maxflow_ffalg(self._graph, source, sink,
+                      int a_cap, int a_x, int v_cut):
+        """Find maximal flow with Ford-Fulkerson algorithm"""
+        source = self.find_vertex_as_needed(source)
+        sink = self.find_vertex_as_needed(sink)
+        cdef double sol
+        retcode = glpk.maxflow_ffalg(self._graph, source, sink,
+                                     a_cap, &sol, a_x, v_cut)
+        return sol
 
-    #  check correctness of assignment problem data
-    int check_asnprob(self._graph, int v_set)
+    def check_asnprob(self, int v_set):
+        """Check correctness of assignment problem data"""
+        retval = glpk.check_asnprob(self._graph, v_set)
+        if retval is not 0:
+            raise ValueError("Assignment problem data is incorrect, code "
+                             + retval + '.')
 
-    #  convert assignment problem to LP
-    int asnprob_lp(Prob* prob, str2asnform[asnform], self._graph, bint copy_names, int v_set, int a_cost)
+    def asnprob_lp(self, str asnform, bint copy_names, int v_set, int a_cost):
+        """Convert assignment problem to LP"""
+        problem = Problem()
+        glpk.Prob* prob = <glpk.Prob*>PyCapsule_GetPointer(problem._prob_ptr(),
+                                                           NULL)
+        retval = glpk.asnprob_lp(prob, str2asnform[asnform], self._graph,
+                                 copy_names, v_set, a_cost)
+        if retval is not 0:
+            raise ValueError("Assignment problem data is incorrect, code "
+                             + retval + '.')
+        return problem
 
-    #  solve assignment problem with out-of-kilter algorithm; returns retcode
-    int asnprob_okalg(str2asnform[asnform], self._graph, int v_set, int a_cost, double* sol, int a_x)
+    def asnprob_okalg(self, str asnform, int v_set, int a_cost, int a_x):
+        """Solve assignment problem with out-of-kilter algorithm"""
+        cdef double sol
+        retcode = glpk.asnprob_okalg(str2asnform[asnform], self._graph,
+                                     v_set, a_cost, &sol, a_x)
+        if retcode is not 0:
+            raise ioretcode2error[retcode]
+        return sol
 
     def asnprob_hall(self, int v_set, int a_x):
         """Find bipartite matching of maximum cardinality"""
@@ -361,5 +415,10 @@ cdef class Graph:
         """Topological sorting of acyclic digraph"""
         return glpk.top_sort(self._graph, v_num)
 
-    #  find maximum weight clique with exact algorithm; returns retcode
-    int wclique_exact(self._graph, int v_wgt, double* sol, int v_set)
+    def wclique_exact(self, int v_wgt, int v_set):
+        """Find maximum weight clique with exact algorithm"""
+        cdef double sol
+        retcode = glpk.wclique_exact(self._graph, v_wgt, &sol, v_set)
+        if retcode is not 0:
+            raise ioretcode2error[retcode]
+        return sol
