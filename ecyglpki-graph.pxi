@@ -391,17 +391,134 @@ cdef class Graph:
             raise RuntimeError("Error writing graph DIMACS clique/coloring " +
                                "file")
 
-    #  Klingman's network problem generator
-    int netgen(self._graph, int v_rhs, int a_cap, int a_cost, const int param[1+15])
+    @classmethod
+    def netgen(cls, int vertex_data_size, int arc_data_size,
+               int v_rhs, int a_cap, int a_cost, **parameters):
+        """Klingman's network problem generator"""
+        graph = cls(vertex_data_size, arc_data_size)
+        cdef glpk.Graph* _graph = <glpk.Graph*>PyCapsule_GetPointer(
+                                                    graph._graph_ptr(), NULL)
+        cdef int params[1+15]
+        cdef int nprob = parameters['nprob']  # 8-digit problem id number
+        if (nprob > 100) and (nprob <= 150):
+            netgen_prob(nprob, params)
+        else:
+            param[2] = nprob
+        for parameter, value in parameters.items():
+            if parameter is 'iseed':
+                param[1] = value  # 8-digit positive random number seed
+            elif parameter is 'nodes':
+                param[3] = value  # total number of nodes
+            elif parameter is 'nsorc':
+                param[4] = value
+                # total number of source nodes (including transshipment nodes)
+            elif parameter is 'nsink':
+                param[5] = value
+                # total number of sink nodes (including transshipment nodes)
+            elif parameter is 'iarcs':
+                param[6] = value  # number of arcs
+            elif parameter is 'mincst':
+                param[7] = value  # minimum cost for arcs
+            elif parameter is 'maxcst':
+                param[8] = value  # maximum cost for arcs
+            elif parameter is 'itsup':
+                param[9] = value  # total supply
+            elif parameter is 'ntsorc':
+                param[10] = value  # number of transshipment source nodes
+            elif parameter is 'ntsink':
+                param[11] = value  # number of transshipment sink nodes
+            elif parameter is 'iphic':
+                param[12] = value
+                # percentage of skeleton arcs to be given the maximum cost
+            elif parameter is 'ipcap':
+                param[13] = value  # percentage of arcs to be capacitated
+            elif parameter is 'mincap':
+                param[14] = value  # minimum upper bound for capacitated arcs
+            elif parameter is 'maxcap':
+                param[15] = value  # maximum upper bound for capacitated arcs
+        retval = glpk.netgen(_graph, v_rhs, a_cap, a_cost, params)
+        if retval is not 0:
+            raise ValueError("Network generator parameters are inconsistent")
+        return graph
 
-    #  Klingman's standard network problem instance
-    void netgen_prob(int nprob, int param[1+15])
+    @classmethod
+    def gridgen(cls, int vertex_data_size, int arc_data_size,
+                int v_rhs, int a_cap, int a_cost, **parameters):
+        """Grid-like network problem generator"""
+        graph = cls(vertex_data_size, arc_data_size)
+        cdef glpk.Graph* _graph = <glpk.Graph*>PyCapsule_GetPointer(
+                                                    graph._graph_ptr(), NULL)
+        cdef int params[1+14]
+        for parameter, value in parameters.items():
+            if parameter is 'two_way':
+                params[1] = value
+                # two-ways arcs indicator
+                #  1 — if links in both direction should be generated
+                #  0 — otherwise
+            if parameter is 'iseed':
+                params[2] = value  # random number seed (a positive integer)
+            if parameter is 'nodes':
+                params[3] = value
+                # number of nodes (the number of nodes generated might be
+                # slightly different to make the network a grid)
+            if parameter is 'width':
+                params[4] = value  # grid width
+            if parameter is 'sources':
+                params[5] = value  # number of sources
+            if parameter is 'sinks':
+                params[6] = value  # number of sinks
+            if parameter is 'degree':
+                params[7] = value  # average degree
+            if parameter is 'flow':
+                params[8] = value  # total flow
+            if parameter is 'dist_costs':
+                params[9] = value
+                # distribution of arc costs: 1 — uniform, 2 — exponential
+            if parameter is 'cost_lb':
+                params[10] = value
+                # lower bound for arc cost (uniform), 100λ (exponential)
+            if parameter is 'cost_ub':
+                params[11] = value
+                # upper bound for arc cost (uniform), not used (exponential)
+            if parameter is 'dist_caps':
+                params[12] = value
+                # distribution of arc capacities: 1 — uniform, 2 — exponential
+            if parameter is 'caps_lb':
+                params[13] = value
+                # lower bound for arc capacity (uniform), 100λ (exponential)
+            if parameter is 'caps_ub':
+                params[14] = value
+                # upper bound for arc capacity (uniform), not used (exponential)
+        retval = glpk.gridgen(_graph, v_rhs, a_cap, a_cost, params)
+        if retval is not 0:
+            raise ValueError("Network generator parameters are inconsistent")
+        return graph
 
-    #  grid-like network problem generator
-    int gridgen(self._graph, int v_rhs, int a_cap, int a_cost, const int parm[1+14])
-
-    #  Goldfarb's maximum flow problem generator
-    int rmfgen(self._graph, int* source, int* sink, int a_cap, const int param[1+5])
+    @classmethod
+    def rmfgen(cls, int vertex_data_size, int arc_data_size,
+               int* source, int* sink, int a_cap, parameters)
+        """Goldfarb's maximum flow problem generator"""
+        graph = cls(vertex_data_size, arc_data_size)
+        cdef glpk.Graph* _graph = <glpk.Graph*>PyCapsule_GetPointer(
+                                                    graph._graph_ptr(), NULL)
+        cdef int params[1+5]
+        for parameter, value in parameters.items():
+            if parameter is 'seed':
+                params[1] = value  # random number seed (a positive integer)
+            if parameter is 'a':
+                params[2] = value  # frame size
+            if parameter is 'b':
+                params[3] = value  # depth
+            if parameter is 'c1':
+                params[4] = value  # minimal arc capacity
+            if parameter is 'c2':
+                params[5] = value  # maximal arc capacity
+        cdef int source
+        cdef int sink
+        retval = glpk.rmfgen(self._graph, &source, &sink, a_cap, params)
+        if retval is not 0:
+            raise ValueError("Network generator parameters are inconsistent")
+        return (graph, source, sink)
 
     def weak_comp(self, int v_num):
         """Find all weakly connected components of graph"""
