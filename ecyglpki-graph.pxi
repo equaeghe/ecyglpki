@@ -24,18 +24,8 @@
 
 
     cdef struct Graph "glp_graph":
-        void* pool   #  DMP *pool; memory pool to store graph components
-        int nv_max   #  length of the vertex list (enlarged automatically)
-        int nv       #  number of vertices in the graph, 0 <= nv <= nv_max
-        int na       #  number of arcs in the graph, na >= 0
         Vertex** v   #  glp_vertex *v[1+nv_max]
                      #   v[i], 1 <= i <= nv, is a pointer to i-th vertex
-        void* index  #  AVL *index
-                     #   vertex index to find vertices by their names
-                     #   NULL means the index does not exist
-        int v_size   #  size of data associated with each vertex
-                     #   (0 to 256 bytes)
-        int a_size   #  size of data associated with each arc (0 to 256 bytes)
 
     #  vertex descriptor
     cdef struct Vertex "glp_vertex":
@@ -61,6 +51,11 @@
       Arc* t_next   #  pointer to next arc having the same tail endpoint
       Arc* h_prev   #  pointer to previous arc having the same head endpoint
       Arc* h_next   #  pointer to next arc having the same head endpoint
+
+
+cdef class Vertex:
+    """A GLPK graph vertex"""
+    pass
 
 
 cdef class Arc:
@@ -120,6 +115,28 @@ cdef class Graph:
     def __dealloc__(self):
         glpk.delete_v_index(self._graph)
         glpk.delete_graph(self._graph)
+
+    ### Selected struct elements become properties ###
+
+    property nv:
+        """The number of vertices in the graph, an `int`"""
+        def __get__(self):
+            return self._graph.nv
+
+    property na:
+        """The number of arcs in the graph, an `int`"""
+        def __get__(self):
+            return self._graph.na
+
+    property v_size:
+        """Size of data associated with each vertex, an `int`"""
+        def __get__(self):
+            return self._graph.v_size
+
+    property a_size:
+        """size of data associated with each arc, an `int`"""
+        def __get__(self):
+            return self._graph.a_size
 
     ### Translated GLPK functions ###
 
