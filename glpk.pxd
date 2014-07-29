@@ -189,8 +189,8 @@ cdef extern from "glpk.h":
         bint fp_heur    #  feasibility pump heuristic
         bint ps_heur    #  proximity search heuristic
         int ps_tm_lim   #  proxy time limit (milliseconds)
-        #bint use_sol    #  use existing solution (experimental/undocumented)
-        #const char* save_sol
+#        bint use_sol    #  use existing solution (experimental/undocumented)
+#        const char* save_sol
                         #  filename to save every new solution
                         # (experimental/undocumented)
 
@@ -211,7 +211,7 @@ cdef extern from "glpk.h":
         int origin  #  row origin flag
         int klass   #  row class descriptor
 
-# We use the Cython bint type instead of te following:
+# We use the Cython bint type instead of the following:
 #
 #    #  enable/disable flag:
 #    enum: ON "GLP_ON"   #  enable something
