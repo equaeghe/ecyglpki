@@ -44,7 +44,7 @@ cdef class Vertex:
     ### Selected struct elements become properties ###
 
     property i:
-        """Vertex ordinal number, and `int`"""
+        """Vertex ordinal number, an `int`"""
         def __get__(self):
             return self._vertex.i
 
@@ -54,13 +54,13 @@ cdef class Vertex:
             return chars2name(self._vertex.name)
 
     property inc:
-        """First incoming arc"""
+        """First incoming arc, an `.Arc`"""
         def __get__(self):
             cdef glpk.Arc* _arc = self._vertex.inc
             return Arc(PyCapsule_New(_arc, NULL, NULL))
 
     property out:
-        """First outgoing arc"""
+        """First outgoing arc, an `.Arc`"""
         def __get__(self):
             cdef glpk.Arc* _arc = self._vertex.out
             return Arc(PyCapsule_New(_arc, NULL, NULL))
@@ -100,25 +100,25 @@ cdef class Arc:
             return Vertex(PyCapsule_New(_vertex, NULL, NULL))
 
     property t_prev:
-        """Previous arc having the same tail endpoint"""
+        """Previous arc having the same tail endpoint, an `.Arc`"""
         def __get__(self):
             cdef glpk.Arc* _arc = self._arc.t_prev
             return Arc(PyCapsule_New(_arc, NULL, NULL))
 
     property t_next:
-        """Next arc having the same tail endpoint"""
+        """Next arc having the same tail endpoint, an `.Arc`"""
         def __get__(self):
             cdef glpk.Arc* _arc = self._arc.t_next
             return Arc(PyCapsule_New(_arc, NULL, NULL))
 
     property h_prev:
-        """Previous arc having the same head endpoint"""
+        """Previous arc having the same head endpoint, an `.Arc`"""
         def __get__(self):
             cdef glpk.Arc* _arc = self._arc.h_prev
             return Arc(PyCapsule_New(_arc, NULL, NULL))
 
     property h_next:
-        """Next arc having the same head endpoint"""
+        """Next arc having the same head endpoint, an `.Arc`"""
         def __get__(self):
             cdef glpk.Arc* _arc = self._arc.h_next
             return Arc(PyCapsule_New(_arc, NULL, NULL))

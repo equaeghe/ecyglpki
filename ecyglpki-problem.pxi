@@ -1033,7 +1033,7 @@ cdef class Problem:
         return (rhs_pre_x_post[i] for i in range(1, 1+m))
 
     def btran(self, tuple rhs):
-        """Perform backward transformation (solve system B'*x = b)"""
+        """Perform backward transformation (solve system B'x = b)"""
         if not all(isinstance(value, numbers.Real) for value in rhs):
             raise TypeError("Right-hand side must contain 'Real' numbers " +
                             "only.")
