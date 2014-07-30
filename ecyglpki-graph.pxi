@@ -22,40 +22,48 @@
 ###############################################################################
 
 
-
-    cdef struct Graph "glp_graph":
-        Vertex** v   #  glp_vertex *v[1+nv_max]
-                     #   v[i], 1 <= i <= nv, is a pointer to i-th vertex
-
-    #  vertex descriptor
-    cdef struct Vertex "glp_vertex":
-      int i          #  vertex ordinal number, 1 <= i <= nv
-      char* name     #  vertex name (1 to 255 chars)
-                     #   NULL means no name is assigned to the vertex
-      void* entry    #  AVLNODE *entry
-                     #   pointer to corresponding entry in the vertex index
-                     #   NULL means that either the index does not exist
-                     #   or the vertex has no name assigned
-      void* data     #  pointer to data associated with the vertex
-      void* temp     #  working pointer
-      Arc* inc "in"  #  pointer to the (unordered) list of incoming arcs
-      Arc* out       #  pointer to the (unordered) list of outgoing arcs
-
-    #  arc descriptor
-    cdef struct Arc "glp_arc":
-      Vertex* tail  #  pointer to the tail endpoint
-      Vertex* head  #  pointer to the head endpoint
-      void* data    #  pointer to data associated with the arc
-      void* temp    #  working pointer
-      Arc* t_prev   #  pointer to previous arc having the same tail endpoint
-      Arc* t_next   #  pointer to next arc having the same tail endpoint
-      Arc* h_prev   #  pointer to previous arc having the same head endpoint
-      Arc* h_next   #  pointer to next arc having the same head endpoint
-
-
 cdef class Vertex:
     """A GLPK graph vertex"""
-    pass
+
+    cdef glpk.Vertex* _vertex
+
+    def __cinit__(self, vertex_ptr):
+        self._vertex = <glpk.Vertex*>PyCapsule_GetPointer(vertex_ptr(), NULL)
+
+    def _vertex_ptr(self):
+        """Encapsulate the pointer to the arc object
+
+        The arc object pointer `self._vertex` cannot be passed as such as
+        an argument to other functions. Therefore we encapsulate it in a
+        capsule that can be passed. It has to be unencapsulated after
+        reception.
+
+        """
+        return PyCapsule_New(self._vertex, NULL, NULL)
+
+    ### Selected struct elements become properties ###
+
+    property i:
+        """Vertex ordinal number, and `int`"""
+        def __get__(self):
+            return self._vertex.i
+
+    property name:
+        """Vertex name, a `str`"""
+        def __get__(self):
+            return chars2name(self._vertex.name)
+
+    property inc:
+        """First incoming arc"""
+        def __get__(self):
+            cdef glpk.Arc* _arc = self._vertex.inc
+            return Arc(PyCapsule_New(_arc, NULL, NULL))
+
+    property out:
+        """First outgoing arc"""
+        def __get__(self):
+            cdef glpk.Arc* _arc = self._vertex.out
+            return Arc(PyCapsule_New(_arc, NULL, NULL))
 
 
 cdef class Arc:
@@ -76,6 +84,44 @@ cdef class Arc:
 
         """
         return PyCapsule_New(self._arc, NULL, NULL)
+
+    ### Selected struct elements become properties ###
+
+    property tail:
+        """Tail vertex, a `.Vertex`"""
+        def __get__(self):
+            cdef glpk.Vertex* _vertex = self._arc.tail
+            return Vertex(PyCapsule_New(_vertex, NULL, NULL))
+
+    property head:
+        """Head vertex, a `.Vertex`"""
+        def __get__(self):
+            cdef glpk.Vertex* _vertex = self._arc.head
+            return Vertex(PyCapsule_New(_vertex, NULL, NULL))
+
+    property t_prev:
+        """Previous arc having the same tail endpoint"""
+        def __get__(self):
+            cdef glpk.Arc* _arc = self._arc.t_prev
+            return Arc(PyCapsule_New(_arc, NULL, NULL))
+
+    property t_next:
+        """Next arc having the same tail endpoint"""
+        def __get__(self):
+            cdef glpk.Arc* _arc = self._arc.t_next
+            return Arc(PyCapsule_New(_arc, NULL, NULL))
+
+    property h_prev:
+        """Previous arc having the same head endpoint"""
+        def __get__(self):
+            cdef glpk.Arc* _arc = self._arc.h_prev
+            return Arc(PyCapsule_New(_arc, NULL, NULL))
+
+    property h_next:
+        """Next arc having the same head endpoint"""
+        def __get__(self):
+            cdef glpk.Arc* _arc = self._arc.h_next
+            return Arc(PyCapsule_New(_arc, NULL, NULL))
 
 
 #  assignment problem formulation
@@ -164,7 +210,7 @@ cdef class Graph:
     def set_vertex_name(self, vertex, str name):
         """Assign (change) vertex name"""
         vertex = self.find_vertex_as_needed(vertex)
-        return set_vertex_name(self._graph, vertex, name2chars(name))
+        glpk.set_vertex_name(self._graph, vertex, name2chars(name))
 
     def add_arc(self, tail, head):
         """Add new arc to graph"""
@@ -180,19 +226,19 @@ cdef class Graph:
             return
         cdef int* inds = <int*>glpk.alloc(1+n, sizeof(int))
         try:
-            for i, ind in enumerate(inds, start=1):
-                inds[i] = self.find_vertex_as_needed(ind)
+            for i, vertex in enumerate(vertices, start=1):
+                inds[i] = self.find_vertex_as_needed(vertex)
             glpk.del_vertices(self._graph, n, inds)
         finally:
             glpk.free(inds)
 
     def del_arc(self, Arc arc):
         """Delete arc from graph"""
-        cdef glpk.Arc* arc = <glpk.Arc*>PyCapsule_GetPointer(arc._arc_ptr(),
+        cdef glpk.Arc* _arc = <glpk.Arc*>PyCapsule_GetPointer(arc._arc_ptr(),
                                                              NULL)
-        glpk.del_arc(self._graph, arc)
+        glpk.del_arc(self._graph, _arc)
 
-    def erase_graph(self, int vertex_data_size, int arc_data_size)
+    def erase_graph(self, int vertex_data_size, int arc_data_size):
         """Erase graph content"""
         glpk.erase_graph(self._graph, vertex_data_size, arc_data_size)
 
@@ -213,6 +259,14 @@ cdef class Graph:
             raise TypeError("'vertex' must be a number ('int') or a name " +
                             "(str 'str'), not '" + type(vertex).__name__ +
                             "'.")
+
+    def get_vertex_object(self, vertex):
+        """Return Vertex object"""
+        cdef int ind = self.find_vertex_as_needed(vertex)
+        if (ind > self.nv) or (ind < 1):
+            raise ValueError("Incorrect vertex index.")
+        cdef glpk.Vertex* _vertex = self._graph.v[ind]
+        return Vertex(PyCapsule_New(_vertex, NULL, NULL))
 
     @classmethod
     def read_graph(cls, int vertex_data_size, int arc_data_size, str fname):
@@ -235,18 +289,18 @@ cdef class Graph:
                    int v_rhs, int a_low, int a_cap, int a_cost):
         """Convert minimum cost flow problem to LP"""
         problem = Problem()
-        glpk.Prob* prob = <glpk.Prob*>PyCapsule_GetPointer(problem._prob_ptr(),
-                                                           NULL)
+        cdef glpk.Prob* prob = <glpk.Prob*>PyCapsule_GetPointer(
+                                                    problem._prob_ptr(), NULL)
         glpk.mincost_lp(prob, self._graph, copy_names,
                         v_rhs, a_low, a_cap, a_cost)
         return problem
 
     def mincost_okalg(self, int v_rhs, int a_low, int a_cap, int a_cost,
-                      int a_x, int v_pi)
+                      int a_x, int v_pi):
         """Find minimum-cost flow with out-of-kilter algorithm"""
         cdef double sol
-        retcode = mincost_okalg(self._graph, v_rhs, a_low, a_cap, a_cost,
-                                &sol, a_x, v_pi)
+        retcode = glpk.mincost_okalg(self._graph, v_rhs, a_low, a_cap, a_cost,
+                                     &sol, a_x, v_pi)
         if retcode is not 0:
             raise ioretcode2error[retcode]
         return sol
@@ -255,8 +309,8 @@ cdef class Graph:
                        int crash, int a_x, int a_rc):
         """Find minimum-cost flow with Bertsekas-Tseng relaxation method"""
         cdef double sol
-        retcode = mincost_relax4(self._graph, v_rhs, a_low, a_cap, a_cost,
-                                crash, &sol, a_x, a_rc)
+        retcode = glpk.mincost_relax4(self._graph, v_rhs, a_low, a_cap, a_cost,
+                                      crash, &sol, a_x, a_rc)
         if retcode is not 0:
             raise ioretcode2error[retcode]
         return sol
@@ -266,13 +320,12 @@ cdef class Graph:
         source = self.find_vertex_as_needed(source)
         sink = self.find_vertex_as_needed(sink)
         problem = Problem()
-        glpk.Prob* prob = <glpk.Prob*>PyCapsule_GetPointer(problem._prob_ptr(),
-                                                           NULL)
+        cdef glpk.Prob* prob = <glpk.Prob*>PyCapsule_GetPointer(
+                                                    problem._prob_ptr(), NULL)
         glpk.maxflow_lp(prob, self._graph, copy_names, source, sink, a_cap)
         return problem
 
-    def maxflow_ffalg(self._graph, source, sink,
-                      int a_cap, int a_x, int v_cut):
+    def maxflow_ffalg(self, source, sink, int a_cap, int a_x, int v_cut):
         """Find maximal flow with Ford-Fulkerson algorithm"""
         source = self.find_vertex_as_needed(source)
         sink = self.find_vertex_as_needed(sink)
@@ -291,8 +344,8 @@ cdef class Graph:
     def asnprob_lp(self, str asnform, bint copy_names, int v_set, int a_cost):
         """Convert assignment problem to LP"""
         problem = Problem()
-        glpk.Prob* prob = <glpk.Prob*>PyCapsule_GetPointer(problem._prob_ptr(),
-                                                           NULL)
+        cdef glpk.Prob* prob = <glpk.Prob*>PyCapsule_GetPointer(
+                                                    problem._prob_ptr(), NULL)
         retval = glpk.asnprob_lp(prob, str2asnform[asnform], self._graph,
                                  copy_names, v_set, a_cost)
         if retval is not 0:
@@ -311,7 +364,7 @@ cdef class Graph:
 
     def asnprob_hall(self, int v_set, int a_x):
         """Find bipartite matching of maximum cardinality"""
-        cardinality = asnprob_hall(self._graph, v_set, a_x)
+        cardinality = glpk.asnprob_hall(self._graph, v_set, a_x)
         if cardinality < 0:
             raise ValueError("The specified graph is incorrect")
         return cardinality
@@ -352,7 +405,7 @@ cdef class Graph:
                                                     graph._graph_ptr(), NULL)
         cdef int source
         cdef int sink
-        retcode = glpk.read_maxflow(_graph, a_cap, &source, &sink,
+        retcode = glpk.read_maxflow(_graph, &source, &sink, a_cap,
                                     str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error reading maximum flow problem DIMACS " +
@@ -418,41 +471,41 @@ cdef class Graph:
         cdef int params[1+15]
         cdef int nprob = parameters['nprob']  # 8-digit problem id number
         if (nprob > 100) and (nprob <= 150):
-            netgen_prob(nprob, params)
+            glpk.netgen_prob(nprob, params)
         else:
-            param[2] = nprob
+            params[2] = nprob
         for parameter, value in parameters.items():
             if parameter is 'iseed':
-                param[1] = value  # 8-digit positive random number seed
+                params[1] = value  # 8-digit positive random number seed
             elif parameter is 'nodes':
-                param[3] = value  # total number of nodes
+                params[3] = value  # total number of nodes
             elif parameter is 'nsorc':
-                param[4] = value
+                params[4] = value
                 # total number of source nodes (including transshipment nodes)
             elif parameter is 'nsink':
-                param[5] = value
+                params[5] = value
                 # total number of sink nodes (including transshipment nodes)
             elif parameter is 'iarcs':
-                param[6] = value  # number of arcs
+                params[6] = value  # number of arcs
             elif parameter is 'mincst':
-                param[7] = value  # minimum cost for arcs
+                params[7] = value  # minimum cost for arcs
             elif parameter is 'maxcst':
-                param[8] = value  # maximum cost for arcs
+                params[8] = value  # maximum cost for arcs
             elif parameter is 'itsup':
-                param[9] = value  # total supply
+                params[9] = value  # total supply
             elif parameter is 'ntsorc':
-                param[10] = value  # number of transshipment source nodes
+                params[10] = value  # number of transshipment source nodes
             elif parameter is 'ntsink':
-                param[11] = value  # number of transshipment sink nodes
+                params[11] = value  # number of transshipment sink nodes
             elif parameter is 'iphic':
-                param[12] = value
+                params[12] = value
                 # percentage of skeleton arcs to be given the maximum cost
             elif parameter is 'ipcap':
-                param[13] = value  # percentage of arcs to be capacitated
+                params[13] = value  # percentage of arcs to be capacitated
             elif parameter is 'mincap':
-                param[14] = value  # minimum upper bound for capacitated arcs
+                params[14] = value  # minimum upper bound for capacitated arcs
             elif parameter is 'maxcap':
-                param[15] = value  # maximum upper bound for capacitated arcs
+                params[15] = value  # maximum upper bound for capacitated arcs
         retval = glpk.netgen(_graph, v_rhs, a_cap, a_cost, params)
         if retval is not 0:
             raise ValueError("Network generator parameters are inconsistent")
@@ -513,7 +566,7 @@ cdef class Graph:
 
     @classmethod
     def rmfgen(cls, int vertex_data_size, int arc_data_size,
-               int* source, int* sink, int a_cap, parameters)
+               int a_cap, parameters):
         """Goldfarb's maximum flow problem generator"""
         graph = cls(vertex_data_size, arc_data_size)
         cdef glpk.Graph* _graph = <glpk.Graph*>PyCapsule_GetPointer(
@@ -532,7 +585,7 @@ cdef class Graph:
                 params[5] = value  # maximal arc capacity
         cdef int source
         cdef int sink
-        retval = glpk.rmfgen(self._graph, &source, &sink, a_cap, params)
+        retval = glpk.rmfgen(_graph, &source, &sink, a_cap, params)
         if retval is not 0:
             raise ValueError("Network generator parameters are inconsistent")
         return (graph, source, sink)

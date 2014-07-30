@@ -25,6 +25,12 @@
 ctypedef void* CBInfo
 ctypedef void (*CBFunc)(Tree*, CBInfo)
 
+ctypedef void* VData
+ctypedef void* VTemp
+
+ctypedef void* AData
+ctypedef void* ATemp
+
 
 cdef extern from "glpk.h":
     #  library version numbers:
@@ -905,9 +911,9 @@ cdef extern from "glpk.h":
         int na       #  number of arcs in the graph, na >= 0
         Vertex** v   #  glp_vertex *v[1+nv_max]
                      #   v[i], 1 <= i <= nv, is a pointer to i-th vertex
-        void* index  #  AVL *index
-                     #   vertex index to find vertices by their names
-                     #   NULL means the index does not exist
+#        void* index  #  AVL *index
+#                     #   vertex index to find vertices by their names
+#                     #   NULL means the index does not exist
         int v_size   #  size of data associated with each vertex
                      #   (0 to 256 bytes)
         int a_size   #  size of data associated with each arc (0 to 256 bytes)
@@ -917,12 +923,12 @@ cdef extern from "glpk.h":
       int i          #  vertex ordinal number, 1 <= i <= nv
       char* name     #  vertex name (1 to 255 chars)
                      #   NULL means no name is assigned to the vertex
-      void* entry    #  AVLNODE *entry
-                     #   pointer to corresponding entry in the vertex index
-                     #   NULL means that either the index does not exist
-                     #   or the vertex has no name assigned
-      void* data     #  pointer to data associated with the vertex
-      void* temp     #  working pointer
+#      void* entry    #  AVLNODE *entry
+#                     #   pointer to corresponding entry in the vertex index
+#                     #   NULL means that either the index does not exist
+#                     #   or the vertex has no name assigned
+      VData data     #  pointer to data associated with the vertex
+      VTemp temp     #  working pointer
       Arc* inc "in"  #  pointer to the (unordered) list of incoming arcs
       Arc* out       #  pointer to the (unordered) list of outgoing arcs
 
@@ -930,8 +936,8 @@ cdef extern from "glpk.h":
     cdef struct Arc "glp_arc":
       Vertex* tail  #  pointer to the tail endpoint
       Vertex* head  #  pointer to the head endpoint
-      void* data    #  pointer to data associated with the arc
-      void* temp    #  working pointer
+      AData data    #  pointer to data associated with the arc
+      ATemp temp    #  working pointer
       Arc* t_prev   #  pointer to previous arc having the same tail endpoint
       Arc* t_next   #  pointer to next arc having the same tail endpoint
       Arc* h_prev   #  pointer to previous arc having the same head endpoint
