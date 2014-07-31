@@ -16,6 +16,7 @@ Contents:
   iocp
   tree
   graph
+  examples
 
 
 Indices and tables
