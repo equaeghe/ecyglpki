@@ -687,7 +687,7 @@ cdef class Problem:
     def scale_prob(self, *algorithms):
         """Scale problem data
 
-        :param algorithms: the algorithms to apply, one or more from `'auto'`:,
+        :param algorithms: the algorithms to apply, one or more from `'auto'`,
             `'skip'`, `'geometric'`, `'equilibration'`, `'round'`
 
         """
