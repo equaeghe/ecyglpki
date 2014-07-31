@@ -22,9 +22,6 @@
 ###############################################################################
 
 
-import itertools
-
-
 from libc.limits cimport INT_MAX
 cdef int int_MAX = int(INT_MAX)
 
