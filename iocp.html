@@ -25,6 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="ecyglpki  documentation" href="index.html" />
+    <link rel="next" title="Branching Tree" href="tree.html" />
     <link rel="prev" title="Interior Point Controls" href="iptcp.html" /> 
   </head>
   <body>
@@ -37,6 +38,9 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="tree.html" title="Branching Tree"
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="iptcp.html" title="Interior Point Controls"
              accesskey="P">previous</a> |</li>
@@ -92,6 +96,34 @@
 <li><tt class="xref py py-obj docutils literal"><span class="pre">'bound'</span></tt>: best local bound</li>
 <li><tt class="xref py py-obj docutils literal"><span class="pre">'projection'</span></tt>: best projection heuristic</li>
 </ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.cb_func">
+<tt class="descname">cb_func</tt><a class="headerlink" href="#ecyglpki.IntOptControls.cb_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback routine</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.cb_info">
+<tt class="descname">cb_info</tt><a class="headerlink" href="#ecyglpki.IntOptControls.cb_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transit pointer passed to the routine cb_func</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.cb_size">
+<tt class="descname">cb_size</tt><a class="headerlink" href="#ecyglpki.IntOptControls.cb_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of extra bytes allocated for each search tree node, an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+<p>Up to 256 bytes can be allocated for each node of the branch-and-bound
+tree to store application-specific data. On creating a node these bytes
+are initialized by binary zeros.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">cb_size</span>  <span class="c"># the GLPK default</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">cb_size</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">cb_size</span>
+<span class="go">128</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -204,7 +236,8 @@
 <dt id="ecyglpki.IntOptControls.tol_int">
 <tt class="descname">tol_int</tt><a class="headerlink" href="#ecyglpki.IntOptControls.tol_int" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abs. tolerance for LP solution integer feasibility, a <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> number</p>
-<p>This is the absolute tolerance used to check if the optimal solution to the current LP relaxation is integer feasible.</p>
+<p>This is the absolute tolerance used to check if the optimal solution to
+the current LP relaxation is integer feasible.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -229,6 +262,9 @@ the best known integer feasible solution.</p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="iptcp.html"
                         title="previous chapter">Interior Point Controls</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tree.html"
+                        title="next chapter">Branching Tree</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/iocp.txt"
@@ -260,6 +296,9 @@ the best known integer feasible solution.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="tree.html" title="Branching Tree"
+             >next</a> |</li>
         <li class="right" >
           <a href="iptcp.html" title="Interior Point Controls"
              >previous</a> |</li>

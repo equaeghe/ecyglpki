@@ -1,0 +1,320 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>gambling_pool &mdash; ecyglpki  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ecyglpki  documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">ecyglpki  documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for gambling_pool</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">ecyglpki</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+
+<span class="n">pspace</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;W&#39;</span><span class="p">,</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="s">&#39;L&#39;</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;The set of possible football match outcomes (Win, Draw, or Lose)&quot;&quot;&quot;</span>
+
+<span class="n">Gamble</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;Gamble&#39;</span><span class="p">,</span> <span class="n">pspace</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;Gamble on the outcome of a football match</span>
+
+<span class="sd">With each possible match outcome, the gamble assigns a payoff (a |Real|);</span>
+<span class="sd">it corresponds to winnings if it is positive, to losses if it is negative.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="lp_setup"><a class="viewcode-back" href="../examples/gambling_pool.html#gambling_pool.lp_setup">[docs]</a><span class="k">def</span> <span class="nf">lp_setup</span><span class="p">(</span><span class="n">lp</span><span class="p">,</span> <span class="n">accdss</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set up the basic linear feasibility problem defining the gambling pool</span>
+
+<span class="sd">    A number of players will form a gambling pool:</span>
+
+<span class="sd">        * Each player states which gambles he finds *acceptable*, i.e., which</span>
+<span class="sd">          have an expected payoff that is nonnegative</span>
+<span class="sd">        * If there is a bet between the players, a gamble is assigned to each</span>
+<span class="sd">          of them; from the player&#39;s perspective, the assigned gamble should</span>
+<span class="sd">          be acceptable, meaning that is a positive linear combination of the</span>
+<span class="sd">          gambles that that player has stated to be acceptable</span>
+<span class="sd">        * The stake is assumed to be one, i.e., the assigned gamble&#39;s lowest</span>
+<span class="sd">          payoff is -1.</span>
+<span class="sd">        * There is a bet between the players if the gambles assigned to the</span>
+<span class="sd">          players sum up to one for each possible match outcome and the</span>
+<span class="sd">          assigned gambles do not all have identically zero payoff</span>
+<span class="sd">        * An important quantity for each player is the ‘lower prevision’ of the</span>
+<span class="sd">          gamble assigned to him: the greatest lower bound on the player&#39;s</span>
+<span class="sd">          expected payoff for the assigned gamble that can be deduced from the</span>
+<span class="sd">          player&#39;s stated acceptable gambles</span>
+<span class="sd">        * The objective is to maximize the sum of the lower previsions,</span>
+<span class="sd">          possibly under additional constraints</span>
+
+<span class="sd">    :param lp: the problem object to set up</span>
+<span class="sd">    :type lp: `ecyglpki.Problem`</span>
+<span class="sd">    :param accdss: the gambles accepted by the players</span>
+<span class="sd">    :type accdss: `dict` of `str` (player id) to `list` of `Gamble`</span>
+<span class="sd">    :returns: the set up problem object</span>
+<span class="sd">    :rtype: `ecyglpki.Problem`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">player</span><span class="p">,</span> <span class="n">accds</span> <span class="ow">in</span> <span class="n">accdss</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>  <span class="c"># per-player setup</span>
+
+        <span class="k">for</span> <span class="n">outcome</span> <span class="ow">in</span> <span class="n">pspace</span><span class="p">:</span>
+            <span class="n">player_outcome</span> <span class="o">=</span> <span class="n">player</span> <span class="o">+</span> <span class="n">outcome</span>
+            <span class="c"># constraints to ensure the assigned gamble is acceptable,</span>
+            <span class="c"># i.e., nonnegative for each outcome</span>
+            <span class="n">lp</span><span class="o">.</span><span class="n">add_named_rows</span><span class="p">(</span><span class="n">player_outcome</span><span class="p">)</span>
+            <span class="n">lp</span><span class="o">.</span><span class="n">set_row_bnds</span><span class="p">(</span><span class="n">player_outcome</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="c"># variables for the gamble to be assigned</span>
+            <span class="n">lp</span><span class="o">.</span><span class="n">add_named_cols</span><span class="p">(</span><span class="n">player_outcome</span><span class="p">)</span>
+            <span class="n">lp</span><span class="o">.</span><span class="n">set_col_bnds</span><span class="p">(</span><span class="n">player_outcome</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>  <span class="c"># stake of 1</span>
+            <span class="n">lp</span><span class="o">.</span><span class="n">set_mat_col</span><span class="p">(</span><span class="n">player_outcome</span><span class="p">,</span> <span class="p">{</span><span class="n">player_outcome</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">})</span>
+
+        <span class="c"># variables for the assigned gambles&#39; lower previsions</span>
+        <span class="n">player_lpr</span> <span class="o">=</span> <span class="n">player</span> <span class="o">+</span> <span class="s">&#39;lpr&#39;</span>
+        <span class="n">lp</span><span class="o">.</span><span class="n">add_named_cols</span><span class="p">(</span><span class="n">player_lpr</span><span class="p">)</span>
+        <span class="n">lp</span><span class="o">.</span><span class="n">set_col_bnds</span><span class="p">(</span><span class="n">player_lpr</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>  <span class="c"># ensure nonnegative lprs</span>
+        <span class="n">lp</span><span class="o">.</span><span class="n">set_mat_col</span><span class="p">(</span><span class="n">player_lpr</span><span class="p">,</span> <span class="p">{</span><span class="n">player</span> <span class="o">+</span> <span class="n">outcome</span><span class="p">:</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">outcome</span> <span class="ow">in</span> <span class="n">pspace</span><span class="p">})</span>
+        <span class="n">lp</span><span class="o">.</span><span class="n">set_obj_coef</span><span class="p">(</span><span class="n">player_lpr</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c"># objective is the sum of lprs</span>
+
+        <span class="c"># variables for the accepted gambles&#39; coefficients that define the</span>
+        <span class="c"># assigned gamble as a positive linear combination of acceptable</span>
+        <span class="c"># gambles</span>
+        <span class="k">for</span> <span class="n">accd</span> <span class="ow">in</span> <span class="n">accds</span><span class="p">:</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">add_cols</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">lp</span><span class="o">.</span><span class="n">set_col_bnds</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>  <span class="c"># ensure nonnegative coeffs</span>
+            <span class="n">lp</span><span class="o">.</span><span class="n">set_mat_col</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="p">{</span><span class="n">player</span> <span class="o">+</span> <span class="n">outcome</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">accd</span><span class="p">,</span> <span class="n">outcome</span><span class="p">)</span>
+                               <span class="k">for</span> <span class="n">outcome</span> <span class="ow">in</span> <span class="n">pspace</span><span class="p">})</span>
+
+        <span class="c"># remove names from database that are not needed anymore</span>
+        <span class="k">for</span> <span class="n">outcome</span> <span class="ow">in</span> <span class="n">pspace</span><span class="p">:</span>
+            <span class="n">lp</span><span class="o">.</span><span class="n">set_row_name</span><span class="p">(</span><span class="n">player</span> <span class="o">+</span> <span class="n">outcome</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="c"># global setup: constraints that ensure the assigned gambles sum up to zero</span>
+    <span class="k">for</span> <span class="n">outcome</span> <span class="ow">in</span> <span class="n">pspace</span><span class="p">:</span>
+        <span class="n">lp</span><span class="o">.</span><span class="n">add_named_rows</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span>
+        <span class="n">lp</span><span class="o">.</span><span class="n">set_row_bnds</span><span class="p">(</span><span class="n">outcome</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">lp</span><span class="o">.</span><span class="n">set_mat_row</span><span class="p">(</span><span class="n">outcome</span><span class="p">,</span> <span class="p">{</span><span class="n">player</span> <span class="o">+</span> <span class="n">outcome</span><span class="p">:</span> <span class="mi">1</span>
+                                 <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="n">accdss</span><span class="o">.</span><span class="n">keys</span><span class="p">()})</span>
+
+    <span class="k">return</span> <span class="n">lp</span>
+
+</div>
+<div class="viewcode-block" id="lp_assign"><a class="viewcode-back" href="../examples/gambling_pool.html#gambling_pool.lp_assign">[docs]</a><span class="k">def</span> <span class="nf">lp_assign</span><span class="p">(</span><span class="n">accdss</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Assign gambles to all players that maximize the sum of lower previsions</span>
+
+<span class="sd">    :param accdss: the gambles accepted by the players</span>
+<span class="sd">    :type accdss: `dict` of `str` (player id) to `list` of `Gamble`</span>
+<span class="sd">    :returns: the gamble assigned to the players</span>
+<span class="sd">        and the corresponding lower prevision value</span>
+<span class="sd">    :rtype: `dict` of `str` (player id) to</span>
+<span class="sd">        {`&#39;gamble&#39;`: `Gamble`, `&#39;lpr&#39;`: `float`}</span>
+
+<span class="sd">    &gt;&gt;&gt; Agambles = [Gamble(.5, .25, -1), Gamble(1, -1, -1)]</span>
+<span class="sd">    &gt;&gt;&gt; Bgambles = [Gamble(-1, -1, 2), Gamble(1, .5, -.25)]</span>
+<span class="sd">    &gt;&gt;&gt; Cgambles = [Gamble(-1, 0, -1)]</span>
+<span class="sd">    &gt;&gt;&gt; accdss = {&#39;Alice&#39;: Agambles, &#39;Bob&#39;: Bgambles, &#39;Cthulhu&#39;: Cgambles}</span>
+<span class="sd">    &gt;&gt;&gt; solution = lp_assign(accdss)</span>
+<span class="sd">    &gt;&gt;&gt; assert solution == (</span>
+<span class="sd">    ...     {&#39;Alice&#39;: {&#39;gamble&#39;: Gamble(W=2.0, D=-1.0, L=-1.0), &#39;lpr&#39;: 0.5},</span>
+<span class="sd">    ...      &#39;Bob&#39;: {&#39;gamble&#39;: Gamble(W=-1.0, D=-1.0, L=2.0), &#39;lpr&#39;: 0.0},</span>
+<span class="sd">    ...      &#39;Cthulhu&#39;: {&#39;gamble&#39;: Gamble(W=-1.0, D=2.0, L=-1.0), &#39;lpr&#39;: 2.0}}</span>
+<span class="sd">    ... )</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lp</span> <span class="o">=</span> <span class="n">ecyglpki</span><span class="o">.</span><span class="n">Problem</span><span class="p">()</span>  <span class="c"># construct the linear program</span>
+    <span class="n">lp_setup</span><span class="p">(</span><span class="n">lp</span><span class="p">,</span> <span class="n">accdss</span><span class="p">)</span>
+
+    <span class="c"># solve the linear program</span>
+    <span class="n">lp</span><span class="o">.</span><span class="n">set_obj_dir</span><span class="p">(</span><span class="s">&#39;maximize&#39;</span><span class="p">)</span>
+    <span class="n">smcp</span> <span class="o">=</span> <span class="n">ecyglpki</span><span class="o">.</span><span class="n">SimplexControls</span><span class="p">()</span> <span class="c"># (default) simplex control parameters</span>
+    <span class="n">smcp</span><span class="o">.</span><span class="n">presolve</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">simplex</span><span class="p">(</span><span class="n">smcp</span><span class="p">)</span>  <span class="c"># solve using control parameters given</span>
+    <span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="s">&#39;optimal&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Error while solving...: &#39;</span> <span class="o">+</span> <span class="n">status</span><span class="p">)</span>
+    <span class="n">smcp</span><span class="o">.</span><span class="n">presolve</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">exact</span><span class="p">(</span><span class="n">smcp</span><span class="p">)</span>  <span class="c"># now solve exactly using control parameters given</span>
+    <span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="s">&#39;optimal&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Error while solving...: &#39;</span> <span class="o">+</span> <span class="n">status</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="n">player</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;gamble&#39;</span><span class="p">:</span> <span class="n">Gamble</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">lp</span><span class="o">.</span><span class="n">get_col_prim</span><span class="p">(</span><span class="n">player</span> <span class="o">+</span> <span class="n">outcome</span><span class="p">)</span>
+                                   <span class="k">for</span> <span class="n">outcome</span> <span class="ow">in</span> <span class="n">pspace</span><span class="p">)),</span>
+                <span class="s">&#39;lpr&#39;</span><span class="p">:</span> <span class="n">lp</span><span class="o">.</span><span class="n">get_col_prim</span><span class="p">(</span><span class="n">player</span> <span class="o">+</span> <span class="s">&#39;lpr&#39;</span><span class="p">)</span>
+            <span class="p">}</span> <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="n">accdss</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+
+</div>
+<div class="viewcode-block" id="milp_assign"><a class="viewcode-back" href="../examples/gambling_pool.html#gambling_pool.milp_assign">[docs]</a><span class="k">def</span> <span class="nf">milp_assign</span><span class="p">(</span><span class="n">accdss</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Assign gambles to some players that maximize the sum of lower previsions</span>
+
+<span class="sd">    As compared to `lp_assign`, we now try to make the bet fair in the sense</span>
+<span class="sd">    that for each player the lower prevision for the assigned gamble is equal</span>
+<span class="sd">    to the other player&#39;s lower prevision, or the gamble assigned to the player</span>
+<span class="sd">    is zero for all outcomes.</span>
+
+<span class="sd">    :param accdss: the gambles accepted by the players</span>
+<span class="sd">    :type accdss: `dict` of `str` (player id) to `list` of `Gamble`</span>
+<span class="sd">    :returns: the gamble assigned to the players</span>
+<span class="sd">        and the corresponding lower prevision value</span>
+<span class="sd">    :rtype: `dict` of `str` (player id) to</span>
+<span class="sd">        {`&#39;gamble&#39;`: `Gamble`, `&#39;lpr&#39;`: `float`}</span>
+
+<span class="sd">    &gt;&gt;&gt; Agambles = [Gamble(.5, .25, -1), Gamble(1, -1, -1)]</span>
+<span class="sd">    &gt;&gt;&gt; Bgambles = [Gamble(-1, -1, 2), Gamble(1, .5, -.25)]</span>
+<span class="sd">    &gt;&gt;&gt; Cgambles = [Gamble(-1, 0, -1)]</span>
+<span class="sd">    &gt;&gt;&gt; accdss = {&#39;Alice&#39;: Agambles, &#39;Bob&#39;: Bgambles, &#39;Cthulhu&#39;: Cgambles}</span>
+<span class="sd">    &gt;&gt;&gt; solution = milp_assign(accdss)</span>
+<span class="sd">    &gt;&gt;&gt; for player, data in solution.items():  # round floats for doctest</span>
+<span class="sd">    ...     solution[player][&#39;lpr&#39;] = round(data[&#39;lpr&#39;], 2)</span>
+<span class="sd">    ...     solution[player][&#39;gamble&#39;] = Gamble(round(data[&#39;gamble&#39;].W, 2),</span>
+<span class="sd">    ...                                         round(data[&#39;gamble&#39;].D, 2),</span>
+<span class="sd">    ...                                         round(data[&#39;gamble&#39;].L, 2))</span>
+<span class="sd">    &gt;&gt;&gt; assert solution == (</span>
+<span class="sd">    ...     {&#39;Alice&#39;: {&#39;gamble&#39;: Gamble(W=1.4, D=0.0, L=-1.0), &#39;lpr&#39;: 0.4},</span>
+<span class="sd">    ...      &#39;Bob&#39;: {&#39;gamble&#39;: Gamble(W=-0.4, D=-0.4, L=2.0), &#39;lpr&#39;: 0.4},</span>
+<span class="sd">    ...      &#39;Cthulhu&#39;: {&#39;gamble&#39;: Gamble(W=-1.0, D=0.4, L=-1.0), &#39;lpr&#39;: 0.4}}</span>
+<span class="sd">    ... )</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">milp</span> <span class="o">=</span> <span class="n">ecyglpki</span><span class="o">.</span><span class="n">Problem</span><span class="p">()</span>  <span class="c"># construct the linear program</span>
+    <span class="n">lp_setup</span><span class="p">(</span><span class="n">milp</span><span class="p">,</span> <span class="n">accdss</span><span class="p">)</span>
+
+    <span class="n">maxval</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">accdss</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c"># the largest possible payoff in the pool:</span>
+                              <span class="c"># stake (==1) times number of other players</span>
+
+    <span class="c"># the unique lower prevision for included players</span>
+    <span class="n">milp</span><span class="o">.</span><span class="n">add_named_cols</span><span class="p">(</span><span class="s">&#39;lpr&#39;</span><span class="p">)</span>
+    <span class="n">milp</span><span class="o">.</span><span class="n">set_col_bnds</span><span class="p">(</span><span class="s">&#39;lpr&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="n">accdss</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">player_b</span> <span class="o">=</span> <span class="n">player</span> <span class="o">+</span> <span class="s">&#39;b&#39;</span>
+        <span class="c"># the binary variable to select whether a player is included or not</span>
+        <span class="n">milp</span><span class="o">.</span><span class="n">add_named_cols</span><span class="p">(</span><span class="n">player_b</span><span class="p">)</span>
+        <span class="n">milp</span><span class="o">.</span><span class="n">set_col_kind</span><span class="p">(</span><span class="n">player_b</span><span class="p">,</span> <span class="s">&#39;binary&#39;</span><span class="p">)</span>
+        <span class="c"># add constraints to ensure that a player&#39;s lpr</span>
+        <span class="c"># is either equal to the global one or zero</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">milp</span><span class="o">.</span><span class="n">add_rows</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="c"># player_lpr &lt;= lpr</span>
+        <span class="n">milp</span><span class="o">.</span><span class="n">set_row_bnds</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">milp</span><span class="o">.</span><span class="n">set_mat_row</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="p">{</span><span class="n">player</span> <span class="o">+</span> <span class="s">&#39;lpr&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;lpr&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">})</span>
+        <span class="c"># player_lpr &lt;= maxval * player_b</span>
+        <span class="n">milp</span><span class="o">.</span><span class="n">set_row_bnds</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">milp</span><span class="o">.</span><span class="n">set_mat_row</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">{</span><span class="n">player</span> <span class="o">+</span> <span class="s">&#39;lpr&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">player_b</span><span class="p">:</span> <span class="o">-</span><span class="n">maxval</span><span class="p">})</span>
+        <span class="c"># lpr - player_lpr &lt;= maxval * (1 - player_b)</span>
+        <span class="n">milp</span><span class="o">.</span><span class="n">set_row_bnds</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">maxval</span><span class="p">)</span>
+        <span class="n">milp</span><span class="o">.</span><span class="n">set_mat_row</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;lpr&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">player</span> <span class="o">+</span> <span class="s">&#39;lpr&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">player_b</span><span class="p">:</span> <span class="n">maxval</span><span class="p">})</span>
+        <span class="c"># -1 * player_b &lt;= player_outcome &lt;= maxval * player_b</span>
+        <span class="k">for</span> <span class="n">outcome</span> <span class="ow">in</span> <span class="n">pspace</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">milp</span><span class="o">.</span><span class="n">add_rows</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">milp</span><span class="o">.</span><span class="n">set_row_bnds</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">milp</span><span class="o">.</span><span class="n">set_mat_row</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="p">{</span><span class="n">player</span> <span class="o">+</span> <span class="n">outcome</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">player_b</span><span class="p">:</span> <span class="o">-</span><span class="n">maxval</span><span class="p">})</span>
+            <span class="n">milp</span><span class="o">.</span><span class="n">set_row_bnds</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="n">milp</span><span class="o">.</span><span class="n">set_mat_row</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">{</span><span class="n">player</span> <span class="o">+</span> <span class="n">outcome</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">player_b</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+
+    <span class="c"># solve the mixed integer linear program</span>
+    <span class="n">milp</span><span class="o">.</span><span class="n">set_obj_dir</span><span class="p">(</span><span class="s">&#39;maximize&#39;</span><span class="p">)</span>
+    <span class="n">iocp</span> <span class="o">=</span> <span class="n">ecyglpki</span><span class="o">.</span><span class="n">IntOptControls</span><span class="p">()</span> <span class="c"># (default) int. opt. control parameters</span>
+    <span class="n">iocp</span><span class="o">.</span><span class="n">presolve</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">milp</span><span class="o">.</span><span class="n">intopt</span><span class="p">(</span><span class="n">iocp</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="s">&#39;optimal&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Error while solving...: &#39;</span> <span class="o">+</span> <span class="n">status</span><span class="p">)</span>
+    <span class="c"># fix the binary variables to their computed value and find exact solution</span>
+    <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="n">accdss</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">player_b</span> <span class="o">=</span> <span class="n">player</span> <span class="o">+</span> <span class="s">&#39;b&#39;</span>
+        <span class="n">player_b_val</span> <span class="o">=</span> <span class="n">milp</span><span class="o">.</span><span class="n">mip_col_val</span><span class="p">(</span><span class="n">player_b</span><span class="p">)</span>
+        <span class="n">milp</span><span class="o">.</span><span class="n">set_col_bnds</span><span class="p">(</span><span class="n">player_b</span><span class="p">,</span> <span class="n">player_b_val</span><span class="p">,</span> <span class="n">player_b_val</span><span class="p">)</span>
+    <span class="n">smcp</span> <span class="o">=</span> <span class="n">ecyglpki</span><span class="o">.</span><span class="n">SimplexControls</span><span class="p">()</span> <span class="c"># (default) simplex control parameters</span>
+    <span class="n">smcp</span><span class="o">.</span><span class="n">presolve</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">milp</span><span class="o">.</span><span class="n">simplex</span><span class="p">(</span><span class="n">smcp</span><span class="p">)</span>  <span class="c"># solve</span>
+    <span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="s">&#39;optimal&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Error while solving...: &#39;</span> <span class="o">+</span> <span class="n">status</span><span class="p">)</span>
+    <span class="n">smcp</span><span class="o">.</span><span class="n">presolve</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">milp</span><span class="o">.</span><span class="n">exact</span><span class="p">(</span><span class="n">smcp</span><span class="p">)</span>  <span class="c"># now solve exactly</span>
+    <span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="s">&#39;optimal&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Error while solving...: &#39;</span> <span class="o">+</span> <span class="n">status</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="n">player</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;gamble&#39;</span><span class="p">:</span> <span class="n">Gamble</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">milp</span><span class="o">.</span><span class="n">get_col_prim</span><span class="p">(</span><span class="n">player</span> <span class="o">+</span> <span class="n">outcome</span><span class="p">)</span>
+                                   <span class="k">for</span> <span class="n">outcome</span> <span class="ow">in</span> <span class="n">pspace</span><span class="p">)),</span>
+                <span class="s">&#39;lpr&#39;</span><span class="p">:</span> <span class="n">milp</span><span class="o">.</span><span class="n">get_col_prim</span><span class="p">(</span><span class="n">player</span> <span class="o">+</span> <span class="s">&#39;lpr&#39;</span><span class="p">)</span>
+            <span class="p">}</span> <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="n">accdss</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">ecyglpki  documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Erik Quaeghebeur.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

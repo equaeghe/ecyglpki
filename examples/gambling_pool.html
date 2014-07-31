@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Gambling pool &mdash; ecyglpki  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ecyglpki  documentation" href="../index.html" />
+    <link rel="up" title="Examples" href="../examples.html" />
+    <link rel="prev" title="Examples" href="../examples.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../examples.html" title="Examples"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">ecyglpki  documentation</a> &raquo;</li>
+          <li><a href="../examples.html" accesskey="U">Examples</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <blockquote>
+<div></div></blockquote>
+<div class="section" id="module-gambling_pool">
+<span id="gambling-pool"></span><h1>Gambling pool<a class="headerlink" href="#module-gambling_pool" title="Permalink to this headline">¶</a></h1>
+<dl class="data">
+<dt id="gambling_pool.pspace">
+<tt class="descclassname">gambling_pool.</tt><tt class="descname">pspace</tt><em class="property"> = ('W', 'D', 'L')</em><a class="headerlink" href="#gambling_pool.pspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>The set of possible football match outcomes (Win, Draw, or Lose)</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="gambling_pool.Gamble">
+<em class="property">class </em><tt class="descclassname">gambling_pool.</tt><tt class="descname">Gamble</tt><a class="headerlink" href="#gambling_pool.Gamble" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gamble on the outcome of a football match</p>
+<p>With each possible match outcome, the gamble assigns a payoff (a <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>);
+it corresponds to winnings if it is positive, to losses if it is negative.</p>
+<dl class="attribute">
+<dt id="gambling_pool.Gamble.D">
+<tt class="descname">D</tt><a class="headerlink" href="#gambling_pool.Gamble.D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gambling_pool.Gamble.L">
+<tt class="descname">L</tt><a class="headerlink" href="#gambling_pool.Gamble.L" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gambling_pool.Gamble.W">
+<tt class="descname">W</tt><a class="headerlink" href="#gambling_pool.Gamble.W" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="gambling_pool.lp_setup">
+<tt class="descclassname">gambling_pool.</tt><tt class="descname">lp_setup</tt><big>(</big><em>lp</em>, <em>accdss</em><big>)</big><a class="reference internal" href="../_modules/gambling_pool.html#lp_setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gambling_pool.lp_setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up the basic linear feasibility problem defining the gambling pool</p>
+<p>A number of players will form a gambling pool:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Each player states which gambles he finds <em>acceptable</em>, i.e., which
+have an expected payoff that is nonnegative</li>
+<li>If there is a bet between the players, a gamble is assigned to each
+of them; from the player&#8217;s perspective, the assigned gamble should
+be acceptable, meaning that is a positive linear combination of the
+gambles that that player has stated to be acceptable</li>
+<li>The stake is assumed to be one, i.e., the assigned gamble&#8217;s lowest
+payoff is -1.</li>
+<li>There is a bet between the players if the gambles assigned to the
+players sum up to one for each possible match outcome and the
+assigned gambles do not all have identically zero payoff</li>
+<li>An important quantity for each player is the ‘lower prevision’ of the
+gamble assigned to him: the greatest lower bound on the player&#8217;s
+expected payoff for the assigned gamble that can be deduced from the
+player&#8217;s stated acceptable gambles</li>
+<li>The objective is to maximize the sum of the lower previsions,
+possibly under additional constraints</li>
+</ul>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>lp</strong> (<a class="reference internal" href="../problem.html#ecyglpki.Problem" title="ecyglpki.Problem"><tt class="xref py py-obj docutils literal"><span class="pre">ecyglpki.Problem</span></tt></a>) &#8211; the problem object to set up</li>
+<li><strong>accdss</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#dict" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> of <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> (player id) to <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#list" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> of <a class="reference internal" href="#gambling_pool.Gamble" title="gambling_pool.Gamble"><tt class="xref py py-obj docutils literal"><span class="pre">Gamble</span></tt></a>) &#8211; the gambles accepted by the players</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the set up problem object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="../problem.html#ecyglpki.Problem" title="ecyglpki.Problem"><tt class="xref py py-obj docutils literal"><span class="pre">ecyglpki.Problem</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gambling_pool.lp_assign">
+<tt class="descclassname">gambling_pool.</tt><tt class="descname">lp_assign</tt><big>(</big><em>accdss</em><big>)</big><a class="reference internal" href="../_modules/gambling_pool.html#lp_assign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gambling_pool.lp_assign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign gambles to all players that maximize the sum of lower previsions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>accdss</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#dict" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> of <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> (player id) to <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#list" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> of <a class="reference internal" href="#gambling_pool.Gamble" title="gambling_pool.Gamble"><tt class="xref py py-obj docutils literal"><span class="pre">Gamble</span></tt></a>) &#8211; the gambles accepted by the players</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the gamble assigned to the players
+and the corresponding lower prevision value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#dict" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> of <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> (player id) to
+{<tt class="xref py py-obj docutils literal"><span class="pre">'gamble'</span></tt>: <a class="reference internal" href="#gambling_pool.Gamble" title="gambling_pool.Gamble"><tt class="xref py py-obj docutils literal"><span class="pre">Gamble</span></tt></a>, <tt class="xref py py-obj docutils literal"><span class="pre">'lpr'</span></tt>: <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a>}</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Agambles</span> <span class="o">=</span> <span class="p">[</span><span class="n">Gamble</span><span class="p">(</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">.</span><span class="mi">25</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">Gamble</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Bgambles</span> <span class="o">=</span> <span class="p">[</span><span class="n">Gamble</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">Gamble</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">-.</span><span class="mi">25</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Cgambles</span> <span class="o">=</span> <span class="p">[</span><span class="n">Gamble</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">accdss</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;Alice&#39;</span><span class="p">:</span> <span class="n">Agambles</span><span class="p">,</span> <span class="s">&#39;Bob&#39;</span><span class="p">:</span> <span class="n">Bgambles</span><span class="p">,</span> <span class="s">&#39;Cthulhu&#39;</span><span class="p">:</span> <span class="n">Cgambles</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">solution</span> <span class="o">=</span> <span class="n">lp_assign</span><span class="p">(</span><span class="n">accdss</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">solution</span> <span class="o">==</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s">&#39;Alice&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;gamble&#39;</span><span class="p">:</span> <span class="n">Gamble</span><span class="p">(</span><span class="n">W</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">D</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">L</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">),</span> <span class="s">&#39;lpr&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">},</span>
+<span class="gp">... </span>     <span class="s">&#39;Bob&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;gamble&#39;</span><span class="p">:</span> <span class="n">Gamble</span><span class="p">(</span><span class="n">W</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">D</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mf">2.0</span><span class="p">),</span> <span class="s">&#39;lpr&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
+<span class="gp">... </span>     <span class="s">&#39;Cthulhu&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;gamble&#39;</span><span class="p">:</span> <span class="n">Gamble</span><span class="p">(</span><span class="n">W</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">D</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">L</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">),</span> <span class="s">&#39;lpr&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">}}</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="gambling_pool.milp_assign">
+<tt class="descclassname">gambling_pool.</tt><tt class="descname">milp_assign</tt><big>(</big><em>accdss</em><big>)</big><a class="reference internal" href="../_modules/gambling_pool.html#milp_assign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gambling_pool.milp_assign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign gambles to some players that maximize the sum of lower previsions</p>
+<p>As compared to <a class="reference internal" href="#gambling_pool.lp_assign" title="gambling_pool.lp_assign"><tt class="xref py py-obj docutils literal"><span class="pre">lp_assign</span></tt></a>, we now try to make the bet fair in the sense
+that for each player the lower prevision for the assigned gamble is equal
+to the other player&#8217;s lower prevision, or the gamble assigned to the player
+is zero for all outcomes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>accdss</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#dict" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> of <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> (player id) to <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#list" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> of <a class="reference internal" href="#gambling_pool.Gamble" title="gambling_pool.Gamble"><tt class="xref py py-obj docutils literal"><span class="pre">Gamble</span></tt></a>) &#8211; the gambles accepted by the players</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the gamble assigned to the players
+and the corresponding lower prevision value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#dict" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> of <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> (player id) to
+{<tt class="xref py py-obj docutils literal"><span class="pre">'gamble'</span></tt>: <a class="reference internal" href="#gambling_pool.Gamble" title="gambling_pool.Gamble"><tt class="xref py py-obj docutils literal"><span class="pre">Gamble</span></tt></a>, <tt class="xref py py-obj docutils literal"><span class="pre">'lpr'</span></tt>: <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a>}</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Agambles</span> <span class="o">=</span> <span class="p">[</span><span class="n">Gamble</span><span class="p">(</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">.</span><span class="mi">25</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">Gamble</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Bgambles</span> <span class="o">=</span> <span class="p">[</span><span class="n">Gamble</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">Gamble</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">-.</span><span class="mi">25</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Cgambles</span> <span class="o">=</span> <span class="p">[</span><span class="n">Gamble</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">accdss</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;Alice&#39;</span><span class="p">:</span> <span class="n">Agambles</span><span class="p">,</span> <span class="s">&#39;Bob&#39;</span><span class="p">:</span> <span class="n">Bgambles</span><span class="p">,</span> <span class="s">&#39;Cthulhu&#39;</span><span class="p">:</span> <span class="n">Cgambles</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">solution</span> <span class="o">=</span> <span class="n">milp_assign</span><span class="p">(</span><span class="n">accdss</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">player</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">solution</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>  <span class="c"># round floats for doctest</span>
+<span class="gp">... </span>    <span class="n">solution</span><span class="p">[</span><span class="n">player</span><span class="p">][</span><span class="s">&#39;lpr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">&#39;lpr&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">solution</span><span class="p">[</span><span class="n">player</span><span class="p">][</span><span class="s">&#39;gamble&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Gamble</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">&#39;gamble&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">W</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+<span class="gp">... </span>                                        <span class="nb">round</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">&#39;gamble&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">D</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+<span class="gp">... </span>                                        <span class="nb">round</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">&#39;gamble&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">solution</span> <span class="o">==</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s">&#39;Alice&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;gamble&#39;</span><span class="p">:</span> <span class="n">Gamble</span><span class="p">(</span><span class="n">W</span><span class="o">=</span><span class="mf">1.4</span><span class="p">,</span> <span class="n">D</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">L</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">),</span> <span class="s">&#39;lpr&#39;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">},</span>
+<span class="gp">... </span>     <span class="s">&#39;Bob&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;gamble&#39;</span><span class="p">:</span> <span class="n">Gamble</span><span class="p">(</span><span class="n">W</span><span class="o">=-</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">D</span><span class="o">=-</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mf">2.0</span><span class="p">),</span> <span class="s">&#39;lpr&#39;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">},</span>
+<span class="gp">... </span>     <span class="s">&#39;Cthulhu&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;gamble&#39;</span><span class="p">:</span> <span class="n">Gamble</span><span class="p">(</span><span class="n">W</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">D</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">L</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">),</span> <span class="s">&#39;lpr&#39;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">}}</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../examples.html"
+                        title="previous chapter">Examples</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/examples/gambling_pool.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../examples.html" title="Examples"
+             >previous</a> |</li>
+        <li><a href="../index.html">ecyglpki  documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Erik Quaeghebeur.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

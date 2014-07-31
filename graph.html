@@ -1,0 +1,471 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Graphs &mdash; ecyglpki  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ecyglpki  documentation" href="index.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Branching Tree" href="tree.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="Examples"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tree.html" title="Branching Tree"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <blockquote>
+<div></div></blockquote>
+<span class="target" id="module-ecyglpki"></span><div class="section" id="graphs">
+<h1>Graphs<a class="headerlink" href="#graphs" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="ecyglpki.Graph">
+<em class="property">class </em><tt class="descclassname">ecyglpki.</tt><tt class="descname">Graph</tt><a class="headerlink" href="#ecyglpki.Graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>A GLPK graph</p>
+<dl class="attribute">
+<dt id="ecyglpki.Graph.a_size">
+<tt class="descname">a_size</tt><a class="headerlink" href="#ecyglpki.Graph.a_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>size of data associated with each arc, an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.add_arc">
+<tt class="descname">add_arc</tt><big>(</big><em>tail</em>, <em>head</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.add_arc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new arc to graph</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.add_named_vertices">
+<tt class="descname">add_named_vertices</tt><big>(</big><em>*names</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.add_named_vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new vertices to graph</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> &#8211; the names (str strings) of the vertices to add</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.add_vertices">
+<tt class="descname">add_vertices</tt><big>(</big><em>int vertices</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.add_vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new vertices to graph</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.asnprob_hall">
+<tt class="descname">asnprob_hall</tt><big>(</big><em>int v_set</em>, <em>int a_x</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.asnprob_hall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find bipartite matching of maximum cardinality</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.asnprob_lp">
+<tt class="descname">asnprob_lp</tt><big>(</big><em>str asnform</em>, <em>bool copy_names</em>, <em>int v_set</em>, <em>int a_cost</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.asnprob_lp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert assignment problem to LP</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.asnprob_okalg">
+<tt class="descname">asnprob_okalg</tt><big>(</big><em>str asnform</em>, <em>int v_set</em>, <em>int a_cost</em>, <em>int a_x</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.asnprob_okalg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve assignment problem with out-of-kilter algorithm</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.check_asnprob">
+<tt class="descname">check_asnprob</tt><big>(</big><em>int v_set</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.check_asnprob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check correctness of assignment problem data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.cpp">
+<tt class="descname">cpp</tt><big>(</big><em>int v_t</em>, <em>int v_es</em>, <em>int v_ls</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.cpp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve critical path problem</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.del_arc">
+<tt class="descname">del_arc</tt><big>(</big><em>Arc arc</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.del_arc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete arc from graph</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.del_vertices">
+<tt class="descname">del_vertices</tt><big>(</big><em>*vertices</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.del_vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete vertices from graph</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.erase_graph">
+<tt class="descname">erase_graph</tt><big>(</big><em>int vertex_data_size</em>, <em>int arc_data_size</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.erase_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Erase graph content</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.find_vertex">
+<tt class="descname">find_vertex</tt><big>(</big><em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.find_vertex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find vertex by its name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.find_vertex_as_needed">
+<tt class="descname">find_vertex_as_needed</tt><big>(</big><em>vertex</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.find_vertex_as_needed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.get_vertex_object">
+<tt class="descname">get_vertex_object</tt><big>(</big><em>vertex</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.get_vertex_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return Vertex object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.gridgen">
+<tt class="descname">gridgen</tt><big>(</big><em>int vertex_data_size</em>, <em>int arc_data_size</em>, <em>int v_rhs</em>, <em>int a_cap</em>, <em>int a_cost</em>, <em>**parameters</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.gridgen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grid-like network problem generator</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.maxflow_ffalg">
+<tt class="descname">maxflow_ffalg</tt><big>(</big><em>source</em>, <em>sink</em>, <em>int a_cap</em>, <em>int a_x</em>, <em>int v_cut</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.maxflow_ffalg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find maximal flow with Ford-Fulkerson algorithm</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.maxflow_lp">
+<tt class="descname">maxflow_lp</tt><big>(</big><em>bool copy_names</em>, <em>source</em>, <em>sink</em>, <em>int a_cap</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.maxflow_lp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert maximum flow problem to LP</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.mincost_lp">
+<tt class="descname">mincost_lp</tt><big>(</big><em>bool copy_names</em>, <em>int v_rhs</em>, <em>int a_low</em>, <em>int a_cap</em>, <em>int a_cost</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.mincost_lp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert minimum cost flow problem to LP</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.mincost_okalg">
+<tt class="descname">mincost_okalg</tt><big>(</big><em>int v_rhs</em>, <em>int a_low</em>, <em>int a_cap</em>, <em>int a_cost</em>, <em>int a_x</em>, <em>int v_pi</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.mincost_okalg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find minimum-cost flow with out-of-kilter algorithm</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.mincost_relax4">
+<tt class="descname">mincost_relax4</tt><big>(</big><em>int v_rhs</em>, <em>int a_low</em>, <em>int a_cap</em>, <em>int a_cost</em>, <em>int crash</em>, <em>int a_x</em>, <em>int a_rc</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.mincost_relax4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find minimum-cost flow with Bertsekas-Tseng relaxation method</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.Graph.na">
+<tt class="descname">na</tt><a class="headerlink" href="#ecyglpki.Graph.na" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of arcs in the graph, an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.netgen">
+<tt class="descname">netgen</tt><big>(</big><em>int vertex_data_size</em>, <em>int arc_data_size</em>, <em>int v_rhs</em>, <em>int a_cap</em>, <em>int a_cost</em>, <em>**parameters</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.netgen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Klingman&#8217;s network problem generator</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.Graph.nv">
+<tt class="descname">nv</tt><a class="headerlink" href="#ecyglpki.Graph.nv" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of vertices in the graph, an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.read_asnprob">
+<tt class="descname">read_asnprob</tt><big>(</big><em>int vertex_data_size</em>, <em>int arc_data_size</em>, <em>int v_set</em>, <em>int a_cost</em>, <em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.read_asnprob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read assignment problem data in DIMACS format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.read_ccdata">
+<tt class="descname">read_ccdata</tt><big>(</big><em>int vertex_data_size</em>, <em>int arc_data_size</em>, <em>int v_wgt</em>, <em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.read_ccdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read graph in DIMACS clique/coloring format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.read_graph">
+<tt class="descname">read_graph</tt><big>(</big><em>int vertex_data_size</em>, <em>int arc_data_size</em>, <em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.read_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read graph from plain text file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.read_maxflow">
+<tt class="descname">read_maxflow</tt><big>(</big><em>int vertex_data_size</em>, <em>int arc_data_size</em>, <em>int a_cap</em>, <em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.read_maxflow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read maximum flow problem data in DIMACS format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.read_mincost">
+<tt class="descname">read_mincost</tt><big>(</big><em>int vertex_data_size</em>, <em>int arc_data_size</em>, <em>int v_rhs</em>, <em>int a_low</em>, <em>int a_cap</em>, <em>int a_cost</em>, <em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.read_mincost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read min-cost flow problem data in DIMACS format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.rmfgen">
+<tt class="descname">rmfgen</tt><big>(</big><em>int vertex_data_size</em>, <em>int arc_data_size</em>, <em>int a_cap</em>, <em>parameters</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.rmfgen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Goldfarb&#8217;s maximum flow problem generator</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.set_graph_name">
+<tt class="descname">set_graph_name</tt><big>(</big><em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.set_graph_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign (change) graph name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.set_vertex_name">
+<tt class="descname">set_vertex_name</tt><big>(</big><em>vertex</em>, <em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.set_vertex_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign (change) vertex name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.strong_comp">
+<tt class="descname">strong_comp</tt><big>(</big><em>int v_num</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.strong_comp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find all strongly connected components of graph</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.top_sort">
+<tt class="descname">top_sort</tt><big>(</big><em>int v_num</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.top_sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Topological sorting of acyclic digraph</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.Graph.v_size">
+<tt class="descname">v_size</tt><a class="headerlink" href="#ecyglpki.Graph.v_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of data associated with each vertex, an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.wclique_exact">
+<tt class="descname">wclique_exact</tt><big>(</big><em>int v_wgt</em>, <em>int v_set</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.wclique_exact" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find maximum weight clique with exact algorithm</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.weak_comp">
+<tt class="descname">weak_comp</tt><big>(</big><em>int v_num</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.weak_comp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find all weakly connected components of graph</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.write_asnprob">
+<tt class="descname">write_asnprob</tt><big>(</big><em>int v_set</em>, <em>int a_cost</em>, <em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.write_asnprob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write assignment problem data in DIMACS format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.write_ccdata">
+<tt class="descname">write_ccdata</tt><big>(</big><em>int v_wgt</em>, <em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.write_ccdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write graph in DIMACS clique/coloring format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.write_graph">
+<tt class="descname">write_graph</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.write_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write graph to plain text file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.write_maxflow">
+<tt class="descname">write_maxflow</tt><big>(</big><em>source</em>, <em>sink</em>, <em>int a_cap</em>, <em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.write_maxflow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write maximum flow problem data in DIMACS format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.write_mincost">
+<tt class="descname">write_mincost</tt><big>(</big><em>int v_rhs</em>, <em>int a_low</em>, <em>int a_cap</em>, <em>int a_cost</em>, <em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.write_mincost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write min-cost flow problem data in DIMACS format</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="vertices">
+<h2>Vertices<a class="headerlink" href="#vertices" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ecyglpki.Vertex">
+<em class="property">class </em><tt class="descclassname">ecyglpki.</tt><tt class="descname">Vertex</tt><a class="headerlink" href="#ecyglpki.Vertex" title="Permalink to this definition">¶</a></dt>
+<dd><p>A GLPK graph vertex</p>
+<dl class="attribute">
+<dt id="ecyglpki.Vertex.i">
+<tt class="descname">i</tt><a class="headerlink" href="#ecyglpki.Vertex.i" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vertex ordinal number, an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.Vertex.inc">
+<tt class="descname">inc</tt><a class="headerlink" href="#ecyglpki.Vertex.inc" title="Permalink to this definition">¶</a></dt>
+<dd><p>First incoming arc, an <a class="reference internal" href="#ecyglpki.Arc" title="ecyglpki.Arc"><tt class="xref py py-obj docutils literal"><span class="pre">Arc</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.Vertex.name">
+<tt class="descname">name</tt><a class="headerlink" href="#ecyglpki.Vertex.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vertex name, a <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.Vertex.out">
+<tt class="descname">out</tt><a class="headerlink" href="#ecyglpki.Vertex.out" title="Permalink to this definition">¶</a></dt>
+<dd><p>First outgoing arc, an <a class="reference internal" href="#ecyglpki.Arc" title="ecyglpki.Arc"><tt class="xref py py-obj docutils literal"><span class="pre">Arc</span></tt></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="arcs">
+<h2>Arcs<a class="headerlink" href="#arcs" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ecyglpki.Arc">
+<em class="property">class </em><tt class="descclassname">ecyglpki.</tt><tt class="descname">Arc</tt><a class="headerlink" href="#ecyglpki.Arc" title="Permalink to this definition">¶</a></dt>
+<dd><p>A GLPK graph arc</p>
+<dl class="attribute">
+<dt id="ecyglpki.Arc.h_next">
+<tt class="descname">h_next</tt><a class="headerlink" href="#ecyglpki.Arc.h_next" title="Permalink to this definition">¶</a></dt>
+<dd><p>Next arc having the same head endpoint, an <a class="reference internal" href="#ecyglpki.Arc" title="ecyglpki.Arc"><tt class="xref py py-obj docutils literal"><span class="pre">Arc</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.Arc.h_prev">
+<tt class="descname">h_prev</tt><a class="headerlink" href="#ecyglpki.Arc.h_prev" title="Permalink to this definition">¶</a></dt>
+<dd><p>Previous arc having the same head endpoint, an <a class="reference internal" href="#ecyglpki.Arc" title="ecyglpki.Arc"><tt class="xref py py-obj docutils literal"><span class="pre">Arc</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.Arc.head">
+<tt class="descname">head</tt><a class="headerlink" href="#ecyglpki.Arc.head" title="Permalink to this definition">¶</a></dt>
+<dd><p>Head vertex, a <a class="reference internal" href="#ecyglpki.Vertex" title="ecyglpki.Vertex"><tt class="xref py py-obj docutils literal"><span class="pre">Vertex</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.Arc.t_next">
+<tt class="descname">t_next</tt><a class="headerlink" href="#ecyglpki.Arc.t_next" title="Permalink to this definition">¶</a></dt>
+<dd><p>Next arc having the same tail endpoint, an <a class="reference internal" href="#ecyglpki.Arc" title="ecyglpki.Arc"><tt class="xref py py-obj docutils literal"><span class="pre">Arc</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.Arc.t_prev">
+<tt class="descname">t_prev</tt><a class="headerlink" href="#ecyglpki.Arc.t_prev" title="Permalink to this definition">¶</a></dt>
+<dd><p>Previous arc having the same tail endpoint, an <a class="reference internal" href="#ecyglpki.Arc" title="ecyglpki.Arc"><tt class="xref py py-obj docutils literal"><span class="pre">Arc</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.Arc.tail">
+<tt class="descname">tail</tt><a class="headerlink" href="#ecyglpki.Arc.tail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tail vertex, a <a class="reference internal" href="#ecyglpki.Vertex" title="ecyglpki.Vertex"><tt class="xref py py-obj docutils literal"><span class="pre">Vertex</span></tt></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Graphs</a><ul>
+<li><a class="reference internal" href="#vertices">Vertices</a></li>
+<li><a class="reference internal" href="#arcs">Arcs</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tree.html"
+                        title="previous chapter">Branching Tree</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="examples.html"
+                        title="next chapter">Examples</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/graph.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="Examples"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tree.html" title="Branching Tree"
+             >previous</a> |</li>
+        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Erik Quaeghebeur.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

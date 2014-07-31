@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Branching Tree &mdash; ecyglpki  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ecyglpki  documentation" href="index.html" />
+    <link rel="next" title="Graphs" href="graph.html" />
+    <link rel="prev" title="Integer Optimization Controls" href="iocp.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="graph.html" title="Graphs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="iocp.html" title="Integer Optimization Controls"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <blockquote>
+<div></div></blockquote>
+<span class="target" id="module-ecyglpki"></span><div class="section" id="branching-tree">
+<h1>Branching Tree<a class="headerlink" href="#branching-tree" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="ecyglpki.Tree">
+<em class="property">class </em><tt class="descclassname">ecyglpki.</tt><tt class="descname">Tree</tt><a class="headerlink" href="#ecyglpki.Tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>A GLPK search tree</p>
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_add_row">
+<tt class="descname">ios_add_row</tt><big>(</big><em>str name</em>, <em>str rowclass</em>, <em>coeffs</em>, <em>str vartype</em>, <em>double rhs</em><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_add_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add row (constraint) to the cut pool</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_best_node">
+<tt class="descname">ios_best_node</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_best_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find active subproblem with best local bound</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_branch_upon">
+<tt class="descname">ios_branch_upon</tt><big>(</big><em>col</em>, <em>str branchdir</em><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_branch_upon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Choose variable to branch upon</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_can_branch">
+<tt class="descname">ios_can_branch</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_can_branch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if can branch upon specified variable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_clear_pool">
+<tt class="descname">ios_clear_pool</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_clear_pool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all rows (constraints) from the cut pool</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_curr_node">
+<tt class="descname">ios_curr_node</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_curr_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine current active subproblem</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_del_row">
+<tt class="descname">ios_del_row</tt><big>(</big><em>int row</em><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_del_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove row (constraint) from the cut pool</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_first_node">
+<tt class="descname">ios_first_node</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_first_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine first active subproblem</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_heur_sol">
+<tt class="descname">ios_heur_sol</tt><big>(</big><em>coeffs</em><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_heur_sol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provide solution found by heuristic</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_last_node">
+<tt class="descname">ios_last_node</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_last_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine last active subproblem</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_mip_gap">
+<tt class="descname">ios_mip_gap</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_mip_gap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute relative MIP gap</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_next_node">
+<tt class="descname">ios_next_node</tt><big>(</big><em>int node</em><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_next_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine next active subproblem</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_node_bound">
+<tt class="descname">ios_node_bound</tt><big>(</big><em>int node</em><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_node_bound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine subproblem local bound</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_node_data">
+<tt class="descname">ios_node_data</tt><big>(</big><em>int node</em><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_node_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Access subproblem application-specific data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_node_level">
+<tt class="descname">ios_node_level</tt><big>(</big><em>int node</em><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_node_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine subproblem level</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_pool_size">
+<tt class="descname">ios_pool_size</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_pool_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine current size of the cut pool</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_prev_node">
+<tt class="descname">ios_prev_node</tt><big>(</big><em>int node</em><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_prev_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine previous active subproblem</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_reason">
+<tt class="descname">ios_reason</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_reason" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine reason for calling the callback routine</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_row_attr">
+<tt class="descname">ios_row_attr</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_row_attr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve additional row attributes</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_select_node">
+<tt class="descname">ios_select_node</tt><big>(</big><em>int node</em><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_select_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select subproblem to continue the search</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_terminate">
+<tt class="descname">ios_terminate</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_terminate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Terminate the solution process</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_tree_size">
+<tt class="descname">ios_tree_size</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_tree_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine size of the branch-and-bound tree</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Tree.ios_up_node">
+<tt class="descname">ios_up_node</tt><big>(</big><em>int node</em><big>)</big><a class="headerlink" href="#ecyglpki.Tree.ios_up_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine parent subproblem</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.Tree.problem">
+<tt class="descname">problem</tt><a class="headerlink" href="#ecyglpki.Tree.problem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="iocp.html"
+                        title="previous chapter">Integer Optimization Controls</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="graph.html"
+                        title="next chapter">Graphs</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tree.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="graph.html" title="Graphs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="iocp.html" title="Integer Optimization Controls"
+             >previous</a> |</li>
+        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Erik Quaeghebeur.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

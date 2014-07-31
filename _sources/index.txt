@@ -14,6 +14,9 @@ Contents:
   bfcp
   iptcp
   iocp
+  tree
+  graph
+  examples
 
 
 Indices and tables
