@@ -1,7 +1,7 @@
 epyglpki
 ========
 
-Cython/Python GLPK interface
+A Cython GLPK interface
 
 To install:
 -----------
