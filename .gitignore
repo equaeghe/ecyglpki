@@ -16,6 +16,7 @@ parts
 bin
 var
 sdist
+MANIFEST
 develop-eggs
 .installed.cfg
 lib
