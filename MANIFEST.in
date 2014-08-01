@@ -1,0 +1,7 @@
+include LICENSE
+include README.md
+include CHANGELOG
+include glpk.pxd
+include ecyglpki*
+include examples/*.py
+graft docs/_build/html
