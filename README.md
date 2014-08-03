@@ -1,4 +1,4 @@
-epyglpki
+ecyglpki
 ========
 
 A Cython GLPK interface
