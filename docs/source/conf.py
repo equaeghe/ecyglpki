@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# epyglpki documentation build configuration file, created by
+# ecyglpki documentation build configuration file, created by
 # sphinx-quickstart on Thu Feb 13 15:59:22 2014.
 #
 # This file is execfile()d with the current directory set to its containing dir.
