@@ -173,7 +173,13 @@ cdef class Tree:
 
     def ios_add_row(self, str name, str rowclass,
                     coeffs, str vartype, double rhs):
-        """Add row (constraint) to the cut pool"""
+        """Add row (constraint) to the cut pool
+
+        :param name: the name of the row, it may not exceed 255 bytes
+            *encoded as UTF-8*
+        :type name: `str`
+
+        """
         _coeffscheck(coeffs)
         cdef int k = len(coeffs)
         cdef int* cols = <int*>glpk.alloc(1+k, sizeof(int))

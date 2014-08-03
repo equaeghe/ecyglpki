@@ -187,7 +187,13 @@ cdef class Graph:
     ### Translated GLPK functions ###
 
     def set_graph_name(self, str name):
-        """Assign (change) graph name"""
+        """Assign (change) graph name
+
+        :param name: the name of the graph, it may not exceed 255 bytes
+            *encoded as UTF-8*
+        :type name: `str`
+
+        """
         glpk.set_graph_name(self._graph, name2chars(name))
 
     def add_vertices(self, int vertices):
@@ -197,7 +203,9 @@ cdef class Graph:
     def add_named_vertices(self, *names):  # variant of add_vertices
         """Add new vertices to graph
 
-        :param names: the names (str strings) of the vertices to add
+        :param names: the names of the vertices to add, none may exceed 255
+            bytes *encoded as UTF-8*
+        :type names: `tuple` of `str`
 
         """
         cdef int number = len(names)
@@ -208,7 +216,13 @@ cdef class Graph:
             glpk.set_vertex_name(self._graph, vertex, name2chars(name))
 
     def set_vertex_name(self, vertex, str name):
-        """Assign (change) vertex name"""
+        """Assign (change) vertex name
+
+        :param name: the name of the vertex, it may not exceed 255 bytes
+            *encoded as UTF-8*
+        :type name: `str`
+
+        """
         vertex = self.find_vertex_as_needed(vertex)
         glpk.set_vertex_name(self._graph, vertex, name2chars(name))
 
@@ -243,7 +257,12 @@ cdef class Graph:
         glpk.erase_graph(self._graph, vertex_data_size, arc_data_size)
 
     def find_vertex(self, str name):
-        """Find vertex by its name"""
+        """Find vertex by its name
+
+        :param name: the name of the vertex
+        :type name: `str`
+
+        """
         cdef int vertex = glpk.find_vertex(self._graph, name2chars(name))
         if vertex is 0:
             raise ValueError("'" + name + "' is not a vertex name.")

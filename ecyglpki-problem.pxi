@@ -72,6 +72,16 @@ cdef vartype2str = {
 cdef str2vartype = {string: vartype for vartype, string in vartype2str.items()}
 
 cdef _bounds(lower, upper):
+    """Return ‘vartype’ and lower and upper bounds as real numbers
+
+    :param lower: a real number or None (if unbounded from below)
+    :type lower: |Real| or `NoneType`
+    :param lower: a real number or None (if unbounded from above)
+    :type lower: |Real| or `NoneType`
+    :returns: a 3-tuple of ‘vartype’, lower bound, and upper bound
+    :rtype: (`int`, |Real|, |Real|)
+
+    """
     if isinstance(lower, numbers.Real):
         lb = lower
         if lb <= -double_MAX:
@@ -260,25 +270,52 @@ cdef class Problem:
     ### Translated GLPK functions ###
 
     def set_prob_name(self, str name):
-        """Assign (change) problem name"""
+        """Assign (change) problem name
+
+        :param name: the name of the problem, it may not exceed 255 bytes
+            *encoded as UTF-8*
+        :type name: `str`
+
+        """
         glpk.set_prob_name(self._prob, name2chars(name))
 
     def set_obj_name(self, str name):
-        """Assign (change) objective function name"""
+        """Assign (change) objective function name
+
+        :param name: the name of the objective, it may not exceed 255 bytes
+            *encoded as UTF-8*
+        :type name: `str`
+
+        """
         glpk.set_obj_name(self._prob, name2chars(name))
 
     def set_obj_dir(self, str direction):
-        """Set (change) optimization direction flag"""
+        """Set (change) optimization direction flag
+
+        :param direction: the objective direction,
+            either `'minimize'` or `'maximize'`
+        :type direction: `str`
+
+        """
         glpk.set_obj_dir(self._prob, str2optdir[direction])
 
     def add_rows(self, int number):
-        """Add new rows to problem object"""
+        """Add new rows to problem object
+
+        :param number: the number of rows to add
+        :type number: `int`
+        :returns: the index of the first row added
+        :rtype: `int`
+
+        """
         return glpk.add_rows(self._prob, number)
 
     def add_named_rows(self, *names):  # variant of add_rows
         """Add new rows to problem object
 
-        :param names: the names (str strings) of the rows to add
+        :param names: the names of the rows to add, none may exceed 255 bytes
+            *encoded as UTF-8*
+        :type names: `tuple` of `str`
 
         """
         cdef int number = len(names)
@@ -289,13 +326,22 @@ cdef class Problem:
             glpk.set_row_name(self._prob, row, name2chars(name))
 
     def add_cols(self, int number):
-        """Add new columns to problem object"""
+        """Add new columns to problem object
+
+        :param number: the number of columns to add
+        :type number: `int`
+        :returns: the index of the first column added
+        :rtype: `int`
+
+        """
         return glpk.add_cols(self._prob, number)
 
     def add_named_cols(self, *names):  # variant of add_cols
         """Add new columns to problem object
 
-        :param names: the names (str strings) of the columns to add
+        :param names: the names of the columns to add, none may exceed 255
+            bytes *encoded as UTF-8*
+        :type names: `tuple` of `str`
 
         """
         cdef int number = len(names)
@@ -306,17 +352,42 @@ cdef class Problem:
             glpk.set_col_name(self._prob, col, name2chars(name))
 
     def set_row_name(self, row, str name):
-        """Change row name"""
+        """Change row name
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+        :param name: the name of the row, it may not exceed 255 bytes
+            *encoded as UTF-8*
+        :type name: `str`
+
+        """
         row = self.find_row_as_needed(row)
         glpk.set_row_name(self._prob, row, name2chars(name))
 
     def set_col_name(self, col, str name):
-        """Change column name"""
+        """Change column name
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :param name: the name of the column, it may not exceed 255 bytes
+            *encoded as UTF-8*
+        :type name: `str`
+
+        """
         col = self.find_col_as_needed(col)
         glpk.set_col_name(self._prob, col, name2chars(name))
 
     def set_row_bnds(self, row, lower, upper):
-        """Set (change) row bounds"""
+        """Set (change) row bounds
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+        :param lower: lower bound (`None` if unbounded from below)
+        :type lower: |Real| or `NoneType`
+        :param upper: upper bound (`None` if unbounded from above)
+        :type upper: |Real| or `NoneType`
+
+        """
         row = self.find_row_as_needed(row)
         cdef int vartype
         cdef double lb
@@ -325,7 +396,16 @@ cdef class Problem:
         glpk.set_row_bnds(self._prob, row, vartype, lb, ub)
 
     def set_col_bnds(self, col, lower, upper):
-        """Set (change) column bounds"""
+        """Set (change) column bounds
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :param lower: lower bound (`None` if unbounded from below)
+        :type lower: |Real| or `NoneType`
+        :param upper: upper bound (`None` if unbounded from above)
+        :type upper: |Real| or `NoneType`
+
+        """
         col = self.find_col_as_needed(col)
         cdef int vartype
         cdef double lb
@@ -334,17 +414,31 @@ cdef class Problem:
         glpk.set_col_bnds(self._prob, col, vartype, lb, ub)
 
     def set_obj_coef(self, col, double coeff):
-        """Set (change) obj. coefficient"""
+        """Set (change) obj. coefficient
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :param coeff: the coefficient value
+        :type coeff: |Real|
+
+        """
         col = self.find_col_as_needed(col)
         glpk.set_obj_coef(self._prob, col, coeff)
 
     def set_obj_const(self, double coeff):  # variant of set_obj_coef
-        """Set (change) obj. constant term"""
+        """Set (change) obj. constant term
+
+        :param coeff: the coefficient value
+        :type coeff: |Real|
+
+        """
         glpk.set_obj_coef(self._prob, 0, coeff)
 
     def set_mat_row(self, row, coeffs):
         """Set (replace) row of the constraint matrix
 
+        :param row: the index or name of the row
+        :type row: `int` or `str`
         :param coeffs: |Mapping| from column names (str strings) to
             coefficient values (|Real|).
 
@@ -364,13 +458,20 @@ cdef class Problem:
             glpk.free(vals)
 
     def clear_mat_row(self, row):  # variant of set_mat_row
-        """Clear row of the constraint matrix"""
+        """Clear row of the constraint matrix
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+
+        """
         row = self.find_row_as_needed(row)
         glpk.set_mat_row(self._prob, row, 0, NULL, NULL)
 
     def set_mat_col(self, col, coeffs):
         """Set (replace) column of the constraint matrix
 
+        :param col: the index or name of the column
+        :type col: `int` or `str`
         :param coeffs: |Mapping| from row names (str strings) to
             coefficient values (|Real|).
 
@@ -390,7 +491,12 @@ cdef class Problem:
             glpk.free(vals)
 
     def clear_mat_col(self, col):  # variant of set_mat_col
-        """Clear column of the constraint matrix"""
+        """Clear column of the constraint matrix
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+
+        """
         col = self.find_col_as_needed(col)
         glpk.set_mat_col(self._prob, col, 0, NULL, NULL)
 
@@ -432,7 +538,8 @@ cdef class Problem:
     def del_rows(self, *rows):
         """Delete specified rows from problem object
 
-        :param names: the names (str strings) of the rows to delete
+        :param rows: the indices or names of the rows
+        :type rows: `tuple` of `str`
 
         """
         cdef int k = len(rows)
@@ -449,7 +556,8 @@ cdef class Problem:
     def del_cols(self, *cols):
         """Delete specified columns from problem object
 
-        :param names: the names (str strings) of the columns to delete
+        :param names: the indices or the names of the columns
+        :type names: `tuple` of `str`
 
         """
         cdef int k = len(cols)
@@ -465,7 +573,16 @@ cdef class Problem:
 
     @classmethod
     def copy_prob(cls, Problem source, bint copy_names):
-        """Copy problem object content"""
+        """Copy problem object content
+
+        :param source: the problem to copy
+        :type source: `.Problem`
+        :param copy_names: whether to copy problem component names or not
+        :type copy_names: `bool`
+        :returns: the copied problem
+        :rtype: `.Problem`
+
+        """
         problem = cls()
         cdef glpk.Prob* _prob = <glpk.Prob*>PyCapsule_GetPointer(
                                                     problem._prob_ptr(), NULL)
@@ -477,11 +594,21 @@ cdef class Problem:
         glpk.erase_prob(self._prob)
 
     def get_prob_name(self):
-        """Retrieve problem name"""
+        """Retrieve problem name
+
+        :returns: the problem name
+        :rtype: `str`
+
+        """
         return chars2name(glpk.get_prob_name(self._prob))
 
     def get_obj_name(self):
-        """Retrieve objective function name"""
+        """Retrieve objective function name
+
+        :returns: the objective name
+        :rtype: `str`
+
+        """
         return chars2name(glpk.get_obj_name(self._prob))
 
     def get_obj_dir(self):
@@ -497,10 +624,27 @@ cdef class Problem:
         return glpk.get_num_cols(self._prob)
 
     def get_row_name(self, int row):
-        """Retrieve row name"""
+        """Retrieve row name
+
+        :param row: the index of the row
+        :type row: `int`
+        :returns: the row name
+        :rtype: `str`
+
+        """
         return chars2name(glpk.get_row_name(self._prob, row))
 
     def get_row_name_if(self, int row, names_preferred=False):
+        """
+
+        :param row: the index of the row
+        :type row: `int`
+        :param names_preferred: whether to return the row name or index
+        :type names_preferred: `bool`
+        :returns: the row name or index
+        :rtype: `str` or `int`
+
+        """
         if names_preferred:
             name = self.get_row_name(row)
             return row if name is '' else name
@@ -508,10 +652,27 @@ cdef class Problem:
             return row
 
     def get_col_name(self, int col):
-        """Retrieve column name"""
+        """Retrieve column name
+
+        :param col: the index of the column
+        :type col: `int`
+        :returns: the problem name
+        :rtype: `str`
+
+        """
         return chars2name(glpk.get_col_name(self._prob, col))
 
     def get_col_name_if(self, int col, names_preferred=False):
+        """
+
+        :param col: the index of the column
+        :type col: `int`
+        :param names_preferred: whether to return the column name or index
+        :type names_preferred: `bool`
+        :returns: the column name or index
+        :rtype: `str` or `int`
+
+        """
         if names_preferred:
             name = self.get_col_name(col)
             return col if name is '' else name
@@ -519,7 +680,14 @@ cdef class Problem:
             return col
 
     def get_row_or_col_name(self, int ind):  # _get_row/col_name variant
-        """Retrieve row or column name"""
+        """Retrieve row or column name
+
+        :param ind: the row/column index
+        :type ind: `int`
+        :returns: a pair, either `'row'` or `'col'` and the row or column name
+        :rtype: (`str`, `str`)
+
+        """
         cdef int m = self.get_num_rows()
         if ind > m:  # column
             return 'col', self.get_col_name(ind - m)
@@ -527,6 +695,17 @@ cdef class Problem:
             return 'row', self.get_row_name(ind)
 
     def get_row_or_col_name_if(self, int ind, names_preferred=False):
+        """
+
+        :param ind: the row/column index
+        :type ind: `int`
+        :param names_preferred: whether to return the row or column
+            name or index
+        :type names_preferred: `bool`
+        :returns: a pair, either `'row'` or `'col'` and the row or column name
+        :rtype: (`str`, `str`)
+
+        """
         if names_preferred:
             row_or_col, name = self.get_row_or_col_name(ind)
             return row_or_col, ind if name is '' else row_or_col, name
@@ -538,41 +717,92 @@ cdef class Problem:
                 return 'row', ind
 
     def get_row_type(self, row):
-        """Retrieve row type"""
+        """Retrieve row type
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+        :returns: the row type, either `'free'`, `'dominating'`, `'dominated'`,
+            `'bounded'`, or `'fixed'`
+        :rtype: `str`
+
+        """
         row = self.find_row_as_needed(row)
         return vartype2str[glpk.get_row_type(self._prob, row)]
 
     def get_row_lb(self, row):
-        """Retrieve row lower bound"""
+        """Retrieve row lower bound
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+        :returns: the lower bound
+        :rtype: `float`
+
+        """
         row = self.find_row_as_needed(row)
         cdef double lb = glpk.get_row_lb(self._prob, row)
         return -float('inf') if lb == -double_MAX else lb
 
     def get_row_ub(self, row):
-        """Retrieve row upper bound"""
+        """Retrieve row upper bound
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+        :returns: the upper bound
+        :rtype: `float`
+
+        """
         row = self.find_row_as_needed(row)
         cdef double ub = glpk.get_row_ub(self._prob, row)
         return -float('inf') if ub == -double_MAX else ub
 
     def get_col_type(self, col):
-        """Retrieve column type"""
+        """Retrieve column type
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :returns: the column type, either `'free'`, `'dominating'`,
+            `'dominated'`, `'bounded'`, or `'fixed'`
+        :rtype: `str`
+
+        """
         col = self.find_col_as_needed(col)
         return vartype2str[glpk.get_col_type(self._prob, col)]
 
     def get_col_lb(self, col):
-        """Retrieve column lower bound"""
+        """Retrieve column lower bound
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :returns: the lower bound
+        :rtype: `float`
+
+        """
         col = self.find_col_as_needed(col)
         cdef double lb = glpk.get_col_lb(self._prob, col)
         return -float('inf') if lb == -double_MAX else lb
 
     def get_col_ub(self, col):
-        """Retrieve column upper bound"""
+        """Retrieve column upper bound
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :returns: the upper bound
+        :rtype: `float`
+
+        """
         col = self.find_col_as_needed(col)
         cdef double ub = glpk.get_col_ub(self._prob, col)
         return -float('inf') if ub == -double_MAX else ub
 
     def get_obj_coef(self, col):
-        """Retrieve obj. coefficient"""
+        """Retrieve obj. coefficient
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :returns: the coefficient value
+        :rtype: `float`
+
+        """
         col = self.find_col_as_needed(col)
         return glpk.get_obj_coef(self._prob, col)
 
@@ -585,7 +815,12 @@ cdef class Problem:
         return glpk.get_num_nz(self._prob)
 
     def get_mat_row(self, row, names_preferred=False):
-        """Retrieve row of the constraint matrix"""
+        """Retrieve row of the constraint matrix
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+
+        """
         row = self.find_row_as_needed(row)
         cdef int n = self.get_num_cols()
         cdef int* cols =  <int*>glpk.alloc(1+n, sizeof(int))
@@ -601,7 +836,12 @@ cdef class Problem:
         return coeffs
 
     def get_mat_col(self, col, names_preferred=False):
-        """Retrieve column of the constraint matrix"""
+        """Retrieve column of the constraint matrix
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+
+        """
         col = self.find_col_as_needed(col)
         cdef int m = self.get_num_rows()
         cdef int* rows =  <int*>glpk.alloc(1+m, sizeof(int))
@@ -617,13 +857,28 @@ cdef class Problem:
         return coeffs
 
     def find_row(self, str name):
-        """Find row by its name"""
+        """Find row by its name
+
+        :param name: the name of the row
+        :type name: `str`
+        :returns: the row index
+        :rtype: `int`
+
+        """
         cdef int row = glpk.find_row(self._prob, name2chars(name))
         if row is 0:
             raise ValueError("'" + name + "' is not a row name.")
         return row
 
     def find_row_as_needed(self, row):
+        """
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+        :returns: the row index
+        :rtype: `int`
+
+        """
         if isinstance(row, int):
             return row
         elif isinstance(row, str):
@@ -634,13 +889,28 @@ cdef class Problem:
                             "'.")
 
     def find_col(self, str name):
-        """Find column by its name"""
+        """Find column by its name
+
+        :param name: the name of the column
+        :type name: `str`
+        :returns: the column index
+        :rtype: `int`
+
+        """
         cdef int col = glpk.find_col(self._prob, name2chars(name))
         if col is 0:
             raise ValueError("'" + name + "' is not a column name.")
         return col
 
     def find_col_as_needed(self, col):
+        """
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :returns: the column index
+        :rtype: `int`
+
+        """
         if isinstance(col, int):
             return col
         elif isinstance(col, str):
@@ -665,22 +935,50 @@ cdef class Problem:
                              str(ind[0]) + "'.")
 
     def set_rii(self, row, double sf):
-        """Set (change) row scale factor"""
+        """Set (change) row scale factor
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+        :param sf: the scale factor
+        :type sf: |Real|
+
+        """
         row = self.find_row_as_needed(row)
         glpk.set_rii(self._prob, row, sf)
 
     def set_sjj(self, col, double sf):
-        """Set (change) column scale factor"""
+        """Set (change) column scale factor
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :param sf: the scale factor
+        :type sf: |Real|
+
+        """
         col = self.find_col_as_needed(col)
         glpk.set_sjj(self._prob, col, sf)
 
     def get_rii(self, row):
-        """Retrieve row scale factor"""
+        """Retrieve row scale factor
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+        :returns: the scale factor
+        :rtype: `float`
+
+        """
         row = self.find_row_as_needed(row)
         return glpk.get_rii(self._prob, row)
 
     def get_sjj(self, col):
-        """Retrieve column scale factor"""
+        """Retrieve column scale factor
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :returns: the scale factor
+        :rtype: `float`
+
+        """
         col = self.find_col_as_needed(col)
         return glpk.get_sjj(self._prob, col)
 
@@ -700,13 +998,23 @@ cdef class Problem:
         glpk.unscale_prob(self._prob)
 
     def set_row_stat(self, row, str status):
-        """Set (change) row status"""
+        """Set (change) row status
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+
+        """
         row = self.find_row_as_needed(row)
         _statuscheck(self.get_row_type(row), status)
         glpk.set_row_stat(self._prob, row, str2varstat[status])
 
     def set_col_stat(self, col, str status):
-        """Set (change) column status"""
+        """Set (change) column status
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+
+        """
         col = self.find_col_as_needed(col)
         _statuscheck(self.get_col_type(col), status)
         glpk.set_col_stat(self._prob, col, str2varstat[status])
@@ -764,32 +1072,76 @@ cdef class Problem:
         return glpk.get_obj_val(self._prob)
 
     def get_row_stat(self, row):
-        """Retrieve row status"""
+        """Retrieve row status
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+        :returns: the row status, either `'basic'`, `'lower'`, `'upper'`,
+            `'free'`, or `'fixed'`
+        :rtype: `str`
+
+        """
         row = self.find_row_as_needed(row)
         return varstat2str[glpk.get_row_stat(self._prob, row)]
 
     def get_row_prim(self, row):
-        """Retrieve row primal value (basic solution)"""
+        """Retrieve row primal value (basic solution)
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+        :returns: the solution value
+        :rtype: `float`
+
+        """
         row = self.find_row_as_needed(row)
         return glpk.get_row_prim(self._prob, row)
 
     def get_row_dual(self, row):
-        """Retrieve row dual value (basic solution)"""
+        """Retrieve row dual value (basic solution)
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+        :returns: the solution value
+        :rtype: `float`
+
+        """
         row = self.find_row_as_needed(row)
         return glpk.get_row_dual(self._prob, row)
 
     def get_col_stat(self, col):
-        """Retrieve column status"""
+        """Retrieve column status
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :returns: the column status, either `'basic'`, `'lower'`, `'upper'`,
+            `'free'`, or `'fixed'`
+        :rtype: `str`
+
+        """
         col = self.find_col_as_needed(col)
         return varstat2str[glpk.get_col_stat(self._prob, col)]
 
     def get_col_prim(self, col):
-        """Retrieve column primal value (basic solution)"""
+        """Retrieve column primal value (basic solution)
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :returns: the solution value
+        :rtype: `float`
+
+        """
         col = self.find_col_as_needed(col)
         return glpk.get_col_prim(self._prob, col)
 
     def get_col_dual(self, col):
-        """retrieve column dual value (basic solution)"""
+        """retrieve column dual value (basic solution)
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :returns: the solution value
+        :rtype: `float`
+
+        """
         col = self.find_col_as_needed(col)
         return glpk.get_col_dual(self._prob, col)
 
@@ -814,32 +1166,76 @@ cdef class Problem:
         return glpk.ipt_obj_val(self._prob)
 
     def ipt_row_prim(self, row):
-        """Retrieve row primal value (interior point)"""
+        """Retrieve row primal value (interior point)
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+        :returns: the solution value
+        :rtype: `float`
+
+        """
         row = self.find_row_as_needed(row)
         return glpk.ipt_row_prim(self._prob, row)
 
     def ipt_row_dual(self, row):
-        """Retrieve row dual value (interior point)"""
+        """Retrieve row dual value (interior point)
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+        :returns: the solution value
+        :rtype: `float`
+
+        """
         row = self.find_row_as_needed(row)
         return glpk.ipt_row_dual(self._prob, row)
 
     def ipt_col_prim(self, col):
-        """Retrieve column primal value (interior point)"""
+        """Retrieve column primal value (interior point)
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :returns: the solution value
+        :rtype: `float`
+
+        """
         col = self.find_col_as_needed(col)
         return glpk.ipt_col_prim(self._prob, col)
 
     def ipt_col_dual(self, col):
-        """Retrieve column dual value (interior point)"""
+        """Retrieve column dual value (interior point)
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :returns: the solution value
+        :rtype: `float`
+
+        """
         col = self.find_col_as_needed(col)
         return glpk.ipt_col_dual(self._prob, col)
 
     def set_col_kind(self, col, str kind):
-        """Set (change) column kind"""
+        """Set (change) column kind
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :param kind: the column kind, either `'continuous'`, `'integer'`,
+            or `'binary'`
+        :type kind: `str`
+
+        """
         col = self.find_col_as_needed(col)
         glpk.set_col_kind(self._prob, col, str2varkind[kind])
 
     def get_col_kind(self, col):
-        """Retrieve column kind; returns varkind"""
+        """Retrieve column kind
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :returns: the column kind, either `'continuous'`, `'integer'`,
+            or `'binary'`
+        :rtype: `str`
+
+        """
         col = self.find_col_as_needed(col)
         return varkind2str[glpk.get_col_kind(self._prob, col)]
 
@@ -867,12 +1263,26 @@ cdef class Problem:
         return glpk.mip_obj_val(self._prob)
 
     def mip_row_val(self, row):
-        """Retrieve row value (MIP solution)"""
+        """Retrieve row value (MIP solution)
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+        :returns: the solution value
+        :rtype: `float`
+
+        """
         row = self.find_row_as_needed(row)
         return glpk.mip_row_val(self._prob, row)
 
     def mip_col_val(self, col):
-        """Retrieve column value (MIP solution)"""
+        """Retrieve column value (MIP solution)
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :returns: the solution value
+        :rtype: `float`
+
+        """
         col = self.find_col_as_needed(col)
         return glpk.mip_col_val(self._prob, col)
 
@@ -905,25 +1315,45 @@ cdef class Problem:
         return {'abs': (ae_max, ae_id), 'rel': (re_max, re_id)}
 
     def print_sol(self, str fname):
-        """Write basic solution in printable format"""
+        """Write basic solution in printable format
+
+        :param fname: file name
+        :type fname: `str`
+
+        """
         retcode = glpk.print_sol(self._prob, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing printable basic solution file")
 
     def read_sol(self, str fname):
-        """Read basic solution from text file"""
+        """Read basic solution from text file
+
+        :param fname: file name
+        :type fname: `str`
+
+        """
         retcode = glpk.read_sol(self._prob, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error reading basic solution file")
 
     def write_sol(self, str fname):
-        """Write basic solution to text file"""
+        """Write basic solution to text file
+
+        :param fname: file name
+        :type fname: `str`
+
+        """
         retcode = glpk.write_sol(self._prob, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing basic solution file")
 
     def print_ranges(self, row_or_cols, str fname):
-        """Print sensitivity analysis report"""
+        """Print sensitivity analysis report
+
+        :param fname: file name
+        :type fname: `str`
+
+        """
         if not isinstance(row_or_cols, collections.abc.Sequence):
             raise TypeError("'row_or_cols' must be a 'Sequence', not " +
                             type(row_or_cols).__name__ + ".")
@@ -937,40 +1367,70 @@ cdef class Problem:
             glpk.free(inds)
 
     def print_ipt(self, str fname):
-        """Write interior-point solution in printable format"""
+        """Write interior-point solution in printable format
+
+        :param fname: file name
+        :type fname: `str`
+
+        """
         retcode = glpk.print_ipt(self._prob, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing printable interior point " +
                                "solution file")
 
     def read_ipt(self, str fname):
-        """Read interior-point solution from text file"""
+        """Read interior-point solution from text file
+
+        :param fname: file name
+        :type fname: `str`
+
+        """
         retcode = glpk.read_ipt(self._prob, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error reading interior point solution file")
 
     def write_ipt(self, str fname):
-        """Write interior-point solution to text file"""
+        """Write interior-point solution to text file
+
+        :param fname: file name
+        :type fname: `str`
+
+        """
         retcode = glpk.write_ipt(self._prob, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing interior point solution file")
 
     def print_mip(self, str fname):
-        """Write MIP solution in printable format"""
+        """Write MIP solution in printable format
+
+        :param fname: file name
+        :type fname: `str`
+
+        """
         retcode = glpk.print_mip(self._prob, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing printable integer " +
                                "optimization solution file")
 
     def read_mip(self, str fname):
-        """Read MIP solution from text file"""
+        """Read MIP solution from text file
+
+        :param fname: file name
+        :type fname: `str`
+
+        """
         retcode = glpk.read_mip(self._prob, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error reading integer optimization solution " +
                                "file")
 
     def write_mip(self, str fname):
-        """Write MIP solution to text file"""
+        """Write MIP solution to text file
+
+        :param fname: file name
+        :type fname: `str`
+
+        """
         retcode = glpk.write_mip(self._prob, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing integer optimization solution " +
@@ -1004,12 +1464,26 @@ cdef class Problem:
                                            names_preferred)
 
     def get_row_bind(self, row):
-        """Retrieve row index in the basis header"""
+        """Retrieve row index in the basis header
+
+        :param row: the index or name of the row
+        :type row: `int` or `str`
+        :returns: basis header index
+        :rtype: `int`
+
+        """
         row = self.find_row_as_needed(row)
         return glpk.get_row_bind(self._prob, row)
 
     def get_col_bind(self, col):
-        """Retrieve column index in the basis header"""
+        """Retrieve column index in the basis header
+
+        :param col: the index or name of the column
+        :type col: `int` or `str`
+        :returns: basis header index
+        :rtype: `int`
+
+        """
         col = self.find_col_as_needed(col)
         return glpk.get_col_bind(self._prob, col)
 
@@ -1220,7 +1694,16 @@ cdef class Problem:
 
     @classmethod
     def read_mps(cls, str format, str fname):
-        """Read problem data in MPS format"""
+        """Read problem data in MPS format
+
+        :param format: the MPS file format, either `'fixed'` or `'free'`
+        :type format: `str`
+        :param fname: file name
+        :type fname: `str`
+        :returns: the problem read
+        :rtype: `.Problem`
+
+        """
         problem = cls()
         cdef glpk.Prob* _prob = <glpk.Prob*>PyCapsule_GetPointer(
                                                     problem._prob_ptr(), NULL)
@@ -1231,7 +1714,14 @@ cdef class Problem:
         return problem
 
     def write_mps(self, str format, str fname):
-        """Write problem data in MPS format"""
+        """Write problem data in MPS format
+
+        :param format: the MPS file format, either `'fixed'` or `'free'`
+        :type format: `str`
+        :param fname: file name
+        :type fname: `str`
+
+        """
         retcode = glpk.write_mps(self._prob, str2mpsfmt[format], NULL,
                                  str2chars(fname))
         if retcode is not 0:
@@ -1239,7 +1729,14 @@ cdef class Problem:
 
     @classmethod
     def read_lp(cls, str fname):
-        """Read problem data in CPLEX LP format"""
+        """Read problem data in CPLEX LP format
+
+        :param fname: file name
+        :type fname: `str`
+        :returns: the problem read
+        :rtype: `.Problem`
+
+        """
         problem = cls()
         cdef glpk.Prob* _prob = <glpk.Prob*>PyCapsule_GetPointer(
                                                     problem._prob_ptr(), NULL)
@@ -1249,14 +1746,26 @@ cdef class Problem:
         return problem
 
     def write_lp(self, str fname):
-        """Write problem data in CPLEX LP format"""
+        """Write problem data in CPLEX LP format
+
+        :param fname: file name
+        :type fname: `str`
+
+        """
         retcode = glpk.write_lp(self._prob, NULL, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing LP file.")
 
     @classmethod
     def read_prob(cls, str fname):
-        """Read problem data in GLPK format"""
+        """Read problem data in GLPK format
+
+        :param fname: file name
+        :type fname: `str`
+        :returns: the problem read
+        :rtype: `.Problem`
+
+        """
         problem = cls()
         cdef glpk.Prob* _prob = <glpk.Prob*>PyCapsule_GetPointer(
                                                     problem._prob_ptr(), NULL)
@@ -1266,14 +1775,26 @@ cdef class Problem:
         return problem
 
     def write_prob(self, str fname):
-        """Write problem data in GLPK format"""
+        """Write problem data in GLPK format
+
+        :param fname: file name
+        :type fname: `str`
+
+        """
         retcode = glpk.write_prob(self._prob, 0, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing GLPK file.")
 
     @classmethod
     def read_cnfsat(cls, str fname):
-        """Read CNF-SAT problem data in DIMACS format"""
+        """Read CNF-SAT problem data in DIMACS format
+
+        :param fname: file name
+        :type fname: `str`
+        :returns: the problem read
+        :rtype: `.Problem`
+
+        """
         problem = cls()
         cdef glpk.Prob* _prob = <glpk.Prob*>PyCapsule_GetPointer(
                                                     problem._prob_ptr(), NULL)
@@ -1287,7 +1808,12 @@ cdef class Problem:
         return not bool(glpk.check_cnfsat(self._prob))
 
     def write_cnfsat(self, str fname):
-        """Write CNF-SAT problem data in DIMACS format"""
+        """Write CNF-SAT problem data in DIMACS format
+
+        :param fname: file name
+        :type fname: `str`
+
+        """
         retcode = glpk.write_cnfsat(self._prob, str2chars(fname))
         if retcode is not 0:
             raise RuntimeError("Error writing CNF-SAT file.")
