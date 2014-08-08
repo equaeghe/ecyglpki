@@ -439,8 +439,8 @@ cdef class Problem:
 
         :param row: the index or name of the row
         :type row: `int` or `str`
-        :param coeffs: |Mapping| from column names (str strings) to
-            coefficient values (|Real|).
+        :param coeffs: |Mapping| from column names (`str` strings) to
+            coefficient values (|Real|)
 
         """
         _coeffscheck(coeffs)
@@ -472,8 +472,8 @@ cdef class Problem:
 
         :param col: the index or name of the column
         :type col: `int` or `str`
-        :param coeffs: |Mapping| from row names (str strings) to
-            coefficient values (|Real|).
+        :param coeffs: |Mapping| from row names (`str` strings) to
+            coefficient values (|Real|)
 
         """
         col = self.find_col_as_needed(col)
@@ -504,7 +504,7 @@ cdef class Problem:
         """Load (replace) the whole constraint matrix
 
         :param coeffs: |Mapping| from row and column name (str string)
-            pairs (length-2 `tuple`) to coefficient values (|Real|).
+            pairs (length-2 `tuple`) to coefficient values (|Real|)
 
         """
         _coeffscheck(coeffs)
@@ -822,6 +822,9 @@ cdef class Problem:
         :param names_preferred: whether to return row and column
             names or indices
         :type names_preferred: `bool`
+        :returns: the row
+        :rtype coeffs: |Mapping| from column names (`str` strings) to
+            coefficient values (|Real|)
 
         """
         row = self.find_row_as_needed(row)
@@ -846,6 +849,9 @@ cdef class Problem:
         :param names_preferred: whether to return row and column
             names or indices
         :type names_preferred: `bool`
+        :returns: the column
+        :rtype coeffs: |Mapping| from row names (`str` strings) to
+            coefficient values (|Real|)
 
         """
         col = self.find_col_as_needed(col)
@@ -1594,9 +1600,14 @@ cdef class Problem:
     def transform_row(self, coeffs, names_preferred=False):
         """Transform explicitly specified row
 
+        :param coeffs: |Mapping| from column names (`str` strings) to
+            coefficient values (|Real|)
         :param names_preferred: whether to return row and column
             names or indices
         :type names_preferred: `bool`
+        :returns: transformed row
+        :rtype: |Mapping| from row and column names (`str` strings) to
+            coefficient values (|Real|)
 
         """
         _coeffscheck(coeffs)
@@ -1618,9 +1629,14 @@ cdef class Problem:
     def transform_col(self, coeffs, names_preferred=False):
         """Transform explicitly specified column
 
+        :param coeffs: |Mapping| from row names (`str` strings) to
+            coefficient values (|Real|)
         :param names_preferred: whether to return row and column
             names or indices
         :type names_preferred: `bool`
+        :returns: transformed column
+        :rtype: |Mapping| from row and column names (`str` strings) to
+            coefficient values (|Real|)
 
         """
         _coeffscheck(coeffs)
