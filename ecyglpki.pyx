@@ -25,7 +25,10 @@
 cimport glpk
 from cpython.pycapsule cimport PyCapsule_New, PyCapsule_GetPointer
 import numbers
-import collections.abc
+try:
+    from collections.abc import Sequence, Mapping # Python >=3.3
+except ImportError:
+    from collections import Sequence, Mapping # Python <3.3
 
 
 def GLPK_version():

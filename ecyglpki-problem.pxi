@@ -231,7 +231,7 @@ cdef str2mpsfmt = {
 
 # problem coefficients
 cdef _coeffscheck(coeffs):
-    if not isinstance(coeffs, collections.abc.Mapping):
+    if not isinstance(coeffs, Mapping):
         raise TypeError("Coefficients must be passed in a 'Mapping', not " +
                         type(coeffs).__name__)
     if not all([isinstance(value, numbers.Real) for value in coeffs.values()]):
@@ -1372,7 +1372,7 @@ cdef class Problem:
         :type fname: `str`
 
         """
-        if not isinstance(row_or_cols, collections.abc.Sequence):
+        if not isinstance(row_or_cols, Sequence):
             raise TypeError("'row_or_cols' must be a 'Sequence', not " +
                             type(row_or_cols).__name__ + ".")
         cdef int k = len(row_or_cols)
