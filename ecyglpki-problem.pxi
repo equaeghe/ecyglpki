@@ -819,6 +819,9 @@ cdef class Problem:
 
         :param row: the index or name of the row
         :type row: `int` or `str`
+        :param names_preferred: whether to return row and column
+            names or indices
+        :type names_preferred: `bool`
 
         """
         row = self.find_row_as_needed(row)
@@ -840,6 +843,9 @@ cdef class Problem:
 
         :param col: the index or name of the column
         :type col: `int` or `str`
+        :param names_preferred: whether to return row and column
+            names or indices
+        :type names_preferred: `bool`
 
         """
         col = self.find_col_as_needed(col)
@@ -1146,7 +1152,13 @@ cdef class Problem:
         return glpk.get_col_dual(self._prob, col)
 
     def get_unbnd_ray(self, names_preferred=False):
-        """Determine variable causing unboundedness"""
+        """Determine variable causing unboundedness
+
+        :param names_preferred: whether to return the row or column
+            name or index
+        :type names_preferred: `bool`
+
+        """
         return self.get_row_or_col_name_if(glpk.get_unbnd_ray(self._prob),
                                            names_preferred)
 
@@ -1288,7 +1300,13 @@ cdef class Problem:
 
     def check_kkt(self, str solver, str condition, bint dual=False,
                   names_preferred=False):
-        """Check feasibility/optimality conditions"""
+        """Check feasibility/optimality conditions
+
+        :param names_preferred: whether to return the row or column
+            name or index
+        :type names_preferred: `bool`
+
+        """
         if dual and (solver is 'intopt'):
             raise ValueError("Dual conditions cannot be checked for the " +
                              "integer optimization solution.")
@@ -1459,7 +1477,13 @@ cdef class Problem:
         glpk.set_bfcp(self._prob, &controls._bfcp)
 
     def get_bhead(self, int k, names_preferred=False):
-        """Retrieve LP basis header information"""
+        """Retrieve LP basis header information
+
+        :param names_preferred: whether to return the row or column
+            name or index
+        :type names_preferred: `bool`
+
+        """
         return self.get_row_or_col_name_if(glpk.get_bhead(self._prob, k),
                                            names_preferred)
 
@@ -1526,7 +1550,13 @@ cdef class Problem:
             raise smretcode2error[retcode]
 
     def eval_tab_row(self, ind, names_preferred=False):
-        """Compute row of the simplex tableau"""
+        """Compute row of the simplex tableau
+
+        :param names_preferred: whether to return row and column
+            names or indices
+        :type names_preferred: `bool`
+
+        """
         ind = self.find_row_or_col_as_needed(ind)
         cdef int n = self.get_num_cols()
         cdef int* inds = <int*>glpk.alloc(1+n, sizeof(int))
@@ -1541,7 +1571,13 @@ cdef class Problem:
             glpk.free(vals)
 
     def eval_tab_col(self, ind, names_preferred=False):
-        """Compute column of the simplex tableau"""
+        """Compute column of the simplex tableau
+
+        :param names_preferred: whether to return row and column
+            names or indices
+        :type names_preferred: `bool`
+
+        """
         ind = self.find_row_or_col_as_needed(ind)
         cdef int m = self.get_num_rows()
         cdef int* inds = <int*>glpk.alloc(1+m, sizeof(int))
@@ -1556,7 +1592,13 @@ cdef class Problem:
             glpk.free(vals)
 
     def transform_row(self, coeffs, names_preferred=False):
-        """Transform explicitly specified row"""
+        """Transform explicitly specified row
+
+        :param names_preferred: whether to return row and column
+            names or indices
+        :type names_preferred: `bool`
+
+        """
         _coeffscheck(coeffs)
         cdef int n = self.get_num_cols()
         cdef int* inds = <int*>glpk.alloc(1+n, sizeof(int))
@@ -1574,7 +1616,13 @@ cdef class Problem:
             glpk.free(vals)
 
     def transform_col(self, coeffs, names_preferred=False):
-        """Transform explicitly specified column"""
+        """Transform explicitly specified column
+
+        :param names_preferred: whether to return row and column
+            names or indices
+        :type names_preferred: `bool`
+
+        """
         _coeffscheck(coeffs)
         cdef int m = self.get_num_cols()
         cdef int* inds = <int*>glpk.alloc(1+m, sizeof(int))
@@ -1593,7 +1641,13 @@ cdef class Problem:
 
     def prim_rtest(self, coeffs, int direction, double eps,
                    names_preferred=False):
-        """Perform primal ratio test"""
+        """Perform primal ratio test
+
+        :param names_preferred: whether to return row and column
+            names or indices
+        :type names_preferred: `bool`
+
+        """
         _coeffscheck(coeffs)
         if direction not in {-1, +1}:
             raise ValueError("'direction' should be +1 or -1, not " +
@@ -1615,7 +1669,13 @@ cdef class Problem:
 
     def dual_rtest(self, coeffs, int direction, double eps,
                    names_preferred=False):
-        """Perform dual ratio test"""
+        """Perform dual ratio test
+
+        :param names_preferred: whether to return row and column
+            names or indices
+        :type names_preferred: `bool`
+
+        """
         _coeffscheck(coeffs)
         if direction not in {-1, +1}:
             raise ValueError("'direction' should be +1 or -1, not " +
@@ -1636,7 +1696,13 @@ cdef class Problem:
             glpk.free(vals)
 
     def analyze_bound(self, ind, names_preferred=False):
-        """Analyze active bound of non-basic variable"""
+        """Analyze active bound of non-basic variable
+
+        :param names_preferred: whether to return row and column
+            names or indices
+        :type names_preferred: `bool`
+
+        """
         ind = self.find_row_or_col_as_needed(ind)
         cdef double min_bnd
         cdef int min_bnd_k
@@ -1657,7 +1723,13 @@ cdef class Problem:
         return {'minimal': minimal, 'maximal': maximal}
 
     def analyze_coef(self, ind, names_preferred=False):
-        """Analyze objective coefficient at basic variable"""
+        """Analyze objective coefficient at basic variable
+
+        :param names_preferred: whether to return row and column
+            names or indices
+        :type names_preferred: `bool`
+
+        """
         ind = self.find_row_or_col_as_needed(ind)
         cdef double min_coef
         cdef int min_coef_k
