@@ -74,6 +74,9 @@ cdef class FactorizationControls:
 
             >>> r.type  # the GLPK default
             ('LU', 'Forrest-Tomlin')
+            >>> r.type = ('BTLU', 'Bartels-Golub')
+            >>> r.type
+            ('BTLU', 'Bartels-Golub')
 
         """
         def __get__(self):
@@ -86,6 +89,14 @@ cdef class FactorizationControls:
 
         (Value must lie between 0 and 1.)
 
+        .. doctest:: FactorizationControls
+
+            >>> r.piv_tol  # the GLPK default
+            0.1
+            >>> r.piv_tol = 0.5
+            >>> r.piv_tol
+            0.5
+
         """
         def __get__(self):
             return self._bfcp.piv_tol
@@ -93,21 +104,51 @@ cdef class FactorizationControls:
             self._bfcp.piv_tol = float(value)
 
     property piv_lim:
-        """Number of pivot candidates that need to be considered, an `int` ≥1"""
+        """Number of pivot candidates that need to be considered, an `int` ≥1
+
+        .. doctest:: FactorizationControls
+
+            >>> r.piv_lim  # the GLPK default
+            4
+            >>> r.piv_lim = 3
+            >>> r.piv_lim
+            3
+
+        """
         def __get__(self):
             return self._bfcp.piv_lim
         def __set__(self, value):
             self._bfcp.piv_lim = int(value)
 
     property suhl:
-        """Whether to use Suhl heuristic, a `bool`"""
+        """Whether to use Suhl heuristic, a `bool`
+
+        .. doctest:: FactorizationControls
+
+            >>> r.suhl  # the GLPK default
+            True
+            >>> r.suhl = False
+            >>> r.suhl
+            False
+
+        """
         def __get__(self):
             return self._bfcp.suhl
         def __set__(self, value):
             self._bfcp.suhl = bool(value)
 
     property eps_tol:
-        """Tolerance below which numbers are replaced by zero, a |Real| number"""
+        """Tolerance below which numbers are replaced by zero, a |Real| number
+
+        .. doctest:: FactorizationControls
+
+            >>> r.eps_tol  # the GLPK default
+            2.220446049250313e-16
+            >>> r.eps_tol = 0.1
+            >>> r.eps_tol
+            0.1
+
+        """
         def __get__(self):
             return self._bfcp.eps_tol
         def __set__(self, value):
@@ -117,6 +158,14 @@ cdef class FactorizationControls:
         """Maximal number of additional row-like factors, an `int`
 
         (Used only when *type* contains `'Forrest-Tomlin'`.)
+
+        .. doctest:: FactorizationControls
+
+            >>> r.nfs_max  # the GLPK default
+            100
+            >>> r.nfs_max = 200
+            >>> r.nfs_max
+            200
 
         """
         def __get__(self):
@@ -128,6 +177,14 @@ cdef class FactorizationControls:
         """Maximal number of additional row and columns, an `int`
 
         (Used only when *type* contains `'Bartels-Golub'` or `'Givens'`.)
+
+        .. doctest:: FactorizationControls
+
+            >>> r.nrs_max  # the GLPK default
+            70
+            >>> r.nrs_max = 7
+            >>> r.nrs_max
+            7
 
         """
         def __get__(self):
