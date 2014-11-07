@@ -612,7 +612,12 @@ cdef class Problem:
         return chars2name(glpk.get_obj_name(self._prob))
 
     def get_obj_dir(self):
-        """Retrieve optimization direction flag"""
+        """Retrieve optimization direction flag
+
+        :returns: the objective direction, either `'minimize'` or `'maximize'`
+        :rtype: `str`
+
+        """
         return optdir2str[glpk.get_obj_dir(self._prob)]
 
     def get_num_rows(self):
@@ -1095,7 +1100,12 @@ cdef class Problem:
         return solstat2str[glpk.get_dual_stat(self._prob)]
 
     def get_obj_val(self):
-        """Retrieve objective value (basic solution)"""
+        """Retrieve objective value (basic solution)
+
+        :returns: the objective value of the basic solution
+        :rtype: `float`
+
+        """
         return glpk.get_obj_val(self._prob)
 
     def get_row_stat(self, row):
@@ -1195,7 +1205,12 @@ cdef class Problem:
         return solstat2str[glpk.ipt_status(self._prob)]
 
     def ipt_obj_val(self):
-        """Retrieve objective value (interior point)"""
+        """Retrieve objective value (interior point)
+
+        :returns: the objective value of the interior point solution
+        :rtype: `float`
+
+        """
         return glpk.ipt_obj_val(self._prob)
 
     def ipt_row_prim(self, row):
@@ -1302,7 +1317,12 @@ cdef class Problem:
         return solstat2str[glpk.mip_status(self._prob)]
 
     def mip_obj_val(self):
-        """Retrieve objective value (MIP solution)"""
+        """Retrieve objective value (MIP solution)
+
+        :returns: the objective value of the MIP solution
+        :rtype: `float`
+
+        """
         return glpk.mip_obj_val(self._prob)
 
     def mip_row_val(self, row):
@@ -1486,7 +1506,11 @@ cdef class Problem:
                                "file")
 
     def bf_exists(self):
-        """Check if LP basis factorization exists"""
+        """Check if LP basis factorization exists
+
+        :rtype: `bool`
+
+        """
         return glpk.bf_exists(self._prob)
 
     def factorize(self):
@@ -1496,11 +1520,20 @@ cdef class Problem:
             raise smretcode2error[retcode]
 
     def bf_updated(self):
-        """Check if LP basis factorization has been updated"""
+        """Check if LP basis factorization has been updated
+
+        :rtype: `bool`
+
+        """
         return glpk.bf_updated(self._prob)
 
     def get_bfcp(self):
-        """Retrieve LP basis factorization control parameters"""
+        """Retrieve LP basis factorization control parameters
+
+        :returns: basis factorization control parameter object
+        :rtype: `.FactorizationControls`
+
+        """
         return FactorizationControls(self)
 
     def set_bfcp(self, FactorizationControls controls):
@@ -1917,7 +1950,11 @@ cdef class Problem:
         return problem
 
     def check_cnfsat(self):
-        """Check for CNF-SAT problem instance"""
+        """Check for CNF-SAT problem instance
+
+        :rtype: `bool`
+
+        """
         return not bool(glpk.check_cnfsat(self._prob))
 
     def write_cnfsat(self, str fname):
