@@ -1,4 +1,4 @@
-# glpk.pxd: Cython bindings for GLPK
+# glpk.pxd: Cython bindings for GLPK (as described in version 5.54 glpk.h)
 
 ###############################################################################
 #
