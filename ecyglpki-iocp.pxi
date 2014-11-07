@@ -247,7 +247,7 @@ cdef class IntOptControls:
             self._iocp.ps_heur = bool(value)
 
     property ps_tm_lim:
-        """Time limit [ms] for the proximity earch heuristic, an `int`"""
+        """Time limit [ms] for the proximity search heuristic, an `int`"""
         def __get__(self):
             return self._iocp.ps_tm_lim
         def __set__(self, value):
