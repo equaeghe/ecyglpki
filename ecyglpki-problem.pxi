@@ -616,11 +616,21 @@ cdef class Problem:
         return optdir2str[glpk.get_obj_dir(self._prob)]
 
     def get_num_rows(self):
-        """Retrieve number of rows"""
+        """Retrieve number of rows
+
+        :returns: the number of rows
+        :rtype: `int`
+
+        """
         return glpk.get_num_rows(self._prob)
 
     def get_num_cols(self):
-        """Retrieve number of columns"""
+        """Retrieve number of columns
+
+        :returns: the number of columns
+        :rtype: `int`
+
+        """
         return glpk.get_num_cols(self._prob)
 
     def get_row_name(self, int row):
@@ -811,7 +821,12 @@ cdef class Problem:
         return glpk.get_obj_coef(self._prob, 0)
 
     def get_num_nz(self):
-        """Retrieve number of constraint coefficients"""
+        """Retrieve number of constraint coefficients
+
+        :returns: the number of (non-zero) constraint coefficients
+        :rtype: `int`
+
+        """
         return glpk.get_num_nz(self._prob)
 
     def get_mat_row(self, row, names_preferred=False):
@@ -1258,11 +1273,21 @@ cdef class Problem:
         return varkind2str[glpk.get_col_kind(self._prob, col)]
 
     def get_num_int(self):
-        """Retrieve number of integer columns"""
+        """Retrieve number of integer columns
+
+        :returns: the number of integer columns
+        :rtype: `int`
+
+        """
         return glpk.get_num_int(self._prob)
 
     def get_num_bin(self):
-        """Retrieve number of binary columns"""
+        """Retrieve number of binary columns
+
+        :returns: the number of binary columns
+        :rtype: `int`
+
+        """
         return glpk.get_num_bin(self._prob)
 
     def intopt(self, IntOptControls controls):
