@@ -152,21 +152,51 @@ cdef class SimplexControls:
             self._smcp.r_test = str2rtest[value]
 
     property tol_bnd:
-        """Tolerance to check if the solution is primal feasible, a |Real| number"""
+        """Tolerance to check if the solution is primal feasible, a |Real| number
+
+        .. doctest:: SimplexControls
+
+            >>> r.tol_bnd  # the GLPK default
+            1e-07
+            >>> r.tol_bnd = 0.2
+            >>> r.tol_bnd
+            0.2
+
+        """
         def __get__(self):
             return self._smcp.tol_bnd
         def __set__(self, value):
             self._smcp.tol_bnd = float(value)
 
     property tol_dj:
-        """Tolerance to check if the solution is dual feasible, a |Real| number"""
+        """Tolerance to check if the solution is dual feasible, a |Real| number
+
+        .. doctest:: SimplexControls
+
+            >>> r.tol_dj  # the GLPK default
+            1e-07
+            >>> r.tol_dj = 0.01
+            >>> r.tol_dj
+            0.01
+
+        """
         def __get__(self):
             return self._smcp.tol_dj
         def __set__(self, value):
             self._smcp.tol_dj = float(value)
 
     property tol_piv:
-        """Tolerance to choose eligble pivotal elements, a |Real| number"""
+        """Tolerance to choose eligble pivotal elements, a |Real| number
+
+        .. doctest:: SimplexControls
+
+            >>> r.tol_piv  # the GLPK default
+            1e-10
+            >>> r.tol_piv = 1e-3
+            >>> r.tol_piv
+            0.001
+
+        """
         def __get__(self):
             return self._smcp.tol_piv
         def __set__(self, value):
@@ -176,6 +206,14 @@ cdef class SimplexControls:
         """Lower limit of the objective function, a |Real| number
 
         (Used only if *meth* is `'dual'`.)
+
+        .. doctest:: SimplexControls
+
+            >>> r.obj_ll  # the GLPK default
+            -1.7976931348623157e+308
+            >>> r.obj_ll = -1234.0
+            >>> r.obj_ll
+            -1234.0
 
         """
         def __get__(self):
@@ -188,6 +226,14 @@ cdef class SimplexControls:
 
         (Used only if *meth* is `'dual'`.)
 
+        .. doctest:: SimplexControls
+
+            >>> r.obj_ul  # the GLPK default
+            1.7976931348623157e+308
+            >>> r.obj_ul = 123.4
+            >>> r.obj_ul
+            123.4
+
         """
         def __get__(self):
             return self._smcp.obj_ul
@@ -195,35 +241,85 @@ cdef class SimplexControls:
             self._smcp.obj_ul = float(value)
 
     property it_lim:
-        """Iteration limit, an `int`"""
+        """Iteration limit, an `int`
+
+        .. doctest:: SimplexControls
+
+            >>> r.it_lim  # the GLPK default
+            2147483647
+            >>> r.it_lim = 10
+            >>> r.it_lim
+            10
+
+        """
         def __get__(self):
             return self._smcp.it_lim
         def __set__(self, value):
             self._smcp.it_lim = int(value)
 
     property tm_lim:
-        """Time limit [ms], an `int`"""
+        """Time limit [ms], an `int`
+
+        .. doctest:: SimplexControls
+
+            >>> r.tm_lim  # the GLPK default
+            2147483647
+            >>> r.tm_lim = 1e7
+            >>> r.tm_lim
+            10000000
+
+        """
         def __get__(self):
             return self._smcp.tm_lim
         def __set__(self, value):
             self._smcp.tm_lim = int(value)
 
     property out_frq:
-        """Output frequency [iterations] of informational messages, an `int`"""
+        """Output frequency [iterations] of informational messages, an `int`
+
+        .. doctest:: SimplexControls
+
+            >>> r.out_frq  # the GLPK default
+            500
+            >>> r.out_frq = 50
+            >>> r.out_frq
+            50
+
+        """
         def __get__(self):
             return self._smcp.out_frq
         def __set__(self, value):
             self._smcp.out_frq = int(value)
 
     property out_dly:
-        """Output delay [ms] of solution process information, an `int`"""
+        """Output delay [ms] of solution process information, an `int`
+
+        .. doctest:: SimplexControls
+
+            >>> r.out_dly  # the GLPK default
+            0
+            >>> r.out_dly = 25
+            >>> r.out_dly
+            25
+
+        """
         def __get__(self):
             return self._smcp.out_dly
         def __set__(self, value):
             self._smcp.out_dly = int(value)
 
     property presolve:
-        """Whether to use the LP presolver, a `bool`"""
+        """Whether to use the LP presolver, a `bool`
+
+        .. doctest:: SimplexControls
+
+            >>> r.presolve  # the GLPK default
+            False
+            >>> r.presolve = True
+            >>> r.presolve
+            True
+
+        """
         def __get__(self):
             return self._smcp.presolve
         def __set__(self, value):
