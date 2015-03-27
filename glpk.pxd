@@ -1,4 +1,4 @@
-# glpk.pxd: Cython bindings for GLPK (as described in version 5.54 glpk.h)
+# glpk.pxd: Cython bindings for GLPK (as described in version 5.55 glpk.h)
 
 ###############################################################################
 #
@@ -114,7 +114,7 @@ cdef extern from "glpk.h":
     enum: DUAL "GLP_DUAL"      #  use dual simplex
 
     #  pricing technique (argument name is 'pricing'):
-    enum: PT_STD "GLP_PT_STD"  #  standard (Dantzig rule)
+    enum: PT_STD "GLP_PT_STD"  #  standard (Dantzig's rule)
     enum: PT_PSE "GLP_PT_PSE"  #  projected steepest edge
 
     #  ratio test technique (argument name is 'r_test'):
