@@ -34,7 +34,7 @@ extern "C" {
 
 /* library version numbers: */
 #define GLP_MAJOR_VERSION  4
-#define GLP_MINOR_VERSION  54
+#define GLP_MINOR_VERSION  55
 
 typedef struct glp_prob glp_prob;
 /* LP/MIP problem object */
@@ -119,7 +119,7 @@ typedef struct
 #define GLP_DUALP          2  /* use dual; if it fails, use primal */
 #define GLP_DUAL           3  /* use dual simplex */
       int pricing;            /* pricing technique: */
-#define GLP_PT_STD      0x11  /* standard (Dantzig rule) */
+#define GLP_PT_STD      0x11  /* standard (Dantzig's rule) */
 #define GLP_PT_PSE      0x22  /* projected steepest edge */
       int r_test;             /* ratio test technique: */
 #define GLP_RT_STD      0x11  /* standard (textbook) */
