@@ -539,7 +539,7 @@ cdef class Problem:
         """Delete specified rows from problem object
 
         :param rows: the indices or names of the rows
-        :type rows: `tuple` of `str`
+        :type rows: `tuple` of `int` or `str`
 
         """
         cdef int k = len(rows)
@@ -556,8 +556,8 @@ cdef class Problem:
     def del_cols(self, *cols):
         """Delete specified columns from problem object
 
-        :param names: the indices or the names of the columns
-        :type names: `tuple` of `str`
+        :param cols: the indices or the names of the columns
+        :type cols: `tuple` of `int` or `str`
 
         """
         cdef int k = len(cols)
@@ -822,7 +822,12 @@ cdef class Problem:
         return glpk.get_obj_coef(self._prob, col)
 
     def get_obj_const(self):  # variant of get_obj_coef
-        """Retrieve obj. constant term"""
+        """Retrieve obj. constant term
+
+        :returns: the constant value
+        :rtype: `float`
+
+        """
         return glpk.get_obj_coef(self._prob, 0)
 
     def get_num_nz(self):
