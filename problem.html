@@ -65,6 +65,18 @@
 <dt id="ecyglpki.Problem.add_cols">
 <tt class="descname">add_cols</tt><big>(</big><em>int number</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.add_cols" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add new columns to problem object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>number</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) &#8211; the number of columns to add</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the index of the first column added</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -75,7 +87,8 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> &#8211; the names (str strings) of the columns to add</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#tuple" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">tuple</span></tt></a> of <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the names of the columns to add, none may exceed 255
+bytes <em>encoded as UTF-8</em></td>
 </tr>
 </tbody>
 </table>
@@ -89,7 +102,8 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> &#8211; the names (str strings) of the rows to add</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#tuple" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">tuple</span></tt></a> of <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the names of the rows to add, none may exceed 255 bytes
+<em>encoded as UTF-8</em></td>
 </tr>
 </tbody>
 </table>
@@ -99,6 +113,18 @@
 <dt id="ecyglpki.Problem.add_rows">
 <tt class="descname">add_rows</tt><big>(</big><em>int number</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.add_rows" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add new rows to problem object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>number</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) &#8211; the number of rows to add</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the index of the first row added</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -111,24 +137,58 @@
 <dt id="ecyglpki.Problem.analyze_bound">
 <tt class="descname">analyze_bound</tt><big>(</big><em>ind</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.analyze_bound" title="Permalink to this definition">¶</a></dt>
 <dd><p>Analyze active bound of non-basic variable</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return row and column
+names or indices</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.analyze_coef">
 <tt class="descname">analyze_coef</tt><big>(</big><em>ind</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.analyze_coef" title="Permalink to this definition">¶</a></dt>
 <dd><p>Analyze objective coefficient at basic variable</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return row and column
+names or indices</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.bf_exists">
 <tt class="descname">bf_exists</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.bf_exists" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if LP basis factorization exists</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.bf_updated">
 <tt class="descname">bf_updated</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.bf_updated" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if LP basis factorization has been updated</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -141,24 +201,57 @@
 <dt id="ecyglpki.Problem.check_cnfsat">
 <tt class="descname">check_cnfsat</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.check_cnfsat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check for CNF-SAT problem instance</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.check_kkt">
 <tt class="descname">check_kkt</tt><big>(</big><em>str solver</em>, <em>str condition</em>, <em>bool dual=False</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.check_kkt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check feasibility/optimality conditions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return the row or column
+name or index</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.clear_mat_col">
 <tt class="descname">clear_mat_col</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.clear_mat_col" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear column of the constraint matrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.clear_mat_row">
 <tt class="descname">clear_mat_row</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.clear_mat_row" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear row of the constraint matrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -171,6 +264,24 @@
 <dt id="ecyglpki.Problem.copy_prob">
 <tt class="descname">copy_prob</tt><big>(</big><em>Problem source</em>, <em>bool copy_names</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.copy_prob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copy problem object content</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>source</strong> (<a class="reference internal" href="#ecyglpki.Problem" title="ecyglpki.Problem"><tt class="xref py py-obj docutils literal"><span class="pre">Problem</span></tt></a>) &#8211; the problem to copy</li>
+<li><strong>copy_names</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to copy problem component names or not</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the copied problem</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#ecyglpki.Problem" title="ecyglpki.Problem"><tt class="xref py py-obj docutils literal"><span class="pre">Problem</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -187,7 +298,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> &#8211; the names (str strings) of the columns to delete</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cols</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#tuple" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">tuple</span></tt></a> of <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the indices or the names of the columns</td>
 </tr>
 </tbody>
 </table>
@@ -201,7 +312,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> &#8211; the names (str strings) of the rows to delete</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rows</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#tuple" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">tuple</span></tt></a> of <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the indices or names of the rows</td>
 </tr>
 </tbody>
 </table>
@@ -211,6 +322,15 @@
 <dt id="ecyglpki.Problem.dual_rtest">
 <tt class="descname">dual_rtest</tt><big>(</big><em>coeffs</em>, <em>int direction</em>, <em>double eps</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.dual_rtest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform dual ratio test</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return row and column
+names or indices</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -223,12 +343,30 @@
 <dt id="ecyglpki.Problem.eval_tab_col">
 <tt class="descname">eval_tab_col</tt><big>(</big><em>ind</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.eval_tab_col" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute column of the simplex tableau</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return row and column
+names or indices</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.eval_tab_row">
 <tt class="descname">eval_tab_row</tt><big>(</big><em>ind</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.eval_tab_row" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute row of the simplex tableau</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return row and column
+names or indices</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -247,23 +385,71 @@
 <dt id="ecyglpki.Problem.find_col">
 <tt class="descname">find_col</tt><big>(</big><em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.find_col" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find column by its name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the name of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the column index</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.find_col_as_needed">
 <tt class="descname">find_col_as_needed</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.find_col_as_needed" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the column index</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.find_row">
 <tt class="descname">find_row</tt><big>(</big><em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.find_row" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find row by its name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the name of the row</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the row index</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.find_row_as_needed">
 <tt class="descname">find_row_as_needed</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.find_row_as_needed" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the row index</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.find_row_or_col_as_needed">
@@ -280,71 +466,219 @@
 <dt id="ecyglpki.Problem.get_bfcp">
 <tt class="descname">get_bfcp</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_bfcp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve LP basis factorization control parameters</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">basis factorization control parameter object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="bfcp.html#ecyglpki.FactorizationControls" title="ecyglpki.FactorizationControls"><tt class="xref py py-obj docutils literal"><span class="pre">FactorizationControls</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_bhead">
 <tt class="descname">get_bhead</tt><big>(</big><em>int k</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_bhead" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve LP basis header information</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return the row or column
+name or index</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_col_bind">
 <tt class="descname">get_col_bind</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_bind" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve column index in the basis header</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">basis header index</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_col_dual">
 <tt class="descname">get_col_dual</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_dual" title="Permalink to this definition">¶</a></dt>
 <dd><p>retrieve column dual value (basic solution)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the solution value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_col_kind">
 <tt class="descname">get_col_kind</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_kind" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve column kind; returns varkind</p>
+<dd><p>Retrieve column kind</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the column kind, either <tt class="xref py py-obj docutils literal"><span class="pre">'continuous'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'integer'</span></tt>,
+or <tt class="xref py py-obj docutils literal"><span class="pre">'binary'</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_col_lb">
 <tt class="descname">get_col_lb</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_lb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve column lower bound</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the lower bound</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_col_name">
 <tt class="descname">get_col_name</tt><big>(</big><em>int col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve column name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) &#8211; the index of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the problem name</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_col_name_if">
 <tt class="descname">get_col_name_if</tt><big>(</big><em>int col</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_name_if" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) &#8211; the index of the column</li>
+<li><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return the column name or index</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the column name or index</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_col_prim">
 <tt class="descname">get_col_prim</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_prim" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve column primal value (basic solution)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the solution value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_col_stat">
 <tt class="descname">get_col_stat</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_stat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve column status</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the column status, either <tt class="xref py py-obj docutils literal"><span class="pre">'basic'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'lower'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'upper'</span></tt>,
+<tt class="xref py py-obj docutils literal"><span class="pre">'free'</span></tt>, or <tt class="xref py py-obj docutils literal"><span class="pre">'fixed'</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_col_type">
 <tt class="descname">get_col_type</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve column type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the column type, either <tt class="xref py py-obj docutils literal"><span class="pre">'free'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'dominating'</span></tt>,
+<tt class="xref py py-obj docutils literal"><span class="pre">'dominated'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'bounded'</span></tt>, or <tt class="xref py py-obj docutils literal"><span class="pre">'fixed'</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_col_ub">
 <tt class="descname">get_col_ub</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_ub" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve column upper bound</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the upper bound</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -357,72 +691,214 @@
 <dt id="ecyglpki.Problem.get_mat_col">
 <tt class="descname">get_mat_col</tt><big>(</big><em>col</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_mat_col" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve column of the constraint matrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</li>
+<li><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return row and column
+names or indices</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the column</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Rtype coeffs:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from row names (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> strings) to
+coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_mat_row">
 <tt class="descname">get_mat_row</tt><big>(</big><em>row</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_mat_row" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve row of the constraint matrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</li>
+<li><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return row and column
+names or indices</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the row</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Rtype coeffs:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from column names (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> strings) to
+coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_num_bin">
 <tt class="descname">get_num_bin</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_num_bin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve number of binary columns</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the number of binary columns</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_num_cols">
 <tt class="descname">get_num_cols</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_num_cols" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve number of columns</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the number of columns</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_num_int">
 <tt class="descname">get_num_int</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_num_int" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve number of integer columns</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the number of integer columns</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_num_nz">
 <tt class="descname">get_num_nz</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_num_nz" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve number of constraint coefficients</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the number of (non-zero) constraint coefficients</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_num_rows">
 <tt class="descname">get_num_rows</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_num_rows" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve number of rows</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the number of rows</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_obj_coef">
 <tt class="descname">get_obj_coef</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_obj_coef" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve obj. coefficient</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the coefficient value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_obj_const">
 <tt class="descname">get_obj_const</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_obj_const" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve obj. constant term</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the constant value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_obj_dir">
 <tt class="descname">get_obj_dir</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_obj_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve optimization direction flag</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the objective direction, either <tt class="xref py py-obj docutils literal"><span class="pre">'minimize'</span></tt> or <tt class="xref py py-obj docutils literal"><span class="pre">'maximize'</span></tt></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_obj_name">
 <tt class="descname">get_obj_name</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_obj_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve objective function name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the objective name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_obj_val">
 <tt class="descname">get_obj_val</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_obj_val" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve objective value (basic solution)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the objective value of the basic solution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -435,82 +911,263 @@
 <dt id="ecyglpki.Problem.get_prob_name">
 <tt class="descname">get_prob_name</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_prob_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve problem name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the problem name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_rii">
 <tt class="descname">get_rii</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_rii" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve row scale factor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the scale factor</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_row_bind">
 <tt class="descname">get_row_bind</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_bind" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve row index in the basis header</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">basis header index</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_row_dual">
 <tt class="descname">get_row_dual</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_dual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve row dual value (basic solution)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the solution value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_row_lb">
 <tt class="descname">get_row_lb</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_lb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve row lower bound</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the lower bound</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_row_name">
 <tt class="descname">get_row_name</tt><big>(</big><em>int row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve row name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) &#8211; the index of the row</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the row name</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_row_name_if">
 <tt class="descname">get_row_name_if</tt><big>(</big><em>int row</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_name_if" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) &#8211; the index of the row</li>
+<li><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return the row name or index</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the row name or index</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_row_or_col_name">
 <tt class="descname">get_row_or_col_name</tt><big>(</big><em>int ind</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_or_col_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve row or column name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ind</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) &#8211; the row/column index</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a pair, either <tt class="xref py py-obj docutils literal"><span class="pre">'row'</span></tt> or <tt class="xref py py-obj docutils literal"><span class="pre">'col'</span></tt> and the row or column name</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>)</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_row_or_col_name_if">
 <tt class="descname">get_row_or_col_name_if</tt><big>(</big><em>int ind</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_or_col_name_if" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ind</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) &#8211; the row/column index</li>
+<li><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return the row or column
+name or index</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a pair, either <tt class="xref py py-obj docutils literal"><span class="pre">'row'</span></tt> or <tt class="xref py py-obj docutils literal"><span class="pre">'col'</span></tt> and the row or column name</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_row_prim">
 <tt class="descname">get_row_prim</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_prim" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve row primal value (basic solution)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the solution value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_row_stat">
 <tt class="descname">get_row_stat</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_stat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve row status</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the row status, either <tt class="xref py py-obj docutils literal"><span class="pre">'basic'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'lower'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'upper'</span></tt>,
+<tt class="xref py py-obj docutils literal"><span class="pre">'free'</span></tt>, or <tt class="xref py py-obj docutils literal"><span class="pre">'fixed'</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_row_type">
 <tt class="descname">get_row_type</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve row type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the row type, either <tt class="xref py py-obj docutils literal"><span class="pre">'free'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'dominating'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'dominated'</span></tt>,
+<tt class="xref py py-obj docutils literal"><span class="pre">'bounded'</span></tt>, or <tt class="xref py py-obj docutils literal"><span class="pre">'fixed'</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_row_ub">
 <tt class="descname">get_row_ub</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_row_ub" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve row upper bound</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the upper bound</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.get_sjj">
 <tt class="descname">get_sjj</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_sjj" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve column scale factor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the scale factor</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -523,6 +1180,15 @@
 <dt id="ecyglpki.Problem.get_unbnd_ray">
 <tt class="descname">get_unbnd_ray</tt><big>(</big><em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_unbnd_ray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine variable causing unboundedness</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return the row or column
+name or index</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -547,30 +1213,88 @@
 <dt id="ecyglpki.Problem.ipt_col_dual">
 <tt class="descname">ipt_col_dual</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ipt_col_dual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve column dual value (interior point)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the solution value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.ipt_col_prim">
 <tt class="descname">ipt_col_prim</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ipt_col_prim" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve column primal value (interior point)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the solution value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.ipt_obj_val">
 <tt class="descname">ipt_obj_val</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ipt_obj_val" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve objective value (interior point)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the objective value of the interior point solution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.ipt_row_dual">
 <tt class="descname">ipt_row_dual</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ipt_row_dual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve row dual value (interior point)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the solution value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.ipt_row_prim">
 <tt class="descname">ipt_row_prim</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ipt_row_prim" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve row primal value (interior point)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the solution value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -588,7 +1312,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coeffs</strong> &#8211; <a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from row and column name (str string)
-pairs (length-2 <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#tuple" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">tuple</span></tt></a>) to coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>).</td>
+pairs (length-2 <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#tuple" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">tuple</span></tt></a>) to coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>)</td>
 </tr>
 </tbody>
 </table>
@@ -604,18 +1328,52 @@ pairs (length-2 <a class="reference external" href="http://docs.python.org/3.3/l
 <dt id="ecyglpki.Problem.mip_col_val">
 <tt class="descname">mip_col_val</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.mip_col_val" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve column value (MIP solution)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the solution value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.mip_obj_val">
 <tt class="descname">mip_obj_val</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.mip_obj_val" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve objective value (MIP solution)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the objective value of the MIP solution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.mip_row_val">
 <tt class="descname">mip_row_val</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.mip_row_val" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve row value (MIP solution)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the solution value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -628,72 +1386,191 @@ pairs (length-2 <a class="reference external" href="http://docs.python.org/3.3/l
 <dt id="ecyglpki.Problem.prim_rtest">
 <tt class="descname">prim_rtest</tt><big>(</big><em>coeffs</em>, <em>int direction</em>, <em>double eps</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.prim_rtest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform primal ratio test</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return row and column
+names or indices</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.print_ipt">
 <tt class="descname">print_ipt</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.print_ipt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write interior-point solution in printable format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.print_mip">
 <tt class="descname">print_mip</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.print_mip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write MIP solution in printable format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.print_ranges">
 <tt class="descname">print_ranges</tt><big>(</big><em>row_or_cols</em>, <em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.print_ranges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print sensitivity analysis report</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.print_sol">
 <tt class="descname">print_sol</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.print_sol" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write basic solution in printable format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.read_cnfsat">
 <tt class="descname">read_cnfsat</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.read_cnfsat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read CNF-SAT problem data in DIMACS format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the problem read</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#ecyglpki.Problem" title="ecyglpki.Problem"><tt class="xref py py-obj docutils literal"><span class="pre">Problem</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.read_ipt">
 <tt class="descname">read_ipt</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.read_ipt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read interior-point solution from text file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.read_lp">
 <tt class="descname">read_lp</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.read_lp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read problem data in CPLEX LP format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the problem read</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#ecyglpki.Problem" title="ecyglpki.Problem"><tt class="xref py py-obj docutils literal"><span class="pre">Problem</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.read_mip">
 <tt class="descname">read_mip</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.read_mip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read MIP solution from text file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.read_mps">
 <tt class="descname">read_mps</tt><big>(</big><em>str format</em>, <em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.read_mps" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read problem data in MPS format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>format</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the MPS file format, either <tt class="xref py py-obj docutils literal"><span class="pre">'fixed'</span></tt> or <tt class="xref py py-obj docutils literal"><span class="pre">'free'</span></tt></li>
+<li><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the problem read</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#ecyglpki.Problem" title="ecyglpki.Problem"><tt class="xref py py-obj docutils literal"><span class="pre">Problem</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.read_prob">
 <tt class="descname">read_prob</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.read_prob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read problem data in GLPK format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the problem read</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#ecyglpki.Problem" title="ecyglpki.Problem"><tt class="xref py py-obj docutils literal"><span class="pre">Problem</span></tt></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.read_sol">
 <tt class="descname">read_sol</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.read_sol" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read basic solution from text file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -704,7 +1581,7 @@ pairs (length-2 <a class="reference external" href="http://docs.python.org/3.3/l
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>algorithms</strong> &#8211; the algorithms to apply, one or more from <tt class="xref py py-obj docutils literal"><span class="pre">'auto'</span></tt>:,
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>algorithms</strong> &#8211; the algorithms to apply, one or more from <tt class="xref py py-obj docutils literal"><span class="pre">'auto'</span></tt>,
 <tt class="xref py py-obj docutils literal"><span class="pre">'skip'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'geometric'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'equilibration'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'round'</span></tt></td>
 </tr>
 </tbody>
@@ -721,24 +1598,71 @@ pairs (length-2 <a class="reference external" href="http://docs.python.org/3.3/l
 <dt id="ecyglpki.Problem.set_col_bnds">
 <tt class="descname">set_col_bnds</tt><big>(</big><em>col</em>, <em>lower</em>, <em>upper</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_col_bnds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set (change) column bounds</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</li>
+<li><strong>lower</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> or <tt class="xref py py-obj docutils literal"><span class="pre">NoneType</span></tt>) &#8211; lower bound (<a class="reference external" href="http://docs.python.org/3.3/library/constants.html#None" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">None</span></tt></a> if unbounded from below)</li>
+<li><strong>upper</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> or <tt class="xref py py-obj docutils literal"><span class="pre">NoneType</span></tt>) &#8211; upper bound (<a class="reference external" href="http://docs.python.org/3.3/library/constants.html#None" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">None</span></tt></a> if unbounded from above)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.set_col_kind">
 <tt class="descname">set_col_kind</tt><big>(</big><em>col</em>, <em>str kind</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_col_kind" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set (change) column kind</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</li>
+<li><strong>kind</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the column kind, either <tt class="xref py py-obj docutils literal"><span class="pre">'continuous'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'integer'</span></tt>,
+or <tt class="xref py py-obj docutils literal"><span class="pre">'binary'</span></tt></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.set_col_name">
 <tt class="descname">set_col_name</tt><big>(</big><em>col</em>, <em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_col_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change column name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</li>
+<li><strong>name</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the name of the column, it may not exceed 255 bytes
+<em>encoded as UTF-8</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.set_col_stat">
 <tt class="descname">set_col_stat</tt><big>(</big><em>col</em>, <em>str status</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_col_stat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set (change) column status</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -749,8 +1673,12 @@ pairs (length-2 <a class="reference external" href="http://docs.python.org/3.3/l
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coeffs</strong> &#8211; <a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from row names (str strings) to
-coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>).</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</li>
+<li><strong>coeffs</strong> &#8211; <a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from row names (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> strings) to
+coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>)</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -764,8 +1692,12 @@ coefficient values (<a class="reference external" href="http://docs.python.org/3
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coeffs</strong> &#8211; <a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from column names (str strings) to
-coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>).</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</li>
+<li><strong>coeffs</strong> &#8211; <a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from column names (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> strings) to
+coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>)</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -775,60 +1707,165 @@ coefficient values (<a class="reference external" href="http://docs.python.org/3
 <dt id="ecyglpki.Problem.set_obj_coef">
 <tt class="descname">set_obj_coef</tt><big>(</big><em>col</em>, <em>double coeff</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_obj_coef" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set (change) obj. coefficient</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</li>
+<li><strong>coeff</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>) &#8211; the coefficient value</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.set_obj_const">
 <tt class="descname">set_obj_const</tt><big>(</big><em>double coeff</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_obj_const" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set (change) obj. constant term</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coeff</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>) &#8211; the coefficient value</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.set_obj_dir">
 <tt class="descname">set_obj_dir</tt><big>(</big><em>str direction</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_obj_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set (change) optimization direction flag</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>direction</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the objective direction,
+either <tt class="xref py py-obj docutils literal"><span class="pre">'minimize'</span></tt> or <tt class="xref py py-obj docutils literal"><span class="pre">'maximize'</span></tt></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.set_obj_name">
 <tt class="descname">set_obj_name</tt><big>(</big><em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_obj_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assign (change) objective function name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the name of the objective, it may not exceed 255 bytes
+<em>encoded as UTF-8</em></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.set_prob_name">
 <tt class="descname">set_prob_name</tt><big>(</big><em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_prob_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assign (change) problem name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the name of the problem, it may not exceed 255 bytes
+<em>encoded as UTF-8</em></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.set_rii">
 <tt class="descname">set_rii</tt><big>(</big><em>row</em>, <em>double sf</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_rii" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set (change) row scale factor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</li>
+<li><strong>sf</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>) &#8211; the scale factor</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.set_row_bnds">
 <tt class="descname">set_row_bnds</tt><big>(</big><em>row</em>, <em>lower</em>, <em>upper</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_row_bnds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set (change) row bounds</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</li>
+<li><strong>lower</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> or <tt class="xref py py-obj docutils literal"><span class="pre">NoneType</span></tt>) &#8211; lower bound (<a class="reference external" href="http://docs.python.org/3.3/library/constants.html#None" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">None</span></tt></a> if unbounded from below)</li>
+<li><strong>upper</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> or <tt class="xref py py-obj docutils literal"><span class="pre">NoneType</span></tt>) &#8211; upper bound (<a class="reference external" href="http://docs.python.org/3.3/library/constants.html#None" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">None</span></tt></a> if unbounded from above)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.set_row_name">
 <tt class="descname">set_row_name</tt><big>(</big><em>row</em>, <em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_row_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change row name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</li>
+<li><strong>name</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the name of the row, it may not exceed 255 bytes
+<em>encoded as UTF-8</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.set_row_stat">
 <tt class="descname">set_row_stat</tt><big>(</big><em>row</em>, <em>str status</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_row_stat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set (change) row status</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.set_sjj">
 <tt class="descname">set_sjj</tt><big>(</big><em>col</em>, <em>double sf</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_sjj" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set (change) column scale factor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</li>
+<li><strong>sf</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>) &#8211; the scale factor</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -853,12 +1890,54 @@ coefficient values (<a class="reference external" href="http://docs.python.org/3
 <dt id="ecyglpki.Problem.transform_col">
 <tt class="descname">transform_col</tt><big>(</big><em>coeffs</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.transform_col" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform explicitly specified column</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coeffs</strong> &#8211; <a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from row names (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> strings) to
+coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>)</li>
+<li><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return row and column
+names or indices</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">transformed column</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from row and column names (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> strings) to
+coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.transform_row">
 <tt class="descname">transform_row</tt><big>(</big><em>coeffs</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.transform_row" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform explicitly specified row</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coeffs</strong> &#8211; <a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from column names (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> strings) to
+coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>)</li>
+<li><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return row and column
+names or indices</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">transformed row</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from row and column names (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> strings) to
+coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -877,42 +1956,102 @@ coefficient values (<a class="reference external" href="http://docs.python.org/3
 <dt id="ecyglpki.Problem.write_cnfsat">
 <tt class="descname">write_cnfsat</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.write_cnfsat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write CNF-SAT problem data in DIMACS format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.write_ipt">
 <tt class="descname">write_ipt</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.write_ipt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write interior-point solution to text file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.write_lp">
 <tt class="descname">write_lp</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.write_lp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write problem data in CPLEX LP format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.write_mip">
 <tt class="descname">write_mip</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.write_mip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write MIP solution to text file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.write_mps">
 <tt class="descname">write_mps</tt><big>(</big><em>str format</em>, <em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.write_mps" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write problem data in MPS format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>format</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the MPS file format, either <tt class="xref py py-obj docutils literal"><span class="pre">'fixed'</span></tt> or <tt class="xref py py-obj docutils literal"><span class="pre">'free'</span></tt></li>
+<li><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.write_prob">
 <tt class="descname">write_prob</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.write_prob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write problem data in GLPK format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.write_sol">
 <tt class="descname">write_sol</tt><big>(</big><em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.write_sol" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write basic solution to text file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

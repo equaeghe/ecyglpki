@@ -81,7 +81,8 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> &#8211; the names (str strings) of the vertices to add</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#tuple" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">tuple</span></tt></a> of <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the names of the vertices to add, none may exceed 255
+bytes <em>encoded as UTF-8</em></td>
 </tr>
 </tbody>
 </table>
@@ -145,6 +146,14 @@
 <dt id="ecyglpki.Graph.find_vertex">
 <tt class="descname">find_vertex</tt><big>(</big><em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.find_vertex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find vertex by its name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the name of the vertex</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -252,12 +261,30 @@
 <dt id="ecyglpki.Graph.set_graph_name">
 <tt class="descname">set_graph_name</tt><big>(</big><em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.set_graph_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assign (change) graph name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the name of the graph, it may not exceed 255 bytes
+<em>encoded as UTF-8</em></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Graph.set_vertex_name">
 <tt class="descname">set_vertex_name</tt><big>(</big><em>vertex</em>, <em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.set_vertex_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assign (change) vertex name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the name of the vertex, it may not exceed 255 bytes
+<em>encoded as UTF-8</em></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">

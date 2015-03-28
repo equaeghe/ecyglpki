@@ -68,6 +68,13 @@
 <dt id="ecyglpki.SimplexControls.it_lim">
 <tt class="descname">it_lim</tt><a class="headerlink" href="#ecyglpki.SimplexControls.it_lim" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iteration limit, an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">it_lim</span>  <span class="c"># the GLPK default</span>
+<span class="go">2147483647</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">it_lim</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">it_lim</span>
+<span class="go">10</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -115,6 +122,13 @@ switch to primal simplex</li>
 <tt class="descname">obj_ll</tt><a class="headerlink" href="#ecyglpki.SimplexControls.obj_ll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lower limit of the objective function, a <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> number</p>
 <p>(Used only if <em>meth</em> is <tt class="xref py py-obj docutils literal"><span class="pre">'dual'</span></tt>.)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">obj_ll</span>  <span class="c"># the GLPK default</span>
+<span class="go">-1.7976931348623157e+308</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">obj_ll</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1234.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">obj_ll</span>
+<span class="go">-1234.0</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -122,24 +136,52 @@ switch to primal simplex</li>
 <tt class="descname">obj_ul</tt><a class="headerlink" href="#ecyglpki.SimplexControls.obj_ul" title="Permalink to this definition">¶</a></dt>
 <dd><p>Upper limit of the objective function, a <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> number</p>
 <p>(Used only if <em>meth</em> is <tt class="xref py py-obj docutils literal"><span class="pre">'dual'</span></tt>.)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">obj_ul</span>  <span class="c"># the GLPK default</span>
+<span class="go">1.7976931348623157e+308</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">obj_ul</span> <span class="o">=</span> <span class="mf">123.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">obj_ul</span>
+<span class="go">123.4</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ecyglpki.SimplexControls.out_dly">
 <tt class="descname">out_dly</tt><a class="headerlink" href="#ecyglpki.SimplexControls.out_dly" title="Permalink to this definition">¶</a></dt>
 <dd><p>Output delay [ms] of solution process information, an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">out_dly</span>  <span class="c"># the GLPK default</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">out_dly</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">out_dly</span>
+<span class="go">25</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ecyglpki.SimplexControls.out_frq">
 <tt class="descname">out_frq</tt><a class="headerlink" href="#ecyglpki.SimplexControls.out_frq" title="Permalink to this definition">¶</a></dt>
 <dd><p>Output frequency [iterations] of informational messages, an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">out_frq</span>  <span class="c"># the GLPK default</span>
+<span class="go">500</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">out_frq</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">out_frq</span>
+<span class="go">50</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ecyglpki.SimplexControls.presolve">
 <tt class="descname">presolve</tt><a class="headerlink" href="#ecyglpki.SimplexControls.presolve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether to use the LP presolver, a <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">presolve</span>  <span class="c"># the GLPK default</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">presolve</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">presolve</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -182,24 +224,52 @@ switch to primal simplex</li>
 <dt id="ecyglpki.SimplexControls.tm_lim">
 <tt class="descname">tm_lim</tt><a class="headerlink" href="#ecyglpki.SimplexControls.tm_lim" title="Permalink to this definition">¶</a></dt>
 <dd><p>Time limit [ms], an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tm_lim</span>  <span class="c"># the GLPK default</span>
+<span class="go">2147483647</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tm_lim</span> <span class="o">=</span> <span class="mf">1e7</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tm_lim</span>
+<span class="go">10000000</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ecyglpki.SimplexControls.tol_bnd">
 <tt class="descname">tol_bnd</tt><a class="headerlink" href="#ecyglpki.SimplexControls.tol_bnd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tolerance to check if the solution is primal feasible, a <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> number</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tol_bnd</span>  <span class="c"># the GLPK default</span>
+<span class="go">1e-07</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tol_bnd</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tol_bnd</span>
+<span class="go">0.2</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ecyglpki.SimplexControls.tol_dj">
 <tt class="descname">tol_dj</tt><a class="headerlink" href="#ecyglpki.SimplexControls.tol_dj" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tolerance to check if the solution is dual feasible, a <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> number</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tol_dj</span>  <span class="c"># the GLPK default</span>
+<span class="go">1e-07</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tol_dj</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tol_dj</span>
+<span class="go">0.01</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ecyglpki.SimplexControls.tol_piv">
 <tt class="descname">tol_piv</tt><a class="headerlink" href="#ecyglpki.SimplexControls.tol_piv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tolerance to choose eligble pivotal elements, a <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> number</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tol_piv</span>  <span class="c"># the GLPK default</span>
+<span class="go">1e-10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tol_piv</span> <span class="o">=</span> <span class="mf">1e-3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tol_piv</span>
+<span class="go">0.001</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
