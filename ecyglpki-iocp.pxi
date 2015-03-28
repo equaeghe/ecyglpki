@@ -108,21 +108,48 @@ cdef class IntOptControls:
             self._iocp.msg_lev = str2msglev[value]
 
     property out_frq:
-        """Output frequency [ms] of informational messages, an `int`"""
+        """Output frequency [ms] of informational messages, an `int`
+
+        .. doctest:: IntOptControls
+
+            >>> r.out_frq  # the GLPK default
+            5000
+            >>> r.out_frq = 10000
+            >>> r.out_frq
+            10000
+
+        """
         def __get__(self):
             return self._iocp.out_frq
         def __set__(self, value):
             self._iocp.out_frq = int(value)
 
     property out_dly:
-        """Output delay [ms] of current LP relaxation solution, an `int`"""
+        """Output delay [ms] of current LP relaxation solution, an `int`
+
+        .. doctest:: IntOptControls
+
+            >>> r.out_dly  # the GLPK default
+            10000
+            >>> r.out_dly = 5000
+            >>> r.out_dly
+            5000
+
+        """
         def __get__(self):
             return self._iocp.out_dly
         def __set__(self, value):
             self._iocp.out_dly = int(value)
 
     property cb_func:
-        """Callback routine"""
+        """Callback routine
+
+        .. warning::
+
+            This functionality has not been tested and is most likely broken;
+            see https://github.com/equaeghe/ecyglpki/issues/7
+
+        """
         def __get__(self):
             cdef glpk.CBFunc callback = self._iocp.cb_func
             if callback is not NULL:
@@ -132,8 +159,15 @@ cdef class IntOptControls:
         def __set__(self, CallbackFunction callback):
             self._iocp.cb_func = callback._cb_func
 
-    property cb_info:  # TODO: use Python object for node data?
-        """Transit pointer passed to the routine cb_func"""
+    property cb_info:
+        """Transit pointer passed to the routine cb_func
+
+        .. warning::
+
+            This functionality has not been tested and is most likely broken;
+            see https://github.com/equaeghe/ecyglpki/issues/7
+
+        """
         def __get__(self):
             cdef glpk.CBInfo info = self._iocp.cb_info
             if info is not NULL:
@@ -168,7 +202,17 @@ cdef class IntOptControls:
             self._iocp.cb_size = value
 
     property tm_lim:
-        """Time limit [ms], an `int`"""
+        """Time limit [ms], an `int`
+
+        .. doctest:: IntOptControls
+
+            >>> r.tm_lim  # the GLPK default
+            2147483647
+            >>> r.tm_lim = 3600000  # one hour
+            >>> r.tm_lim
+            3600000
+
+        """
         def __get__(self):
             return self._iocp.tm_lim
         def __set__(self, value):
@@ -187,6 +231,14 @@ cdef class IntOptControls:
 
         .. _Driebeek: http://dx.doi.org/10.1287/ijoc.4.3.267
 
+        .. doctest:: IntOptControls
+
+            >>> r.br_tech  # the GLPK default
+            'Driebeek-Tomlin'
+            >>> r.br_tech = 'most_fracvar'
+            >>> r.br_tech
+            'most_fracvar'
+
         """
         def __get__(self):
             return brtech2str[self._iocp.br_tech]
@@ -203,6 +255,14 @@ cdef class IntOptControls:
         * `'bound'`: best local bound
         * `'projection'`: best projection heuristic
 
+        .. doctest:: IntOptControls
+
+            >>> r.bt_tech  # the GLPK default
+            'bound'
+            >>> r.bt_tech = 'projection'
+            >>> r.bt_tech
+            'projection'
+
         """
         def __get__(self):
             return bttech2str[self._iocp.bt_tech]
@@ -218,6 +278,14 @@ cdef class IntOptControls:
         * `'root'`: preprocessing only on the root level
         * `'all'`: preprocessing on all levels
 
+        .. doctest:: IntOptControls
+
+            >>> r.pp_tech  # the GLPK default
+            'all'
+            >>> r.pp_tech = 'root'
+            >>> r.pp_tech
+            'root'
+
         """
         def __get__(self):
             return pptech2str[self._iocp.pp_tech]
@@ -228,6 +296,14 @@ cdef class IntOptControls:
         """Whether to apply the `feasibility pump`_ heuristic, a `bool`
 
         .. _feasibility pump: http://dx.doi.org/10.1007/s10107-004-0570-3
+
+        .. doctest:: IntOptControls
+
+            >>> r.fp_heur  # the GLPK default
+            False
+            >>> r.fp_heur = True
+            >>> r.fp_heur
+            True
 
         """
         def __get__(self):
@@ -240,6 +316,14 @@ cdef class IntOptControls:
 
         .. _proximity search: http://www.dei.unipd.it/~fisch/papers/proximity_search.pdf
 
+        .. doctest:: IntOptControls
+
+            >>> r.ps_heur  # the GLPK default
+            False
+            >>> r.ps_heur = True
+            >>> r.ps_heur
+            True
+
         """
         def __get__(self):
             return self._iocp.ps_heur
@@ -247,35 +331,85 @@ cdef class IntOptControls:
             self._iocp.ps_heur = bool(value)
 
     property ps_tm_lim:
-        """Time limit [ms] for the proximity search heuristic, an `int`"""
+        """Time limit [ms] for the proximity search heuristic, an `int`
+
+        .. doctest:: IntOptControls
+
+            >>> r.ps_tm_lim  # the GLPK default
+            60000
+            >>> r.ps_tm_lim = 30000
+            >>> r.ps_tm_lim
+            30000
+
+        """
         def __get__(self):
             return self._iocp.ps_tm_lim
         def __set__(self, value):
             self._iocp.ps_tm_lim = int(value)
 
     property gmi_cuts:
-        """Whether to generate Gomory’s mixed integer cuts, a `bool`"""
+        """Whether to generate Gomory’s mixed integer cuts, a `bool`
+
+        .. doctest:: IntOptControls
+
+            >>> r.gmi_cuts  # the GLPK default
+            False
+            >>> r.gmi_cuts = True
+            >>> r.gmi_cuts
+            True
+
+        """
         def __get__(self):
             return self._iocp.gmi_cuts
         def __set__(self, value):
             self._iocp.gmi_cuts = bool(value)
 
     property mir_cuts:
-        """Whether to generate mixed integer rounding cuts, a `bool`"""
+        """Whether to generate mixed integer rounding cuts, a `bool`
+
+        .. doctest:: IntOptControls
+
+            >>> r.mir_cuts  # the GLPK default
+            False
+            >>> r.mir_cuts = True
+            >>> r.mir_cuts
+            True
+
+        """
         def __get__(self):
             return self._iocp.mir_cuts
         def __set__(self, value):
             self._iocp.mir_cuts = bool(value)
 
     property cov_cuts:
-        """Whether to generate mixed cover cuts, a `bool`"""
+        """Whether to generate mixed cover cuts, a `bool`
+
+        .. doctest:: IntOptControls
+
+            >>> r.cov_cuts  # the GLPK default
+            False
+            >>> r.cov_cuts = True
+            >>> r.cov_cuts
+            True
+
+        """
         def __get__(self):
             return self._iocp.cov_cuts
         def __set__(self, value):
             self._iocp.cov_cuts = bool(value)
 
     property clq_cuts:
-        """Whether to generate generate clique cuts, a `bool`"""
+        """Whether to generate generate clique cuts, a `bool`
+
+        .. doctest:: IntOptControls
+
+            >>> r.clq_cuts  # the GLPK default
+            False
+            >>> r.clq_cuts = True
+            >>> r.clq_cuts
+            True
+
+        """
         def __get__(self):
             return self._iocp.clq_cuts
         def __set__(self, value):
@@ -286,6 +420,14 @@ cdef class IntOptControls:
 
         This is the absolute tolerance used to check if the optimal solution to
         the current LP relaxation is integer feasible.
+
+        .. doctest:: IntOptControls
+
+            >>> r.tol_int  # the GLPK default
+            1e-05
+            >>> r.tol_int = 1e-04
+            >>> r.tol_int
+            0.0001
 
         """
         def __get__(self):
@@ -300,6 +442,14 @@ cdef class IntOptControls:
         the optimal solution to the current LP relaxation is not better than in
         the best known integer feasible solution.
 
+        .. doctest:: IntOptControls
+
+            >>> r.tol_obj  # the GLPK default
+            1e-07
+            >>> r.tol_obj = 1e-06
+            >>> r.tol_obj
+            1e-06
+
         """
         def __get__(self):
             return self._iocp.tol_obj
@@ -311,6 +461,14 @@ cdef class IntOptControls:
 
         The search stops once the relative MIP-gap falls below this value.
 
+        .. doctest:: IntOptControls
+
+            >>> r.mip_gap  # the GLPK default
+            0.0
+            >>> r.mip_gap = 0.1
+            >>> r.mip_gap
+            0.1
+
         """
         def __get__(self):
             return self._iocp.mip_gap
@@ -320,7 +478,15 @@ cdef class IntOptControls:
     property presolve:
         """Whether to use the MIP presolver, a `bool`
 
-        Using the MIP presolver may simplify the problem
+        Using the MIP presolver may simplify the problem.
+
+        .. doctest:: IntOptControls
+
+            >>> r.presolve  # the GLPK default
+            False
+            >>> r.presolve = True
+            >>> r.presolve
+            True
 
         """
         def __get__(self):
@@ -332,6 +498,14 @@ cdef class IntOptControls:
         """Whether to binarize integer variables, a `bool`
 
         This option is only used if *presolve* is `True`.
+
+        .. doctest:: IntOptControls
+
+            >>> r.binarize  # the GLPK default
+            False
+            >>> r.binarize = True
+            >>> r.binarize
+            True
 
         """
         def __get__(self):
