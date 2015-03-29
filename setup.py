@@ -47,6 +47,7 @@ classifiers = [
 setup(
     name = 'ecyglpki',
     description = 'A Cython GLPK interface',
+    version = '0.2.0',
     url = 'https://github.com/equaeghe/ecyglpki',
     author = 'Erik Quaeghebeur',
     author_email = 'ecyglpki@equaeghe.nospammail.net',
