@@ -4,7 +4,7 @@
 
     from ecyglpki import Problem
 
-Problems
-========
+Additional routines
+-------------------
 
-.. autoclass:: Problem
+.. automethod:: Problem.check_kkt

@@ -4,7 +4,7 @@
 
     from ecyglpki import Tree
 
-Branching Tree
-==============
+Introduction
+------------
 
 .. autoclass:: Tree

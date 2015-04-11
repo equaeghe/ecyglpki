@@ -527,13 +527,13 @@ cdef class Problem:
             glpk.free(cols)
             glpk.free(vals)
 
-    def sort_matrix(self):
-        """Sort elements of the constraint matrix"""
-        glpk.sort_matrix(self._prob)
-
     def clear_matrix(self):  # variant of load_matrix
         """Clear the whole constraint matrix"""
         glpk.load_matrix(self._prob, 0, NULL, NULL, NULL)
+
+    def sort_matrix(self):
+        """Sort elements of the constraint matrix"""
+        glpk.sort_matrix(self._prob)
 
     def del_rows(self, *rows):
         """Delete specified rows from problem object
@@ -571,7 +571,7 @@ cdef class Problem:
         finally:
             glpk.free(colinds)
 
-    @classmethod
+    @classmethod # make it a normal method?
     def copy_prob(cls, Problem source, bint copy_names):
         """Copy problem object content
 

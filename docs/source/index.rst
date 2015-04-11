@@ -9,13 +9,13 @@ Contents:
 .. toctree::
   :maxdepth: 2
 
-  problem
-  smcp
-  bfcp
-  iptcp
-  iocp
-  tree
+  2
+  3
+  4
+  5
+  6
   graph
+  cnfsat
   examples
 
 

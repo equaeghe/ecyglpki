@@ -31,7 +31,13 @@ except ImportError:
     from collections import Sequence, Mapping # Python <3.3
 
 
-def GLPK_version():
+def version():
+    """Determine the library version
+
+    :returns: the library version
+    :rtype: `str`
+
+    """
     return glpk.version().decode()
 
 
