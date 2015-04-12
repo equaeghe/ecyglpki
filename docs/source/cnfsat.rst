@@ -1,7 +1,7 @@
 .. module:: ecyglpki
 
 CNF Satisfiability Problem
-==========================
+##########################
 
 .. toctree::
 

@@ -1,5 +1,5 @@
-Welcome to ecyglpki's documentation!
-====================================
+Welcome to ecyglpki's documentation
+===================================
 
 :Release: |release|
 :Date:    |today|
@@ -7,13 +7,9 @@ Welcome to ecyglpki's documentation!
 Contents:
 
 .. toctree::
-  :maxdepth: 2
+  :maxdepth: 4
 
-  2
-  3
-  4
-  5
-  6
+  ref
   graph
   cnfsat
   examples

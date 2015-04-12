@@ -4,17 +4,11 @@
 
     from ecyglpki import Tree
 
-Graphs
-======
+Graph and Network Routines
+##########################
 
 .. autoclass:: Graph
 
-Vertices
---------
-
 .. autoclass:: Vertex
-
-Arcs
-----
 
 .. autoclass:: Arc

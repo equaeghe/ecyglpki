@@ -5,7 +5,7 @@ Branch-and-Cut API Routines
 
 .. toctree::
 
-  5.1
-  5.2
-  5.3
-  5.4
+  ref.5.1
+  ref.5.2
+  ref.5.3
+  ref.5.4

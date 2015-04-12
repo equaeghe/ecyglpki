@@ -5,6 +5,6 @@ Advanced API Routines
 
 .. toctree::
 
-  4.2
-  4.3
-  4.4
+  ref.4.2
+  ref.4.3
+  ref.4.4

@@ -5,6 +5,6 @@ Utility API routines
 
 .. toctree::
 
-  3.1
-  3.3
-  3.4
+  ref.3.1
+  ref.3.3
+  ref.3.4

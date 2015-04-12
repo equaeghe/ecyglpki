@@ -5,4 +5,4 @@ Miscellaneous API Routines
 
 .. toctree::
 
-  6.1
+  ref.6.1
