@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Simplex tableau routines &mdash; ecyglpki  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ecyglpki  documentation" href="index.html" />
+    <link rel="up" title="Advanced API Routines" href="4.html" />
+    <link rel="next" title="Post-optimal analysis routines" href="4.4.html" />
+    <link rel="prev" title="LP basis routines" href="4.2.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="4.4.html" title="Post-optimal analysis routines"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="4.2.html" title="LP basis routines"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li>
+          <li><a href="4.html" accesskey="U">Advanced API Routines</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <blockquote>
+<div></div></blockquote>
+<span class="target" id="module-ecyglpki"></span><div class="section" id="simplex-tableau-routines">
+<h1>Simplex tableau routines<a class="headerlink" href="#simplex-tableau-routines" title="Permalink to this headline">¶</a></h1>
+<dl class="method">
+<dt id="ecyglpki.Problem.eval_tab_row">
+<tt class="descclassname">Problem.</tt><tt class="descname">eval_tab_row</tt><big>(</big><em>ind</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.eval_tab_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute row of the simplex tableau</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return row and column
+names or indices</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.eval_tab_col">
+<tt class="descclassname">Problem.</tt><tt class="descname">eval_tab_col</tt><big>(</big><em>ind</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.eval_tab_col" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute column of the simplex tableau</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return row and column
+names or indices</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.transform_row">
+<tt class="descclassname">Problem.</tt><tt class="descname">transform_row</tt><big>(</big><em>coeffs</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.transform_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform explicitly specified row</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coeffs</strong> &#8211; <a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from column names (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> strings) to
+coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>)</li>
+<li><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return row and column
+names or indices</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">transformed row</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from row and column names (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> strings) to
+coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.transform_col">
+<tt class="descclassname">Problem.</tt><tt class="descname">transform_col</tt><big>(</big><em>coeffs</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.transform_col" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform explicitly specified column</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coeffs</strong> &#8211; <a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from row names (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> strings) to
+coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>)</li>
+<li><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return row and column
+names or indices</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">transformed column</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/3.3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Mapping</span></tt></a> from row and column names (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> strings) to
+coefficient values (<a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.prim_rtest">
+<tt class="descclassname">Problem.</tt><tt class="descname">prim_rtest</tt><big>(</big><em>coeffs</em>, <em>int direction</em>, <em>double eps</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.prim_rtest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform primal ratio test</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return row and column
+names or indices</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.dual_rtest">
+<tt class="descclassname">Problem.</tt><tt class="descname">dual_rtest</tt><big>(</big><em>coeffs</em>, <em>int direction</em>, <em>double eps</em>, <em>names_preferred=False</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.dual_rtest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform dual ratio test</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names_preferred</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; whether to return row and column
+names or indices</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="4.2.html"
+                        title="previous chapter">LP basis routines</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="4.4.html"
+                        title="next chapter">Post-optimal analysis routines</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/4.3.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="4.4.html" title="Post-optimal analysis routines"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="4.2.html" title="LP basis routines"
+             >previous</a> |</li>
+        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li>
+          <li><a href="4.html" >Advanced API Routines</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Erik Quaeghebeur.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -24,9 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="ecyglpki  documentation" href="index.html" />
-    <link rel="next" title="Integer Optimization Controls" href="iocp.html" />
-    <link rel="prev" title="Basis Factorization Controls" href="bfcp.html" /> 
+    <link rel="top" title="ecyglpki  documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,12 +36,6 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="iocp.html" title="Integer Optimization Controls"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="bfcp.html" title="Basis Factorization Controls"
-             accesskey="P">previous</a> |</li>
         <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -64,46 +56,6 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">IPointControls</span><span class="p">()</span>
 </pre></div>
 </div>
-<dl class="attribute">
-<dt id="ecyglpki.IPointControls.msg_lev">
-<tt class="descname">msg_lev</tt><a class="headerlink" href="#ecyglpki.IPointControls.msg_lev" title="Permalink to this definition">¶</a></dt>
-<dd><p>The message level, a <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></p>
-<p>The possible values are</p>
-<ul class="simple">
-<li><tt class="xref py py-obj docutils literal"><span class="pre">'no'</span></tt>: no output</li>
-<li><tt class="xref py py-obj docutils literal"><span class="pre">'warnerror'</span></tt>: warnings and errors only</li>
-<li><tt class="xref py py-obj docutils literal"><span class="pre">'normal'</span></tt>: normal output</li>
-<li><tt class="xref py py-obj docutils literal"><span class="pre">'full'</span></tt>: normal output and informational messages</li>
-</ul>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">msg_lev</span>  <span class="c"># the GLPK default</span>
-<span class="go">&#39;full&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">msg_lev</span> <span class="o">=</span> <span class="s">&#39;no&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">msg_lev</span>
-<span class="go">&#39;no&#39;</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ecyglpki.IPointControls.ord_alg">
-<tt class="descname">ord_alg</tt><a class="headerlink" href="#ecyglpki.IPointControls.ord_alg" title="Permalink to this definition">¶</a></dt>
-<dd><p>The ordering algorithm used prior to Cholesky factorization, a <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></p>
-<p>The possible values are</p>
-<ul class="simple">
-<li><tt class="xref py py-obj docutils literal"><span class="pre">'orig'</span></tt>: normal (original)</li>
-<li><tt class="xref py py-obj docutils literal"><span class="pre">'qmd'</span></tt>: quotient minimum degree</li>
-<li><tt class="xref py py-obj docutils literal"><span class="pre">'amd'</span></tt>: approximate minimum degree</li>
-<li><tt class="xref py py-obj docutils literal"><span class="pre">'symamd'</span></tt>: approximate minimum degree for symmetric matrices</li>
-</ul>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">ord_alg</span>  <span class="c"># the GLPK default</span>
-<span class="go">&#39;amd&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">ord_alg</span> <span class="o">=</span> <span class="s">&#39;qmd&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">ord_alg</span>
-<span class="go">&#39;qmd&#39;</span>
-</pre></div>
-</div>
-</dd></dl>
-
 </dd></dl>
 
 </div>
@@ -114,12 +66,6 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="bfcp.html"
-                        title="previous chapter">Basis Factorization Controls</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="iocp.html"
-                        title="next chapter">Integer Optimization Controls</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/iptcp.txt"
@@ -151,17 +97,11 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="iocp.html" title="Integer Optimization Controls"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="bfcp.html" title="Basis Factorization Controls"
-             >previous</a> |</li>
         <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, Erik Quaeghebeur.
+        &copy; Copyright 2015, Erik Quaeghebeur.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

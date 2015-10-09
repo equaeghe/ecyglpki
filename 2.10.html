@@ -1,0 +1,597 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Mixed integer programming routines &mdash; ecyglpki  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ecyglpki  documentation" href="index.html" />
+    <link rel="up" title="Basic API Routines" href="2.html" />
+    <link rel="next" title="Additional routines" href="2.11.html" />
+    <link rel="prev" title="Interior-point method routines" href="2.9.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="2.11.html" title="Additional routines"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="2.9.html" title="Interior-point method routines"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li>
+          <li><a href="2.html" accesskey="U">Basic API Routines</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <blockquote>
+<div></div></blockquote>
+<span class="target" id="module-ecyglpki"></span><div class="section" id="mixed-integer-programming-routines">
+<h1>Mixed integer programming routines<a class="headerlink" href="#mixed-integer-programming-routines" title="Permalink to this headline">¶</a></h1>
+<dl class="method">
+<dt id="ecyglpki.Problem.set_col_kind">
+<tt class="descclassname">Problem.</tt><tt class="descname">set_col_kind</tt><big>(</big><em>col</em>, <em>str kind</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.set_col_kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set (change) column kind</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</li>
+<li><strong>kind</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the column kind, either <tt class="xref py py-obj docutils literal"><span class="pre">'continuous'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'integer'</span></tt>,
+or <tt class="xref py py-obj docutils literal"><span class="pre">'binary'</span></tt></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_col_kind">
+<tt class="descclassname">Problem.</tt><tt class="descname">get_col_kind</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_col_kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve column kind</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the column kind, either <tt class="xref py py-obj docutils literal"><span class="pre">'continuous'</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">'integer'</span></tt>,
+or <tt class="xref py py-obj docutils literal"><span class="pre">'binary'</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_num_int">
+<tt class="descclassname">Problem.</tt><tt class="descname">get_num_int</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_num_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve number of integer columns</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the number of integer columns</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.get_num_bin">
+<tt class="descclassname">Problem.</tt><tt class="descname">get_num_bin</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.get_num_bin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve number of binary columns</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the number of binary columns</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.intopt">
+<tt class="descclassname">Problem.</tt><tt class="descname">intopt</tt><big>(</big><em>IntOptControls controls</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.intopt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve MIP problem with the branch-and-bound method</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.mip_status">
+<tt class="descclassname">Problem.</tt><tt class="descname">mip_status</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.mip_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve status of MIP solution</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.mip_obj_val">
+<tt class="descclassname">Problem.</tt><tt class="descname">mip_obj_val</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.mip_obj_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve objective value (MIP solution)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the objective value of the MIP solution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.mip_row_val">
+<tt class="descclassname">Problem.</tt><tt class="descname">mip_row_val</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.mip_row_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve row value (MIP solution)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the solution value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.mip_col_val">
+<tt class="descclassname">Problem.</tt><tt class="descname">mip_col_val</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.mip_col_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve column value (MIP solution)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the solution value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="section" id="integer-optimization-controls">
+<h2>Integer optimization controls<a class="headerlink" href="#integer-optimization-controls" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ecyglpki.IntOptControls">
+<em class="property">class </em><tt class="descclassname">ecyglpki.</tt><tt class="descname">IntOptControls</tt><a class="headerlink" href="#ecyglpki.IntOptControls" title="Permalink to this definition">¶</a></dt>
+<dd><p>The integer optimization solver control parameter object</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">IntOptControls</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.binarize">
+<tt class="descname">binarize</tt><a class="headerlink" href="#ecyglpki.IntOptControls.binarize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to binarize integer variables, a <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></p>
+<p>This option is only used if <em>presolve</em> is <a class="reference external" href="http://docs.python.org/3.3/library/constants.html#True" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">True</span></tt></a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">binarize</span>  <span class="c"># the GLPK default</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">binarize</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">binarize</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.br_tech">
+<tt class="descname">br_tech</tt><a class="headerlink" href="#ecyglpki.IntOptControls.br_tech" title="Permalink to this definition">¶</a></dt>
+<dd><p>The branching technique, a <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></p>
+<p>The possible values are</p>
+<ul class="simple">
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'first_fracvar'</span></tt>: first fractional variable</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'last_fracvar'</span></tt>: last fractional variable</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'most_fracvar'</span></tt>: most fractional variable</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'Driebeek-Tomlin'</span></tt>: heuristic by <a class="reference external" href="http://dx.doi.org/10.1287/ijoc.4.3.267">Driebeek</a> &amp; Tomlin</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'hybrid_peudocost'</span></tt>: hybrid pseudocost heuristic</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">br_tech</span>  <span class="c"># the GLPK default</span>
+<span class="go">&#39;Driebeek-Tomlin&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">br_tech</span> <span class="o">=</span> <span class="s">&#39;most_fracvar&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">br_tech</span>
+<span class="go">&#39;most_fracvar&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.bt_tech">
+<tt class="descname">bt_tech</tt><a class="headerlink" href="#ecyglpki.IntOptControls.bt_tech" title="Permalink to this definition">¶</a></dt>
+<dd><p>The backtracking technique, a <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></p>
+<p>The possible values are</p>
+<ul class="simple">
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'depth'</span></tt>: depth first search</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'breadth'</span></tt>: breadth first search</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'bound'</span></tt>: best local bound</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'projection'</span></tt>: best projection heuristic</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">bt_tech</span>  <span class="c"># the GLPK default</span>
+<span class="go">&#39;bound&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">bt_tech</span> <span class="o">=</span> <span class="s">&#39;projection&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">bt_tech</span>
+<span class="go">&#39;projection&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.cb_func">
+<tt class="descname">cb_func</tt><a class="headerlink" href="#ecyglpki.IntOptControls.cb_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback routine</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This functionality has not been tested and is most likely broken;
+see <a class="reference external" href="https://github.com/equaeghe/ecyglpki/issues/7">https://github.com/equaeghe/ecyglpki/issues/7</a></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.cb_info">
+<tt class="descname">cb_info</tt><a class="headerlink" href="#ecyglpki.IntOptControls.cb_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transit pointer passed to the routine cb_func</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This functionality has not been tested and is most likely broken;
+see <a class="reference external" href="https://github.com/equaeghe/ecyglpki/issues/7">https://github.com/equaeghe/ecyglpki/issues/7</a></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.cb_size">
+<tt class="descname">cb_size</tt><a class="headerlink" href="#ecyglpki.IntOptControls.cb_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of extra bytes allocated for each search tree node, an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+<p>Up to 256 bytes can be allocated for each node of the branch-and-bound
+tree to store application-specific data. On creating a node these bytes
+are initialized by binary zeros.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">cb_size</span>  <span class="c"># the GLPK default</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">cb_size</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">cb_size</span>
+<span class="go">128</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.clq_cuts">
+<tt class="descname">clq_cuts</tt><a class="headerlink" href="#ecyglpki.IntOptControls.clq_cuts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to generate generate clique cuts, a <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">clq_cuts</span>  <span class="c"># the GLPK default</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">clq_cuts</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">clq_cuts</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.cov_cuts">
+<tt class="descname">cov_cuts</tt><a class="headerlink" href="#ecyglpki.IntOptControls.cov_cuts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to generate mixed cover cuts, a <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">cov_cuts</span>  <span class="c"># the GLPK default</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">cov_cuts</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">cov_cuts</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.fp_heur">
+<tt class="descname">fp_heur</tt><a class="headerlink" href="#ecyglpki.IntOptControls.fp_heur" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to apply the <a class="reference external" href="http://dx.doi.org/10.1007/s10107-004-0570-3">feasibility pump</a> heuristic, a <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">fp_heur</span>  <span class="c"># the GLPK default</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">fp_heur</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">fp_heur</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.gmi_cuts">
+<tt class="descname">gmi_cuts</tt><a class="headerlink" href="#ecyglpki.IntOptControls.gmi_cuts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to generate Gomory’s mixed integer cuts, a <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">gmi_cuts</span>  <span class="c"># the GLPK default</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">gmi_cuts</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">gmi_cuts</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.mip_gap">
+<tt class="descname">mip_gap</tt><a class="headerlink" href="#ecyglpki.IntOptControls.mip_gap" title="Permalink to this definition">¶</a></dt>
+<dd><p>The relative MIP-gap tolerance, a <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> number</p>
+<p>The search stops once the relative MIP-gap falls below this value.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">mip_gap</span>  <span class="c"># the GLPK default</span>
+<span class="go">0.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">mip_gap</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">mip_gap</span>
+<span class="go">0.1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.mir_cuts">
+<tt class="descname">mir_cuts</tt><a class="headerlink" href="#ecyglpki.IntOptControls.mir_cuts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to generate mixed integer rounding cuts, a <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">mir_cuts</span>  <span class="c"># the GLPK default</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">mir_cuts</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">mir_cuts</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.msg_lev">
+<tt class="descname">msg_lev</tt><a class="headerlink" href="#ecyglpki.IntOptControls.msg_lev" title="Permalink to this definition">¶</a></dt>
+<dd><p>The message level, a <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></p>
+<p>The possible values are</p>
+<ul class="simple">
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'no'</span></tt>: no output</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'warnerror'</span></tt>: warnings and errors only</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'normal'</span></tt>: normal output</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'full'</span></tt>: normal output and informational messages</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">msg_lev</span>  <span class="c"># the GLPK default</span>
+<span class="go">&#39;full&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">msg_lev</span> <span class="o">=</span> <span class="s">&#39;no&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">msg_lev</span>
+<span class="go">&#39;no&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.out_dly">
+<tt class="descname">out_dly</tt><a class="headerlink" href="#ecyglpki.IntOptControls.out_dly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output delay [ms] of current LP relaxation solution, an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">out_dly</span>  <span class="c"># the GLPK default</span>
+<span class="go">10000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">out_dly</span> <span class="o">=</span> <span class="mi">5000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">out_dly</span>
+<span class="go">5000</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.out_frq">
+<tt class="descname">out_frq</tt><a class="headerlink" href="#ecyglpki.IntOptControls.out_frq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output frequency [ms] of informational messages, an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">out_frq</span>  <span class="c"># the GLPK default</span>
+<span class="go">5000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">out_frq</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">out_frq</span>
+<span class="go">10000</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.pp_tech">
+<tt class="descname">pp_tech</tt><a class="headerlink" href="#ecyglpki.IntOptControls.pp_tech" title="Permalink to this definition">¶</a></dt>
+<dd><p>The preprocessing technique, a <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></p>
+<p>The possible values are</p>
+<ul class="simple">
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'none'</span></tt>: disable preprocessing</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'root'</span></tt>: preprocessing only on the root level</li>
+<li><tt class="xref py py-obj docutils literal"><span class="pre">'all'</span></tt>: preprocessing on all levels</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">pp_tech</span>  <span class="c"># the GLPK default</span>
+<span class="go">&#39;all&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">pp_tech</span> <span class="o">=</span> <span class="s">&#39;root&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">pp_tech</span>
+<span class="go">&#39;root&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.presolve">
+<tt class="descname">presolve</tt><a class="headerlink" href="#ecyglpki.IntOptControls.presolve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to use the MIP presolver, a <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></p>
+<p>Using the MIP presolver may simplify the problem.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">presolve</span>  <span class="c"># the GLPK default</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">presolve</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">presolve</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.ps_heur">
+<tt class="descname">ps_heur</tt><a class="headerlink" href="#ecyglpki.IntOptControls.ps_heur" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to apply the <a class="reference external" href="http://www.dei.unipd.it/~fisch/papers/proximity_search.pdf">proximity search</a> heuristic, a <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#bool" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">ps_heur</span>  <span class="c"># the GLPK default</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">ps_heur</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">ps_heur</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.ps_tm_lim">
+<tt class="descname">ps_tm_lim</tt><a class="headerlink" href="#ecyglpki.IntOptControls.ps_tm_lim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time limit [ms] for the proximity search heuristic, an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">ps_tm_lim</span>  <span class="c"># the GLPK default</span>
+<span class="go">60000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">ps_tm_lim</span> <span class="o">=</span> <span class="mi">30000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">ps_tm_lim</span>
+<span class="go">30000</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.tm_lim">
+<tt class="descname">tm_lim</tt><a class="headerlink" href="#ecyglpki.IntOptControls.tm_lim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time limit [ms], an <a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tm_lim</span>  <span class="c"># the GLPK default</span>
+<span class="go">2147483647</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tm_lim</span> <span class="o">=</span> <span class="mi">3600000</span>  <span class="c"># one hour</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tm_lim</span>
+<span class="go">3600000</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.tol_int">
+<tt class="descname">tol_int</tt><a class="headerlink" href="#ecyglpki.IntOptControls.tol_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abs. tolerance for LP solution integer feasibility, a <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> number</p>
+<p>This is the absolute tolerance used to check if the optimal solution to
+the current LP relaxation is integer feasible.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tol_int</span>  <span class="c"># the GLPK default</span>
+<span class="go">1e-05</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tol_int</span> <span class="o">=</span> <span class="mf">1e-04</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tol_int</span>
+<span class="go">0.0001</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ecyglpki.IntOptControls.tol_obj">
+<tt class="descname">tol_obj</tt><a class="headerlink" href="#ecyglpki.IntOptControls.tol_obj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rel. tolerance of LP objective optimality, a <a class="reference external" href="http://docs.python.org/3.3/library/numbers.html#numbers.Real" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">Real</span></tt></a> number</p>
+<p>This is the relative tolerance used to check if the objective value in
+the optimal solution to the current LP relaxation is not better than in
+the best known integer feasible solution.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tol_obj</span>  <span class="c"># the GLPK default</span>
+<span class="go">1e-07</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tol_obj</span> <span class="o">=</span> <span class="mf">1e-06</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">tol_obj</span>
+<span class="go">1e-06</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Mixed integer programming routines</a><ul>
+<li><a class="reference internal" href="#integer-optimization-controls">Integer optimization controls</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="2.9.html"
+                        title="previous chapter">Interior-point method routines</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="2.11.html"
+                        title="next chapter">Additional routines</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/2.10.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="2.11.html" title="Additional routines"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="2.9.html" title="Interior-point method routines"
+             >previous</a> |</li>
+        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li>
+          <li><a href="2.html" >Basic API Routines</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Erik Quaeghebeur.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Assignment problem &mdash; ecyglpki  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ecyglpki  documentation" href="index.html" />
+    <link rel="up" title="Network optimization API routines" href="graph.2.html" />
+    <link rel="next" title="Graph Optimization API Routines" href="graph.3.html" />
+    <link rel="prev" title="Maximum flow problem" href="graph.2.2.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="graph.3.html" title="Graph Optimization API Routines"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="graph.2.2.html" title="Maximum flow problem"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li>
+          <li><a href="graph.html" >Graph and Network Routines</a> &raquo;</li>
+          <li><a href="graph.2.html" accesskey="U">Network optimization API routines</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <blockquote>
+<div></div></blockquote>
+<span class="target" id="module-ecyglpki"></span><div class="section" id="assignment-problem">
+<h1>Assignment problem<a class="headerlink" href="#assignment-problem" title="Permalink to this headline">¶</a></h1>
+<dl class="method">
+<dt id="ecyglpki.Graph.read_asnprob">
+<tt class="descclassname">Graph.</tt><tt class="descname">read_asnprob</tt><big>(</big><em>int vertex_data_size</em>, <em>int arc_data_size</em>, <em>int v_set</em>, <em>int a_cost</em>, <em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.read_asnprob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read assignment problem data in DIMACS format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.write_asnprob">
+<tt class="descclassname">Graph.</tt><tt class="descname">write_asnprob</tt><big>(</big><em>int v_set</em>, <em>int a_cost</em>, <em>str fname</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.write_asnprob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write assignment problem data in DIMACS format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.check_asnprob">
+<tt class="descclassname">Graph.</tt><tt class="descname">check_asnprob</tt><big>(</big><em>int v_set</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.check_asnprob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check correctness of assignment problem data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.asnprob_lp">
+<tt class="descclassname">Graph.</tt><tt class="descname">asnprob_lp</tt><big>(</big><em>str asnform</em>, <em>bool copy_names</em>, <em>int v_set</em>, <em>int a_cost</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.asnprob_lp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert assignment problem to LP</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.asnprob_okalg">
+<tt class="descclassname">Graph.</tt><tt class="descname">asnprob_okalg</tt><big>(</big><em>str asnform</em>, <em>int v_set</em>, <em>int a_cost</em>, <em>int a_x</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.asnprob_okalg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve assignment problem with out-of-kilter algorithm</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.asnprob_hall">
+<tt class="descclassname">Graph.</tt><tt class="descname">asnprob_hall</tt><big>(</big><em>int v_set</em>, <em>int a_x</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.asnprob_hall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find bipartite matching of maximum cardinality</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="graph.2.2.html"
+                        title="previous chapter">Maximum flow problem</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="graph.3.html"
+                        title="next chapter">Graph Optimization API Routines</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/graph.2.3.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="graph.3.html" title="Graph Optimization API Routines"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="graph.2.2.html" title="Maximum flow problem"
+             >previous</a> |</li>
+        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li>
+          <li><a href="graph.html" >Graph and Network Routines</a> &raquo;</li>
+          <li><a href="graph.2.html" >Network optimization API routines</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Erik Quaeghebeur.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

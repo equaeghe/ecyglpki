@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Graph creating and modifying routines &mdash; ecyglpki  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ecyglpki  documentation" href="index.html" />
+    <link rel="up" title="Basic Graph API Routines" href="graph.1.html" />
+    <link rel="next" title="Graph searching routines" href="graph.1.3.html" />
+    <link rel="prev" title="Graph program object" href="graph.1.1.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="graph.1.3.html" title="Graph searching routines"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="graph.1.1.html" title="Graph program object"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li>
+          <li><a href="graph.html" >Graph and Network Routines</a> &raquo;</li>
+          <li><a href="graph.1.html" accesskey="U">Basic Graph API Routines</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <blockquote>
+<div></div></blockquote>
+<span class="target" id="module-ecyglpki"></span><div class="section" id="graph-creating-and-modifying-routines">
+<h1>Graph creating and modifying routines<a class="headerlink" href="#graph-creating-and-modifying-routines" title="Permalink to this headline">¶</a></h1>
+<dl class="method">
+<dt id="ecyglpki.Graph.set_graph_name">
+<tt class="descclassname">Graph.</tt><tt class="descname">set_graph_name</tt><big>(</big><em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.set_graph_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign (change) graph name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the name of the graph, it may not exceed 255 bytes
+<em>encoded as UTF-8</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.add_vertices">
+<tt class="descclassname">Graph.</tt><tt class="descname">add_vertices</tt><big>(</big><em>int vertices</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.add_vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new vertices to graph</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.add_named_vertices">
+<tt class="descclassname">Graph.</tt><tt class="descname">add_named_vertices</tt><big>(</big><em>*names</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.add_named_vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new vertices to graph</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#tuple" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">tuple</span></tt></a> of <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the names of the vertices to add, none may exceed 255
+bytes <em>encoded as UTF-8</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.set_vertex_name">
+<tt class="descclassname">Graph.</tt><tt class="descname">set_vertex_name</tt><big>(</big><em>vertex</em>, <em>str name</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.set_vertex_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign (change) vertex name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the name of the vertex, it may not exceed 255 bytes
+<em>encoded as UTF-8</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.add_arc">
+<tt class="descclassname">Graph.</tt><tt class="descname">add_arc</tt><big>(</big><em>tail</em>, <em>head</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.add_arc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new arc to graph</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.del_vertices">
+<tt class="descclassname">Graph.</tt><tt class="descname">del_vertices</tt><big>(</big><em>*vertices</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.del_vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete vertices from graph</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.del_arc">
+<tt class="descclassname">Graph.</tt><tt class="descname">del_arc</tt><big>(</big><em>Arc arc</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.del_arc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete arc from graph</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Graph.erase_graph">
+<tt class="descclassname">Graph.</tt><tt class="descname">erase_graph</tt><big>(</big><em>int vertex_data_size</em>, <em>int arc_data_size</em><big>)</big><a class="headerlink" href="#ecyglpki.Graph.erase_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Erase graph content</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="graph.1.1.html"
+                        title="previous chapter">Graph program object</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="graph.1.3.html"
+                        title="next chapter">Graph searching routines</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/graph.1.2.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="graph.1.3.html" title="Graph searching routines"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="graph.1.1.html" title="Graph program object"
+             >previous</a> |</li>
+        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li>
+          <li><a href="graph.html" >Graph and Network Routines</a> &raquo;</li>
+          <li><a href="graph.1.html" >Basic Graph API Routines</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Erik Quaeghebeur.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,20 +1,10 @@
 .. module:: ecyglpki
 
-.. testsetup:: *
+Graph and Network Routines
+##########################
 
-    from ecyglpki import Tree
+.. toctree::
 
-Graphs
-======
-
-.. autoclass:: Graph
-
-Vertices
---------
-
-.. autoclass:: Vertex
-
-Arcs
-----
-
-.. autoclass:: Arc
+  graph.1
+  graph.2
+  graph.3
