@@ -1955,7 +1955,7 @@ cdef class Problem:
             >>> p.get_num_rows() # the number of clauses
             3
             >>> [p.get_mat_row(i) for i in range(1,4)]
-            []
+            [{1: 1.0, 2: 1.0}, {2: -1.0, 3: 1.0, 4: -1.0}, {1: -1.0, 4: 1.0}]
 
         """
         problem = cls()
@@ -1975,6 +1975,11 @@ cdef class Problem:
 
             >>> p.check_cnfsat()
             True
+            >>> clause = p.get_mat_row(1)
+            >>> clause[1] = 2
+            >>> p.set_mat_row(1, clause)
+            >>> p.check_cnfsat()
+            False
 
         """
         return not bool(glpk.check_cnfsat(self._prob))
