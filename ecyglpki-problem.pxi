@@ -1945,7 +1945,7 @@ cdef class Problem:
         :returns: the problem read
         :rtype: `.Problem`
 
-        .. doctest:: CNF-SAT
+        .. doctest:: read_cnfsat
 
             >>> p = Problem.read_cnfsat('examples/sample.cnf')
             >>> p.get_num_cols() # the number of variables
@@ -1971,8 +1971,9 @@ cdef class Problem:
 
         :rtype: `bool`
 
-        .. doctest:: CNF-SAT
+        .. doctest:: check_cnfsat
 
+            >>> p = Problem.read_cnfsat('examples/sample.cnf')
             >>> p.check_cnfsat()
             True
             >>> clause = p.get_mat_row(1)
@@ -1996,7 +1997,25 @@ cdef class Problem:
             raise RuntimeError("Error writing CNF-SAT file.")
 
     def minisat1(self):
-        """Solve CNF-SAT problem with MiniSat solver"""
+        """Solve CNF-SAT problem with MiniSat solver
+
+        This method is a driver to MiniSat, a CNF-SAT solver developed by
+        Niklas Eén and Niklas Sörensson, Chalmers University of Technology,
+        Sweden.
+
+        :returns: solution status, either `'optimal'` (satistfiable)
+            or `'no feasible'` (unsatisfiable)
+        :rtype: `str`
+
+        .. doctest:: minisat1
+
+            >>> p = Problem.read_cnfsat('examples/sample.cnf')
+            >>> p.minisat1()
+            'optimal'
+            >>> {j: bool(p.mip_col_val(j)) for j in range(1, 5)}
+            {1: False, 2: True, 3: False, 4: False}
+
+        """
         cdef int retcode = glpk.minisat1(self._prob)
         if retcode is not 0:
             raise ioretcode2error[retcode]
