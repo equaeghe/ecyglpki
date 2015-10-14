@@ -268,7 +268,7 @@ texinfo_documents = [
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/3.3/': None}
+intersphinx_mapping = {'http://docs.python.org/3.4/': None}
 
 # Substitutions
 rst_prolog = """
