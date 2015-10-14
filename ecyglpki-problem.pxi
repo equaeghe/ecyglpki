@@ -1945,6 +1945,18 @@ cdef class Problem:
         :returns: the problem read
         :rtype: `.Problem`
 
+        .. doctest:: CNF-SAT
+
+            >>> p = Problem.read_cnfsat('examples/sample.cnf')
+            >>> p.get_num_cols() # the number of variables
+            4
+            >>> all(p.get_col_kind(j) == 'binary' for j in range(1, 5))
+            True
+            >>> p.get_num_rows() # the number of clauses
+            3
+            >>> [p.get_mat_row(i) for i in range(1,4)]
+            []
+
         """
         problem = cls()
         cdef glpk.Prob* _prob = <glpk.Prob*>PyCapsule_GetPointer(
@@ -1958,6 +1970,11 @@ cdef class Problem:
         """Check for CNF-SAT problem instance
 
         :rtype: `bool`
+
+        .. doctest:: CNF-SAT
+
+            >>> p.check_cnfsat()
+            True
 
         """
         return not bool(glpk.check_cnfsat(self._prob))
