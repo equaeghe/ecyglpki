@@ -2094,6 +2094,52 @@ cdef class Problem:
             #. Partitioning equalities (SOS1 constraints):
                :math:`\sum_{j}t_j=1`.
 
+        .. doctest:: intfeas1
+
+            >>> # The Queens Problem is to place as many queens as possible on
+            ... # the 8x8 chess board in a way that they do not fight each
+            ... # other.
+            >>> p = Problem()
+            >>> p.add_cols(64) # a variable for each square on the board
+            >>> square2col = lambda b_col, b_row: 8 * (b_col - 1) + b_row
+            >>> for col in range(1, 65):
+            ...   # add variable encoding presence of a queen in a square
+            ...   p.set_col_kind(col, 'binary')
+            ...   # objective is to place as many queens as possible
+            ...   p.set_obj_coef(col, 1)
+            >>> for index in range(1, 9):
+            ...   # at most one queen can be placed in each row
+            ...   row = p.add_rows(1)
+            ...   p.set_mat_row(row, {square2col(b_col, index): 1
+            ...                       for b_col in range(1, 9)})
+            ...   p.set_row_bnds(row, None, 1)
+            ...   # at most one queen can be placed in each column
+            ...   row = p.add_rows(1)
+            ...   p.set_mat_row(row, {square2col(index, b_row): 1
+            ...                       for b_row in range(1, 9)})
+            ...   p.set_row_bnds(row, None, 1)
+            ...   # at most one queen can be placed in each diagonal
+            ...   row = p.add_rows(1)
+            ...   p.set_mat_row(row, {square2col(index - b_row + 1, b_row): 1
+            ...                       for b_row in range(1, index+1)})
+            ...   p.set_row_bnds(row, None, 1)
+            ...   # at most one queen can be placed in each cross diagonal
+            ...   row = p.add_rows(1)
+            ...   p.set_mat_row(row, {square2col(8 - diff, index - diff): 1
+            ...                       for diff in range(0, index)})
+            ...   p.set_row_bnds(row, None, 1)
+            >>> best = 0
+            >>> p.intfeas1(use_bound=True, obj_bound=best)
+
+/* solve the problem */
+solve;
+
+/* and print its optimal solution */
+for {i in 1..n}
+{  for {j in 1..n} printf " %s", if x[i,j] then "Q" else ".";
+   printf("\n");
+}
+
         """
         cdef int retcode = glpk.intfeas1(self._prob, use_bound, obj_bound)
         if retcode is not 0:
