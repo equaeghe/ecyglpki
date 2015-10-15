@@ -5,7 +5,7 @@
     from ecyglpki import Graph
 
 Graph creating and modifying routines
--------------------------------------
+=====================================
 
 .. automethod:: Graph.set_graph_name
 

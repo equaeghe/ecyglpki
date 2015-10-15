@@ -5,6 +5,6 @@
     from ecyglpki import version
 
 GLPK environment routines
--------------------------
+=========================
 
 .. autofunction:: version

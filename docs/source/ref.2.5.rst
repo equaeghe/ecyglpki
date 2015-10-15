@@ -5,7 +5,7 @@
     from ecyglpki import Problem
 
 Row and column searching routines
----------------------------------
+=================================
 
 .. automethod:: Problem.find_row
 

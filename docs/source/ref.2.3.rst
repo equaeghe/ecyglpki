@@ -5,7 +5,7 @@
     from ecyglpki import Problem
 
 Problem creating and modifying routines
----------------------------------------
+=======================================
 
 .. automethod:: Problem.set_prob_name
 

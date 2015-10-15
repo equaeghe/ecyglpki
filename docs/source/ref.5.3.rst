@@ -5,7 +5,7 @@
     from ecyglpki import Tree
 
 The search tree exploring routines
-----------------------------------
+==================================
 
 .. automethod:: Tree.ios_tree_size
 

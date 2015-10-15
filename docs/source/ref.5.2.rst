@@ -5,7 +5,7 @@
     from ecyglpki import Tree
 
 Basic routines
---------------
+==============
 
 .. automethod:: Tree.ios_reason
 

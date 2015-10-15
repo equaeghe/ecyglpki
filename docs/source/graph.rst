@@ -1,5 +1,6 @@
 .. module:: ecyglpki
 
+##########################
 Graph and Network Routines
 ##########################
 

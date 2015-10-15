@@ -5,7 +5,7 @@
     from ecyglpki import Tree
 
 The cut pool routines
----------------------
+=====================
 
 .. automethod:: Tree.ios_pool_size
 

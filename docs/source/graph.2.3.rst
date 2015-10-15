@@ -5,7 +5,7 @@
     from ecyglpki import Graph
 
 Assignment problem
-------------------
+==================
 
 .. automethod:: Graph.read_asnprob
 

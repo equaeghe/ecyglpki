@@ -5,7 +5,7 @@
     from ecyglpki import Graph
 
 Minimum cost flow problem
--------------------------
+=========================
 
 .. automethod:: Graph.read_mincost
 

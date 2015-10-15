@@ -5,7 +5,7 @@
     from ecyglpki import Graph, Vertex, Arc
 
 Graph program object
---------------------
+====================
 
 .. autoclass:: Graph
     :members: nv, na, v_size, a_size

@@ -5,7 +5,7 @@
     from ecyglpki import Problem, SimplexControls
 
 Simplex method routines
------------------------
+=======================
 
 .. automethod:: Problem.simplex
 
@@ -34,7 +34,7 @@ Simplex method routines
 .. automethod:: Problem.get_unbnd_ray
 
 Simplex controls
-~~~~~~~~~~~~~~~~
+----------------
 
 .. autoclass:: SimplexControls
     :members:

@@ -5,7 +5,7 @@
     from ecyglpki import Problem
 
 Post-optimal analysis routines
-------------------------------
+==============================
 
 .. automethod:: Problem.analyze_bound
 

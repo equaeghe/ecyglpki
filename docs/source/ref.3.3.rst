@@ -5,7 +5,7 @@
     from ecyglpki import Problem
 
 Problem solution reading/writing routines
------------------------------------------
+=========================================
 
 .. automethod:: Problem.print_sol
 

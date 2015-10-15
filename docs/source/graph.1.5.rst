@@ -5,7 +5,7 @@
     from ecyglpki import Graph
 
 Graph analysis routines
------------------------
+=======================
 
 .. automethod:: Graph.weak_comp
 

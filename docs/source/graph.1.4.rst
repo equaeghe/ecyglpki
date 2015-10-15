@@ -5,7 +5,7 @@
     from ecyglpki import Graph
 
 Graph reading/writing routines
-------------------------------
+==============================
 
 .. automethod:: Graph.read_graph
 

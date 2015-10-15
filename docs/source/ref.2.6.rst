@@ -5,7 +5,7 @@
     from ecyglpki import Problem
 
 Problem scaling routines
-------------------------
+========================
 
 .. automethod:: Problem.set_rii
 

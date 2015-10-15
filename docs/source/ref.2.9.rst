@@ -5,7 +5,7 @@
     from ecyglpki import Problem, IPointControls
 
 Interior-point method routines
-------------------------------
+==============================
 
 .. automethod:: Problem.interior
 
@@ -22,7 +22,7 @@ Interior-point method routines
 .. automethod:: Problem.ipt_col_dual
 
 Interior-point controls
-~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------
 
 .. autoclass:: IPointControls
     :members:

@@ -1,7 +1,8 @@
 .. module:: ecyglpki
 
+*********************
 Advanced API Routines
-=====================
+*********************
 
 .. toctree::
 

@@ -5,7 +5,7 @@
     from ecyglpki import Problem, IntOptControls
 
 Mixed integer programming routines
-----------------------------------
+==================================
 
 .. automethod:: Problem.set_col_kind
 
@@ -26,7 +26,7 @@ Mixed integer programming routines
 .. automethod:: Problem.mip_col_val
 
 Integer optimization controls
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------
 
 .. autoclass:: IntOptControls
     :members:

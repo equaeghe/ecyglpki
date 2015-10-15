@@ -5,6 +5,6 @@
     from ecyglpki import Tree
 
 Introduction
-------------
+============
 
 .. autoclass:: Tree

@@ -5,7 +5,7 @@
     from ecyglpki import Problem
 
 Problem retrieving routines
----------------------------
+===========================
 
 .. automethod:: Problem.get_prob_name
 

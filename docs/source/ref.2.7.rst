@@ -5,7 +5,7 @@
     from ecyglpki import Problem
 
 LP basis constructing routines
-------------------------------
+==============================
 
 .. automethod:: Problem.set_row_stat
 

@@ -5,7 +5,7 @@
     from ecyglpki import Problem, FactorizationControls
 
 LP basis routines
------------------
+=================
 
 .. automethod:: Problem.bf_exists
 
@@ -31,7 +31,7 @@ LP basis routines
 
 
 Basis factorization controls
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------
 
 .. autoclass:: FactorizationControls
     :members:

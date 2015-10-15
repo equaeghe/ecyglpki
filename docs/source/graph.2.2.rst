@@ -5,7 +5,7 @@
     from ecyglpki import Graph
 
 Maximum flow problem
---------------------
+====================
 
 .. automethod:: Graph.read_maxflow
 

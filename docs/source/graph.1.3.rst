@@ -5,7 +5,7 @@
     from ecyglpki import Graph
 
 Graph searching routines
-------------------------
+========================
 
 .. automethod:: Graph.find_vertex
 
