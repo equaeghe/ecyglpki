@@ -1940,9 +1940,9 @@ cdef class Problem:
     def read_cnfsat(cls, str fname):
         """Read CNF-SAT problem data in DIMACS format
 
-        This method reads the CNF-SAT problem data from a text file in DIMACS
-        format and automatically translates the data to corresponding 0-1
-        programming problem instance :eq:`1.5`–:eq:`1.6`.
+        This class method reads the CNF-SAT problem data from a text file in
+        DIMACS format and automatically translates the data to corresponding
+        0-1 programming problem instance :eq:`1.5`–:eq:`1.6`.
 
         :param fname: file name
         :type fname: `str`
@@ -1979,6 +1979,10 @@ cdef class Problem:
     def check_cnfsat(self):
         """Check for CNF-SAT problem instance
 
+        This method checks if the specified problem object P contains a 0-1
+        programming problem instance in the format :eq:`1.5`–:eq:`1.6` and
+        therefore encodes a CNF-SAT problem instance.
+
         :rtype: `bool`
 
         .. doctest:: check_cnfsat
@@ -1997,6 +2001,10 @@ cdef class Problem:
 
     def write_cnfsat(self, str fname):
         """Write CNF-SAT problem data in DIMACS format
+
+        This method automatically translates the specified 0-1 programming
+        problem instance :eq:`1.5`–:eq:`1.6` to a CNF-SAT problem instance and
+        writes the problem data to a text file in DIMACS format.
 
         :param fname: file name
         :type fname: `str`
@@ -2025,6 +2033,12 @@ cdef class Problem:
             or `'no feasible'` (unsatisfiable)
         :rtype: `str`
 
+        .. note::
+
+            It is assumed that the specified problem is a 0-1 programming
+            problem instance in the format :eq:`1.5`–:eq:`1.6` and therefore
+            encodes a CNF-SAT problem instance.
+
         .. doctest:: minisat1
 
             >>> p = Problem.read_cnfsat('examples/sample.cnf')
@@ -2040,7 +2054,47 @@ cdef class Problem:
         return self.mip_status()
 
     def intfeas1(self, bint use_bound, int obj_bound):
-        """Solve integer feasibility problem"""
+        """Solve integer feasibility problem
+
+        This method is a tentative implementation of an integer feasibility
+        solver based on a CNF-SAT solver (currently it is MiniSat; see
+        `.minisat1`).
+
+        :param use_bound: whether to require a solution with an objective
+            function value not worse than the bound given in `obj_bound`
+        :type use_bound: `bool`
+        :param obj_bound: specifies an upper (in case of minimization) or lower
+            (in case of maximization) bound to the objective function
+        :type obj_bound: `int`
+        :returns: solution status, either `'feasible'` or `'no feasible'`
+        :rtype: `str`
+
+        .. note::
+
+            The integer programming problem should satisfy to the following
+            requirements:
+
+            #. All variables (columns) should be either `'binary'`
+               (cf. `Problem.get_col_kind`) or `'fixed'`
+               (cf. `Problem.get_col_type`) at integer values
+
+            #. All constraint and objective coefficients should be integer
+               numbers in the range :math:`[-2^{31}, +2^{31}-1]`.
+
+            Though there are no special requirements to the constraints,
+            currently this method is efficient mainly for problems, where most
+            constraints (rows) fall into the following three classes:
+
+            #. Covering inequalities: :math:`\sum_{j}t_j\geq 1`, where
+               :math:`t_j=x_j` or :math:`t_j=1-x_j`, :math:`x_j` is a
+               binary variable.
+
+            #. Packing inequalities: :math:`\sum_{j}t_j\leq 1`.
+
+            #. Partitioning equalities (SOS1 constraints):
+               :math:`\sum_{j}t_j=1`.
+
+        """
         cdef int retcode = glpk.intfeas1(self._prob, use_bound, obj_bound)
         if retcode is not 0:
             raise ioretcode2error[retcode]
