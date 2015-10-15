@@ -1940,10 +1940,20 @@ cdef class Problem:
     def read_cnfsat(cls, str fname):
         """Read CNF-SAT problem data in DIMACS format
 
+        This method reads the CNF-SAT problem data from a text file in DIMACS
+        format and automatically translates the data to corresponding 0-1
+        programming problem instance :eq:`1.5`–:eq:`1.6`.
+
         :param fname: file name
         :type fname: `str`
         :returns: the problem read
         :rtype: `.Problem`
+
+        .. note::
+
+            If the filename ends with the suffix ‘.gz’, the file is assumed to
+            be compressed, in which case the routine decompresses it “on the
+            fly”.
 
         .. doctest:: read_cnfsat
 
@@ -1991,6 +2001,12 @@ cdef class Problem:
         :param fname: file name
         :type fname: `str`
 
+        .. note::
+
+            If the filename ends with suffix ‘.gz’, the file is assumed to be
+            compressed, in which case the routine performs automatic
+            compression on writing that file.
+
         """
         retcode = glpk.write_cnfsat(self._prob, str2chars(fname))
         if retcode is not 0:
@@ -1999,9 +2015,11 @@ cdef class Problem:
     def minisat1(self):
         """Solve CNF-SAT problem with MiniSat solver
 
-        This method is a driver to MiniSat, a CNF-SAT solver developed by
+        This method is a driver to MiniSat_, a CNF-SAT solver developed by
         Niklas Eén and Niklas Sörensson, Chalmers University of Technology,
         Sweden.
+
+        .. _MiniSat: http://minisat.se/
 
         :returns: solution status, either `'optimal'` (satistfiable)
             or `'no feasible'` (unsatisfiable)
