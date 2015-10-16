@@ -1388,16 +1388,19 @@ cdef class Problem:
             raise ValueError("Condition is either 'equalities' or 'bounds'.")
         return {'abs': (ae_max, ae_id), 'rel': (re_max, re_id)}
 
-    def print_sol(self, str fname):
+    def print_sol(self, fname=None):
         """Write basic solution in printable format
 
         :param fname: file name
         :type fname: `str`
 
         """
-        retcode = glpk.print_sol(self._prob, str2chars(fname))
+        fn = tempFile() if fname is None else fname
+        retcode = glpk.print_sol(self._prob, str2chars(fn))
         if retcode is not 0:
             raise RuntimeError("Error writing printable basic solution file")
+        if fname is None:
+            return popFile(fn)
 
     def read_sol(self, str fname):
         """Read basic solution from text file
@@ -1410,24 +1413,28 @@ cdef class Problem:
         if retcode is not 0:
             raise RuntimeError("Error reading basic solution file")
 
-    def write_sol(self, str fname):
+    def write_sol(self, fname=None):
         """Write basic solution to text file
 
         :param fname: file name
         :type fname: `str`
 
         """
-        retcode = glpk.write_sol(self._prob, str2chars(fname))
+        fn = tempFile() if fname is None else fname
+        retcode = glpk.write_sol(self._prob, str2chars(fn))
         if retcode is not 0:
             raise RuntimeError("Error writing basic solution file")
+        if fname is None:
+            return popFile(fn)
 
-    def print_ranges(self, row_or_cols, str fname):
+    def print_ranges(self, row_or_cols, fname=None):
         """Print sensitivity analysis report
 
         :param fname: file name
         :type fname: `str`
 
         """
+        fn = tempFile() if fname is None else fname
         if not isinstance(row_or_cols, Sequence):
             raise TypeError("'row_or_cols' must be a 'Sequence', not " +
                             type(row_or_cols).__name__ + ".")
@@ -1436,21 +1443,26 @@ cdef class Problem:
         try:
             for i, row_or_col in enumerate(row_or_cols, start=1):
                 inds[i] = self.find_row_or_col_as_needed(row_or_col)
-            glpk.print_ranges(self._prob, k, inds, 0, str2chars(fname))
+            glpk.print_ranges(self._prob, k, inds, 0, str2chars(fn))
         finally:
             glpk.free(inds)
+        if fname is None:
+            return popFile(fn)
 
-    def print_ipt(self, str fname):
+    def print_ipt(self, fname=None):
         """Write interior-point solution in printable format
 
         :param fname: file name
         :type fname: `str`
 
         """
-        retcode = glpk.print_ipt(self._prob, str2chars(fname))
+        fn = tempFile() if fname is None else fname
+        retcode = glpk.print_ipt(self._prob, str2chars(fn))
         if retcode is not 0:
             raise RuntimeError("Error writing printable interior point " +
                                "solution file")
+        if fname is None:
+            return popFile(fn)
 
     def read_ipt(self, str fname):
         """Read interior-point solution from text file
@@ -1463,28 +1475,34 @@ cdef class Problem:
         if retcode is not 0:
             raise RuntimeError("Error reading interior point solution file")
 
-    def write_ipt(self, str fname):
+    def write_ipt(self, fname=None):
         """Write interior-point solution to text file
 
         :param fname: file name
         :type fname: `str`
 
         """
-        retcode = glpk.write_ipt(self._prob, str2chars(fname))
+        fn = tempFile() if fname is None else fname
+        retcode = glpk.write_ipt(self._prob, str2chars(fn))
         if retcode is not 0:
             raise RuntimeError("Error writing interior point solution file")
+        if fname is None:
+            return popFile(fn)
 
-    def print_mip(self, str fname):
+    def print_mip(self, fname=None):
         """Write MIP solution in printable format
 
         :param fname: file name
         :type fname: `str`
 
         """
-        retcode = glpk.print_mip(self._prob, str2chars(fname))
+        fn = tempFile() if fname is None else fname
+        retcode = glpk.print_mip(self._prob, str2chars(fn))
         if retcode is not 0:
             raise RuntimeError("Error writing printable integer " +
                                "optimization solution file")
+        if fname is None:
+            return popFile(fn)
 
     def read_mip(self, str fname):
         """Read MIP solution from text file
@@ -1498,17 +1516,20 @@ cdef class Problem:
             raise RuntimeError("Error reading integer optimization solution " +
                                "file")
 
-    def write_mip(self, str fname):
+    def write_mip(self, fname=None):
         """Write MIP solution to text file
 
         :param fname: file name
         :type fname: `str`
 
         """
-        retcode = glpk.write_mip(self._prob, str2chars(fname))
+        fn = tempFile() if fname is None else fname
+        retcode = glpk.write_mip(self._prob, str2chars(fn))
         if retcode is not 0:
             raise RuntimeError("Error writing integer optimization solution " +
                                "file")
+        if fname is None:
+            return popFile(fn)
 
     def bf_exists(self):
         """Check if LP basis factorization exists
@@ -1864,7 +1885,7 @@ cdef class Problem:
             raise RuntimeError("Error reading MPS file.")
         return problem
 
-    def write_mps(self, str format, str fname):
+    def write_mps(self, str format, fname=None):
         """Write problem data in MPS format
 
         :param format: the MPS file format, either `'fixed'` or `'free'`
@@ -1873,10 +1894,13 @@ cdef class Problem:
         :type fname: `str`
 
         """
+        fn = tempFile() if fname is None else fname
         retcode = glpk.write_mps(self._prob, str2mpsfmt[format], NULL,
-                                 str2chars(fname))
+                                 str2chars(fn))
         if retcode is not 0:
             raise RuntimeError("Error writing MPS file.")
+        if fname is None:
+            return popFile(fn)
 
     @classmethod
     def read_lp(cls, str fname):
@@ -1896,16 +1920,19 @@ cdef class Problem:
             raise RuntimeError("Error reading LP file.")
         return problem
 
-    def write_lp(self, str fname):
+    def write_lp(self, fname=None):
         """Write problem data in CPLEX LP format
 
         :param fname: file name
         :type fname: `str`
 
         """
-        retcode = glpk.write_lp(self._prob, NULL, str2chars(fname))
+        fn = tempFile() if fname is None else fname
+        retcode = glpk.write_lp(self._prob, NULL, str2chars(fn))
         if retcode is not 0:
             raise RuntimeError("Error writing LP file.")
+        if fname is None:
+            return popFile(fn)
 
     @classmethod
     def read_prob(cls, str fname):
@@ -1925,16 +1952,19 @@ cdef class Problem:
             raise RuntimeError("Error reading GLPK file.")
         return problem
 
-    def write_prob(self, str fname):
+    def write_prob(self, fname=None):
         """Write problem data in GLPK format
 
         :param fname: file name
         :type fname: `str`
 
         """
-        retcode = glpk.write_prob(self._prob, 0, str2chars(fname))
+        fn = tempFile() if fname is None else fname
+        retcode = glpk.write_prob(self._prob, 0, str2chars(fn))
         if retcode is not 0:
             raise RuntimeError("Error writing GLPK file.")
+        if fname is None:
+            return popFile(fn)
 
     @classmethod
     def read_cnfsat(cls, str fname):
@@ -2031,11 +2061,12 @@ cdef class Problem:
             <BLANKLINE>
 
         """
-        fn = ensureFile(fname)
+        fn = tempFile() if fname is None else fname
         retcode = glpk.write_cnfsat(self._prob, str2chars(fn))
         if retcode is not 0:
             raise RuntimeError("Error writing CNF-SAT file.")
-        return returnFile(fn, fname)
+        if fname is None:
+            return popFile(fn)
 
     def minisat1(self):
         """Solve CNF-SAT problem with MiniSat solver

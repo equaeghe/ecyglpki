@@ -298,11 +298,14 @@ cdef class Graph:
             raise RuntimeError("Error reading graph from plain text file")
         return graph
 
-    def write_graph(self, str fname):
+    def write_graph(self, fname=None):
         """Write graph to plain text file"""
-        retcode = glpk.write_graph(self._graph, str2chars(fname))
+        fn = tempFile() if fname is None else fname
+        retcode = glpk.write_graph(self._graph, str2chars(fn))
         if retcode is not 0:
             raise RuntimeError("Error writing graph plain text file")
+        if fname is None:
+            return popFile(fn)
 
     def mincost_lp(self, bint copy_names,
                    int v_rhs, int a_low, int a_cap, int a_cost):
@@ -407,13 +410,16 @@ cdef class Graph:
         return graph
 
     def write_mincost(self, int v_rhs, int a_low, int a_cap, int a_cost,
-                      str fname):
+                      fname=None):
         """Write min-cost flow problem data in DIMACS format"""
+        fn = tempFile() if fname is None else fname
         retcode = glpk.write_mincost(self._graph, v_rhs, a_low, a_cap, a_cost,
-                                     str2chars(fname))
+                                     str2chars(fn))
         if retcode is not 0:
             raise RuntimeError("Error writing min-cost flow problem DIMACS " +
                                "file")
+        if fname is None:
+            return popFile(fn)
 
     @classmethod
     def read_maxflow(cls, int vertex_data_size, int arc_data_size,
@@ -431,15 +437,18 @@ cdef class Graph:
                                "file")
         return (graph, source, sink)
 
-    def write_maxflow(self, source, sink, int a_cap, str fname):
+    def write_maxflow(self, source, sink, int a_cap, fname=None):
         """Write maximum flow problem data in DIMACS format"""
         source = self.find_vertex_as_needed(source)
         sink = self.find_vertex_as_needed(sink)
+        fn = tempFile() if fname is None else fname
         retcode = glpk.write_maxflow(self._graph, source, sink, a_cap,
-                                     str2chars(fname))
+                                     str2chars(fn))
         if retcode is not 0:
             raise RuntimeError("Error writing maximum flow problem DIMACS " +
                                "file")
+        if fname is None:
+            return popFile(fn)
 
     @classmethod
     def read_asnprob(cls, int vertex_data_size, int arc_data_size,
@@ -453,12 +462,15 @@ cdef class Graph:
             raise RuntimeError("Error assignment problem DIMACS file")
         return graph
 
-    def write_asnprob(self, int v_set, int a_cost, str fname):
+    def write_asnprob(self, int v_set, int a_cost, fname=None):
         """Write assignment problem data in DIMACS format"""
+        fn = tempFile() if fname is None else fname
         retcode = glpk.write_asnprob(self._graph, v_set, a_cost,
-                                     str2chars(fname))
+                                     str2chars(fn))
         if retcode is not 0:
             raise RuntimeError("Error writing assignment problem DIMACS file")
+        if fname is None:
+            return popFile(fn)
 
     @classmethod
     def read_ccdata(cls, int vertex_data_size, int arc_data_size,
@@ -473,12 +485,15 @@ cdef class Graph:
                                "file")
         return graph
 
-    def write_ccdata(self, int v_wgt, str fname):
+    def write_ccdata(self, int v_wgt, fname=None):
         """Write graph in DIMACS clique/coloring format"""
-        retcode = glpk.write_ccdata(self._graph, v_wgt, str2chars(fname))
+        fn = tempFile() if fname is None else fname
+        retcode = glpk.write_ccdata(self._graph, v_wgt, str2chars(fn))
         if retcode is not 0:
             raise RuntimeError("Error writing graph DIMACS clique/coloring " +
                                "file")
+        if fname is None:
+            return popFile(fn)
 
     @classmethod
     def netgen(cls, int vertex_data_size, int arc_data_size,
