@@ -1999,15 +1999,17 @@ cdef class Problem:
         """
         return not bool(glpk.check_cnfsat(self._prob))
 
-    def write_cnfsat(self, str fname):
+    def write_cnfsat(self, fname=None):
         """Write CNF-SAT problem data in DIMACS format
 
         This method automatically translates the specified 0-1 programming
         problem instance :eq:`1.5`–:eq:`1.6` to a CNF-SAT problem instance and
-        writes the problem data to a text file in DIMACS format.
+        returns the problem data in DIMACS format or writes it to a file.
 
-        :param fname: file name
+        :param fname: file name (omit to have data returned)
         :type fname: `str`
+        :returns: the problem data in DIMACS format (if argument is omitted)
+        :rtype: `str`
 
         .. note::
 
@@ -2015,10 +2017,25 @@ cdef class Problem:
             compressed, in which case the routine performs automatic
             compression on writing that file.
 
+        .. doctest:: write_cnfsat
+
+            >>> p = Problem.read_cnfsat('examples/sample.cnf')
+            >>> p.set_prob_name('σαμπλε')
+            >>> print(p.write_cnfsat())
+            c σαμπλε
+            p cnf 4 3
+            1 2 0
+            -2 3 -4 0
+            -1 4 0
+            c eof
+            <BLANKLINE>
+
         """
-        retcode = glpk.write_cnfsat(self._prob, str2chars(fname))
+        fn = ensureFile(fname)
+        retcode = glpk.write_cnfsat(self._prob, str2chars(fn))
         if retcode is not 0:
             raise RuntimeError("Error writing CNF-SAT file.")
+        return returnFile(fn, fname)
 
     def minisat1(self):
         """Solve CNF-SAT problem with MiniSat solver

@@ -25,6 +25,8 @@
 cimport glpk
 from cpython.pycapsule cimport PyCapsule_New, PyCapsule_GetPointer
 import numbers
+import os
+import tempfile
 try:
     from collections.abc import Sequence, Mapping # Python >=3.3
 except ImportError:
@@ -60,6 +62,39 @@ cdef char* name2chars(str name) except NULL:
 
 cdef str chars2name(const char* chars):
     return '' if chars is NULL else chars.decode()
+
+
+def ensureFile(fname):
+    """Ensure a file is available in the file system
+
+    :param fname: omitted or a valid filename
+    :type fname: `NoneType` or `str`
+    :returns: the filename of the available file
+    :rtype: `str`
+
+    """
+    if fname is None:
+        with tempfile.NamedTemporaryFile(delete=False) as f:
+            return f.name
+    else:
+        return fname
+
+def returnFile(fn, fname):
+    """Return the file contents of and remove temporary file as needed
+
+    :param fn: a valid filename
+    :type fn: `str`
+    :param fname: omitted or a valid filename
+    :type fname: `NoneType` or `str`
+    :returns: the contents of the file `fn` if `fname` is omitted
+    :rtype: `str`
+
+    """
+    if fname is None:
+        with open(fn) as f:
+            output = f.read()
+        os.remove(fn)
+        return output
 
 
 include 'ecyglpki-smcp.pxi'
