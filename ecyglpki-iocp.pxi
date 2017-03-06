@@ -4,7 +4,7 @@
 #
 #  This code is part of ecyglpki (a Cython GLPK interface).
 #
-#  Copyright (C) 2015 Erik Quaeghebeur. All rights reserved.
+#  Copyright ⓒ 2017 Erik Quaeghebeur. All rights reserved.
 #
 #  ecyglpki is free software: you can redistribute it and/or modify it under
 #  the terms of the GNU General Public License as published by the Free
@@ -346,6 +346,25 @@ cdef class IntOptControls:
             return self._iocp.ps_tm_lim
         def __set__(self, value):
             self._iocp.ps_tm_lim = int(value)
+
+    property sr_heur:
+        """Whether to apply the `simple rounding`_ heuristic, a `bool`
+
+        .. _simple rounding: ???
+
+        .. doctest:: IntOptControls
+
+            >>> r.sr_heur  # the GLPK default
+            True
+            >>> r.sr_heur = False
+            >>> r.sr_heur
+            False
+
+        """
+        def __get__(self):
+            return self._iocp.sr_heur
+        def __set__(self, value):
+            self._iocp.sr_heur = bool(value)
 
     property gmi_cuts:
         """Whether to generate Gomory’s mixed integer cuts, a `bool`

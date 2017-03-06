@@ -1,10 +1,10 @@
-# glpk.pxd: Cython bindings for GLPK (as described in version 5.55 glpk.h)
+# glpk.pxd: Cython bindings for GLPK (as described in version 4.61 glpk.h)
 
 ###############################################################################
 #
 #  This code is part of ecyglpki (a Cython GLPK interface).
 #
-#  Copyright (C) 2015 Erik Quaeghebeur. All rights reserved.
+#  Copyright ⓒ 2017 Erik Quaeghebeur. All rights reserved.
 #
 #  ecyglpki is free software: you can redistribute it and/or modify it under
 #  the terms of the GNU General Public License as published by the Free
@@ -118,8 +118,9 @@ cdef extern from "glpk.h":
     enum: PT_PSE "GLP_PT_PSE"  #  projected steepest edge
 
     #  ratio test technique (argument name is 'r_test'):
-    enum: RT_STD "GLP_RT_STD"  #  standard (textbook)
-    enum: RT_HAR "GLP_RT_HAR"  #  two-pass Harris' ratio test
+    enum: RT_STD "GLP_RT_STD"    #  standard (textbook)
+    enum: RT_HAR "GLP_RT_HAR"    #  Harris' two-pass ratio test
+    enum: RT_FLIP "GLP_RT_FLIP"  # long step (flip-flop) ratio test
 
     #  simplex method control parameters
     ctypedef struct SmCp "glp_smcp":
@@ -195,10 +196,13 @@ cdef extern from "glpk.h":
         bint fp_heur    #  feasibility pump heuristic
         bint ps_heur    #  proximity search heuristic
         int ps_tm_lim   #  proxy time limit (milliseconds)
+        bint sr_heur    #  simple rounding heuristic
 #        bint use_sol    #  use existing solution (experimental/undocumented)
 #        const char* save_sol
-                        #  filename to save every new solution
-                        # (experimental/undocumented)
+#                        #  filename to save every new solution
+#                        # (experimental/undocumented)
+#        bint flip;      # use long-step dual simplex
+#                        # (experimental/undocumented)
 
     #  row origin flag (argument name is 'origin'):
     enum: RF_REG "GLP_RF_REG"    #  regular constraint
@@ -804,10 +808,6 @@ cdef extern from "glpk.h":
 
     #  free the MathProg translator workspace
     void mpl_free_wksp "glp_mpl_free_wksp" (Tran* wksp)
-
-    #  stand-alone LP/MIP solver (main function of glpsol;
-    # can be used to avoid having to call glpsol in a separate process)
-    int main "glp_main" (int argc, const char* argv[])
 
     #  read CNF-SAT problem data in DIMACS format
     int read_cnfsat "glp_read_cnfsat" (Prob* prob, const char* fname)

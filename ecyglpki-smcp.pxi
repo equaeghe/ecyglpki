@@ -4,7 +4,7 @@
 #
 #  This code is part of ecyglpki (a Cython GLPK interface).
 #
-#  Copyright (C) 2014 Erik Quaeghebeur. All rights reserved.
+#  Copyright ⓒ 2017 Erik Quaeghebeur. All rights reserved.
 #
 #  ecyglpki is free software: you can redistribute it and/or modify it under
 #  the terms of the GNU General Public License as published by the Free
@@ -41,6 +41,7 @@ cdef pricing2str = {pricing: string for string, pricing in str2pricing.items()}
 cdef str2rtest = {
     'standard': glpk.RT_STD,
     'Harris': glpk.RT_HAR
+    'flip-flop': glpk.RT_FLIP
     }
 cdef rtest2str = {r_test: string for string, r_test in str2rtest.items()}
 
