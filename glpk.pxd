@@ -945,11 +945,11 @@ cdef extern from "glpk.h":
     void mem_usage "glp_mem_usage" (int* count, int* cpeak,
                                     size_t* total, size_t* tpeak)
 
-double glp_time(void);
-/* determine current universal time */
+    #  determine current universal time
+    double time "glp_time" ()
 
-double glp_difftime(double t1, double t0);
-/* compute difference between two time values */
+    #  compute difference between two time values
+    double difftime "glp_difftime" (double t1, double t0)
 
     #  graph descriptor
     cdef struct Graph "glp_graph":
