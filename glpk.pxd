@@ -120,7 +120,7 @@ cdef extern from "glpk.h":
     #  ratio test technique (argument name is 'r_test'):
     enum: RT_STD "GLP_RT_STD"    #  standard (textbook)
     enum: RT_HAR "GLP_RT_HAR"    #  Harris' two-pass ratio test
-    enum: RT_FLIP "GLP_RT_FLIP"  # long step (flip-flop) ratio test
+    enum: RT_FLIP "GLP_RT_FLIP"  #  long step (flip-flop) ratio test
 
     #  simplex method control parameters
     ctypedef struct SmCp "glp_smcp":
@@ -200,9 +200,9 @@ cdef extern from "glpk.h":
 #        bint use_sol    #  use existing solution (experimental/undocumented)
 #        const char* save_sol
 #                        #  filename to save every new solution
-#                        # (experimental/undocumented)
-#        bint flip;      # use long-step dual simplex
-#                        # (experimental/undocumented)
+#                        #  (experimental/undocumented)
+#        bint flip;      #  use long-step dual simplex
+#                        #  (experimental/undocumented)
 
     #  row origin flag (argument name is 'origin'):
     enum: RF_REG "GLP_RF_REG"    #  regular constraint
@@ -505,10 +505,10 @@ cdef extern from "glpk.h":
 
 # Undocumented
 #
-#    # get simplex solver iteration count
+#    #  get simplex solver iteration count
 #    int get_it_cnt "glp_get_it_cnt" (Prob* prob)
 #
-#    # set simplex solver iteration count
+#    #  set simplex solver iteration count
 #    void set_it_cnt "glp_set_it_cnt" (Prob* prob, int it_cnt)
 
     #  solve LP problem with the interior-point method; returns retcode
@@ -746,6 +746,41 @@ cdef extern from "glpk.h":
     #  terminate the solution process
     void ios_terminate "glp_ios_terminate" (Tree* tree)
 
+# Undocumented.
+#
+#    #  generate Gomory's mixed integer cut (core routine)
+#    int gmi_cut "glp_gmi_cut" (Prob* prob, int j, int ind[],
+#                               double val[], double phi[])
+#
+#    #  generate Gomory's mixed integer cuts
+#    int gmi_gen "glp_gmi_gen" (Prob* prob, Prob* pool, int max_cuts)
+#
+#    #  MIR cut generator workspace
+#    cdef struct Mir "glp_mir":
+#        pass
+#
+#    #  create and initialize MIR cut generator
+#    Mir* mir_init "glp_mir_init" (Prob* prob)
+#
+#    #  generate mixed integer rounding (MIR) cuts
+#    int mir_gen "glp_mir_gen" (Prob* prob, Mir* mir, Prob* pool)
+#
+#    #  delete MIR cut generator workspace
+#    void mir_free "glp_mir_free" (Mir* mir)
+#
+#    #  conflict graph descriptor
+#    cdef struct Cfg "glp_cfg":
+#        pass
+#
+#    #  create and initialize conflict graph
+#    Cfg* cfg_init "glp_cfg_init" (Prob* prob)
+#
+#    #  delete conflict graph descriptor
+#    void cfg_free "glp_cfg_free" (Cfg* cfg)
+#
+#    #  generate clique cut from conflict graph
+#    int clq_cut "glp_clq_cut" (Prob* prob, Cfg* cfg, int ind[], double val[])
+
 # Not used and (therefore) undocumented.
 #
 #    #  initialize MPS format control parameters
@@ -788,6 +823,9 @@ cdef extern from "glpk.h":
 
     #  allocate the MathProg translator workspace
     Tran* mpl_alloc_wksp "glp_mpl_alloc_wksp" ()
+
+    # initialize pseudo-random number generator
+    void mpl_init_rand "glp_mpl_init_rand" (Tran* wksp, int seed);
 
     #  read and translate model section
     int mpl_read_model "glp_mpl_read_model" (Tran* wksp,
@@ -836,6 +874,9 @@ cdef extern from "glpk.h":
     #  determine library version
     const char* version "glp_version" ()
 
+    # determine library configuration
+    const char* glp_config(const char* option);
+
     # Free return codes (argument name is 'freeretcode'):
     enum: FREE_OK   #  termination successful
     enum: FREE_UNN  #  environment is inactive (was not initialized)
@@ -877,6 +918,9 @@ cdef extern from "glpk.h":
 ##define glp_error glp_error_(__FILE__, __LINE__)
 #    glp_errfunc glp_error_ "error_" (const char* file, int line)
 #
+#    # check for error state
+#    int at_error "glp_at_error" ();
+#
 #    #  check for logical condition
 ##define glp_assert(expr) \
 #      ((void)((expr) || (glp_assert_(#expr, __FILE__, __LINE__), 1)))
@@ -900,6 +944,12 @@ cdef extern from "glpk.h":
     #  get memory usage information
     void mem_usage "glp_mem_usage" (int* count, int* cpeak,
                                     size_t* total, size_t* tpeak)
+
+double glp_time(void);
+/* determine current universal time */
+
+double glp_difftime(double t1, double t0);
+/* compute difference between two time values */
 
     #  graph descriptor
     cdef struct Graph "glp_graph":
