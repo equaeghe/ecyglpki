@@ -350,7 +350,8 @@ cdef class IntOptControls:
     property sr_heur:
         """Whether to apply the `simple rounding`_ heuristic, a `bool`
 
-        .. _simple rounding: ???
+        .. _simple rounding: https://opus4.kobv.de/opus4-zib/frontdoor/index/index/docId/1325/
+                             # http://dx.doi.org/10.1007/978-3-642-29210-1_12
 
         .. doctest:: IntOptControls
 
