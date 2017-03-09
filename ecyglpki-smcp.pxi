@@ -40,7 +40,7 @@ cdef pricing2str = {pricing: string for string, pricing in str2pricing.items()}
 # ratio test type
 cdef str2rtest = {
     'standard': glpk.RT_STD,
-    'Harris': glpk.RT_HAR
+    'Harris': glpk.RT_HAR,
     'flip-flop': glpk.RT_FLIP
     }
 cdef rtest2str = {r_test: string for string, r_test in str2rtest.items()}
@@ -192,7 +192,7 @@ cdef class SimplexControls:
         .. doctest:: SimplexControls
 
             >>> r.tol_piv  # the GLPK default
-            1e-10
+            1e-09
             >>> r.tol_piv = 1e-3
             >>> r.tol_piv
             0.001
