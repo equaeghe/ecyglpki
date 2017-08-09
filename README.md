@@ -5,7 +5,7 @@ Cython GLPK interface
 
 Development takes place in branches named
 
-    <GLPK library version current number>-<Cython version>
+    <GLPK library version current.revision>-<Cython version>
 
 Check them out.
 
