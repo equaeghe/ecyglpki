@@ -1,4 +1,4 @@
-# glpk.pxd: Cython bindings for GLPK (as described in version 4.61 glpk.h)
+# glpk.pxd: Cython bindings for GLPK (as described in version 4.63 glpk.h)
 
 ###############################################################################
 #
@@ -122,22 +122,33 @@ cdef extern from "glpk.h":
     enum: RT_HAR "GLP_RT_HAR"    #  Harris' two-pass ratio test
     enum: RT_FLIP "GLP_RT_FLIP"  #  long step (flip-flop) ratio test
 
+#    #  A or N (argument name is 'aorn'):
+#    # (experimental/undocumented)
+#    enum: USE_AT "GLP_USE_AT"   # use A matrix in row-wise format
+#    enum: USE_NT "GLP_USE_NT"   # use N matrix in row-wise format
+
     #  simplex method control parameters
     ctypedef struct SmCp "glp_smcp":
         int msg_lev     #  message level
         int meth        #  simplex method option
         int pricing     #  pricing technique
         int r_test      #  ratio test technique
-        double tol_bnd  #  spx.tol_bnd
-        double tol_dj   #  spx.tol_dj
-        double tol_piv  #  spx.tol_piv
-        double obj_ll   #  spx.obj_ll
-        double obj_ul   #  spx.obj_ul
-        int it_lim      #  spx.it_lim
-        int tm_lim      #  spx.tm_lim (milliseconds)
-        int out_frq     #  spx.out_frq
-        int out_dly     #  spx.out_dly (milliseconds)
+        double tol_bnd  #  primal feasibility tolerance
+        double tol_dj   #  dual feasibility tolerance
+        double tol_piv  #  pivot tolerance
+        double obj_ll   #  lower objective limit
+        double obj_ul   #  upper objective limit
+        int it_lim      #  simplex iteration limit
+        int tm_lim      #  time limit, ms
+        int out_frq     #  display output frequency, ms
+        int out_dly     #  display output delay, ms
         bint presolve   #  enable/disable using LP presolver
+#        int excl        # exclude fixed non-basic variables
+#                        # (experimental/undocumented)
+#        int shift       # shift bounds of variables to zero
+#                        # (experimental/undocumented)
+#        int aorn        # option to use A or N:
+#                        # (experimental/undocumented)
 
     #  ordering algorithm (argument name is 'ord_alg'):
     enum: ORD_NONE "GLP_ORD_NONE"      #  natural (original) ordering

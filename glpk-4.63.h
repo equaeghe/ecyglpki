@@ -34,7 +34,7 @@ extern "C" {
 
 /* library version numbers: */
 #define GLP_MAJOR_VERSION  4
-#define GLP_MINOR_VERSION  61
+#define GLP_MINOR_VERSION  63
 
 typedef struct glp_prob glp_prob;
 /* LP/MIP problem object */
@@ -127,17 +127,24 @@ typedef struct
 #if 1 /* 16/III-2016 */
 #define GLP_RT_FLIP     0x33  /* long-step (flip-flop) ratio test */
 #endif
-      double tol_bnd;         /* spx.tol_bnd */
-      double tol_dj;          /* spx.tol_dj */
-      double tol_piv;         /* spx.tol_piv */
-      double obj_ll;          /* spx.obj_ll */
-      double obj_ul;          /* spx.obj_ul */
-      int it_lim;             /* spx.it_lim */
-      int tm_lim;             /* spx.tm_lim (milliseconds) */
-      int out_frq;            /* spx.out_frq */
-      int out_dly;            /* spx.out_dly (milliseconds) */
+      double tol_bnd;         /* primal feasibility tolerance */
+      double tol_dj;          /* dual feasibility tolerance */
+      double tol_piv;         /* pivot tolerance */
+      double obj_ll;          /* lower objective limit */
+      double obj_ul;          /* upper objective limit */
+      int it_lim;             /* simplex iteration limit */
+      int tm_lim;             /* time limit, ms */
+      int out_frq;            /* display output frequency, ms */
+      int out_dly;            /* display output delay, ms */
       int presolve;           /* enable/disable using LP presolver */
-      double foo_bar[36];     /* (reserved) */
+#if 1 /* 11/VII-2017 (not documented yet) */
+      int excl;               /* exclude fixed non-basic variables */
+      int shift;              /* shift bounds of variables to zero */
+      int aorn;               /* option to use A or N: */
+#define GLP_USE_AT         1  /* use A matrix in row-wise format */
+#define GLP_USE_NT         2  /* use N matrix in row-wise format */
+      double foo_bar[33];     /* (reserved) */
+#endif
 } glp_smcp;
 
 typedef struct
