@@ -187,7 +187,7 @@ cdef class SimplexControls:
             self._smcp.tol_dj = float(value)
 
     property tol_piv:
-        """Tolerance to choose eligble pivotal elements, a |Real| number
+        """Tolerance to choose eligible pivotal elements, a |Real| number
 
         .. doctest:: SimplexControls
 
@@ -276,7 +276,7 @@ cdef class SimplexControls:
             self._smcp.tm_lim = int(value)
 
     property out_frq:
-        """Output frequency [iterations] of informational messages, an `int`
+        """Output frequency [ms] of informational messages, an `int`
 
         .. doctest:: SimplexControls
 
