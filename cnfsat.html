@@ -1,66 +1,418 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>CNF Satisfiability Problem &mdash; ecyglpki  documentation</title>
-    
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <title>CNF Satisfiability Problem &#8212; ecyglpki  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="ecyglpki  documentation" href="index.html" />
-    <link rel="next" title="GLPK API Routines" href="cnfsat.2.html" />
-    <link rel="prev" title="Maximum clique problem" href="graph.3.1.html" /> 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Maximum clique problem" href="graph.3.1.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
   </head>
   <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="cnfsat.2.html" title="GLPK API Routines"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="graph.3.1.html" title="Maximum clique problem"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <blockquote>
 <div></div></blockquote>
 <span class="target" id="module-ecyglpki"></span><div class="section" id="cnf-satisfiability-problem">
 <h1>CNF Satisfiability Problem<a class="headerlink" href="#cnf-satisfiability-problem" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="cnfsat.2.html">GLPK API Routines</a></li>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>The <em>Satisfiability Problem (SAT)</em> is a classic combinatorial problem. Given a
+Boolean formula of <span class="math">\(n\)</span> variables</p>
+<div class="math" id="equation-1.1">
+<span class="eqno">(1)<a class="headerlink" href="#equation-1.1" title="Permalink to this equation">¶</a></span>\[f(x_1,x_2,\dots,x_n),\]</div>
+<p>this problem is to find such values of the variables, on which the formula
+takes on the value <em>true</em>.</p>
+<p>The <em>CNF Satisfiability Problem (CNF-SAT)</em> is a version of the Satisfiability
+Problem, where the Boolean formula <a class="reference internal" href="#equation-1.1">(1)</a> is specified in the
+<em>Conjunctive Normal Form (CNF)</em>, that means that it is a conjunction of
+<em>clauses</em>, where a clause is a disjunction of <em>literals</em>, and a literal is a
+variable or its negation.
+For example:</p>
+<div class="math" id="equation-1.2">
+<span class="eqno">(2)<a class="headerlink" href="#equation-1.2" title="Permalink to this equation">¶</a></span>\[(x_1\vee x_2)\;\&amp;\;(\neg x_2\vee x_3\vee\neg x_4)\;\&amp;\;(\neg x_1\vee x_4).\]</div>
+<p>Here <span class="math">\(x_1\)</span>, <span class="math">\(x_2\)</span>, <span class="math">\(x_3\)</span>, <span class="math">\(x_4\)</span> are Boolean variables
+to be assigned, <span class="math">\(\neg\)</span> means negation (logical <em>not</em>), <span class="math">\(\vee\)</span> means
+disjunction (logical <em>or</em>), and <span class="math">\(\&amp;\)</span> means conjunction (logical <em>and</em>).
+One may note that the formula <a class="reference internal" href="#equation-1.2">(2)</a> is <em>satisfiable</em>, because on
+<span class="math">\(x_1=\)</span> <em>true</em>, <span class="math">\(x_2=\)</span> <em>false</em>, <span class="math">\(x_3=\)</span> <em>false</em>, and
+<span class="math">\(x_4=\)</span> <em>true</em> it takes on the value <em>true</em>. If a formula
+is not satisfiable, it is called <em>unsatisfiable</em>, that means that
+it takes on the value <em>false</em> on any values of its variables.</p>
+<p>Any CNF-SAT problem can be easily translated to a 0-1 programming problem as
+follows.</p>
+<p>A Boolean variable <span class="math">\(x\)</span> can be modeled by a binary variable in a natural
+way: <span class="math">\(x=1\)</span> means that <span class="math">\(x\)</span> takes on the value <em>true</em>, and
+<span class="math">\(x=0\)</span> means that <span class="math">\(x\)</span> takes on the value <em>false</em>. Then, if a literal
+is a negated variable, i.e. <span class="math">\(t=\neg x\)</span>, it can be expressed as
+<span class="math">\(t=1-x\)</span>. Since a formula in CNF is a conjunction of clauses, to provide
+its satisfiability we should require all its clauses to  take on the value
+<em>true</em>. A particular clause is a disjunction of literals:</p>
+<div class="math" id="equation-1.3">
+<span class="eqno">(3)<a class="headerlink" href="#equation-1.3" title="Permalink to this equation">¶</a></span>\[t\vee t'\vee t''\vee\dots,\]</div>
+<p>so it takes on the value <em>true</em> iff at least one of its literals takes on the
+value <em>true</em>, that can be expressed as the following inequality constraint:</p>
+<div class="math" id="equation-1.4">
+<span class="eqno">(4)<a class="headerlink" href="#equation-1.4" title="Permalink to this equation">¶</a></span>\[t+t'+t''+\dots\geq 1.\]</div>
+<p>Note that no objective function is used in this case, because only a feasible
+solution needs to be found.</p>
+<p>For example, the formula <a class="reference internal" href="#equation-1.2">(2)</a> can be translated to the following constraints:</p>
+<div class="math">
+\begin{alignat*}{8}
+  &amp;&amp;x_1&amp; &amp;{}+{} &amp;&amp;x_2&amp; &amp; &amp;&amp;&amp; &amp; &amp;&amp;&amp; &amp;\geq 1\\
+  &amp;&amp;&amp; &amp; &amp;(1-{}&amp;x_2&amp;) &amp;{}+{} &amp;&amp;x_3&amp; &amp;{}+{} &amp;(1-{}&amp;x_4&amp;) &amp;\geq 1\\
+  &amp;(1-{}&amp;x_1&amp;) &amp; &amp;&amp;&amp; &amp; &amp;&amp;&amp; &amp;{}+{} &amp;&amp;x_4&amp; &amp;\geq 1
+\end{alignat*}</div><p>with <span class="math">\(x_1, x_2, x_3, x_4\in\{0,1\}\)</span>.</p>
+<p>Carrying out all constant terms to the right-hand side gives corresponding 0-1
+programming problem in the standard format:</p>
+<div class="math">
+\begin{alignat*}{5}
+  &amp; &amp;x_1 &amp;{}+{} &amp;x_2 &amp; &amp; &amp; &amp; &amp;\geq &amp;1\\
+  &amp; &amp; &amp;{}-{} &amp;x_2 &amp;{}+{} &amp;x_3 &amp;{}-{} &amp;x_4 &amp;\geq -&amp;1\\
+  &amp;-&amp;x_1 &amp; &amp; &amp; &amp; &amp;{}+{} &amp;x_4 &amp;\geq &amp;0\\
+\end{alignat*}</div><p>with <span class="math">\(x_1, x_2, x_3, x_4\in\{0,1\}\)</span>.</p>
+<p>In general case translation of a CNF-SAT problem results in the following 0-1
+programming problem:</p>
+<div class="math" id="equation-1.5">
+<span class="eqno">(5)<a class="headerlink" href="#equation-1.5" title="Permalink to this equation">¶</a></span>\[\sum_{j\in J^+_i}x_j-\sum_{j\in J^-_i}x_j\geq 1-|J^-_i|,\quad i=1,\dots,m,\]</div>
+<div class="math" id="equation-1.6">
+<span class="eqno">(6)<a class="headerlink" href="#equation-1.6" title="Permalink to this equation">¶</a></span>\[x_j\in\{0,1\},\quad j=1,\dots,n,\]</div>
+<p>where <span class="math">\(n\)</span> is the number of variables, <span class="math">\(m\)</span> is the number of clauses
+(inequality constraints), <span class="math">\(J^+_i\subseteq\{1,\dots,n\}\)</span> is a
+subset of variables, whose literals in <span class="math">\(i\)</span>-th clause do not have
+negation, and <span class="math">\(J^-_i\subseteq\{1,\dots,n\}\)</span> is a subset of variables,
+whose literals in <span class="math">\(i\)</span>-th clause are negations of that variables. It is
+assumed that <span class="math">\(J^+_i\cap J^-_i=\varnothing\)</span> for all <span class="math">\(i\)</span>.</p>
+</div>
+<div class="section" id="dimacs-cnf-sat-format">
+<h2>DIMACS CNF-SAT Format<a class="headerlink" href="#dimacs-cnf-sat-format" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This material is based on the paper <a class="reference external" href="http://www.domagoj-babic.com/uploads/ResearchProjects/Spear/dimacs-cnf.pdf">“Satisfiability Suggested Format”</a>.</p>
+</div>
+<p>The DIMACS input file is a plain ASCII text file. It contains lines of several
+types described below.
+A line is terminated with an end-of-line character.
+Fields in each line are separated by at least one blank space.</p>
+<div class="section" id="comment-lines">
+<h3>Comment lines<a class="headerlink" href="#comment-lines" title="Permalink to this headline">¶</a></h3>
+<p>Comment lines give human-readable information about the file and are ignored by
+programs.
+Comment lines can appear anywhere in the file.
+Each comment line begins with a lower-case character <code class="xref py py-obj docutils literal"><span class="pre">c</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">c</span> <span class="n">This</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">comment</span> <span class="n">line</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="problem-line">
+<h3>Problem line<a class="headerlink" href="#problem-line" title="Permalink to this headline">¶</a></h3>
+<p>There is one problem line per data file.
+The problem line must appear before any clause lines.
+It has the following format:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="n">cnf</span> <span class="n">VARIABLES</span> <span class="n">CLAUSES</span>
+</pre></div>
+</div>
+<p>The lower-case character <code class="xref py py-obj docutils literal"><span class="pre">p</span></code> signifies that this is a problem line.
+The three character problem designator <code class="xref py py-obj docutils literal"><span class="pre">cnf</span></code> identifies the file as
+containing specification information for the CNF-SAT problem.
+The <code class="xref py py-obj docutils literal"><span class="pre">VARIABLES</span></code> field contains an integer value specifying <span class="math">\(n\)</span>, the
+number of variables in the instance.
+The <code class="xref py py-obj docutils literal"><span class="pre">CLAUSES</span></code> field contains an integer value specifying <span class="math">\(m\)</span>, the number
+of clauses in the instance.</p>
+</div>
+<div class="section" id="clauses">
+<h3>Clauses<a class="headerlink" href="#clauses" title="Permalink to this headline">¶</a></h3>
+<p>The clauses appear immediately after the problem line.
+The variables are assumed to be numbered from 1 up to <span class="math">\(n\)</span>.
+It is not necessary that every variable appears in the instance.
+Each clause is represented by a sequence of numbers separated by either a
+space, tab, or new-line character.
+The non-negated version of a variable <span class="math">\(j\)</span> is represented by <span class="math">\(j\)</span>;
+the negated version is represented by <span class="math">\(-j\)</span>.
+Each clause is terminated by the value 0. Unlike many formats that represent
+the end of a clause by a new-line character, this format allows clauses to be
+on multiple lines.</p>
+</div>
+<div class="section" id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<p>Below here is an example of the data file in DIMACS format corresponding to the
+CNF-SAT problem <a class="reference internal" href="#equation-1.2">(2)</a>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">c</span> <span class="n">sample</span><span class="o">.</span><span class="n">cnf</span>
+<span class="n">c</span>
+<span class="n">c</span> <span class="n">This</span> <span class="ow">is</span> <span class="n">an</span> <span class="n">example</span> <span class="n">of</span> <span class="n">the</span> <span class="n">CNF</span><span class="o">-</span><span class="n">SAT</span> <span class="n">problem</span> <span class="n">data</span>
+<span class="n">c</span> <span class="ow">in</span> <span class="n">DIMACS</span> <span class="nb">format</span><span class="o">.</span>
+<span class="n">c</span>
+<span class="n">p</span> <span class="n">cnf</span> <span class="mi">4</span> <span class="mi">3</span>
+<span class="mi">1</span> <span class="mi">2</span> <span class="mi">0</span>
+<span class="o">-</span><span class="mi">4</span> <span class="mi">3</span>
+<span class="o">-</span><span class="mi">2</span> <span class="mi">0</span>
+<span class="o">-</span><span class="mi">1</span> <span class="mi">4</span> <span class="mi">0</span>
+<span class="n">c</span>
+<span class="n">c</span> <span class="n">eof</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="glpk-api-routines">
+<h2>GLPK API Routines<a class="headerlink" href="#glpk-api-routines" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="ecyglpki.Problem.read_cnfsat">
+<code class="descclassname">Problem.</code><code class="descname">read_cnfsat</code><span class="sig-paren">(</span><em>str fname</em><span class="sig-paren">)</span><a class="headerlink" href="#ecyglpki.Problem.read_cnfsat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read CNF-SAT problem data in DIMACS format</p>
+<p>This class method reads the CNF-SAT problem data from a text file in
+DIMACS format and automatically translates the data to corresponding
+0-1 programming problem instance <a class="reference internal" href="#equation-1.5">(5)</a>–<a class="reference internal" href="#equation-1.6">(6)</a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/3.4/library/stdtypes.html#str" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">str</span></code></a>) – file name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the problem read</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ref.2.2.html#ecyglpki.Problem" title="ecyglpki.Problem"><code class="xref py py-obj docutils literal"><span class="pre">Problem</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If the filename ends with the suffix ‘.gz’, the file is assumed to
+be compressed, in which case the routine decompresses it “on the
+fly”.</p>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Problem</span><span class="o">.</span><span class="n">read_cnfsat</span><span class="p">(</span><span class="s1">&#39;examples/sample.cnf&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">get_num_cols</span><span class="p">()</span> <span class="c1"># the number of variables</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">all</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">get_col_kind</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;binary&#39;</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">get_num_rows</span><span class="p">()</span> <span class="c1"># the number of clauses</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">get_mat_row</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)]</span>
+<span class="go">[{1: 1.0, 2: 1.0}, {2: -1.0, 3: 1.0, 4: -1.0}, {1: -1.0, 4: 1.0}]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.check_cnfsat">
+<code class="descclassname">Problem.</code><code class="descname">check_cnfsat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ecyglpki.Problem.check_cnfsat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check for CNF-SAT problem instance</p>
+<p>This method checks if the specified problem object P contains a 0-1
+programming problem instance in the format <a class="reference internal" href="#equation-1.5">(5)</a>–<a class="reference internal" href="#equation-1.6">(6)</a> and
+therefore encodes a CNF-SAT problem instance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.4/library/functions.html#bool" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">bool</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Problem</span><span class="o">.</span><span class="n">read_cnfsat</span><span class="p">(</span><span class="s1">&#39;examples/sample.cnf&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">check_cnfsat</span><span class="p">()</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clause</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_mat_row</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clause</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">set_mat_row</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">clause</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">check_cnfsat</span><span class="p">()</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.write_cnfsat">
+<code class="descclassname">Problem.</code><code class="descname">write_cnfsat</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="headerlink" href="#ecyglpki.Problem.write_cnfsat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write CNF-SAT problem data in DIMACS format</p>
+<p>This method automatically translates the specified 0-1 programming
+problem instance <a class="reference internal" href="#equation-1.5">(5)</a>–<a class="reference internal" href="#equation-1.6">(6)</a> to a CNF-SAT problem instance and
+returns the problem data in DIMACS format or writes it to a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/3.4/library/stdtypes.html#str" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">str</span></code></a>) – file name (omit to have data returned)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the problem data in DIMACS format (if argument is omitted)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.4/library/stdtypes.html#str" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If the filename ends with suffix ‘.gz’, the file is assumed to be
+compressed, in which case the routine performs automatic
+compression on writing that file.</p>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Problem</span><span class="o">.</span><span class="n">read_cnfsat</span><span class="p">(</span><span class="s1">&#39;examples/sample.cnf&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">set_prob_name</span><span class="p">(</span><span class="s1">&#39;σαμπλε&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">write_cnfsat</span><span class="p">())</span>
+<span class="go">c σαμπλε</span>
+<span class="go">p cnf 4 3</span>
+<span class="go">1 2 0</span>
+<span class="go">-2 3 -4 0</span>
+<span class="go">-1 4 0</span>
+<span class="go">c eof</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.minisat1">
+<code class="descclassname">Problem.</code><code class="descname">minisat1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ecyglpki.Problem.minisat1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve CNF-SAT problem with MiniSat solver</p>
+<p>This method is a driver to <a class="reference external" href="http://minisat.se/">MiniSat</a>, a CNF-SAT solver developed by
+Niklas Eén and Niklas Sörensson, Chalmers University of Technology,
+Sweden.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">solution status, either <code class="xref py py-obj docutils literal"><span class="pre">'optimal'</span></code> (satistfiable)
+or <code class="xref py py-obj docutils literal"><span class="pre">'no</span> <span class="pre">feasible'</span></code> (unsatisfiable)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.4/library/stdtypes.html#str" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It is assumed that the specified problem is a 0-1 programming
+problem instance in the format <a class="reference internal" href="#equation-1.5">(5)</a>–<a class="reference internal" href="#equation-1.6">(6)</a> and therefore
+encodes a CNF-SAT problem instance.</p>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Problem</span><span class="o">.</span><span class="n">read_cnfsat</span><span class="p">(</span><span class="s1">&#39;examples/sample.cnf&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">minisat1</span><span class="p">()</span>
+<span class="go">&#39;optimal&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="n">j</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">mip_col_val</span><span class="p">(</span><span class="n">j</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)}</span>
+<span class="go">{1: False, 2: True, 3: False, 4: False}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ecyglpki.Problem.intfeas1">
+<code class="descclassname">Problem.</code><code class="descname">intfeas1</code><span class="sig-paren">(</span><em>bool use_bound</em>, <em>int obj_bound</em><span class="sig-paren">)</span><a class="headerlink" href="#ecyglpki.Problem.intfeas1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve integer feasibility problem</p>
+<p>This method is a tentative implementation of an integer feasibility
+solver based on a CNF-SAT solver (currently it is MiniSat; see
+<a class="reference internal" href="#ecyglpki.Problem.minisat1" title="ecyglpki.Problem.minisat1"><code class="xref py py-obj docutils literal"><span class="pre">minisat1</span></code></a>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>use_bound</strong> (<a class="reference external" href="https://docs.python.org/3.4/library/functions.html#bool" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">bool</span></code></a>) – whether to require a solution with an objective
+function value not worse than the bound given in <code class="xref py py-obj docutils literal"><span class="pre">obj_bound</span></code></li>
+<li><strong>obj_bound</strong> (<a class="reference external" href="https://docs.python.org/3.4/library/functions.html#int" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">int</span></code></a>) – specifies an upper (in case of minimization) or lower
+(in case of maximization) bound to the objective function</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">solution status, either <code class="xref py py-obj docutils literal"><span class="pre">'feasible'</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">'no</span> <span class="pre">feasible'</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3.4/library/stdtypes.html#str" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The integer programming problem should satisfy to the following
+requirements:</p>
+<ol class="arabic simple">
+<li>All variables (columns) should be either <code class="xref py py-obj docutils literal"><span class="pre">'binary'</span></code>
+(cf. <a class="reference internal" href="ref.2.10.html#ecyglpki.Problem.get_col_kind" title="ecyglpki.Problem.get_col_kind"><code class="xref py py-obj docutils literal"><span class="pre">Problem.get_col_kind</span></code></a>) or <code class="xref py py-obj docutils literal"><span class="pre">'fixed'</span></code>
+(cf. <a class="reference internal" href="ref.2.4.html#ecyglpki.Problem.get_col_type" title="ecyglpki.Problem.get_col_type"><code class="xref py py-obj docutils literal"><span class="pre">Problem.get_col_type</span></code></a>) at integer values</li>
+<li>All constraint and objective coefficients should be integer
+numbers in the range <span class="math">\([-2^{31}, +2^{31}-1]\)</span>.</li>
+</ol>
+<p>Though there are no special requirements to the constraints,
+currently this method is efficient mainly for problems, where most
+constraints (rows) fall into the following three classes:</p>
+<ol class="last arabic simple">
+<li>Covering inequalities: <span class="math">\(\sum_{j}t_j\geq 1\)</span>, where
+<span class="math">\(t_j=x_j\)</span> or <span class="math">\(t_j=1-x_j\)</span>, <span class="math">\(x_j\)</span> is a
+binary variable.</li>
+<li>Packing inequalities: <span class="math">\(\sum_{j}t_j\leq 1\)</span>.</li>
+<li>Partitioning equalities (SOS1 constraints):
+<span class="math">\(\sum_{j}t_j=1\)</span>.</li>
+</ol>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Problem</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">add_cols</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span> <span class="c1"># consider the squares of a chess board</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">square2col</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">b_col</span><span class="p">,</span> <span class="n">b_row</span><span class="p">:</span> <span class="mi">8</span> <span class="o">*</span> <span class="p">(</span><span class="n">b_col</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">b_row</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">65</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="c1"># add variable encoding presence of a queen in a square</span>
+<span class="gp">... </span>    <span class="n">p</span><span class="o">.</span><span class="n">set_col_kind</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="s1">&#39;binary&#39;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="c1"># objective is the number of queens placed</span>
+<span class="gp">... </span>    <span class="n">p</span><span class="o">.</span><span class="n">set_obj_coef</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">set_obj_dir</span><span class="p">(</span><span class="s1">&#39;maximize&#39;</span><span class="p">)</span> <span class="c1"># place as many queens as possible</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="c1"># at most one queen can be placed in each row</span>
+<span class="gp">... </span>    <span class="n">row</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_rows</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">p</span><span class="o">.</span><span class="n">set_mat_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="p">{</span><span class="n">square2col</span><span class="p">(</span><span class="n">b_col</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span> <span class="mi">1</span>
+<span class="gp">... </span>                        <span class="k">for</span> <span class="n">b_col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">)})</span>
+<span class="gp">... </span>    <span class="n">p</span><span class="o">.</span><span class="n">set_row_bnds</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="c1"># at most one queen can be placed in each column</span>
+<span class="gp">... </span>    <span class="n">row</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_rows</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">p</span><span class="o">.</span><span class="n">set_mat_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="p">{</span><span class="n">square2col</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">b_row</span><span class="p">):</span> <span class="mi">1</span>
+<span class="gp">... </span>                        <span class="k">for</span> <span class="n">b_row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">)})</span>
+<span class="gp">... </span>    <span class="n">p</span><span class="o">.</span><span class="n">set_row_bnds</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="c1"># at most one queen can be placed in each diagonal</span>
+<span class="gp">... </span>    <span class="n">row</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_rows</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">p</span><span class="o">.</span><span class="n">set_mat_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="p">{</span><span class="n">square2col</span><span class="p">(</span><span class="n">index</span> <span class="o">-</span> <span class="n">b_row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">b_row</span><span class="p">):</span> <span class="mi">1</span>
+<span class="gp">... </span>                        <span class="k">for</span> <span class="n">b_row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">)})</span>
+<span class="gp">... </span>    <span class="n">p</span><span class="o">.</span><span class="n">set_row_bnds</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="c1"># at most one queen can be placed in each cross diagonal</span>
+<span class="gp">... </span>    <span class="n">row</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">add_rows</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">p</span><span class="o">.</span><span class="n">set_mat_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="p">{</span><span class="n">square2col</span><span class="p">(</span><span class="mi">8</span> <span class="o">-</span> <span class="n">diff</span><span class="p">,</span> <span class="n">index</span> <span class="o">-</span> <span class="n">diff</span><span class="p">):</span> <span class="mi">1</span>
+<span class="gp">... </span>                        <span class="k">for</span> <span class="n">diff</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">index</span><span class="p">)})</span>
+<span class="gp">... </span>    <span class="n">p</span><span class="o">.</span><span class="n">set_row_bnds</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">best</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># we know at least one queen can be put on the board</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">while</span> <span class="n">p</span><span class="o">.</span><span class="n">intfeas1</span><span class="p">(</span><span class="n">use_bound</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">obj_bound</span><span class="o">=</span><span class="n">best</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;feasible&#39;</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">best</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">mip_obj_val</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">best</span> <span class="c1"># the maximum number of queens</span>
+<span class="go">8.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">65</span><span class="p">)</span> <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">mip_col_val</span><span class="p">(</span><span class="n">col</span><span class="p">))}</span>
+<span class="go">{4, 37, 41, 14, 51, 24, 26, 63}</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 </div>
 
@@ -68,57 +420,82 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="graph.3.1.html"
-                        title="previous chapter">Maximum clique problem</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="cnfsat.2.html"
-                        title="next chapter">GLPK API Routines</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/cnfsat.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+<h1 class="logo"><a href="index.html">ecyglpki</a></h1>
+
+
+
+<p class="blurb">Cython GLPK interface</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=equaeghe&repo=ecyglpki&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="ref.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="graph.html">Graph and Network Routines</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CNF Satisfiability Problem</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dimacs-cnf-sat-format">DIMACS CNF-SAT Format</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#comment-lines">Comment lines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#problem-line">Problem line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clauses">Clauses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#glpk-api-routines">GLPK API Routines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="graph.3.1.html" title="previous chapter">Maximum clique problem</a></li>
+      <li>Next: <a href="examples.html" title="next chapter">Examples</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="cnfsat.2.html" title="GLPK API Routines"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="graph.3.1.html" title="Maximum clique problem"
-             >previous</a> |</li>
-        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li> 
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2015, Erik Quaeghebeur.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2017, Erik Quaeghebeur.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/cnfsat.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>

@@ -1,60 +1,45 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Interior-point method routines &mdash; ecyglpki  documentation</title>
-    
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <title>Interior-point method routines &#8212; ecyglpki  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="ecyglpki  documentation" href="index.html" />
-    <link rel="up" title="Basic API Routines" href="ref.2.html" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Mixed integer programming routines" href="ref.2.10.html" />
-    <link rel="prev" title="Simplex method routines" href="ref.2.8.html" /> 
+    <link rel="prev" title="Simplex method routines" href="ref.2.8.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
   </head>
   <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="ref.2.10.html" title="Mixed integer programming routines"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="ref.2.8.html" title="Simplex method routines"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li>
-          <li><a href="ref.html" >Reference</a> &raquo;</li>
-          <li><a href="ref.2.html" accesskey="U">Basic API Routines</a> &raquo;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <blockquote>
 <div></div></blockquote>
@@ -62,19 +47,19 @@
 <h1>Interior-point method routines<a class="headerlink" href="#interior-point-method-routines" title="Permalink to this headline">¶</a></h1>
 <dl class="method">
 <dt id="ecyglpki.Problem.interior">
-<tt class="descclassname">Problem.</tt><tt class="descname">interior</tt><big>(</big><em>IPointControls controls</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.interior" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Problem.</code><code class="descname">interior</code><span class="sig-paren">(</span><em>IPointControls controls</em><span class="sig-paren">)</span><a class="headerlink" href="#ecyglpki.Problem.interior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Solve LP problem with the interior-point method</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.ipt_status">
-<tt class="descclassname">Problem.</tt><tt class="descname">ipt_status</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ipt_status" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Problem.</code><code class="descname">ipt_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ecyglpki.Problem.ipt_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve status of interior-point solution</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecyglpki.Problem.ipt_obj_val">
-<tt class="descclassname">Problem.</tt><tt class="descname">ipt_obj_val</tt><big>(</big><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ipt_obj_val" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Problem.</code><code class="descname">ipt_obj_val</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ecyglpki.Problem.ipt_obj_val" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve objective value (interior point)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -82,7 +67,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the objective value of the interior point solution</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.4/library/functions.html#float" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">float</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -90,17 +75,17 @@
 
 <dl class="method">
 <dt id="ecyglpki.Problem.ipt_row_prim">
-<tt class="descclassname">Problem.</tt><tt class="descname">ipt_row_prim</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ipt_row_prim" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Problem.</code><code class="descname">ipt_row_prim</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="headerlink" href="#ecyglpki.Problem.ipt_row_prim" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve row primal value (interior point)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="https://docs.python.org/3.4/library/functions.html#int" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">int</span></code></a> or <a class="reference external" href="https://docs.python.org/3.4/library/stdtypes.html#str" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">str</span></code></a>) – the index or name of the row</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the solution value</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.4/library/functions.html#float" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">float</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -108,17 +93,17 @@
 
 <dl class="method">
 <dt id="ecyglpki.Problem.ipt_row_dual">
-<tt class="descclassname">Problem.</tt><tt class="descname">ipt_row_dual</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ipt_row_dual" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Problem.</code><code class="descname">ipt_row_dual</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="headerlink" href="#ecyglpki.Problem.ipt_row_dual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve row dual value (interior point)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the row</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row</strong> (<a class="reference external" href="https://docs.python.org/3.4/library/functions.html#int" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">int</span></code></a> or <a class="reference external" href="https://docs.python.org/3.4/library/stdtypes.html#str" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">str</span></code></a>) – the index or name of the row</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the solution value</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.4/library/functions.html#float" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">float</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -126,17 +111,17 @@
 
 <dl class="method">
 <dt id="ecyglpki.Problem.ipt_col_prim">
-<tt class="descclassname">Problem.</tt><tt class="descname">ipt_col_prim</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ipt_col_prim" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Problem.</code><code class="descname">ipt_col_prim</code><span class="sig-paren">(</span><em>col</em><span class="sig-paren">)</span><a class="headerlink" href="#ecyglpki.Problem.ipt_col_prim" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve column primal value (interior point)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="https://docs.python.org/3.4/library/functions.html#int" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">int</span></code></a> or <a class="reference external" href="https://docs.python.org/3.4/library/stdtypes.html#str" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">str</span></code></a>) – the index or name of the column</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the solution value</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.4/library/functions.html#float" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">float</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -144,17 +129,17 @@
 
 <dl class="method">
 <dt id="ecyglpki.Problem.ipt_col_dual">
-<tt class="descclassname">Problem.</tt><tt class="descname">ipt_col_dual</tt><big>(</big><em>col</em><big>)</big><a class="headerlink" href="#ecyglpki.Problem.ipt_col_dual" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Problem.</code><code class="descname">ipt_col_dual</code><span class="sig-paren">(</span><em>col</em><span class="sig-paren">)</span><a class="headerlink" href="#ecyglpki.Problem.ipt_col_dual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve column dual value (interior point)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/functions.html#int" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; the index or name of the column</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<a class="reference external" href="https://docs.python.org/3.4/library/functions.html#int" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">int</span></code></a> or <a class="reference external" href="https://docs.python.org/3.4/library/stdtypes.html#str" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">str</span></code></a>) – the index or name of the column</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the solution value</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/functions.html#float" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.4/library/functions.html#float" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">float</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -164,25 +149,25 @@
 <h2>Interior-point controls<a class="headerlink" href="#interior-point-controls" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ecyglpki.IPointControls">
-<em class="property">class </em><tt class="descclassname">ecyglpki.</tt><tt class="descname">IPointControls</tt><a class="headerlink" href="#ecyglpki.IPointControls" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ecyglpki.</code><code class="descname">IPointControls</code><a class="headerlink" href="#ecyglpki.IPointControls" title="Permalink to this definition">¶</a></dt>
 <dd><p>The interior point solver control parameter object</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">IPointControls</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">IPointControls</span><span class="p">()</span>
 </pre></div>
 </div>
 <dl class="attribute">
 <dt id="ecyglpki.IPointControls.msg_lev">
-<tt class="descname">msg_lev</tt><a class="headerlink" href="#ecyglpki.IPointControls.msg_lev" title="Permalink to this definition">¶</a></dt>
-<dd><p>The message level, a <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></p>
+<code class="descname">msg_lev</code><a class="headerlink" href="#ecyglpki.IPointControls.msg_lev" title="Permalink to this definition">¶</a></dt>
+<dd><p>The message level, a <a class="reference external" href="https://docs.python.org/3.4/library/stdtypes.html#str" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">str</span></code></a></p>
 <p>The possible values are</p>
 <ul class="simple">
-<li><tt class="xref py py-obj docutils literal"><span class="pre">'no'</span></tt>: no output</li>
-<li><tt class="xref py py-obj docutils literal"><span class="pre">'warnerror'</span></tt>: warnings and errors only</li>
-<li><tt class="xref py py-obj docutils literal"><span class="pre">'normal'</span></tt>: normal output</li>
-<li><tt class="xref py py-obj docutils literal"><span class="pre">'full'</span></tt>: normal output and informational messages</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">'no'</span></code>: no output</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">'warnerror'</span></code>: warnings and errors only</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">'normal'</span></code>: normal output</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">'full'</span></code>: normal output and informational messages</li>
 </ul>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">msg_lev</span>  <span class="c"># the GLPK default</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">msg_lev</span>  <span class="c1"># the GLPK default</span>
 <span class="go">&#39;full&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">msg_lev</span> <span class="o">=</span> <span class="s">&#39;no&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">msg_lev</span> <span class="o">=</span> <span class="s1">&#39;no&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">msg_lev</span>
 <span class="go">&#39;no&#39;</span>
 </pre></div>
@@ -191,18 +176,18 @@
 
 <dl class="attribute">
 <dt id="ecyglpki.IPointControls.ord_alg">
-<tt class="descname">ord_alg</tt><a class="headerlink" href="#ecyglpki.IPointControls.ord_alg" title="Permalink to this definition">¶</a></dt>
-<dd><p>The ordering algorithm used prior to Cholesky factorization, a <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(in Python v3.3)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></p>
+<code class="descname">ord_alg</code><a class="headerlink" href="#ecyglpki.IPointControls.ord_alg" title="Permalink to this definition">¶</a></dt>
+<dd><p>The ordering algorithm used prior to Cholesky factorization, a <a class="reference external" href="https://docs.python.org/3.4/library/stdtypes.html#str" title="(in Python v3.4)"><code class="xref py py-obj docutils literal"><span class="pre">str</span></code></a></p>
 <p>The possible values are</p>
 <ul class="simple">
-<li><tt class="xref py py-obj docutils literal"><span class="pre">'orig'</span></tt>: normal (original)</li>
-<li><tt class="xref py py-obj docutils literal"><span class="pre">'qmd'</span></tt>: quotient minimum degree</li>
-<li><tt class="xref py py-obj docutils literal"><span class="pre">'amd'</span></tt>: approximate minimum degree</li>
-<li><tt class="xref py py-obj docutils literal"><span class="pre">'symamd'</span></tt>: approximate minimum degree for symmetric matrices</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">'orig'</span></code>: normal (original)</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">'qmd'</span></code>: quotient minimum degree</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">'amd'</span></code>: approximate minimum degree</li>
+<li><code class="xref py py-obj docutils literal"><span class="pre">'symamd'</span></code>: approximate minimum degree for symmetric matrices</li>
 </ul>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">ord_alg</span>  <span class="c"># the GLPK default</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">ord_alg</span>  <span class="c1"># the GLPK default</span>
 <span class="go">&#39;amd&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">ord_alg</span> <span class="o">=</span> <span class="s">&#39;qmd&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">ord_alg</span> <span class="o">=</span> <span class="s1">&#39;qmd&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">ord_alg</span>
 <span class="go">&#39;qmd&#39;</span>
 </pre></div>
@@ -218,67 +203,97 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Interior-point method routines</a><ul>
-<li><a class="reference internal" href="#interior-point-controls">Interior-point controls</a></li>
+<h1 class="logo"><a href="index.html">ecyglpki</a></h1>
+
+
+
+<p class="blurb">Cython GLPK interface</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=equaeghe&repo=ecyglpki&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ref.html">Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ref.2.html">Basic API Routines</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ref.2.2.html">Problem object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref.2.3.html">Problem creating and modifying routines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref.2.4.html">Problem retrieving routines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref.2.5.html">Row and column searching routines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref.2.6.html">Problem scaling routines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref.2.7.html">LP basis constructing routines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref.2.8.html">Simplex method routines</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Interior-point method routines</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#interior-point-controls">Interior-point controls</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ref.2.10.html">Mixed integer programming routines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref.2.11.html">Additional routines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref.3.html">Utility API routines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref.4.html">Advanced API Routines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref.5.html">Branch-and-Cut API Routines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref.6.html">Miscellaneous API Routines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="graph.html">Graph and Network Routines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cnfsat.html">CNF Satisfiability Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="ref.2.8.html"
-                        title="previous chapter">Simplex method routines</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="ref.2.10.html"
-                        title="next chapter">Mixed integer programming routines</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/ref.2.9.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="ref.html">Reference</a><ul>
+  <li><a href="ref.2.html">Basic API Routines</a><ul>
+      <li>Previous: <a href="ref.2.8.html" title="previous chapter">Simplex method routines</a></li>
+      <li>Next: <a href="ref.2.10.html" title="next chapter">Mixed integer programming routines</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="ref.2.10.html" title="Mixed integer programming routines"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="ref.2.8.html" title="Simplex method routines"
-             >previous</a> |</li>
-        <li><a href="index.html">ecyglpki  documentation</a> &raquo;</li>
-          <li><a href="ref.html" >Reference</a> &raquo;</li>
-          <li><a href="ref.2.html" >Basic API Routines</a> &raquo;</li> 
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2015, Erik Quaeghebeur.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2017, Erik Quaeghebeur.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/ref.2.9.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>
