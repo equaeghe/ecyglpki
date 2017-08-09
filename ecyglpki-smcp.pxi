@@ -281,10 +281,10 @@ cdef class SimplexControls:
         .. doctest:: SimplexControls
 
             >>> r.out_frq  # the GLPK default
-            500
-            >>> r.out_frq = 50
+            5000
+            >>> r.out_frq = 500
             >>> r.out_frq
-            50
+            500
 
         """
         def __get__(self):
